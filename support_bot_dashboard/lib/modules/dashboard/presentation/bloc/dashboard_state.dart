@@ -12,11 +12,14 @@ class DashboardDataSuccess extends DashboardState {
   final List<DashboardResponseDataModel> data;
   final List<String> selectedColumns;
   final List<String> columnNames;
+  final List<String> temporarySelectedColumns;
 
-  DashboardDataSuccess(
-      {required this.columnNames,
-      required this.selectedColumns,
-      required this.data});
+  DashboardDataSuccess({
+    required this.columnNames,
+    required this.temporarySelectedColumns,
+    required this.selectedColumns,
+    required this.data,
+  });
 }
 
 class DashboardDataFailure extends DashboardState {

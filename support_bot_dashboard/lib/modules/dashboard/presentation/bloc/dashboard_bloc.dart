@@ -7,9 +7,11 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
+  List<String> temporarySelectedColumns = [];
   DashboardBloc() : super(DashboardInitial()) {
     on<FetchDataEvent>(_onFetchDataEvent);
     on<SelectDropdownEvent>(_onSelectDropdownEvent);
+    on<ApplyColumnsEvent>(_onApplyColumnEvent);
   }
 
   FutureOr<void> _onFetchDataEvent(
@@ -25,6 +27,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           data: data,
           columnNames:
               data.isNotEmpty ? data.first.toJson().keys.toList() : <String>[],
+          temporarySelectedColumns: ['id'],
         ),
       );
     } catch (e) {
@@ -34,12 +37,26 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onSelectDropdownEvent(
       SelectDropdownEvent event, Emitter<DashboardState> emit) async {
+    final currentState = state as DashboardDataSuccess;
+    emit(DashboardDataSuccess(
+      selectedColumns: currentState.selectedColumns,
+      temporarySelectedColumns: event.selectedColumns,
+      data: currentState.data,
+      columnNames: currentState.columnNames,
+    ));
+  }
+
+  FutureOr<void> _onApplyColumnEvent(
+      ApplyColumnsEvent event, Emitter<DashboardState> emit) async {
     emit(DashboardDataLoading());
     await Future.delayed(const Duration(seconds: 2));
-    emit(DashboardDataSuccess(
-      selectedColumns: event.selectedColumns,
-      data: event.data,
-      columnNames: event.columnNames,
-    ));
+    emit(
+      DashboardDataSuccess(
+        columnNames: event.columnNames,
+        selectedColumns: event.selectedColumns,
+        data: event.data,
+        temporarySelectedColumns: event.selectedColumns,
+      ),
+    );
   }
 }
