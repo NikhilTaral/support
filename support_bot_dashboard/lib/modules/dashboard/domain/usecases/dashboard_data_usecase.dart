@@ -7,6 +7,6 @@ class DashboardDatausecase {
       locator<DashboardDataRepository>();
 
   Future<List<DashboardResponseDataModel>> call() async {
-    return await _dataRepository.fetchData();
+    return await _dataRepository.fetchTableData();
   }
 }

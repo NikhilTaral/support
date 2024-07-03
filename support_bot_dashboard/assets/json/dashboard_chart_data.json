@@ -1,0 +1,5 @@
+[
+    { "Spam": "Spam", "value": 30 },
+    { "NoAction": "No action required", "value": 20 },
+    { "Genuine": "Genuine", "value": 50 }
+]

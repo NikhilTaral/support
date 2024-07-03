@@ -10,14 +10,14 @@ class DashboardDataEmpty extends DashboardState {}
 
 class DashboardDataSuccess extends DashboardState {
   final List<DashboardResponseDataModel> data;
-  final List<String> selectedColumns;
+  final String selectedClassification;
   final List<String> columnNames;
-  final List<String> temporarySelectedColumns;
+  final List<String> selectColumn;
 
   DashboardDataSuccess({
+    required this.selectColumn,
     required this.columnNames,
-    required this.temporarySelectedColumns,
-    required this.selectedColumns,
+    required this.selectedClassification,
     required this.data,
   });
 }
@@ -26,4 +26,18 @@ class DashboardDataFailure extends DashboardState {
   final String errorMsg;
 
   DashboardDataFailure({required this.errorMsg});
+}
+
+class PiechartLoading extends DashboardState {}
+
+class PiechartDataSuccess extends DashboardState {
+  final List<ChartData> data;
+
+  PiechartDataSuccess({required this.data});
+}
+
+class PieChartError extends DashboardState {
+  final String message;
+
+  PieChartError({required this.message});
 }

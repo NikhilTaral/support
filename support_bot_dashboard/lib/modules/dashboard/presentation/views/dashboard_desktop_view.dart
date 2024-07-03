@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pie_chart_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pluto_table_widget.dart';
 
 class DashboardDesktopView extends StatelessWidget {
@@ -28,17 +31,27 @@ class DashboardDesktopView extends StatelessWidget {
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.3,
                     height: MediaQuery.of(context).size.height / 1.21,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
+                    // decoration: BoxDecoration(
+                    //   border: Border.all(color: Colors.black),
+                    // ),
+                    child: BlocProvider(
+                      create: (context) => DashboardBloc()
+                        ..add(
+                          LoadPiechartData(),
+                        ),
+                      child: const PieChartWidget(),
                     ),
-                    child: const Text('Graph'),
                   ),
                 ),
-                const SizedBox(width: 15),
-                const Flexible(
-                  flex: 6,
-                  fit: FlexFit.tight,
-                  child: PlutoTableWidget(),
+                Expanded(
+                  flex: 4,
+                  child: BlocProvider(
+                    create: (context) => DashboardBloc()
+                      ..add(
+                        FetchDataEvent(),
+                      ),
+                    child: const PlutoTableWidget(),
+                  ),
                 ),
               ],
             ),
