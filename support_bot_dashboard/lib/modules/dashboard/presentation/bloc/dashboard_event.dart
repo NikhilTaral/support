@@ -15,4 +15,14 @@ class SelectDropdownEvent extends DashboardEvent {
       required this.data});
 }
 
-class LoadPiechartData extends DashboardEvent {}
+class LoadPiechartData extends DashboardEvent {
+  final DateTime selectedDate;
+
+  LoadPiechartData(this.selectedDate);
+}
+
+class SelectTimePeriodEvent extends DashboardEvent {
+  final String selectedTimePeriod;
+
+  SelectTimePeriodEvent(this.selectedTimePeriod);
+}

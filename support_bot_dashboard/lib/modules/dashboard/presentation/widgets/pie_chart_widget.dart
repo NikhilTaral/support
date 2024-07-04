@@ -26,10 +26,11 @@ class PieChartWidget extends StatelessWidget {
               sections: List.generate(
                 state.data.length,
                 (index) => PieChartSectionData(
-                    value: state.data[index].value.toDouble(),
-                    title: state.data[index].label,
-                    color: blueShades[index % blueShades.length],
-                    radius: radius),
+                  value: state.data[index].value?.toDouble() ?? 0,
+                  title: state.data[index].label ?? '',
+                  color: blueShades[index % blueShades.length],
+                  radius: radius,
+                ),
               ),
             ),
           );

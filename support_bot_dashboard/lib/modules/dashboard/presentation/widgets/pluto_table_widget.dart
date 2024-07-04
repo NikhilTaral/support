@@ -50,8 +50,13 @@ class PlutoTableWidget extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white),
+                          backgroundColor: const Color(0xFF003865),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
                         onPressed: () {
                           _exportToCsv(state.selectColumn, data);
                         },
@@ -77,6 +82,8 @@ class PlutoTableWidget extends StatelessWidget {
                             type: PlutoColumnType.text(),
                             textAlign: PlutoColumnTextAlign.start,
                             titlePadding: const EdgeInsets.all(8),
+                            backgroundColor: Colors.grey.shade300,
+                            enableContextMenu: false,
                           ),
                         )
                         .toList(),
@@ -97,8 +104,8 @@ class PlutoTableWidget extends StatelessWidget {
                     configuration: PlutoGridConfiguration(
                       style: PlutoGridStyleConfig(
                         enableColumnBorderHorizontal: true,
-                        enableColumnBorderVertical: true,
-                        enableCellBorderVertical: true,
+                        enableColumnBorderVertical: false,
+                        enableCellBorderVertical: false,
                         enableCellBorderHorizontal: true,
                         evenRowColor: const Color(0xFFF6F6F6),
                         gridBorderRadius: BorderRadius.circular(8),
@@ -146,7 +153,7 @@ class PlutoTableWidget extends StatelessWidget {
   void _exportToCsv(
       List<String> selectedColumns, List<DashboardResponseDataModel> data) {
     List<List<String>> csvData = [
-      selectedColumns, // Headers
+      selectedColumns,
       ...data.map((dataModel) =>
           selectedColumns.map((col) => _getCellValue(dataModel, col)).toList())
     ];

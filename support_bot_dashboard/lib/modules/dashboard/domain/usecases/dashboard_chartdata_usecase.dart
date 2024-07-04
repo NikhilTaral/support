@@ -6,7 +6,7 @@ class DashboardChartdatausecase {
   final DashboardDataRepository _dataRepository =
       locator<DashboardDataRepository>();
 
-  Future<List<ChartData>> call() async {
-    return await _dataRepository.piechartData();
+  Future<List<ChartData>> call(DateTime selectedDate) async {
+    return await _dataRepository.piechartData(selectedDate: selectedDate);
   }
 }

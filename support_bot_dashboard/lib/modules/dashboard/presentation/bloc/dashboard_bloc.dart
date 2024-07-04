@@ -9,11 +9,11 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  List<String> temporarySelectedColumns = [];
   DashboardBloc() : super(DashboardInitial()) {
     on<FetchDataEvent>(_onFetchDataEvent);
     on<SelectDropdownEvent>(_onSelectDropdownEvent);
     on<LoadPiechartData>(_onLoadPiechartData);
+    on<SelectTimePeriodEvent>(_onSelectTimePeriodEvent);
   }
 
   FutureOr<void> _onFetchDataEvent(
@@ -62,12 +62,21 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final DashboardChartdatausecase getPieChartData =
           locator<DashboardChartdatausecase>();
-      final pieData = await getPieChartData();
+      final pieData = await getPieChartData(event.selectedDate);
+      print('Fetching pie chart data for date: ${event.selectedDate}');
       emit(PiechartDataSuccess(data: pieData));
       print('Pie chart data loaded: $pieData');
     } catch (e) {
       emit(PieChartError(message: e.toString()));
       print('Pie chart data load failed: $e');
     }
+  }
+
+  FutureOr<void> _onSelectTimePeriodEvent(
+      SelectTimePeriodEvent event, Emitter<DashboardState> emit) {
+    emit(TimePeriodSelectionState(
+      selectedTimePeriod: event.selectedTimePeriod,
+    ));
+    print('Time period selection updated: ${event.selectedTimePeriod}');
   }
 }

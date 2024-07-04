@@ -3,5 +3,5 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_res
 
 abstract class DashboardDataRepository {
   Future<List<DashboardResponseDataModel>> fetchTableData();
-  Future<List<ChartData>> piechartData();
+  Future<List<ChartData>> piechartData({required DateTime selectedDate});
 }

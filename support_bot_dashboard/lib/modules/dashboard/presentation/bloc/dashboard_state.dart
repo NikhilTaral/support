@@ -2,7 +2,9 @@ part of 'dashboard_bloc.dart';
 
 abstract class DashboardState {}
 
-class DashboardInitial extends DashboardState {}
+class DashboardInitial extends DashboardState {
+  final String selectedTimePeriod = 'Day';
+}
 
 class DashboardDataLoading extends DashboardState {}
 
@@ -41,3 +43,13 @@ class PieChartError extends DashboardState {
 
   PieChartError({required this.message});
 }
+
+class TimePeriodSelectionState extends DashboardState {
+  final String selectedTimePeriod;
+
+  TimePeriodSelectionState({
+    required this.selectedTimePeriod,
+  });
+}
+
+

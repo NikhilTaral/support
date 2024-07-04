@@ -17,11 +17,19 @@ class DashboardDataRepoImpl extends DashboardDataRepository {
     return data;
   }
 
-  @override
-  Future<List<ChartData>> piechartData() async {
-    final response =
-        await rootBundle.loadString('assets/json/dashboard_chart_data.json');
-    final List<dynamic> jsonData = json.decode(response);
-    return jsonData.map((json) => ChartData.fromJson(json)).toList();
+  Future<List<ChartData>> piechartData({required DateTime selectedDate}) async {
+    try {
+      final response =
+          await rootBundle.loadString('assets/json/dashboard_chart_data.json');
+      final List<dynamic> jsonData = json.decode(response);
+
+      List<ChartData> filteredData =
+          jsonData.map((json) => ChartData.fromJson(json)).toList();
+
+      return filteredData;
+    } catch (e) {
+      print('Error loading pie chart data: $e');
+      throw Exception('Failed to load pie chart data');
+    }
   }
 }
