@@ -2,7 +2,7 @@ part of 'dashboard_bloc.dart';
 
 abstract class DashboardEvent {}
 
-class FetchDataEvent extends DashboardEvent {}
+class FetchTableDataEvent extends DashboardEvent {}
 
 class SelectDropdownEvent extends DashboardEvent {
   final List<DashboardResponseDataModel> data;

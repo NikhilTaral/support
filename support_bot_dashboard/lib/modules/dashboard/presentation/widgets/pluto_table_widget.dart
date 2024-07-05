@@ -19,7 +19,7 @@ class PlutoTableWidget extends StatelessWidget {
               .where((d) => d.classification == state.selectedClassification)
               .toList();
           final filteredColumns =
-              state.columnNames.where((e) => e != 'createdAt').toList();
+              state.columnNames.where((e) => e != 'ticketDescription').toList();
           return Column(
             children: [
               Align(
@@ -69,8 +69,10 @@ class PlutoTableWidget extends StatelessWidget {
               const SizedBox(height: 15),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height / 3,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: _calculateMaxHeight(data.length),
+                  ),
                   child: PlutoGrid(
                     columns: filteredColumns
                         .where((e) => state.selectColumn.contains(e))
@@ -79,11 +81,17 @@ class PlutoTableWidget extends StatelessWidget {
                           (e) => PlutoColumn(
                             title: e,
                             field: e,
+                            enableFilterMenuItem: false,
+                            enableHideColumnMenuItem: false,
                             type: PlutoColumnType.text(),
                             textAlign: PlutoColumnTextAlign.start,
                             titlePadding: const EdgeInsets.all(8),
-                            backgroundColor: Colors.grey.shade300,
+                            backgroundColor: const Color(0xFFE7E7E9),
                             enableContextMenu: false,
+                            enableDropToResize: false,
+                            enableEditingMode: false,
+                            enableColumnDrag: false,
+                            readOnly: true,
                           ),
                         )
                         .toList(),
@@ -103,13 +111,28 @@ class PlutoTableWidget extends StatelessWidget {
                     }).toList(),
                     configuration: PlutoGridConfiguration(
                       style: PlutoGridStyleConfig(
-                        enableColumnBorderHorizontal: true,
-                        enableColumnBorderVertical: false,
-                        enableCellBorderVertical: false,
+                        enableColumnBorderHorizontal: false,
+                        enableColumnBorderVertical: true,
+                        enableCellBorderVertical: true,
                         enableCellBorderHorizontal: true,
-                        evenRowColor: const Color(0xFFF6F6F6),
                         gridBorderRadius: BorderRadius.circular(8),
                         gridPopupBorderRadius: BorderRadius.circular(8),
+                        rowHeight: 50,
+                        columnHeight: 50,
+                        gridBorderColor: Colors.transparent,
+                        columnTextStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF232538),
+                        ),
+                        cellTextStyle: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        enableGridBorderShadow: true,
+                      ),
+                      columnSize: const PlutoGridColumnSizeConfig(
+                        autoSizeMode: PlutoAutoSizeMode.scale,
                       ),
                     ),
                   ),
@@ -143,8 +166,8 @@ class PlutoTableWidget extends StatelessWidget {
         return dataModel.hsPipelineStage?.toString() ?? "";
       case 'reasoning':
         return dataModel.reasoning ?? "";
-      case 'ticketDescription':
-        return dataModel.ticketDescription ?? "";
+      case 'createdAt':
+        return dataModel.createdAt ?? "";
       default:
         return '';
     }
@@ -167,5 +190,17 @@ class PlutoTableWidget extends StatelessWidget {
       ext: "csv",
       mimeType: MimeType.csv,
     );
+  }
+
+  double _calculateMaxHeight(int rowCount) {
+    const double rowHeight = 45.0; // Height of each row
+    const double headerHeight = 56.0; // Height of the header
+    const double padding = 16.0; // Additional padding
+
+    // Calculate the height based on the number of rows, but limit it to a maximum of 6 rows
+    int visibleRowCount = rowCount > 6 ? 6 : rowCount;
+    double totalHeight = visibleRowCount * rowHeight + headerHeight + padding;
+
+    return totalHeight;
   }
 }

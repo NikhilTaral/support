@@ -10,14 +10,14 @@ part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitial()) {
-    on<FetchDataEvent>(_onFetchDataEvent);
+    on<FetchTableDataEvent>(_onFetchDataEvent);
     on<SelectDropdownEvent>(_onSelectDropdownEvent);
     on<LoadPiechartData>(_onLoadPiechartData);
     on<SelectTimePeriodEvent>(_onSelectTimePeriodEvent);
   }
 
   FutureOr<void> _onFetchDataEvent(
-      FetchDataEvent event, Emitter<DashboardState> emit) async {
+      FetchTableDataEvent event, Emitter<DashboardState> emit) async {
     final DashboardDatausecase fetchDataUsecase =
         locator<DashboardDatausecase>();
     emit(DashboardDataLoading());
