@@ -7,7 +7,6 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_response_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 
-
 class PlutoTableWidget extends StatelessWidget {
   const PlutoTableWidget({super.key});
 
@@ -23,50 +22,6 @@ class PlutoTableWidget extends StatelessWidget {
               state.columnNames.where((e) => e != 'ticketDescription').toList();
           return Column(
             children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    DropdownButton<String>(
-                      value: state.selectedClassification,
-                      onChanged: (String? newValue) {
-                        context.read<DashboardBloc>().add(SelectDropdownEvent(
-                              selectedClassification: newValue!,
-                              columnNames: state.columnNames,
-                              data: state.data,
-                            ));
-                      },
-                      items: ['Spam', 'No Action Required', 'Genuine']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      hint: const Text('Select Classification'),
-                    ),
-                    const SizedBox(width: 10),
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF003865),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () {
-                          _exportToCsv(state.selectColumn, data);
-                        },
-                        child: const Text('Export'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 15),
               Padding(
                 padding: const EdgeInsets.all(16),
