@@ -99,6 +99,15 @@ class SupportBotColors {
   );
 
   static const int _skyPrimaryColor = 0xFF0175DB;
+
+  static const MaterialColor blueShades = MaterialColor(
+    _disableColor,
+    <int, Color>{
+      100: Color.fromARGB(255, 153, 172, 187),
+      200:  const Color.fromARGB(255, 28, 88, 136),
+      300: Color.fromARGB(255, 17, 58, 98),
+    },
+  );
 }
 
 class ExpV3Color extends ColorSwatch<int> {

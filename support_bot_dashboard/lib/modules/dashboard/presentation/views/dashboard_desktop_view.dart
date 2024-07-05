@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pie_chart_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pluto_table_widget.dart';
-=======
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/count_container.dart';
->>>>>>> Stashed changes
 
 String ? count;
 class DashboardDesktopView extends StatelessWidget {
@@ -33,8 +31,7 @@ class DashboardDesktopView extends StatelessWidget {
                       ),
                     ),
                   ),
-<<<<<<< Updated upstream
-                ),
+                
                 Expanded(
                     flex: 7,
                     child: Container(
@@ -44,12 +41,13 @@ class DashboardDesktopView extends StatelessWidget {
                         child: const PlutoTableWidget(),
                       ),
                     ))
-=======
-                Expanded(flex: 7, child: Container())
->>>>>>> Stashed changes
               ],
             )),
-        Expanded(flex: 3, child: Container())
+        Expanded(flex: 3, child:  BlocProvider(
+                create: (context) => DashboardBloc()..add(LoadPiechartData(DateTime.now())),
+                child: PieChartWidget(),
+              ),
+)
       ],
     ));
   }
