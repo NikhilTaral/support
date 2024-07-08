@@ -14,7 +14,7 @@ class CountContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.only(top: 0, bottom: 50, left: 20, right: 0),
+        margin: const EdgeInsets.only(top: 0,  left: 20, right: 0),
         height: MediaQuery.of(context).size.height / 7,
         width: MediaQuery.of(context).size.width / 6.2,
         color: SupportBotColors.bluePrimary.shade400,
@@ -24,7 +24,7 @@ class CountContainer extends StatelessWidget {
             Expanded(
                 flex: 3,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(left: 8),
                   child: SvgPicture.asset(
                     icon,
                     width: 40,
