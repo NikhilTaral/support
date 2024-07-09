@@ -19,43 +19,45 @@ class DateSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
+    return Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
-            margin: const EdgeInsets.only(top: 20, left: 25, right: 1),
-            height: UIHelpers.screenHeight(context) / 18,
-            child: GestureDetector(
-              onTap: isInteractive
-                  ? () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime.now(),
-                      );
-                      if (picked != null) {
-                        onChanged(picked.toString()); // Assuming you want to pass the selected date as a string
+          SizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
+              margin: const EdgeInsets.only(top: 20, left: 25, right: 1),
+              height: UIHelpers.screenHeight(context) / 18,
+              width: UIHelpers.screenWidth(context)/7,
+              child: GestureDetector(
+                onTap: isInteractive
+                    ? () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime.now(),
+                        );
+                        if (picked != null) {
+                          onChanged(picked.toString()); // Assuming you want to pass the selected date as a string
+                        }
                       }
-                    }
-                  : null,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      selectedValue,
-                      style: const TextStyle(color: Colors.black, fontSize: 16),
-                      overflow: TextOverflow.clip,
+                    : null,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedValue,
+                        style: const TextStyle(color: Colors.black, fontSize: 16),
+                        overflow: TextOverflow.clip,
+                      ),
                     ),
-                  ),
-                  const Icon(Icons.calendar_month, color: Color.fromARGB(255, 6, 67, 117)),
-                ],
+                    const Icon(Icons.calendar_month, color: Color.fromARGB(255, 6, 67, 117)),
+                  ],
+                ),
               ),
             ),
           ),
@@ -74,8 +76,7 @@ class DateSelectionWidget extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
+        ], 
     );
   }
 }

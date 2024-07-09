@@ -15,18 +15,16 @@ class CustomDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        children: [
+    return 
           Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5.0),
             ),
             padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
-            margin: const EdgeInsets.only(top: 20, bottom: 10, left: 5, right: 1),
+            margin: const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
             height: MediaQuery.of(context).size.height / 18,
-            width: MediaQuery.of(context).size.width / 9,
+            width: MediaQuery.of(context).size.width / 7,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 elevation: 0,
@@ -43,10 +41,10 @@ class CustomDropdown extends StatelessWidget {
                 isExpanded: true, //
               ),
             ),
-          ),
+          );
           Positioned(
-            left: 15,
-            top: 10,
+            left: 25,
+            top: 20,
             child: Container(
               padding:const EdgeInsets.symmetric(horizontal: 5),
               color: Colors.white, // Background color of the text label
@@ -58,9 +56,16 @@ class CustomDropdown extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          
     );
   }
 }
+
+
+
+
+
+
+
+
+

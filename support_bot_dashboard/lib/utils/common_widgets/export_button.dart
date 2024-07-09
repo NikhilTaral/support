@@ -15,7 +15,8 @@ class ExportButton extends StatelessWidget {
   Widget build(BuildContext context) {
 
         return Container(
-          padding: const EdgeInsets.only(left: 55, right: 1),
+          margin: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(right: 1),
           child: TextButton(
             onPressed: () {},
             child: SvgPicture.asset(

@@ -61,73 +61,50 @@ class DashboardDesktopView extends StatelessWidget {
                   ),
                 
                 Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: DateSelectionWidget(
-                        selectedValue: 'Select Date',
-                        onChanged: (newValue) {
-                          // setState(() {
-                          //   selectedValue = newValue ?? "Select Date";
-                          // });
-                        },
-                        label: 'Day',
-                        selectedDate: DateTime.now(),
-                        isInteractive: true,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 8,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: CustomDropdown(
-                              selectedValue: 'January', // Set initially selected item
-                              items: const [
-                                'January',
-                                'February',
-                                'March',
-                                'April',
-                                'May',
-                                'June',
-                                'July',
-                                'August',
-                                'September',
-                                'October',
-                                'November',
-                                'December'
-                              ], // List of items
-                              onChanged: (String? value) {
-                                print('Selected value: $value');
-                              },
-                              label: 'Month',
-                            ),
-                          ),
-                          const Expanded(flex:3, child:Text('')), 
-                          Expanded(
-                            flex: 1,
-                            child: CustomDropdown(
-                              selectedValue: 'Spam', // Set initially selected item
-                              items: const [
-                                'Spam',
-                                'Genuine Query',
-                                'No Action'
-                              ], // List of items
-                              onChanged: (String? value) {
-                                print('Selected value: $value');
-                              },
-                              label: 'Classification',
-                            ),
-                          ),
-                          const Expanded(
-                            child: ExportButton(icon: 'assets/icons/Export.svg'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Expanded(
+      flex: 2,
+      child: Row(
+        children: [
+          DateSelectionWidget(
+            selectedValue: 'Select Date',
+            onChanged: (newValue) {
+              // Handle onChanged if needed
+            },
+            label: 'Day',
+            selectedDate: DateTime.now(),
+            isInteractive: true,
+          ),
+          const SizedBox(width: 10), // Space between DateSelectionWidget and CustomDropdown
+          CustomDropdown(
+            selectedValue: 'January', // Set initially selected item
+            items: const [
+              'January', 'February', 'March', 'April', 'May', 'June',
+              'July', 'August', 'September', 'October', 'November', 'December'
+            ], // List of items
+            onChanged: (String? value) {
+              print('Selected value: $value');
+            },
+            label: 'Month',
+          ),
+        ],
+      ),
+    ),
+    const Spacer(), // Spacer to evenly distribute space between left and right sections
+    CustomDropdown(
+      selectedValue: 'Spam', // Set initially selected item
+      items: const [
+        'Spam', 'Genuine Query', 'No Action'
+      ], // List of items
+      onChanged: (String? value) {
+        print('Selected value: $value');
+      },
+      label: 'Classification',
+    ),   // Space between DateSelectionWidget and CustomDropdown
+    const ExportButton(icon: 'assets/icons/Export.svg'),
+  ],
+),
                 Expanded(
                   flex: 7,
                     child: BlocProvider(
