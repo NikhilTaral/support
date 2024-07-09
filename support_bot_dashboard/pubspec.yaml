@@ -43,6 +43,8 @@ dependencies:
   csv: 
   file_saver: 
   flutter_svg: 
+  either_dart: 
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

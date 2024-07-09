@@ -36,9 +36,9 @@ class CustomDropdown extends StatelessWidget {
                     child: Text(value),
                   );
                 }).toList(),
-                icon: const Icon(Icons.arrow_drop_down), // Custom dropdown icon
-                iconSize: 30, // Set the size of the dropdown icon
-                isExpanded: true, //
+                icon: const Icon(Icons.arrow_drop_down), 
+                iconSize: 30, 
+                isExpanded: true, 
               ),
             ),
           );
@@ -47,12 +47,12 @@ class CustomDropdown extends StatelessWidget {
             top: 20,
             child: Container(
               padding:const EdgeInsets.symmetric(horizontal: 5),
-              color: Colors.white, // Background color of the text label
+              color: Colors.white, 
               child: Text(
-                label, // Replace with your desired label text
+                label, 
                 style:const TextStyle(
-                  color: Colors.grey, // Text color of the label
-                  fontSize: 12, // Font size of the label
+                  color: Colors.grey,
+                  fontSize: 12, 
                 ),
               ),
             ),

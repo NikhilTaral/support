@@ -33,7 +33,7 @@ class DashboardDataFailure extends DashboardState {
 class PiechartLoading extends DashboardState {}
 
 class PiechartDataSuccess extends DashboardState {
-  final List<ChartData> data;
+  final DashboardChartAttributeModel? data;
 
   PiechartDataSuccess({required this.data});
 }

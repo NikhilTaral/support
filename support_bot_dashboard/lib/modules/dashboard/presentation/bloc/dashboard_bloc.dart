@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_response_data_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_data_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
+     DashboardChartAttributeModel? dashboardchartdata;
   DashboardBloc() : super(DashboardInitial()) {
     on<FetchTableDataEvent>(_onFetchDataEvent);
     on<SelectDropdownEvent>(_onSelectDropdownEvent);
@@ -58,18 +59,26 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onLoadPiechartData(
       LoadPiechartData event, Emitter<DashboardState> emit) async {
-    emit(PiechartLoading());
-    try {
-      final DashboardChartdatausecase getPieChartData =
-          locator<DashboardChartdatausecase>();
-      final pieData = await getPieChartData(event.selectedDate);
-      print('Fetching pie chart data for date: ${event.selectedDate}');
-      emit(PiechartDataSuccess(data: pieData));
-      print('Pie chart data loaded: $pieData');
-    } catch (e) {
-      emit(PieChartError(message: e.toString()));
-      print('Pie chart data load failed: $e');
-    }
+
+      emit(PiechartLoading());
+      final repository = locator<DashboardChartdataUsecase>();
+      final response = await repository.invoke(event.selectedDate);
+
+      response.fold(
+        (failure) => emit(PieChartError(message: "Failed to fetch data")),
+        (model) {
+          if (model.success == true) {
+            final dashboardchartdata = DashboardChartAttributeModel(
+              genuineQuery: model.data?.genuineQuery ?? 0,
+              noActionRequired: model.data?.noActionRequired ?? 0,
+              spamMarketing: model.data?.spamMarketing ?? 0,
+            );
+            emit(PiechartDataSuccess(data: dashboardchartdata));
+          } else {
+            emit(PieChartError(message: model.message ?? 'Unknown error'));
+          }
+        },
+      );
   }
 
   FutureOr<void> _onSelectTimePeriodEvent(
