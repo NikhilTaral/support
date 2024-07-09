@@ -5,10 +5,10 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
-
+ 
 class PieChartWidget extends StatelessWidget {
   const PieChartWidget({super.key});
-
+ 
   @override
   Widget build(BuildContext context) {
     List<Color> blueShades = [
@@ -17,7 +17,7 @@ class PieChartWidget extends StatelessWidget {
       const Color.fromARGB(255, 17, 58, 98),
     ];
     double radius = UIHelpers.screenWidth(context) / 12;
-
+ 
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
         if (state is PiechartLoading) {
@@ -32,7 +32,7 @@ class PieChartWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(top: 35),
+                padding: EdgeInsets.only(top: 68),
                 child: Text(
                   'Pie Chart Title',
                   style: SupportBotTextstyle.pierchartHeading,
@@ -42,7 +42,7 @@ class PieChartWidget extends StatelessWidget {
                 height: UIHelpers.screenHeight(context) / 2,
                 child: PieChart(
                   PieChartData(
-                    centerSpaceRadius: 0,
+                    centerSpaceRadius: 1,
                     sectionsSpace: 1,
                     sections: List.generate(
                       chartData.length,
@@ -93,3 +93,5 @@ class PieChartWidget extends StatelessWidget {
     );
   }
 }
+ 
+ 
