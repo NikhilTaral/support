@@ -28,9 +28,9 @@ class DateSelectionWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5.0),
               ),
               padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
-              margin: const EdgeInsets.only(top: 20, left: 25, right: 1),
+              margin: const EdgeInsets.only(top: 30, left: 25, right: 1),
               height: UIHelpers.screenHeight(context) / 18,
-              width: UIHelpers.screenWidth(context)/7,
+              width: UIHelpers.screenWidth(context)/7.5,
               child: GestureDetector(
                 onTap: isInteractive
                     ? () async {
@@ -63,7 +63,7 @@ class DateSelectionWidget extends StatelessWidget {
           ),
           Positioned(
             left: 35,
-            top: 10,
+            top: 20,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 5),
               color: Colors.white,

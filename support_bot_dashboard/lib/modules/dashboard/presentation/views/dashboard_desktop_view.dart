@@ -14,6 +14,7 @@ class DashboardDesktopView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Row(
@@ -21,9 +22,10 @@ class DashboardDesktopView extends StatelessWidget {
           Expanded(
             flex: 7,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height / 11,
                     child:const Row(
@@ -55,8 +57,9 @@ class DashboardDesktopView extends StatelessWidget {
               
                  const Row(
                     children: [
-                       CustomElevatedButton(text: 'Ticket Classification'),
+                       CustomElevatedButton(text: 'Ticket Classification' , isSelected: true,),
                        CustomElevatedButton(text: 'AI Query Answer')
+               
                     ],
                   ),
                 
@@ -102,7 +105,7 @@ class DashboardDesktopView extends StatelessWidget {
                   },
                   label: 'Classification',
                 ),   // Space between DateSelectionWidget and CustomDropdown
-                const ExportButton(icon: 'assets/icons/Export.svg'),
+                const ExportButton(icon: 'assets/icons/ExportIcon.svg'),
               ],
             ),
                 Expanded(
