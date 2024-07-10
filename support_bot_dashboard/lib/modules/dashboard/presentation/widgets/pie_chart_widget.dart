@@ -2,20 +2,25 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
  
 class PieChartWidget extends StatefulWidget {
-   PieChartWidget({super.key});
+  final DashboardChartAttributeModel? data;
+   PieChartWidget({super.key, this.data});
 
   @override
-  State<PieChartWidget> createState() => _PieChartWidgetState();
+  State<PieChartWidget> createState() => _PieChartWidgetState(data: data);
 }
 
 class _PieChartWidgetState extends State<PieChartWidget> {
+  final DashboardChartAttributeModel? data;
   @override
     int? touchedIndex;
+
+  _PieChartWidgetState({required this.data});
 
   Widget build(BuildContext context) {
     
@@ -25,18 +30,14 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       const Color.fromARGB(255, 17, 58, 98),
     ];
     double radius = UIHelpers.screenWidth(context) / 12;
- 
-    return BlocBuilder<DashboardBloc, DashboardState>(
-      builder: (context, state) {
-        if (state is PiechartLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is PiechartDataSuccess) {
-          final chartData = [
-            ChartData(label: 'Genuine Query', value: state.data?.genuineQuery),
-            ChartData(label: 'No Action Required', value: state.data?.noActionRequired),
-            ChartData(label: 'Spam/Marketing', value: state.data?.spamMarketing),
+
+    final chartData = [
+            ChartData(label: 'Genuine Query', value: data?.genuineQuery),
+            ChartData(label: 'No Action Required', value: data?.noActionRequired),
+            ChartData(label: 'Spam/Marketing', value: data?.spamMarketing),
           ];
-          return Column(
+ 
+    return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Padding(
@@ -128,13 +129,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               ),
             ],
           );
-        } else if (state is PieChartError) {
-          return Center(child: Text(state.message));
-        }
-        return Container();
-      },
-    );
+        
+    
   }
 }
- 
- 
