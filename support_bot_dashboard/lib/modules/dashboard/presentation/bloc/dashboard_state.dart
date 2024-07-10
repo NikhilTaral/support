@@ -34,8 +34,10 @@ class PiechartLoading extends DashboardState {}
 
 class PiechartDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? data;
+    final DateTime selectedDate;
+    final DateTime selectedMonth;
 
-  PiechartDataSuccess({required this.data});
+  PiechartDataSuccess({required this.data,required this.selectedDate, required this.selectedMonth});
 }
 
 class PieChartError extends DashboardState {
@@ -44,12 +46,15 @@ class PieChartError extends DashboardState {
   PieChartError({required this.message});
 }
 
-class TimePeriodSelectionState extends DashboardState {
-  final String selectedTimePeriod;
+class DateUpdatedState extends DashboardState {
+  final DateTime selectedDate;
 
-  TimePeriodSelectionState({
-    required this.selectedTimePeriod,
-  });
+  DateUpdatedState(this.selectedDate);
 }
 
+class MonthUpdatedState extends DashboardState{
+  final DateTime month;
+
+  MonthUpdatedState(this.month);
+}
 

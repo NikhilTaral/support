@@ -8,26 +8,34 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 class DashboardChartDataRepoImpl extends DashboardChartDataRepository {
 
-  @override
-  Future<Either<Failure, dynamic>> getDashboardChartData(DateTime selectedDate) async {
-    final uri = Uri.parse(EnvConfig.total_tickets);
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-    final body = jsonEncode({
-      'day': selectedDate.toIso8601String().substring(0, 10),
-    });
+    @override
+    Future<Either<Failure, dynamic>> getDashboardChartData(DateTime? selectedDate, DateTime? selectedMonth) async {
+      final uri = Uri.parse(EnvConfig.total_tickets);
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      Map<String, dynamic> body = {};
 
-    final response = await http.post(uri, headers: headers, body: body);
+      if (selectedDate != null) {
+        body['day'] = selectedDate.toIso8601String().substring(0, 10);
+      }
+      
+      if (selectedMonth != null) {
+        body['month'] = '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
+      }
 
-    if (response == null) {
-      return Left(ServerFailure(message: "Failure"));
-    } else if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      return Right(DashboardChartResponseModel.fromJson(jsonData));
-    } else {
-      return Left(ServerFailure(message: 'Failed to load dashboard chart data'));
+      final encodedBody = jsonEncode(body);
+
+      final response = await http.post(uri, headers: headers, body: encodedBody);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+        return Right(DashboardChartResponseModel.fromJson(jsonData));
+      } else {
+        return Left(ServerFailure(message: 'Failed to load dashboard chart data'));
+      }
     }
-  }
-
 }
+
+

@@ -16,13 +16,21 @@ class SelectDropdownEvent extends DashboardEvent {
 }
 
 class LoadPiechartData extends DashboardEvent {
-  final DateTime selectedDate;
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
 
-  LoadPiechartData(this.selectedDate);
+  LoadPiechartData(this.selectedDate, this.selectedMonth);
 }
 
-class SelectTimePeriodEvent extends DashboardEvent {
-  final String selectedTimePeriod;
 
-  SelectTimePeriodEvent(this.selectedTimePeriod);
+class UpdateSelectedDateEvent extends DashboardEvent {
+  final DateTime selectedDate;
+
+  UpdateSelectedDateEvent(this.selectedDate);
+}
+
+class UpdateSelectedMonthEvent extends DashboardEvent {
+  final DateTime selectedMonth;
+
+  UpdateSelectedMonthEvent(this.selectedMonth);
 }

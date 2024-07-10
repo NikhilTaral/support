@@ -149,11 +149,10 @@ class PlutoTableWidget extends StatelessWidget {
   }
 
   double _calculateMaxHeight(int rowCount) {
-    const double rowHeight = 45.0; // Height of each row
-    const double headerHeight = 56.0; // Height of the header
-    const double padding = 16.0; // Additional padding
+    const double rowHeight = 45.0; 
+    const double headerHeight = 56.0;
+    const double padding = 16.0; 
 
-    // Calculate the height based on the number of rows, but limit it to a maximum of 6 rows
     int visibleRowCount = rowCount > 6 ? 6 : rowCount;
     double totalHeight = visibleRowCount * rowHeight + headerHeight + padding;
 
