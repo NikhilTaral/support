@@ -43,7 +43,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               const Padding(
                 padding: EdgeInsets.only(top: 68),
                 child: Text(
-                  'Pie Chart Title',
+                  'Ticket Classification',
                   style: SupportBotTextstyle.pierchartHeading,
                 ),
               ),
