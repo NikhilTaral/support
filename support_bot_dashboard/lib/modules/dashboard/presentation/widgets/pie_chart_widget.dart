@@ -34,7 +34,7 @@ class PieChartWidget extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.only(top: 35),
                 child: Text(
-                  'Pie Chart Title',
+                  'Ticket Classification',
                   style: SupportBotTextstyle.pierchartHeading,
                 ),
               ),
