@@ -29,29 +29,45 @@ class DashboardDesktopView extends StatelessWidget {
                       flex: 4,
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height / 11,
-                        child: const Row(
-                          children: [
-                            CountContainer(
-                              text: 'Spam',
-                              icon: 'assets/icons/Spam.svg',
-                              count: '8',
-                            ),
-                            CountContainer(
-                              text: 'No Action Required',
-                              icon: 'assets/icons/NotSpam.svg',
-                              count: '8',
-                            ),
-                            CountContainer(
-                              text: 'Genuine Query',
-                              icon: 'assets/icons/genuine.svg',
-                              count: '8',
-                            ),
-                            CountContainer(
-                              text: 'Total',
-                              icon: 'assets/icons/TotalTicket.svg',
-                              count: '8',
-                            ),
-                          ],
+                        child: BlocBuilder<DashboardBloc,DashboardState>(
+                          builder: (context, state) {
+                              if (state is FetchCountDataLoading) {
+                                return const Center(child: CircularProgressIndicator());
+                              } else if (state is DashboardDataSuccess) {
+                                  num totalCount = (state.countData?.spamMarketing ?? 0) +
+                                                   (state.countData?.noActionRequired ?? 0) +
+                                                   (state.countData?.genuineQuery ?? 0);
+                                  return  Row(
+                                      children: [
+                                        CountContainer(
+                                          text: 'Spam',
+                                          icon: 'assets/icons/Spam.svg',
+                                          count: state.countData?.spamMarketing.toString() ?? '0',
+                                        ),
+                                        CountContainer(
+                                          text: 'No Action Required',
+                                          icon: 'assets/icons/NotSpam.svg',
+                                          count: state.countData?.noActionRequired.toString() ?? '0',
+                                        ),
+                                        CountContainer(
+                                          text: 'Genuine Query',
+                                          icon: 'assets/icons/genuine.svg',
+                                          count: state.countData?.genuineQuery.toString() ?? '0',
+                                        ),
+                                        CountContainer(
+                                          text: 'Total',
+                                          icon: 'assets/icons/TotalTicket.svg',
+                                          count: totalCount.toString(),
+                                        ),
+                                      ],
+                                    );
+                              } else if (state is FetchCountDataError) {
+                                return const Center(child: Text('No Data Available'));
+                              } else {
+                                return Container();
+                              }
+                          },
+                        
                         ),
                       ),
                     ),
@@ -71,15 +87,13 @@ class DashboardDesktopView extends StatelessWidget {
                               BlocBuilder<DashboardBloc, DashboardState>(
                                 builder: (context, state) {
                                   DateTime selectedDate = DateTime.now();
-                                  if (state is PiechartDataSuccess) {
-                                    print("UI: ${state.selectedDate}");
+                                  if (state is DashboardDataSuccess) {
                                     selectedDate = state.selectedDate;
                                   }
                                   return DateSelectionWidget(
-                                    selectedDate: state is PiechartDataSuccess ? state.selectedDate : DateTime.now(),
+                                    selectedDate: state is DashboardDataSuccess ? state.selectedDate : DateTime.now(),
                                     onChanged: (newDate) {
                                       BlocProvider.of<DashboardBloc>(context).add(UpdateSelectedDateEvent(newDate));
-                                      print("$state");
                                     },
                                     label: 'Day',
                                     isInteractive: true,
@@ -90,8 +104,7 @@ class DashboardDesktopView extends StatelessWidget {
                               BlocBuilder<DashboardBloc, DashboardState>(
                                  builder: (context, state) {
                                   DateTime selectMonth = DateTime(2024, 1);
-                                  if (state is PiechartDataSuccess) {
-                                    print("UI: ${state.selectedMonth}");
+                                  if (state is DashboardDataSuccess) {
                                     selectMonth = state.selectedMonth;
                                   }
                                   return CustomDropdown(
@@ -125,22 +138,7 @@ class DashboardDesktopView extends StatelessWidget {
                         const ExportButton(icon: 'assets/icons/Export.svg'),
                       ],
                     ),
-                    // Expanded(
-                    //   flex: 4,
-                    //   child: BlocBuilder<DashboardBloc, DashboardState>(
-                    //     builder: (context, state) {
-                    //       if (state is DashboardDataLoading) {
-                    //         return const Center(child: CircularProgressIndicator());
-                    //       } else if (state is DashboardDataSuccess) {
-                    //         return const PlutoTableWidget();
-                    //       } else if (state is DashboardDataFailure) {
-                    //         return Center(child: Text('Error: ${state.errorMsg}'));
-                    //       } else {
-                    //         return Container();
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
+                 
                       Expanded(
                       flex: 7,
                       child: BlocProvider(
@@ -157,10 +155,10 @@ class DashboardDesktopView extends StatelessWidget {
                   builder: (context, state) {
                     if (state is PiechartLoading) {
                       return const Center(child: CircularProgressIndicator());
-                    } else if (state is PiechartDataSuccess) {
-                      return PieChartWidget(data: state.data);
+                    } else if (state is DashboardDataSuccess) {
+                      return PieChartWidget(data: state.pieChartData);
                     } else if (state is PieChartError) {
-                      return Center(child: Text('No Data Available'));
+                      return const Center(child: Text('No Data Available'));
                     } else {
                       return Container();
                     }

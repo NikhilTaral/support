@@ -14,7 +14,7 @@ class PlutoTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
-        if (state is DashboardDataSuccess) {
+        if (state is DashboardTableDataSuccess) {
           final data = state.data
               .where((d) => d.classification == state.selectedClassification)
               .toList();

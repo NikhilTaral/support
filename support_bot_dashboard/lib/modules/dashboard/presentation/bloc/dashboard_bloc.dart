@@ -12,10 +12,10 @@ part 'dashboard_state.dart';
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitial()) {
     on<FetchTableDataEvent>(_onFetchDataEvent);
-    on<SelectDropdownEvent>(_onSelectDropdownEvent);
     on<LoadPiechartData>(_onLoadPiechartData);
     on<UpdateSelectedMonthEvent>(_onUpdateSelectedMonthEvent);
     on<UpdateSelectedDateEvent>(_onUpdateSelectedDateEvent);
+    on<FetchCountDataEvent>(_onFetchCountDataEvent);
   }
 
   Future<void> _onFetchDataEvent(
@@ -27,7 +27,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final data = await fetchDataUsecase.call();
       emit(
-        DashboardDataSuccess(
+        DashboardTableDataSuccess(
           data: data,
           selectedClassification: 'Spam',
           columnNames:
@@ -43,22 +43,21 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  Future<void> _onSelectDropdownEvent(
-      SelectDropdownEvent event, Emitter<DashboardState> emit) async {
-    emit(DashboardDataLoading());
-    await Future.delayed(const Duration(seconds: 2));
-    emit(
-      DashboardDataSuccess(
-        selectedClassification: event.selectedClassification,
-        data: event.data,
-        columnNames: event.columnNames,
-        selectColumn: event.columnNames,
-      ),
-    );
-    print('Dropdown selection updated: ${event.selectedClassification}');
+  Future<void> _onUpdateSelectedDateEvent(
+      UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
+    emit(DateUpdatedState(event.selectedDate));
+    add(LoadPiechartData(event.selectedDate, DateTime(2024, 1),null)); 
+   
   }
 
-  Future<void> _onLoadPiechartData(
+  Future<void> _onUpdateSelectedMonthEvent(
+      UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async{
+    emit(MonthUpdatedState(event.selectedMonth));
+    print(event.selectedMonth);
+    add(LoadPiechartData(null, event.selectedMonth,null));
+  }
+
+    Future<void> _onLoadPiechartData(
       LoadPiechartData event, Emitter<DashboardState> emit) async {
     emit(PiechartLoading());
     final repository = locator<DashboardChartdataUsecase>();
@@ -73,11 +72,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             noActionRequired: model.data?.noActionRequired ?? 0,
             spamMarketing: model.data?.spamMarketing ?? 0,
           );
-          emit(PiechartDataSuccess(
-            data: dashboardchartdata,
+
+          emit(DashboardDataSuccess(
+            pieChartData: dashboardchartdata,
+            countData: event.countData,
             selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024-01),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
           ));
+          add(FetchCountDataEvent(selectedDate: event.selectedDate, selectedMonth: event.selectedMonth, pieChartData: dashboardchartdata));
         } else {
           emit(PieChartError(message: model.message ?? 'Unknown error'));
         }
@@ -85,16 +87,33 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     );
   }
 
-  Future<void> _onUpdateSelectedDateEvent(
-      UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
-    emit(DateUpdatedState(event.selectedDate));
-    add(LoadPiechartData(event.selectedDate, DateTime(2024, 1))); 
-  }
+    Future<void> _onFetchCountDataEvent(
+        FetchCountDataEvent event, Emitter<DashboardState> emit) async {
+      emit(FetchCountDataLoading());
+      final repository = locator<DashboardChartdataUsecase>();
+      final response = await repository.invoke(event.selectedDate, event.selectedMonth);
 
-  Future<void> _onUpdateSelectedMonthEvent(
-      UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async{
-    emit(MonthUpdatedState(event.selectedMonth));
-    print(event.selectedMonth);
-    add(LoadPiechartData(null, event.selectedMonth));
-  }
+      response.fold(
+        (failure) => emit(FetchCountDataError(message: "Failed to fetch data")),
+        (model) {
+          if (model.success == true) {
+            final dashboardchartdata = DashboardChartAttributeModel(
+              genuineQuery: model.data?.genuineQuery ?? 0,
+              noActionRequired: model.data?.noActionRequired ?? 0,
+              spamMarketing: model.data?.spamMarketing ?? 0,
+            );
+
+            emit(DashboardDataSuccess(
+              pieChartData: event.pieChartData,
+              countData: dashboardchartdata,
+              selectedDate: event.selectedDate ?? DateTime.now(),
+              selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+            ));
+          } else {
+            emit(PieChartError(message: model.message ?? 'Unknown error'));
+          }
+        },
+      );
+    }
+
 }

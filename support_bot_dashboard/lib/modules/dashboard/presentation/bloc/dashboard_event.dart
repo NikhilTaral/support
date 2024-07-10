@@ -4,22 +4,12 @@ abstract class DashboardEvent {}
 
 class FetchTableDataEvent extends DashboardEvent {}
 
-class SelectDropdownEvent extends DashboardEvent {
-  final List<DashboardResponseDataModel> data;
-  final String selectedClassification;
-  final List<String> columnNames;
-
-  SelectDropdownEvent(
-      {required this.selectedClassification,
-      required this.columnNames,
-      required this.data});
-}
-
 class LoadPiechartData extends DashboardEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
+  final DashboardChartAttributeModel? countData;
 
-  LoadPiechartData(this.selectedDate, this.selectedMonth);
+  LoadPiechartData(this.selectedDate, this.selectedMonth,  this.countData);
 }
 
 
@@ -33,4 +23,12 @@ class UpdateSelectedMonthEvent extends DashboardEvent {
   final DateTime selectedMonth;
 
   UpdateSelectedMonthEvent(this.selectedMonth);
+}
+
+class FetchCountDataEvent extends DashboardEvent{
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+  final DashboardChartAttributeModel? pieChartData;
+
+  FetchCountDataEvent({required this.pieChartData,required this.selectedDate, required this.selectedMonth});
 }
