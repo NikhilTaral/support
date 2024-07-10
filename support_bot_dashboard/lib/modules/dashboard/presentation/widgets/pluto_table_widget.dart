@@ -23,7 +23,7 @@ class PlutoTableWidget extends StatelessWidget {
           return Column(
             children: [
               const SizedBox(height: 15),
-              Padding(
+              Padding(  
                 padding: const EdgeInsets.all(16),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(

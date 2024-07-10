@@ -4,7 +4,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
-
+ 
 class PieChartWidget extends StatelessWidget {
   final DashboardChartAttributeModel? data;
 
@@ -84,4 +84,3 @@ class PieChartWidget extends StatelessWidget {
     );
   }
 }
-
