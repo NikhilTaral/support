@@ -6,11 +6,19 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashbo
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
  
-class PieChartWidget extends StatelessWidget {
-  const PieChartWidget({super.key});
- 
+class PieChartWidget extends StatefulWidget {
+   PieChartWidget({super.key});
+
   @override
+  State<PieChartWidget> createState() => _PieChartWidgetState();
+}
+
+class _PieChartWidgetState extends State<PieChartWidget> {
+  @override
+    int? touchedIndex;
+
   Widget build(BuildContext context) {
+    
     List<Color> blueShades = [
       const Color.fromARGB(255, 153, 172, 187),
       const Color.fromARGB(255, 28, 88, 136),
@@ -42,22 +50,57 @@ class PieChartWidget extends StatelessWidget {
                 height: UIHelpers.screenHeight(context) / 2,
                 child: PieChart(
                   PieChartData(
+                    pieTouchData: PieTouchData(
+            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+              setState(() {
+                if (!event.isInterestedForInteractions ||
+                    pieTouchResponse == null ||
+                    pieTouchResponse.touchedSection == null) {
+                  touchedIndex = -1;
+                
+                  return ;
+                }
+                touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+              });
+            },
+          ),
                     centerSpaceRadius: 1,
                     sectionsSpace: 1,
-                    sections: List.generate(
-                      chartData.length,
-                      (index) => PieChartSectionData(
-                        value: chartData[index].value?.toDouble() ?? 0,
-                        title: chartData[index].label ?? '',
-                        color: blueShades[index % blueShades.length],
-                        radius: radius,
-                        titleStyle: SupportBotTextstyle.pierchartNormal,
-                        showTitle: true,
-                      ),
-                    ),
+                     sections: List.generate(
+            chartData.length,
+            (index) {
+              final isTouched = index == touchedIndex;
+              final double fontSize = isTouched ? 16 : 16;
+              final double radius = isTouched ? 100 : 100;
+              return PieChartSectionData(
+                value: chartData[index].value?.toDouble() ?? 0,
+                title: isTouched
+                    ? '${chartData[index].value}'
+                    : chartData[index].label ?? '',
+                color: blueShades[index % blueShades.length],
+                radius: radius,
+                titleStyle: SupportBotTextstyle.pierchartNormal.copyWith(
+                  fontSize: fontSize,
+                ),
+                showTitle: true,
+              );
+            },
+                    
+                    // List.generate(
+                    //   chartData.length,
+                    //   (index) => PieChartSectionData(
+
+                    //     value: chartData[index].value?.toDouble() ?? 0,
+                    //     title: chartData[index].label ?? '',
+                    //     color: blueShades[index % blueShades.length],
+                    //     radius: radius,
+                    //     titleStyle: SupportBotTextstyle.pierchartNormal,
+                    //     showTitle: true,
+                    //   ),
+                    // ),
                   ),
                 ),
-              ),
+              ),),
               UIHelpers.horizontalSpaceSmallRegular,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
