@@ -45,6 +45,8 @@ dependencies:
   flutter_svg: 
   either_dart: 
   equatable: ^2.0.5
+  provider: ^6.1.2
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:

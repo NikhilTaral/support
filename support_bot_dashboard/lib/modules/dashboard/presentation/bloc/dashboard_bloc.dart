@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
@@ -9,15 +10,15 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-     DashboardChartAttributeModel? dashboardchartdata;
   DashboardBloc() : super(DashboardInitial()) {
     on<FetchTableDataEvent>(_onFetchDataEvent);
-    on<SelectDropdownEvent>(_onSelectDropdownEvent);
     on<LoadPiechartData>(_onLoadPiechartData);
-    on<SelectTimePeriodEvent>(_onSelectTimePeriodEvent);
+    on<UpdateSelectedMonthEvent>(_onUpdateSelectedMonthEvent);
+    on<UpdateSelectedDateEvent>(_onUpdateSelectedDateEvent);
+    on<FetchCountDataEvent>(_onFetchCountDataEvent);
   }
 
-  FutureOr<void> _onFetchDataEvent(
+  Future<void> _onFetchDataEvent(
       FetchTableDataEvent event, Emitter<DashboardState> emit) async {
     final DashboardDatausecase fetchDataUsecase =
         locator<DashboardDatausecase>();
@@ -26,7 +27,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final data = await fetchDataUsecase.call();
       emit(
-        DashboardDataSuccess(
+        DashboardTableDataSuccess(
           data: data,
           selectedClassification: 'Spam',
           columnNames:
@@ -42,30 +43,58 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  FutureOr<void> _onSelectDropdownEvent(
-      SelectDropdownEvent event, Emitter<DashboardState> emit) async {
-    emit(DashboardDataLoading());
-    await Future.delayed(const Duration(seconds: 2));
-    emit(
-      DashboardDataSuccess(
-        selectedClassification: event.selectedClassification,
-        data: event.data,
-        columnNames: event.columnNames,
-        selectColumn: event.columnNames,
-      ),
-    );
-    print('Dropdown selection updated: ${event.selectedClassification}');
+  Future<void> _onUpdateSelectedDateEvent(
+      UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
+    emit(DateUpdatedState(event.selectedDate));
+    add(LoadPiechartData(event.selectedDate, DateTime(2024, 1),null)); 
+   
   }
 
-  FutureOr<void> _onLoadPiechartData(
-      LoadPiechartData event, Emitter<DashboardState> emit) async {
+  Future<void> _onUpdateSelectedMonthEvent(
+      UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async{
+    emit(MonthUpdatedState(event.selectedMonth));
+    print(event.selectedMonth);
+    add(LoadPiechartData(null, event.selectedMonth,null));
+  }
 
-      emit(PiechartLoading());
+    Future<void> _onLoadPiechartData(
+      LoadPiechartData event, Emitter<DashboardState> emit) async {
+    emit(PiechartLoading());
+    final repository = locator<DashboardChartdataUsecase>();
+    final response = await repository.invoke(event.selectedDate, event.selectedMonth);
+
+    response.fold(
+      (failure) => emit(PieChartError(message: "Failed to fetch data")),
+      (model) {
+        if (model.success == true) {
+          final dashboardchartdata = DashboardChartAttributeModel(
+            genuineQuery: model.data?.genuineQuery ?? 0,
+            noActionRequired: model.data?.noActionRequired ?? 0,
+            spamMarketing: model.data?.spamMarketing ?? 0,
+          );
+
+          emit(DashboardDataSuccess(
+            pieChartData: dashboardchartdata,
+            countData: event.countData,
+            selectedDate: event.selectedDate ?? DateTime.now(),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+          ));
+          add(FetchCountDataEvent(selectedDate: event.selectedDate, selectedMonth: event.selectedMonth, pieChartData: dashboardchartdata));
+        } else {
+          emit(PieChartError(message: model.message ?? 'Unknown error'));
+        }
+      },
+    );
+  }
+
+    Future<void> _onFetchCountDataEvent(
+        FetchCountDataEvent event, Emitter<DashboardState> emit) async {
+      emit(FetchCountDataLoading());
       final repository = locator<DashboardChartdataUsecase>();
-      final response = await repository.invoke(event.selectedDate);
+      final response = await repository.invoke(event.selectedDate, event.selectedMonth);
 
       response.fold(
-        (failure) => emit(PieChartError(message: "Failed to fetch data")),
+        (failure) => emit(FetchCountDataError(message: "Failed to fetch data")),
         (model) {
           if (model.success == true) {
             final dashboardchartdata = DashboardChartAttributeModel(
@@ -73,19 +102,18 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               noActionRequired: model.data?.noActionRequired ?? 0,
               spamMarketing: model.data?.spamMarketing ?? 0,
             );
-            emit(PiechartDataSuccess(data: dashboardchartdata));
+
+            emit(DashboardDataSuccess(
+              pieChartData: event.pieChartData,
+              countData: dashboardchartdata,
+              selectedDate: event.selectedDate ?? DateTime.now(),
+              selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+            ));
           } else {
             emit(PieChartError(message: model.message ?? 'Unknown error'));
           }
         },
       );
-  }
+    }
 
-  FutureOr<void> _onSelectTimePeriodEvent(
-      SelectTimePeriodEvent event, Emitter<DashboardState> emit) {
-    emit(TimePeriodSelectionState(
-      selectedTimePeriod: event.selectedTimePeriod,
-    ));
-    print('Time period selection updated: ${event.selectedTimePeriod}');
-  }
 }

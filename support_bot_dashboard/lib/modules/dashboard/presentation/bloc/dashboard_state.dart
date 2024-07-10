@@ -10,13 +10,13 @@ class DashboardDataLoading extends DashboardState {}
 
 class DashboardDataEmpty extends DashboardState {}
 
-class DashboardDataSuccess extends DashboardState {
+class DashboardTableDataSuccess extends DashboardState {
   final List<DashboardResponseDataModel> data;
   final String selectedClassification;
   final List<String> columnNames;
   final List<String> selectColumn;
 
-  DashboardDataSuccess({
+  DashboardTableDataSuccess({
     required this.selectColumn,
     required this.columnNames,
     required this.selectedClassification,
@@ -34,8 +34,10 @@ class PiechartLoading extends DashboardState {}
 
 class PiechartDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? data;
+    final DateTime selectedDate;
+    final DateTime selectedMonth;
 
-  PiechartDataSuccess({required this.data});
+  PiechartDataSuccess({required this.data,required this.selectedDate, required this.selectedMonth});
 }
 
 class PieChartError extends DashboardState {
@@ -44,12 +46,44 @@ class PieChartError extends DashboardState {
   PieChartError({required this.message});
 }
 
-class TimePeriodSelectionState extends DashboardState {
-  final String selectedTimePeriod;
+class DateUpdatedState extends DashboardState {
+  final DateTime selectedDate;
 
-  TimePeriodSelectionState({
-    required this.selectedTimePeriod,
-  });
+  DateUpdatedState(this.selectedDate);
 }
 
+class MonthUpdatedState extends DashboardState{
+  final DateTime month;
 
+  MonthUpdatedState(this.month);
+}
+
+class FetchCountDataLoading extends DashboardState{}
+
+class FetchCountDataSuccess extends DashboardState{
+  final DashboardChartAttributeModel? data;
+  final DateTime? selecedDate;
+  final DateTime? selectedMonth;
+
+  FetchCountDataSuccess({required this.data, required this.selecedDate, required this.selectedMonth});
+}
+
+class FetchCountDataError extends DashboardState{
+  final String message;
+
+  FetchCountDataError({required this.message});
+}
+
+class DashboardDataSuccess extends DashboardState {
+  final DashboardChartAttributeModel? pieChartData;
+  final DashboardChartAttributeModel? countData;
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
+
+  DashboardDataSuccess({
+    required this.pieChartData,
+    required this.countData,
+    required this.selectedDate,
+    required this.selectedMonth,
+  });
+}
