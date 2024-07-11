@@ -4,7 +4,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 
 class DashboardDatausecase {
   final DashboardTableDataRepository _dataRepository =
-      locator<DashboardTableDataRepository>();
+      serviceLocator<DashboardTableDataRepository>();
 
   Future<List<DashboardResponseDataModel>> call() async {
     return await _dataRepository.fetchTableData();

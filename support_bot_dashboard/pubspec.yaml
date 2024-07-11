@@ -47,6 +47,18 @@ dependencies:
   equatable: ^2.0.5
   provider: ^6.1.2
   http: ^1.2.1
+  go_router: ^6.2.0
+  shared_preferences:
+  logger: ^1.1.0
+  email_validator:
+  jwt_decoder:
+  flutter_web_auth_2: ^3.1.2
+  flutter_secure_storage: ^9.2.2
+  json_annotation: ^4.9.0
+  build_runner: ^2.4.11
+  freezed: ^2.5.2
+  freezed_annotation: ^2.4.3
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:

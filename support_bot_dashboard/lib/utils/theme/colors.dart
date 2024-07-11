@@ -30,6 +30,31 @@ class SupportBotColors {
 
   static const int _secondaryColor = 0xFF0C0F24;
 
+  static const MaterialColor warningPrimary = MaterialColor(
+    _warningPrimaryColor,
+    <int, Color>{
+      100: Color(0xFFFFE1A4),
+      200: Color(0xff87817E),
+      300: Color(0xFF895D0B),
+      400: Color(0xFF721c24),
+      500: Color(0xFFd6721b),
+    },
+  );
+
+  static const int _warningPrimaryColor = 0xFF895D0B;
+
+  static const MaterialColor successPrimary = MaterialColor(
+    _successPrimaryColor,
+    <int, Color>{
+      100: Color(0xFFCCF2DB),
+      200: Color(0xFF91C681),
+      300: Color(0xFF1E774A),
+      400: Color(0xFF0a454e),
+    },
+  );
+
+  static const int _successPrimaryColor = 0xFF1E774A;
+
   static const MaterialColor black = MaterialColor(
     _blackColor,
     <int, Color>{},
@@ -81,6 +106,25 @@ class SupportBotColors {
 
   static const int _grayPrimaryColor = 0xFFe6e6e6;
 
+  static const MaterialColor danger = MaterialColor(
+    _dangerPrimaryColor,
+    <int, Color>{
+      0: Color(_dangerPrimaryColor),
+      100: Color(0xFFfef7f8),
+      200: Color(0xFFf7d3d6),
+      300: Color(0xFFf1aeb5),
+      400: Color(0xFFeb8a93),
+      500: Color(0xFFe46572),
+      600: Color(0xFFde4150),
+      700: Color(0xFFc22f3d),
+      800: Color(0xFF9a2530),
+      900: Color(0xFF721c24),
+      1000: Color(0xFF4b1217),
+    },
+  );
+
+  static const int _dangerPrimaryColor = 0xFFdc3545;
+
   static const MaterialColor sky = MaterialColor(
     _skyPrimaryColor,
     <int, Color>{
@@ -99,15 +143,6 @@ class SupportBotColors {
   );
 
   static const int _skyPrimaryColor = 0xFF0175DB;
-
-  static const MaterialColor blueShades = MaterialColor(
-    _disableColor,
-    <int, Color>{
-      100: Color.fromARGB(255, 153, 172, 187),
-      200:  const Color.fromARGB(255, 28, 88, 136),
-      300: Color.fromARGB(255, 17, 58, 98),
-    },
-  );
 }
 
 class ExpV3Color extends ColorSwatch<int> {

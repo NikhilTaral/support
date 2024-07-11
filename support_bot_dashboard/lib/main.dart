@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:support_bot_dashboard/config/router/go_route/app_route_config.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/pages/dashboard.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:url_strategy/url_strategy.dart';
 
-void main() {
-  setupLocator();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
+  initServiceLocator();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return MaterialApp.router(
+      title: 'Support Bot',
       debugShowCheckedModeBanner: false,
+      routeInformationParser: MyAppRoutes().router.routeInformationParser,
+      routerDelegate: MyAppRoutes().router.routerDelegate,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        fontFamily: 'Roboto',
+        scaffoldBackgroundColor: SupportBotColors.white,
       ),
-      home: const Dashboard(),
     );
   }
 }
+

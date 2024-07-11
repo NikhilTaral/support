@@ -21,7 +21,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _onFetchDataEvent(
       FetchTableDataEvent event, Emitter<DashboardState> emit) async {
     final DashboardDatausecase fetchDataUsecase =
-        locator<DashboardDatausecase>();
+        serviceLocator<DashboardDatausecase>();
     emit(DashboardDataLoading());
     print('Fetching data...');
     try {
@@ -60,7 +60,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Future<void> _onLoadPiechartData(
       LoadPiechartData event, Emitter<DashboardState> emit) async {
     emit(PiechartLoading());
-    final repository = locator<DashboardChartdataUsecase>();
+    final repository = serviceLocator<DashboardChartdataUsecase>();
     final response = await repository.invoke(event.selectedDate, event.selectedMonth);
 
     response.fold(
@@ -90,7 +90,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Future<void> _onFetchCountDataEvent(
         FetchCountDataEvent event, Emitter<DashboardState> emit) async {
       emit(FetchCountDataLoading());
-      final repository = locator<DashboardChartdataUsecase>();
+      final repository = serviceLocator<DashboardChartdataUsecase>();
       final response = await repository.invoke(event.selectedDate, event.selectedMonth);
 
       response.fold(

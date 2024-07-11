@@ -10,7 +10,7 @@ class DashboardChartDataRepoImpl extends DashboardChartDataRepository {
 
     @override
     Future<Either<Failure, dynamic>> getDashboardChartData(DateTime? selectedDate, DateTime? selectedMonth) async {
-      final uri = Uri.parse(EnvConfig.total_tickets);
+      final uri = Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getCategoryCounts');
       final headers = {
         'Content-Type': 'application/json',
       };
