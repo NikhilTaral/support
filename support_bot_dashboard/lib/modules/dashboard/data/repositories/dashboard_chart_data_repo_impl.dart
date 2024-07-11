@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:http/http.dart' as http;
 import 'package:support_bot_dashboard/config/environment/env_config.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_response_mdeil.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 

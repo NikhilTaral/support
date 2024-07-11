@@ -1,18 +1,21 @@
-
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PlutoTableWidget extends StatelessWidget {
   final DashboardTableAttributeModel tableData;
 
   const PlutoTableWidget({Key? key, required this.tableData}) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 15),
+        UIHelpers.verticalSpaceTinySmall,
         Padding(
           padding: const EdgeInsets.all(16),
           child: ConstrainedBox(
@@ -29,7 +32,7 @@ class PlutoTableWidget extends StatelessWidget {
                     enableHideColumnMenuItem: false,
                     textAlign: PlutoColumnTextAlign.start,
                     titlePadding: const EdgeInsets.all(8),
-                    backgroundColor: const Color(0xFFE7E7E9),
+                    backgroundColor: SupportBotColors.blueSecondary.shade100,
                     enableContextMenu: false,
                     enableDropToResize: false,
                     enableEditingMode: false,
@@ -44,7 +47,7 @@ class PlutoTableWidget extends StatelessWidget {
                     enableHideColumnMenuItem: false,
                     textAlign: PlutoColumnTextAlign.start,
                     titlePadding: const EdgeInsets.all(8),
-                    backgroundColor: const Color(0xFFE7E7E9),
+                    backgroundColor: SupportBotColors.blueSecondary.shade100,
                     enableContextMenu: false,
                     enableDropToResize: false,
                     enableEditingMode: false,
@@ -59,7 +62,7 @@ class PlutoTableWidget extends StatelessWidget {
                     enableHideColumnMenuItem: false,
                     textAlign: PlutoColumnTextAlign.start,
                     titlePadding: const EdgeInsets.all(8),
-                    backgroundColor: const Color(0xFFE7E7E9),
+                    backgroundColor: SupportBotColors.blueSecondary.shade100,
                     enableContextMenu: false,
                     enableDropToResize: false,
                     enableEditingMode: false,
@@ -74,7 +77,7 @@ class PlutoTableWidget extends StatelessWidget {
                     enableHideColumnMenuItem: false,
                     textAlign: PlutoColumnTextAlign.start,
                     titlePadding: const EdgeInsets.all(8),
-                    backgroundColor: const Color(0xFFE7E7E9),
+                    backgroundColor: SupportBotColors.blueSecondary.shade100,
                     enableContextMenu: false,
                     enableDropToResize: false,
                     enableEditingMode: false,
@@ -89,7 +92,7 @@ class PlutoTableWidget extends StatelessWidget {
                     enableHideColumnMenuItem: false,
                     textAlign: PlutoColumnTextAlign.start,
                     titlePadding: const EdgeInsets.all(8),
-                    backgroundColor: const Color(0xFFE7E7E9),
+                    backgroundColor: SupportBotColors.blueSecondary.shade100,
                     enableContextMenu: false,
                     enableDropToResize: false,
                     enableEditingMode: false,
@@ -117,17 +120,10 @@ class PlutoTableWidget extends StatelessWidget {
                         gridBorderRadius: BorderRadius.circular(8),
                         gridPopupBorderRadius: BorderRadius.circular(8),
                         rowHeight: 50,
-                        columnHeight: 60,
+                        columnHeight: 50,
                         gridBorderColor: Colors.transparent,
-                        columnTextStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF232538),
-                        ),
-                        cellTextStyle: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        columnTextStyle: SupportBotTextstyle.columnHeading,
+                        cellTextStyle: SupportBotTextstyle.cellHeading,
                         enableGridBorderShadow: true,
                       ),
                       columnSize: const PlutoGridColumnSizeConfig(

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class CustomDropdown extends StatelessWidget {
   final DateTime selectedValue;
@@ -20,19 +23,19 @@ class CustomDropdown extends StatelessWidget {
       children: [
          Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: SupportBotColors.gray),
         borderRadius: BorderRadius.circular(5.0),
       ),
       padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
       margin: const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
-      height: MediaQuery.of(context).size.height / 18,
-      width: MediaQuery.of(context).size.width / 7,
+      height: UIHelpers.screenHeight(context)/18,
+      width: UIHelpers.screenWidth(context)/7,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<DateTime>(
           value: selectedValue,
           onChanged: onChanged,
           items: items.map((String value) {
-            DateTime dateTimeValue = DateTime(2024, items.indexOf(value) + 1); // Adjust year as needed
+            DateTime dateTimeValue = DateTime(2024, items.indexOf(value) + 1); 
             return DropdownMenuItem<DateTime>(
               value: dateTimeValue,
               child: Text(value),
@@ -41,8 +44,8 @@ class CustomDropdown extends StatelessWidget {
           icon: const Icon(Icons.arrow_drop_down),
           iconSize: 30,
           isExpanded: true,
-          focusColor: Colors.white,
-          dropdownColor:Colors.white,
+          focusColor: SupportBotColors.white,
+          dropdownColor: SupportBotColors.white,
           autofocus: false,
         ),
       ),
@@ -52,13 +55,10 @@ class CustomDropdown extends StatelessWidget {
           top: 20,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            color: Colors.white, // Background color of the text label
+            color: SupportBotColors.white,
             child: Text(
               label,
-              style: const TextStyle(
-                color: Colors.grey, // Text color of the label
-                fontSize: 12, // Font size of the label
-              ),
+              style: SupportBotTextstyle.dropdownLabel
             ),
           ),
         ),

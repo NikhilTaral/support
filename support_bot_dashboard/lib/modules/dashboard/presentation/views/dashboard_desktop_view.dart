@@ -10,6 +10,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/plu
 import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 
 class DashboardDesktopView extends StatelessWidget {
@@ -37,7 +38,7 @@ class DashboardDesktopView extends StatelessWidget {
                   Expanded(
                     flex: 4,
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height / 11,
+                      height: UIHelpers.screenHeight(context)/11,
                       child: BlocBuilder<DashboardBloc, DashboardState>(
                         builder: (context, state) {
                           if (state is FetchCountDataLoading) {
@@ -132,7 +133,7 @@ class DashboardDesktopView extends StatelessWidget {
                                 );
                               },
                             ),
-                            const SizedBox(width: 10),
+                            UIHelpers.horizontalSpaceSmall,
                             BlocBuilder<DashboardBloc, DashboardState>(
                               builder: (context, state) {
                                 DateTime selectMonth = DateTime(2024, 1);

@@ -9,7 +9,7 @@ class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     Key? key,
     required this.text,
-    this.isSelected = false, // Default isSelected to false
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class CustomElevatedButton extends StatelessWidget {
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             backgroundColor: isSelected ? SupportBotColors.bluePrimary.shade500 : SupportBotColors.blueSecondary.shade200,
-            foregroundColor: isSelected ? Colors.white : Colors.black,
+            foregroundColor: isSelected ? SupportBotColors.white : SupportBotColors.black,
           ),
           child: Text(text),
         ),

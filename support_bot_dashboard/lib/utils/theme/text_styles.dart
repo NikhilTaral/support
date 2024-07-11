@@ -42,6 +42,12 @@ class SupportBotTextstyle {
       fontWeight: FontWeight.w400,
       color: SupportBotColors.white);
 
+  //Dropdown label
+  static const TextStyle dropdownLabel = TextStyle(
+      color: SupportBotColors.gray, 
+      fontSize: 12, 
+  );
+
 // Font size 48
   static final TextStyle headingH1 = TextStyle(
     color: _fontColor,

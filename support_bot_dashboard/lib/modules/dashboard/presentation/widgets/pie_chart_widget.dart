@@ -7,7 +7,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
  
 class PieChartWidget extends StatefulWidget {
   final DashboardChartAttributeModel? data;
-   PieChartWidget({super.key, this.data});
+   const PieChartWidget({super.key, this.data});
 
   @override
   State<PieChartWidget> createState() => _PieChartWidgetState(data: data);
@@ -15,11 +15,11 @@ class PieChartWidget extends StatefulWidget {
 
 class _PieChartWidgetState extends State<PieChartWidget> {
   final DashboardChartAttributeModel? data;
-  @override
-    int? touchedIndex;
+  int? touchedIndex;
 
   _PieChartWidgetState({required this.data});
 
+  @override
   Widget build(BuildContext context) {
     
     List<Color> blueShades = [

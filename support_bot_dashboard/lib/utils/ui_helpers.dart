@@ -11,7 +11,7 @@ class UIHelpers {
 
   static Widget verticalSpaceTiny = const SizedBox(height: 5.0);
   static Widget verticalSpaceSmall = const SizedBox(height: 10.0);
-  static Widget verticalSpaceTinySmall = const SizedBox(height: 13.0);
+  static Widget verticalSpaceTinySmall = const SizedBox(height: 15.0);
   static Widget verticalSpaceRegular = const SizedBox(height: 18.0);
   static Widget verticalSpaceMedium = const SizedBox(height: 20.0);
   static Widget verticalSpaceLarge = const SizedBox(height: 35.0);
