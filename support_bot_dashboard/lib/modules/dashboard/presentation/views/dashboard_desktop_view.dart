@@ -9,7 +9,9 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pie
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_dropdown.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 
@@ -42,7 +44,7 @@ class DashboardDesktopView extends StatelessWidget {
                       child: BlocBuilder<DashboardBloc, DashboardState>(
                         builder: (context, state) {
                           if (state is FetchCountDataLoading) {
-                            return const Center(child: CircularProgressIndicator());
+                            return  Center(child: LoadingWidget(width: UIHelpers.screenWidth(context), height: UIHelpers.screenHeight(context)/11,));
                           } else if (state is DashboardDataSuccess) {
                             num totalCount = (state.countData?.spamMarketing ?? 0) +
                                 (state.countData?.noActionRequired ?? 0) +
@@ -72,7 +74,7 @@ class DashboardDesktopView extends StatelessWidget {
                               ],
                             );
                           } else if (state is FetchCountDataError) {
-                            return const Center(child: Text('No Data Available'));
+                            return const Center(child: EmptyWidget());
                           } else {
                             return const Row(
                               children: [
@@ -168,11 +170,11 @@ class DashboardDesktopView extends StatelessWidget {
                     child: BlocBuilder<PlutotableBloc, PlutotableState>(
                       builder: (context, state) {
                         if (state is FetchTableDataLoading) {
-                          return const Center(child: CircularProgressIndicator());
+                          return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context),width: UIHelpers.screenWidth(context),));
                         } else if (state is FetchTableDataSuccess) {
                           return PlutoTableWidget(tableData: state.tableData);
                         } else if (state is FetchTableDataError) {
-                          return const Center(child: Text('No Data Available'));
+                          return const Center(child: EmptyWidget());
                         } else {
                           return Container();
                         }
@@ -187,11 +189,11 @@ class DashboardDesktopView extends StatelessWidget {
               child: BlocBuilder<DashboardBloc, DashboardState>(
                 builder: (context, state) {
                   if (state is PiechartLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: LoadingWidget(width: UIHelpers.screenWidth(context),height: UIHelpers.screenHeight(context),));
                   } else if (state is DashboardDataSuccess) {
                     return PieChartWidget(data: state.pieChartData);
                   } else if (state is PieChartError) {
-                    return const Center(child: Text('No Data Available'));
+                    return const Center(child: EmptyWidget());
                   } else {
                     return Container();
                   }
