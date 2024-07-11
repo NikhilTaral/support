@@ -8,7 +8,7 @@ class ExportButton extends StatelessWidget {
   const ExportButton({
     Key? key,
     required this.icon,
-    this.iconSize = 50.0, // Default icon size (adjust as needed)
+    this.iconSize = 30.0, // Default icon size (adjust as needed)
   }) : super(key: key);
 
   @override

@@ -73,7 +73,7 @@ class DashboardDesktopView extends StatelessWidget {
                     ),
                     const Row(
                       children: [
-                        CustomElevatedButton(text: 'Ticket Classification'),
+                        CustomElevatedButton(text: 'Ticket Classification', isSelected: true,),
                         CustomElevatedButton(text: 'AI Query Answer'),
                       ],
                     ),
