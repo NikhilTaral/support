@@ -2,27 +2,11 @@ part of 'dashboard_bloc.dart';
 
 abstract class DashboardState {}
 
-class DashboardInitial extends DashboardState {
-  final String selectedTimePeriod = 'Day';
-}
+class DashboardInitial extends DashboardState {}
 
 class DashboardDataLoading extends DashboardState {}
 
 class DashboardDataEmpty extends DashboardState {}
-
-class DashboardTableDataSuccess extends DashboardState {
-  final List<DashboardResponseDataModel> data;
-  final String selectedClassification;
-  final List<String> columnNames;
-  final List<String> selectColumn;
-
-  DashboardTableDataSuccess({
-    required this.selectColumn,
-    required this.columnNames,
-    required this.selectedClassification,
-    required this.data,
-  });
-}
 
 class DashboardDataFailure extends DashboardState {
   final String errorMsg;

@@ -84,19 +84,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                 showTitle: true,
               );
             },
-                    
-                    // List.generate(
-                    //   chartData.length,
-                    //   (index) => PieChartSectionData(
 
-                    //     value: chartData[index].value?.toDouble() ?? 0,
-                    //     title: chartData[index].label ?? '',
-                    //     color: blueShades[index % blueShades.length],
-                    //     radius: radius,
-                    //     titleStyle: SupportBotTextstyle.pierchartNormal,
-                    //     showTitle: true,
-                    //   ),
-                    // ),
                   ),
                 ),
               ),),
@@ -127,7 +115,5 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               ),
             ],
           );
-        
-    
   }
 }

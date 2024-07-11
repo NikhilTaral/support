@@ -40,8 +40,8 @@ Future<void> initServiceLocator() async {
       () => DashboardTableDataRepoImpl());
   serviceLocator.registerLazySingleton<DashboardChartDataRepository>(
       () => DashboardChartDataRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardDatausecase>(
-      () => DashboardDatausecase());
+  serviceLocator.registerLazySingleton<DashboardTableDatausecase>(
+      () => DashboardTableDatausecase());
   serviceLocator.registerLazySingleton<DashboardChartdataUsecase>(
       () => DashboardChartdataUsecase());
   serviceLocator.registerFactory<DashboardBloc>(() => DashboardBloc());

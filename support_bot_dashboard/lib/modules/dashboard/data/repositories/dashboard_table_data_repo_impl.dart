@@ -1,20 +1,43 @@
 import 'dart:convert';
-import 'package:flutter/services.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_response_data_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:either_dart/either.dart';
+import 'package:support_bot_dashboard/config/environment/env_config.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_Repository.dart';
+import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
+
   @override
-  Future<List<DashboardResponseDataModel>> fetchTableData() async {
-    final response =
-        await rootBundle.loadString('assets/json/dashboard_data.json');
+  Future<Either<Failure, dynamic>> getDashboardTableData(DateTime? selectedDate, DateTime? selectedMonth) async {
+      final uri = Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      Map<String, dynamic> body = {};
 
-    final List<dynamic> jsonData = json.decode(response);
-    final List<DashboardResponseDataModel> data = jsonData
-        .map((json) => DashboardResponseDataModel.fromJson(json))
-        .toList();
-    return data;
+      if (selectedDate != null) {
+        body['day'] = selectedDate.toIso8601String().substring(0, 10);
+      }
+      
+      if (selectedMonth != null) {
+        body['month'] = '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
+      }
+
+      final encodedBody = jsonEncode(body);
+
+      final response = await http.post(uri, headers: headers, body: encodedBody);
+
+      if (response.statusCode == 200) {
+        if (response.body.isNotEmpty) {
+          final Map<String, dynamic> jsonData = jsonDecode(response.body);
+          return Right(DashboardPlutotableResponseModel.fromJson(jsonData));
+        } else {
+          return Left(ServerFailure(message: 'Empty response body'));
+        }
+      } else {
+        return Left(ServerFailure(message: 'Failed to load dashboard table data'));
+      }
   }
-
-
 }

@@ -2,45 +2,17 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_response_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitial()) {
-    on<FetchTableDataEvent>(_onFetchDataEvent);
     on<LoadPiechartData>(_onLoadPiechartData);
     on<UpdateSelectedMonthEvent>(_onUpdateSelectedMonthEvent);
     on<UpdateSelectedDateEvent>(_onUpdateSelectedDateEvent);
     on<FetchCountDataEvent>(_onFetchCountDataEvent);
-  }
-
-  Future<void> _onFetchDataEvent(
-      FetchTableDataEvent event, Emitter<DashboardState> emit) async {
-    final DashboardDatausecase fetchDataUsecase =
-        serviceLocator<DashboardDatausecase>();
-    emit(DashboardDataLoading());
-    print('Fetching data...');
-    try {
-      final data = await fetchDataUsecase.call();
-      emit(
-        DashboardTableDataSuccess(
-          data: data,
-          selectedClassification: 'Spam',
-          columnNames:
-              data.isNotEmpty ? data.first.toJson().keys.toList() : <String>[],
-          selectColumn:
-              data.isNotEmpty ? data.first.toJson().keys.toList() : <String>[],
-        ),
-      );
-      print('Data fetched successfully: $data');
-    } catch (e) {
-      emit(DashboardDataFailure(errorMsg: 'Failed to load data: $e'));
-      print('Data fetch failed: $e');
-    }
   }
 
   Future<void> _onUpdateSelectedDateEvent(

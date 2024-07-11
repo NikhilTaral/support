@@ -1,6 +1,8 @@
 
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_response_data_model.dart';
+import 'package:either_dart/either.dart';
+import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 abstract class DashboardTableDataRepository {
-  Future<List<DashboardResponseDataModel>> fetchTableData();
+  
+   Future<Either<Failure, dynamic>> getDashboardTableData(DateTime? selectedDate, DateTime? selectedMonth);
 }

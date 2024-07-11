@@ -2,8 +2,6 @@ part of 'dashboard_bloc.dart';
 
 abstract class DashboardEvent {}
 
-class FetchTableDataEvent extends DashboardEvent {}
-
 class LoadPiechartData extends DashboardEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
