@@ -170,7 +170,7 @@ class DashboardDesktopView extends StatelessWidget {
                     child: BlocBuilder<PlutotableBloc, PlutotableState>(
                       builder: (context, state) {
                         if (state is FetchTableDataLoading) {
-                          return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context),width: UIHelpers.screenWidth(context),));
+                          return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context)/2,width: UIHelpers.screenWidth(context)/1.7,));
                         } else if (state is FetchTableDataSuccess) {
                           return PlutoTableWidget(tableData: state.tableData);
                         } else if (state is FetchTableDataError) {
@@ -189,7 +189,7 @@ class DashboardDesktopView extends StatelessWidget {
               child: BlocBuilder<DashboardBloc, DashboardState>(
                 builder: (context, state) {
                   if (state is PiechartLoading) {
-                    return Center(child: LoadingWidget(width: UIHelpers.screenWidth(context),height: UIHelpers.screenHeight(context),));
+                    return Center(child: LoadingWidget(width: UIHelpers.screenWidth(context)/4,height: UIHelpers.screenHeight(context)/1.5,));
                   } else if (state is DashboardDataSuccess) {
                     return PieChartWidget(data: state.pieChartData);
                   } else if (state is PieChartError) {
