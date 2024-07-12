@@ -47,11 +47,6 @@ class _PieChartWidgetState extends State<PieChartWidget> {
         ),
         SizedBox(
           height: UIHelpers.screenHeight(context) / 1.8,
-
-
-
-
-
           child: PieChart(
             PieChartData(
               pieTouchData: PieTouchData(

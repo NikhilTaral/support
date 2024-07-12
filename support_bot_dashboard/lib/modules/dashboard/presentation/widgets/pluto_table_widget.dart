@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
@@ -88,14 +89,16 @@ class PlutoTableWidget extends StatelessWidget {
                       final value = context.cell!.value ?? '';
                       return MouseRegion(
                         cursor: SystemMouseCursors.click,
-                        child: Tooltip(
+                        child: CustomToolTip(
                           message: value.toString(),
+                          width: 200,
+                          isMobile: false,
                           child: Text(
-                            value.toString(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                              value.toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
                       );
                   },
                 ),

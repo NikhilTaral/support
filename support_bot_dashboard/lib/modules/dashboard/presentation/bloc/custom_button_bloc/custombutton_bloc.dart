@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 part 'custombutton_event.dart';
 part 'custombutton_state.dart';
 
@@ -9,7 +9,8 @@ class CustombuttonBloc extends Bloc<CustombuttonEvent, CustombuttonState> {
     on<SelectButtonEvent>(_onSelectButtonEvent);
   }
 
-   FutureOr<void> _onSelectButtonEvent(SelectButtonEvent event, Emitter<CustombuttonState> emit) {
+  Future<void> _onSelectButtonEvent(
+      SelectButtonEvent event, Emitter<CustombuttonState> emit) async {
     emit(ButtonSelectedState(event.buttonText));
   }
 }

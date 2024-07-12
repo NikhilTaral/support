@@ -116,6 +116,10 @@ class DashboardDesktopView extends StatelessWidget {
                         selectedButtonText = state.selectedButtonText;
                       }
 
+                      if (state is CustomButtonInitial && state.selectedButtonText == 'Ticket Classification') {
+                        selectedButtonText = state.selectedButtonText;
+                      }
+
                       return Row(
                         children: [
                           CustomElevatedButton(
@@ -209,9 +213,29 @@ class DashboardDesktopView extends StatelessWidget {
                             },
                           ),
                         );
+                      } else if (state is CustomButtonInitial ) {
+                        return Expanded(
+                          flex: 7,
+                          child: BlocBuilder<PlutotableBloc, PlutotableState>(
+                            builder: (context, state) {
+                              if (state is FetchTableDataLoading) {
+                                return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context)/2,width: UIHelpers.screenWidth(context)/1.5,radius: 8,));
+                              } else if (state is FetchTableDataSuccess) {
+                                return PlutoTableWidget(tableData: state.tableData);
+                              } else if (state is FetchTableDataError) {
+                                return const Center(child: EmptyWidget());
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
+                        );
                       } else {
                         return Container(
                           height: UIHelpers.screenHeight(context)/2,
+                          child: Center(
+                            child: Text('No Data available'),
+                          ),
                         );
                       }
                     },
