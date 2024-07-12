@@ -29,7 +29,7 @@ pipeline
     stage('Docker build') {
       steps {
         script {
-          docker.build("$IMAGE")
+          docker.build("$IMAGE", "support_bot_dashboard")
         }
       }
     }
