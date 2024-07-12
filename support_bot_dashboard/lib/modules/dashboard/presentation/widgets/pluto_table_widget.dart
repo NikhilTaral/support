@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
@@ -83,6 +84,20 @@ class PlutoTableWidget extends StatelessWidget {
                     enableEditingMode: false,
                     enableColumnDrag: false,
                     readOnly: true,
+                    renderer: (PlutoColumnRendererContext context) {
+                      final value = context.cell!.value ?? '';
+                      return MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Tooltip(
+                          message: value.toString(),
+                          child: Text(
+                            value.toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      );
+                  },
                 ),
                 PlutoColumn(
                   title: 'Created At',
@@ -125,6 +140,7 @@ class PlutoTableWidget extends StatelessWidget {
                         columnTextStyle: SupportBotTextstyle.columnHeading,
                         cellTextStyle: SupportBotTextstyle.cellHeading,
                         enableGridBorderShadow: true,
+                        
                       ),
                       columnSize: const PlutoGridColumnSizeConfig(
                         autoSizeMode: PlutoAutoSizeMode.scale,

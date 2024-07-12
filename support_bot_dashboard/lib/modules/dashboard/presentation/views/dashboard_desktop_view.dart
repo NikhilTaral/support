@@ -187,7 +187,7 @@ class DashboardDesktopView extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      const ExportButton(icon: 'assets/icons/Export.svg'),
+                      const Tooltip(message:'download csv file',  child: ExportButton(icon: 'assets/icons/Export.svg')),
                     ],
                   ),
                   BlocBuilder<CustombuttonBloc, CustombuttonState>(
