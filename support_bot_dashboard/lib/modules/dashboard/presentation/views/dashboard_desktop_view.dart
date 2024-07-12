@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/count_container.dart';
@@ -27,6 +28,9 @@ class DashboardDesktopView extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => PlutotableBloc()..add(FetchTableDataEvent(selectedDate: DateTime.now(), selectedMonth: DateTime(2024, 1))),
+        ),
+         BlocProvider(
+          create: (context) => CustombuttonBloc(),
         ),
       ],
       child: Scaffold(
@@ -105,11 +109,32 @@ class DashboardDesktopView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Row(
-                    children: [
-                      CustomElevatedButton(text: 'Ticket Classification', isSelected: true),
-                      CustomElevatedButton(text: 'AI Query Answer'),
-                    ],
+                  BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                    builder: (context, state) {
+                      String selectedButtonText = '';
+                      if (state is ButtonSelectedState) {
+                        selectedButtonText = state.selectedButtonText;
+                      }
+
+                      return Row(
+                        children: [
+                          CustomElevatedButton(
+                            text: 'Ticket Classification',
+                            isSelected: selectedButtonText == 'Ticket Classification',
+                            onPressed: () {
+                              BlocProvider.of<CustombuttonBloc>(context).add( SelectButtonEvent('Ticket Classification'));
+                            },
+                          ),
+                          CustomElevatedButton(
+                            text: 'AI Query Answer',
+                            isSelected: selectedButtonText == 'AI Query Answer',
+                            onPressed: () {
+                              BlocProvider.of<CustombuttonBloc>(context).add( SelectButtonEvent('AI Query Answer'));
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,22 +190,33 @@ class DashboardDesktopView extends StatelessWidget {
                       const ExportButton(icon: 'assets/icons/Export.svg'),
                     ],
                   ),
-                  Expanded(
-                    flex: 7,
-                    child: BlocBuilder<PlutotableBloc, PlutotableState>(
-                      builder: (context, state) {
-                        if (state is FetchTableDataLoading) {
-                          return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context)/2,width: UIHelpers.screenWidth(context)/1.7,));
-                        } else if (state is FetchTableDataSuccess) {
-                          return PlutoTableWidget(tableData: state.tableData);
-                        } else if (state is FetchTableDataError) {
-                          return const Center(child: EmptyWidget());
-                        } else {
-                          return Container();
-                        }
-                      },
-                    ),
+                  BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                    builder: (context, state) {
+                      if (state is ButtonSelectedState && state.selectedButtonText == 'Ticket Classification') {
+                        return Expanded(
+                          flex: 7,
+                          child: BlocBuilder<PlutotableBloc, PlutotableState>(
+                            builder: (context, state) {
+                              if (state is FetchTableDataLoading) {
+                                return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context)/2,width: UIHelpers.screenWidth(context)/1.5,radius: 8,));
+                              } else if (state is FetchTableDataSuccess) {
+                                return PlutoTableWidget(tableData: state.tableData);
+                              } else if (state is FetchTableDataError) {
+                                return const Center(child: EmptyWidget());
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          height: UIHelpers.screenHeight(context)/2,
+                        );
+                      }
+                    },
                   ),
+               
                 ],
               ),
             ),
@@ -189,7 +225,7 @@ class DashboardDesktopView extends StatelessWidget {
               child: BlocBuilder<DashboardBloc, DashboardState>(
                 builder: (context, state) {
                   if (state is PiechartLoading) {
-                    return Center(child: LoadingWidget(width: UIHelpers.screenWidth(context)/4,height: UIHelpers.screenHeight(context)/1.5,));
+                    return Center(child: LoadingWidget(width: UIHelpers.screenWidth(context)/4,height: UIHelpers.screenHeight(context)/1.3,radius: 8,));
                   } else if (state is DashboardDataSuccess) {
                     return PieChartWidget(data: state.pieChartData);
                   } else if (state is PieChartError) {
