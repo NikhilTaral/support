@@ -7,7 +7,7 @@ RUN apt-get install -y curl git unzip
 
 # define variables
 ARG FLUTTER_SDK=/usr/local/flutter
-ARG FLUTTER_VERSION=3.16.9
+ARG FLUTTER_VERSION=3.22.2
 ARG APP=/app/
 
 #clone flutter
