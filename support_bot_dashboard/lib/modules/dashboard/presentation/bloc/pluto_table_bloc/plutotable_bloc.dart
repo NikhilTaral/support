@@ -21,14 +21,12 @@ FutureOr<void> _onFetchTableDataEvent(FetchTableDataEvent event, Emitter<Plutota
     print('Fetching table data for ${event.selectedDate}, ${event.selectedMonth}');
     final repository = serviceLocator<DashboardTableDatausecase>();
     final response = await repository.invoke(event.selectedDate, event.selectedMonth);
-
     response.fold(
       (failure) {
         print('Failed to fetch data: $failure'); 
         emit(FetchTableDataError("Failed to fetch data"));
       },
       (model) {
-        print(model.runtimeType);
         if (model.success == true) {
           List<TableItem> items = (model.data?.items as List<Item>).map((item) {
             return TableItem(
@@ -36,7 +34,8 @@ FutureOr<void> _onFetchTableDataEvent(FetchTableDataEvent event, Emitter<Plutota
               classification: item.classification.s,
               hsPipelineStage: item.hsPipelineStage.s,
               reasoning: item.reasoning.s,
-              createdAt: item.createdAt.s,
+              createdAt: item.createdAt.s, 
+              ticketDescription: item.ticketDescription.s,
             );
           }).toList();
 
@@ -51,7 +50,6 @@ FutureOr<void> _onFetchTableDataEvent(FetchTableDataEvent event, Emitter<Plutota
             selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
           ));
         } else {
-          print(model.runtimeType);
           print('Fetch data success but model.success is false'); 
           emit(FetchTableDataError(model.message ?? 'Unknown error'));
         }

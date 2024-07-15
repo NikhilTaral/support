@@ -24,7 +24,7 @@ class DashboardDesktopView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => DashboardBloc(),
+          create: (context) => DashboardBloc()..add(LoadPiechartData(DateTime.now(), null, null)),
         ),
         BlocProvider(
           create: (context) => PlutotableBloc()..add(FetchTableDataEvent(selectedDate: DateTime.now(), selectedMonth: DateTime(2024, 1))),

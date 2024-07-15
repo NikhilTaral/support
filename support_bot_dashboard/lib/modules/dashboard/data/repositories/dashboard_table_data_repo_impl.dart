@@ -31,8 +31,13 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
 
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {
-          final Map<String, dynamic> jsonData = jsonDecode(response.body);
+          try {
+            final Map<String, dynamic> jsonData = jsonDecode(response.body);
+          
           return Right(DashboardPlutotableResponseModel.fromJson(jsonData));
+          } catch (e) {
+            return Left(ServerFailure(message: 'Failed to load dashboard table data'));
+          }
         } else {
           return Left(ServerFailure(message: 'Empty response body'));
         }
