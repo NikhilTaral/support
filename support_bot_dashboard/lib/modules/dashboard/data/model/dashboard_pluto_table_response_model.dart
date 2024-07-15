@@ -51,7 +51,7 @@ class Data {
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         totalRecords: json["totalRecords"],
         items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
-        lastEvaluatedKey: json["lastEvaluatedKey"],
+        lastEvaluatedKey: json["lastEvaluatedKey"] ?? "",
     );
 
     Map<String, dynamic> toJson() => {
@@ -67,6 +67,7 @@ class Item {
   final CreatedAt id;
   final CreatedAt reasoning;
   final CreatedAt createdAt;
+  final CreatedAt ticketDescription;
 
   Item({
     required this.classification,
@@ -74,6 +75,7 @@ class Item {
     required this.id,
     required this.reasoning,
     required this.createdAt,
+    required this.ticketDescription
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -82,7 +84,8 @@ class Item {
       hsPipelineStage: json.containsKey("HS_Pipeline_Stage") ? CreatedAt.fromJson(json["HS_Pipeline_Stage"]) : CreatedAt(s: ''),
       id: json.containsKey("id") ? CreatedAt.fromJson(json["id"]) : CreatedAt(s: ''),
       reasoning: json.containsKey("reasoning") ? CreatedAt.fromJson(json["reasoning"]) : CreatedAt(s: ''),
-      createdAt: json.containsKey("CreatedAt") ? CreatedAt.fromJson(json["CreatedAt"]) : CreatedAt(s: ''),
+      createdAt: json.containsKey("CreatedAt") ? CreatedAt.fromJson(json["CreatedAt"]) : CreatedAt(s: ''), 
+      ticketDescription: json.containsKey("Ticket_Description") ? CreatedAt.fromJson(json["Ticket_Description"]) : CreatedAt(s: ''),
     );
   }
 
@@ -92,6 +95,7 @@ class Item {
     "id": id.toJson(),
     "reasoning": reasoning.toJson(),
     "CreatedAt": createdAt.toJson(),
+    "ticketDescription": createdAt.toJson()
   };
 }
 
