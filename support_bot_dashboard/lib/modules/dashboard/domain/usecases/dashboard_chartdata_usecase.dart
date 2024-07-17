@@ -4,10 +4,10 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class DashboardChartdataUsecase implements UseCaseTwoInput {
+class DashboardChartdataUsecase implements UseCaseTwoInput<DateTime?, DateTime?, dynamic> {
   @override
-  Future<Either<Failure, dynamic>> invoke(date,month) async {
-    return await serviceLocator<DashboardChartDataRepository>().getDashboardChartData(date, month);
+  Future<Either<Failure, dynamic>> invoke(date, month) async {
+    return await serviceLocator<DashboardChartDataRepository>()
+        .getDashboardChartData(selectedDate: date, selectedMonth: month);
   }
-
 }

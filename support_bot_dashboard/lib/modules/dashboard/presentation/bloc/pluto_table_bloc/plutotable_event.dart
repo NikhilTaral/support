@@ -1,32 +1,38 @@
 part of 'plutotable_bloc.dart';
 
-abstract class PlutotableEvent{}
+abstract class PlutotableEvent {}
 
-class FetchTableDataEvent extends PlutotableEvent{
-   final DateTime? selectedDate;
+class FetchTableDataEvent extends PlutotableEvent {
+  final DateTime? selectedDate;
   final DateTime? selectedMonth;
 
-  FetchTableDataEvent({required this.selectedDate, required this.selectedMonth});
+  FetchTableDataEvent(
+      {this.selectedDate, this.selectedMonth});
 }
 
-class SelectDateEvent extends PlutotableEvent{
-   final DateTime selectedDate;
+class SelectDateEvent extends PlutotableEvent {
+  final DateTime selectedDate;
 
   SelectDateEvent({required this.selectedDate});
 }
 
-class SelectMonthEvent extends PlutotableEvent{
+class SelectMonthEvent extends PlutotableEvent {
   final DateTime selectedMonth;
 
   SelectMonthEvent({required this.selectedMonth});
 }
 
-class UpdateValidationEvent extends PlutotableEvent{
+class UpdateValidationEvent extends PlutotableEvent {
   final String id;
   final String validation;
   final String reason;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
 
-  UpdateValidationEvent({required this.selectedDate,required this.selectedMonth, required this.id, required this.validation, required this.reason});
+  UpdateValidationEvent(
+      { this.selectedDate,
+       this.selectedMonth,
+      required this.id,
+      required this.validation,
+      required this.reason});
 }

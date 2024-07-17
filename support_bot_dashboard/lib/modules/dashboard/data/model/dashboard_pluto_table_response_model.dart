@@ -38,7 +38,7 @@ class DashboardPlutotableResponseModel {
 }
 
 class Data {
-    final int totalRecords;
+    final num totalRecords;
     final List<Item> items;
     final String lastEvaluatedKey;
 

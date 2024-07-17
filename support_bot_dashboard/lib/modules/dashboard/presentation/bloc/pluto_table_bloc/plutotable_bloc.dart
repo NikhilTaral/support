@@ -5,7 +5,6 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_plu
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
-
 part 'plutotable_event.dart';
 part 'plutotable_state.dart';
 
@@ -24,42 +23,40 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       final repository = serviceLocator<DashboardTableDatausecase>();
       final response =
           await repository.invoke(event.selectedDate, event.selectedMonth);
-      response.fold(
-        (failure) {
-          emit(FetchTableDataError("Failed to fetch data"));
-        },
-        (model) {
-          if (model.success == true) {
-            List<TableItem> items =
-                (model.data?.items as List<Item>).map((item) {
-              return TableItem(
-                id: item.id.s,
-                classification: item.classification.s,
-                hsPipelineStage: item.hsPipelineStage.s,
-                reasoning: item.reasoning.s,
-                createdAt: item.createdAt.s,
-                ticketDescription: item.ticketDescription.s,
-                classificationValidation: item.classificationValidation.s,
-                classificationValidationReason:
-                    item.classificationValidationReason.s,
-              );
-            }).toList();
+      if (response.isLeft) {
+        emit(FetchTableDataError("Failed to fetch data"));
+      } else {
+        final model = response.right;
 
-            final tableData = DashboardTableAttributeModel(
-              totalRecords: model.data?.totalRecords,
-              items: items,
+        if (model.success == true) {
+          List<TableItem> items = (model.data?.items as List<Item>).map((item) {
+            return TableItem(
+              id: item.id.s,
+              classification: item.classification.s,
+              hsPipelineStage: item.hsPipelineStage.s,
+              reasoning: item.reasoning.s,
+              createdAt: item.createdAt.s,
+              ticketDescription: item.ticketDescription.s,
+              classificationValidation: item.classificationValidation.s,
+              classificationValidationReason:
+                  item.classificationValidationReason.s,
             );
+          }).toList();
 
-            emit(FetchTableDataSuccess(
-              tableData: tableData,
-              selectedDate: event.selectedDate ?? DateTime.now(),
-              selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
-            ));
-          } else {
-            emit(FetchTableDataError(model.message ?? 'Unknown error'));
-          }
-        },
-      );
+          final tableData = DashboardTableAttributeModel(
+            totalRecords: model.data?.totalRecords,
+            items: items,
+          );
+
+          emit(FetchTableDataSuccess(
+            tableData: tableData,
+            selectedDate: event.selectedDate ?? DateTime.now(),
+            selectedMonth: event.selectedMonth ?? DateTime(2024 - 01),
+          ));
+        } else {
+          emit(FetchTableDataError(model.message ?? 'Unknown error'));
+        }
+      }
     } catch (e) {
       emit(FetchTableDataError("Exception occurred: $e"));
     }
@@ -69,7 +66,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       SelectDateEvent event, Emitter<PlutotableState> emit) {
     emit(UpdateDateState(selectedDate: event.selectedDate));
     add(FetchTableDataEvent(
-        selectedDate: event.selectedDate, selectedMonth: DateTime(2024, 1)));
+        selectedDate: event.selectedDate, selectedMonth: DateTime(2024-01)));
   }
 
   FutureOr<void> _onSelectMonthEvent(

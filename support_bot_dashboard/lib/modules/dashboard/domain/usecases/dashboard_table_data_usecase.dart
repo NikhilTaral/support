@@ -2,10 +2,13 @@ import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_Repository.dart';
 import 'package:support_bot_dashboard/utils/service/failure.dart';
+import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class DashboardTableDatausecase {
-  Future<Either<Failure, dynamic>> invoke(DateTime? date,DateTime? month) async {
-    return await serviceLocator<DashboardTableDataRepository>().getDashboardTableData(date, month);
+class DashboardTableDatausecase implements UseCaseTwoInput{
+  @override
+  Future<Either<Failure, dynamic>> invoke(
+      date, month) async {
+    return await serviceLocator<DashboardTableDataRepository>()
+        .getDashboardTableData(selectedDate: date, selectedMonth: month);
   }
 }
-

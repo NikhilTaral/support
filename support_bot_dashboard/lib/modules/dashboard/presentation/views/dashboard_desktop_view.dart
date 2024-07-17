@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
@@ -22,17 +23,20 @@ class DashboardDesktopView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => DashboardBloc()
+          create: (context) => serviceLocator<DashboardBloc>()
             ..add(LoadPiechartData(DateTime.now(), null, null)),
         ),
         BlocProvider(
-          create: (context) => PlutotableBloc()
-            ..add(FetchTableDataEvent(
+          create: (context) => serviceLocator<PlutotableBloc>()
+            ..add(
+              FetchTableDataEvent(
                 selectedDate: DateTime.now(),
-                selectedMonth: DateTime(2024, 1))),
+                selectedMonth: DateTime(2024, 1),
+              ),
+            ),
         ),
         BlocProvider(
-          create: (context) => CustombuttonBloc(),
+          create: (context) => serviceLocator<CustombuttonBloc>(),
         ),
       ],
       child: Scaffold(
@@ -46,14 +50,14 @@ class DashboardDesktopView extends StatelessWidget {
                   Expanded(
                     flex: 4,
                     child: SizedBox(
-                      height: UIHelpers.screenHeight(context) / 11,
+                      height: UIHelpers.screenHeight(context) *0.25,
                       child: BlocBuilder<DashboardBloc, DashboardState>(
                         builder: (context, state) {
                           if (state is FetchCountDataLoading) {
                             return Center(
                                 child: LoadingWidget(
                               width: UIHelpers.screenWidth(context),
-                              height: UIHelpers.screenHeight(context) / 11,
+                              height: UIHelpers.screenHeight(context) * 0.25,
                             ));
                           } else if (state is DashboardDataSuccess) {
                             num totalCount =
@@ -149,7 +153,7 @@ class DashboardDesktopView extends StatelessWidget {
 
                       return Row(
                         children: [
-                          CustomElevatedButton(
+                          CustomButton(
                             text: 'Ticket Classification',
                             isSelected:
                                 selectedButtonText == 'Ticket Classification',
@@ -158,7 +162,7 @@ class DashboardDesktopView extends StatelessWidget {
                                   SelectButtonEvent('Ticket Classification'));
                             },
                           ),
-                          CustomElevatedButton(
+                          CustomButton(
                             text: 'AI Query Answer',
                             isSelected: selectedButtonText == 'AI Query Answer',
                             onPressed: () {
@@ -204,7 +208,7 @@ class DashboardDesktopView extends StatelessWidget {
                                 if (state is DashboardDataSuccess) {
                                   selectMonth = state.selectedMonth;
                                 }
-                                return CustomDropdown(
+                                return CustomMonthDropdown(
                                   selectedValue: selectMonth,
                                   items: const [
                                     'January',
@@ -268,8 +272,8 @@ class DashboardDesktopView extends StatelessWidget {
                               if (state is UpdateValidationLoading) {
                                 return Center(
                                   child: LoadingWidget(
-                                    height: UIHelpers.screenHeight(context) / 2,
-                                    width: UIHelpers.screenWidth(context) / 1.5,
+                                    height: UIHelpers.screenHeight(context) * 0.4,
+                                    width: UIHelpers.screenWidth(context) * 0.65,
                                     radius: 8,
                                   ),
                                 );
@@ -277,13 +281,15 @@ class DashboardDesktopView extends StatelessWidget {
                               if (state is FetchTableDataLoading) {
                                 return Center(
                                     child: LoadingWidget(
-                                  height: UIHelpers.screenHeight(context) / 2,
-                                  width: UIHelpers.screenWidth(context) / 1.5,
+                                  height: UIHelpers.screenHeight(context) * 0.4,
+                                  width: UIHelpers.screenWidth(context) * 0.65,
                                   radius: 8,
                                 ));
                               } else if (state is FetchTableDataSuccess) {
                                 return PlutoTableWidget(
-                                    tableData: state.tableData, selectedDate: state.selectedDate, selectedMonth: state.selectedMonth);
+                                    tableData: state.tableData,
+                                    selectedDate: state.selectedDate,
+                                    selectedMonth: state.selectedMonth);
                               } else if (state is FetchTableDataError) {
                                 return const Center(child: EmptyWidget());
                               } else {
@@ -315,8 +321,8 @@ class DashboardDesktopView extends StatelessWidget {
                               if (state is UpdateValidationLoading) {
                                 return Center(
                                   child: LoadingWidget(
-                                    height: UIHelpers.screenHeight(context) / 2,
-                                    width: UIHelpers.screenWidth(context) / 1.5,
+                                    height: UIHelpers.screenHeight(context) * 0.4,
+                                    width: UIHelpers.screenWidth(context) * 0.65,
                                     radius: 8,
                                   ),
                                 );
@@ -324,13 +330,16 @@ class DashboardDesktopView extends StatelessWidget {
                               if (state is FetchTableDataLoading) {
                                 return Center(
                                     child: LoadingWidget(
-                                  height: UIHelpers.screenHeight(context) / 2,
-                                  width: UIHelpers.screenWidth(context) / 1.5,
+                                  height: UIHelpers.screenHeight(context) * 0.4,
+                                  width: UIHelpers.screenWidth(context) * 0.65,
                                   radius: 8,
                                 ));
                               } else if (state is FetchTableDataSuccess) {
                                 return PlutoTableWidget(
-                                    tableData: state.tableData, selectedDate: state.selectedDate, selectedMonth: state.selectedMonth,);
+                                  tableData: state.tableData,
+                                  selectedDate: state.selectedDate,
+                                  selectedMonth: state.selectedMonth,
+                                );
                               } else if (state is FetchTableDataError) {
                                 return const Center(child: EmptyWidget());
                               } else {
@@ -341,7 +350,7 @@ class DashboardDesktopView extends StatelessWidget {
                         );
                       } else {
                         return SizedBox(
-                          height: UIHelpers.screenHeight(context) / 2,
+                          height: UIHelpers.screenHeight(context) * 0.3,
                           child: const Center(
                             child: Text('No Data available'),
                           ),
@@ -359,8 +368,8 @@ class DashboardDesktopView extends StatelessWidget {
                   if (state is PiechartLoading) {
                     return Center(
                         child: LoadingWidget(
-                      width: UIHelpers.screenWidth(context) / 4,
-                      height: UIHelpers.screenHeight(context) / 1.3,
+                      width: UIHelpers.screenWidth(context) * 0.2,
+                      height: UIHelpers.screenHeight(context) * 0.6,
                       radius: 8,
                     ));
                   } else if (state is DashboardDataSuccess) {

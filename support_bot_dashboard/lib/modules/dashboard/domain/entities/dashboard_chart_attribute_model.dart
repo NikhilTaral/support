@@ -6,7 +6,7 @@ class DashboardChartAttributeModel extends Equatable{
   final num? spamMarketing;
   final num? acknowledgement;
 
-  const DashboardChartAttributeModel({required this.genuineQuery, required this.noActionRequired, required this.spamMarketing, required this.acknowledgement});
+  const DashboardChartAttributeModel({this.genuineQuery, this.noActionRequired, this.spamMarketing, this.acknowledgement});
 
    @override
   List<Object?> get props => [

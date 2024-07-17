@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
@@ -13,7 +14,12 @@ class PlutoTableWidget extends StatelessWidget {
   final DateTime selectedMonth;
   final DateTime selectedDate;
 
-  const PlutoTableWidget({Key? key, required this.tableData, required this.selectedMonth, required this.selectedDate}) : super(key: key);
+  const PlutoTableWidget(
+      {Key? key,
+      required this.tableData,
+      required this.selectedMonth,
+      required this.selectedDate})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +176,7 @@ class PlutoTableWidget extends StatelessWidget {
                   renderer: (PlutoColumnRendererContext _) {
                     return ValidationReasonRenderer(
                       rowID: _.row.cells['id']?.value ?? "",
-                      plutotableBloc: BlocProvider.of<PlutotableBloc>(context),
+                      plutotableBloc: serviceLocator<PlutotableBloc>(),
                       date: selectedDate,
                       month: selectedMonth,
                       row: _.row,
@@ -203,7 +209,8 @@ class PlutoTableWidget extends StatelessWidget {
                     'createdAt': PlutoCell(value: item.createdAt),
                     'ticketDescription':
                         PlutoCell(value: item.ticketDescription),
-                    'validation': PlutoCell(value: item.classificationValidation),
+                    'validation':
+                        PlutoCell(value: item.classificationValidation),
                     'validation_reason':
                         PlutoCell(value: item.classificationValidationReason),
                   },
@@ -265,17 +272,18 @@ class ValidationReasonRenderer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ValidationReasonRendererState createState() => _ValidationReasonRendererState();
+  _ValidationReasonRendererState createState() =>
+      _ValidationReasonRendererState();
 }
 
 class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
   late String _selectedValue;
 
- 
   @override
   void initState() {
     super.initState();
-    _selectedValue = _validateValue(widget.row.cells['validation']?.value ?? 'Select');
+    _selectedValue =
+        _validateValue(widget.row.cells['validation']?.value ?? 'Select');
   }
 
   String _validateValue(String value) {
@@ -287,7 +295,7 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
   }
 
   void _showPopup(String rowId) {
-     showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext _) {
         String reason = '';
@@ -346,8 +354,12 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                 child: const Text('Save'),
                 onPressed: () {
                   String validationStatus = _selectedValue;
-                  widget.plutotableBloc.add(UpdateValidationEvent(
-                      id: rowId, validation: validationStatus, reason: reason,selectedDate: widget.date, selectedMonth: widget.month ));
+                  context.read<PlutotableBloc>().add(UpdateValidationEvent(
+                      id: rowId,
+                      validation: validationStatus,
+                      reason: reason,
+                      selectedDate: widget.date,
+                      selectedMonth: widget.month));
                 },
               ),
             ],
@@ -372,7 +384,8 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
               items: [
                 DropdownMenuItem<String>(
                   value: 'Select',
-                  child: Text('Select', style: TextStyle(color: Colors.grey.shade400)),
+                  child: Text('Select',
+                      style: TextStyle(color: Colors.grey.shade400)),
                 ),
                 const DropdownMenuItem<String>(
                   value: 'correct',
@@ -391,7 +404,11 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                     _showPopup(rowId);
                   } else {
                     context.read<PlutotableBloc>().add(UpdateValidationEvent(
-                        id: rowId, validation: _selectedValue, reason: '', selectedDate: widget.date, selectedMonth: widget.month));
+                        id: rowId,
+                        validation: _selectedValue,
+                        reason: '',
+                        selectedDate: widget.date,
+                        selectedMonth: widget.month));
                   }
                 });
               },

@@ -1,4 +1,3 @@
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
@@ -8,7 +7,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PieChartWidget extends StatefulWidget {
   final DashboardChartAttributeModel? data;
-   const PieChartWidget({super.key, this.data});
+  const PieChartWidget({super.key, this.data});
 
   @override
   State<PieChartWidget> createState() => _PieChartWidgetState(data: data);
@@ -28,7 +27,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       const Color.fromARGB(255, 28, 88, 136),
       const Color.fromARGB(255, 17, 58, 98),
     ];
-    double radius = UIHelpers.screenWidth(context) / 10;
+    double radius = UIHelpers.screenWidth(context) * 0.095;
 
     final chartData = [
       ChartData(label: 'Genuine Query', value: data?.genuineQuery),
@@ -48,7 +47,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           ),
         ),
         SizedBox(
-          height: UIHelpers.screenHeight(context) / 1.8,
+          height: UIHelpers.screenHeight(context) * 0.5,
           child: PieChart(
             PieChartData(
               pieTouchData: PieTouchData(
@@ -60,7 +59,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                       touchedIndex = -1;
                       return;
                     }
-                    touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
                   });
                 },
               ),
@@ -73,7 +73,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                   final double fontSize = isTouched ? 16 : 16;
                   return PieChartSectionData(
                     value: chartData[index].value?.toDouble() ?? 0,
-                     title: isTouched ? '${chartData[index].label}: ${chartData[index].value}' : null,
+                    title: isTouched
+                        ? '${chartData[index].label}: ${chartData[index].value}'
+                        : null,
                     color: blueShades[index % blueShades.length],
                     radius: radius,
                     titleStyle: SupportBotTextstyle.pierchartNormal.copyWith(
@@ -97,8 +99,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: UIHelpers.screenWidth(context) / 76,
-                    height: UIHelpers.screenHeight(context) / 45,
+                    width: UIHelpers.screenWidth(context) * 0.01,
+                    height: UIHelpers.screenHeight(context) * 0.02,
                     color: blueShades[index % blueShades.length],
                   ),
                   UIHelpers.horizontalSpaceTiny,

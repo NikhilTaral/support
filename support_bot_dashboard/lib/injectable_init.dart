@@ -1,12 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_table_data_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repository_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_table_data_repository_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_Repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
@@ -49,5 +50,6 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<DashboardValidationUsecase>(
       () => DashboardValidationUsecase());
   serviceLocator.registerFactory<DashboardBloc>(() => DashboardBloc());
-  serviceLocator.registerFactory<PlutotableBloc>(()=>PlutotableBloc());
+  serviceLocator.registerFactory<PlutotableBloc>(() => PlutotableBloc());
+  serviceLocator.registerFactory<CustombuttonBloc>(() => CustombuttonBloc());
 }
