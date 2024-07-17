@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DateSelectionWidget extends StatelessWidget {
@@ -52,7 +53,7 @@ class DateSelectionWidget extends StatelessWidget {
                       selectedDate != DateTime.now()
                           ? selectedDate.toIso8601String().substring(0, 10)
                           : 'Select date',
-                      style: const TextStyle(color: SupportBotColors.black, fontSize: 16),
+                      style: SupportBotTextstyle.dateText,
                       overflow: TextOverflow.clip,
                     ),
                   ),
@@ -70,10 +71,7 @@ class DateSelectionWidget extends StatelessWidget {
             color: SupportBotColors.white,
             child: Text(
               label,
-              style: const TextStyle(
-                color: SupportBotColors.gray,
-                fontSize: 12,
-              ),
+              style: SupportBotTextstyle.dateLabel
             ),
           ),
         ),
