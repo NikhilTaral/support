@@ -39,24 +39,28 @@ class DashboardChartResponseModel {
 class Data {
     final num? genuineQuery;
     final num? noActionRequired;
-    final int? spamMarketing;
+    final num? spamMarketing;
+    final num? acknowledgement;
 
     Data({
         this.genuineQuery,
         this.noActionRequired,
         this.spamMarketing,
+        this.acknowledgement
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         genuineQuery: json["Genuine Query"],
         noActionRequired: json["No Action Required"],
         spamMarketing: json["Spam/Marketing"],
+        acknowledgement: json['Acknowledgement Required']
     );
 
     Map<String, dynamic> toJson() => {
         "Genuine Query": genuineQuery,
         "No Action Required": noActionRequired,
         "Spam/Marketing": spamMarketing,
+        "Acknowledgement Required": acknowledgement
     };
 }
 

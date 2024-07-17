@@ -20,3 +20,13 @@ class SelectMonthEvent extends PlutotableEvent{
 
   SelectMonthEvent({required this.selectedMonth});
 }
+
+class UpdateValidationEvent extends PlutotableEvent{
+  final String id;
+  final String validation;
+  final String reason;
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+
+  UpdateValidationEvent({required this.selectedDate,required this.selectedMonth, required this.id, required this.validation, required this.reason});
+}

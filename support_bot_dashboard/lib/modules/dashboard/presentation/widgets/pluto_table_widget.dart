@@ -1,5 +1,3 @@
-
-
 /////////////////////dropdown popup////////////////////////////////
 
 // import 'package:flutter/material.dart';
@@ -249,7 +247,7 @@
 // }
 
 // class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
-//   String _selectedValue = 'Correct'; 
+//   String _selectedValue = 'Correct';
 //   String _comment = '';
 //   bool _showCommentField = false;
 
@@ -355,10 +353,11 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -366,8 +365,10 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PlutoTableWidget extends StatelessWidget {
   final DashboardTableAttributeModel tableData;
+  final DateTime selectedMonth;
+  final DateTime selectedDate;
 
-  const PlutoTableWidget({Key? key, required this.tableData}) : super(key: key);
+  const PlutoTableWidget({Key? key, required this.tableData, required this.selectedMonth, required this.selectedDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +507,7 @@ class PlutoTableWidget extends StatelessWidget {
                     );
                   },
                 ),
-                  PlutoColumn(
+                PlutoColumn(
                   title: 'Validation',
                   field: 'validation',
                   type: PlutoColumnType.text(),
@@ -519,12 +520,9 @@ class PlutoTableWidget extends StatelessWidget {
                   enableDropToResize: false,
                   enableEditingMode: false,
                   enableColumnDrag: false,
-                  readOnly: false,
-                  renderer: (PlutoColumnRendererContext context) {
-                    return ValidationReasonRenderer(context: context);
-                  },
+                  readOnly: true,
                 ),
-                  PlutoColumn(
+                PlutoColumn(
                   title: 'Validation_Reason',
                   field: 'validation_reason',
                   type: PlutoColumnType.text(),
@@ -539,7 +537,29 @@ class PlutoTableWidget extends StatelessWidget {
                   enableColumnDrag: false,
                   readOnly: true,
                 ),
-              
+                PlutoColumn(
+                  title: 'Status',
+                  field: 'status',
+                  type: PlutoColumnType.text(),
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.start,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: false,
+                  renderer: (PlutoColumnRendererContext _) {
+                    return ValidationReasonRenderer(
+                      rowID: _.row.cells['id']?.value ?? "",
+                      plutotableBloc: BlocProvider.of<PlutotableBloc>(context),
+                      date: selectedDate,
+                      month: selectedMonth
+                    );
+                  },
+                ),
               ],
               rows: tableData.items.map((item) {
                 return PlutoRow(
@@ -549,9 +569,13 @@ class PlutoTableWidget extends StatelessWidget {
                     'hSPipelineStage': PlutoCell(value: item.hsPipelineStage),
                     'reasoning': PlutoCell(value: item.reasoning),
                     'createdAt': PlutoCell(value: item.createdAt),
-                    'ticketDescription': PlutoCell(value: item.ticketDescription),
-                    'validation': PlutoCell(value: ''),
-                    'validation_reason': PlutoCell(value: 'N/A'),
+                    'ticketDescription':
+                        PlutoCell(value: item.ticketDescription),
+                    'status': PlutoCell(value: ''),
+                    'validation':
+                        PlutoCell(value: item.classificationValidation),
+                    'validation_reason':
+                        PlutoCell(value: item.classificationValidationReason),
                   },
                 );
               }).toList(),
@@ -595,56 +619,89 @@ class PlutoTableWidget extends StatelessWidget {
 }
 
 class ValidationReasonRenderer extends StatefulWidget {
-  final PlutoColumnRendererContext context;
+  final String rowID;
+  final PlutotableBloc plutotableBloc;
+  final DateTime date;
+  final DateTime month;
 
-  const ValidationReasonRenderer({Key? key, required this.context}) : super(key: key);
+  const ValidationReasonRenderer(
+      {Key? key, required this.rowID, required this.plutotableBloc, required this.date, required this.month})
+      : super(key: key);
 
   @override
-  _ValidationReasonRendererState createState() => _ValidationReasonRendererState();
+  _ValidationReasonRendererState createState() =>
+      _ValidationReasonRendererState();
 }
 
 class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
   String _selectedValue = 'Select';
 
-  void _showPopup() {
+  void _showPopup(String rowId) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Email Validation Details', style: TextStyle(fontSize: 20),),
-          content: SizedBox(
-            width: UIHelpers.screenWidth(context) * 0.4,
-            height: UIHelpers.screenHeight(context) * 0.2,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter your comments here',
-                     contentPadding: const EdgeInsets.all(16.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  maxLines: 5,
-                ),
-              ],
+      builder: (BuildContext _) {
+        String reason = '';
+
+        return BlocProvider.value(
+          value: context.read<PlutotableBloc>(),
+          child: AlertDialog(
+            title: const Text('Email Validation Details',
+                style: TextStyle(fontSize: 20)),
+            content: SizedBox(
+              width: UIHelpers.screenWidth(context) * 0.4,
+              height: UIHelpers.screenHeight(context) * 0.3,
+              child: BlocConsumer<PlutotableBloc, PlutotableState>(
+                listener: (context, state) {
+                  if (state is UpdateValidationSuccess) {
+                    Navigator.of(context).pop();
+                    context.read<PlutotableBloc>().add(FetchTableDataEvent(
+                        selectedDate: widget.date,
+                        selectedMonth: widget.month));
+                  }
+                },
+                builder: (context, state) {
+                  if (state is UpdateValidationLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        onChanged: (value) {
+                          reason = value;
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Enter your comments here',
+                          contentPadding: const EdgeInsets.all(16.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        maxLines: 5,
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Save'),
+                onPressed: () {
+                  String validationStatus = _selectedValue;
+                  widget.plutotableBloc.add(UpdateValidationEvent(
+                      id: rowId, validation: validationStatus, reason: reason,selectedDate: widget.date, selectedMonth: widget.month ));
+                },
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Save'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
@@ -652,43 +709,46 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
 
   @override
   Widget build(BuildContext context) {
+    final String rowId = widget.rowID;
+
     return Column(
       children: [
-        DropdownButton<String>(
-          value: _selectedValue,
-          items: [
-             DropdownMenuItem<String>(
-              value: 'Select',
-              child: Text('Select', style: TextStyle(color: Colors.grey.shade400),),
+        Flexible(
+          child: SizedBox(
+            width: 120,
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: _selectedValue,
+              items: [
+                DropdownMenuItem<String>(
+                  value: 'Select',
+                  child: Text('Select',
+                      style: TextStyle(color: Colors.grey.shade400)),
+                ),
+                const DropdownMenuItem<String>(
+                  value: 'correct',
+                  child: Text('Correct'),
+                ),
+                const DropdownMenuItem<String>(
+                  value: 'incorrect',
+                  child: Text('Incorrect'),
+                ),
+              ],
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedValue = newValue!;
+                  if (_selectedValue == 'incorrect') {
+                    _showPopup(rowId);
+                  } else {
+                    context.read<PlutotableBloc>().add(UpdateValidationEvent(
+                        id: rowId, validation: _selectedValue, reason: '', selectedDate: widget.date, selectedMonth: widget.month));
+                  }
+                });
+              },
             ),
-            const DropdownMenuItem<String>(
-              value: 'correct',
-              child: Text('Correct'),
-            ),
-            const DropdownMenuItem<String>(
-              value: 'incorrect',
-              child: Text('Incorrect'),
-            ),
-          ],
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedValue = newValue!;
-              if (_selectedValue == 'incorrect') {
-                _showPopup();
-              }
-            });
-          },
+          ),
         ),
       ],
     );
   }
 }
-
-
-
-
-
-
-
-
-

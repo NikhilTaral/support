@@ -32,3 +32,18 @@ class UpdateMonthState extends PlutotableState{
 
   UpdateMonthState({required this.selectedMonth});
 }
+
+class UpdateValidationLoading extends PlutotableState {}
+
+class UpdateValidationSuccess extends PlutotableState {
+    final DateTime selectedDate;
+  final DateTime selectedMonth;
+
+  UpdateValidationSuccess({required this.selectedDate, required this.selectedMonth});
+}
+
+class UpdateValidationError extends PlutotableState {
+  final String errorMessage;
+
+ UpdateValidationError(this.errorMessage);
+}

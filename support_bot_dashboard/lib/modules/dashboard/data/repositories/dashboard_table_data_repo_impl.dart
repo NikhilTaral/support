@@ -45,4 +45,29 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
         return Left(ServerFailure(message: 'Failed to load dashboard table data'));
       }
   }
+  
+  @override
+  Future<Either<Failure, dynamic>> updateClassificationValidation(String id, String validation, String reason) async{
+      final uri = Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/updateClassificationValidation');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+       final body = jsonEncode({
+      'id': id,
+      'validation': validation,
+      'reason': reason,
+    });
+      final response = await http.post(
+        uri,
+        headers: headers,
+        body: body
+      );
+      if(response.statusCode == 200){
+        return await getDashboardTableData(DateTime.now(), DateTime(2024, 1));
+      }
+      else{
+        return Left(ServerFailure(message: 'Data updation failed'));
+      }
+
+  }
 }
