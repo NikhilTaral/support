@@ -1,7 +1,6 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
@@ -11,11 +10,11 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pie
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_dropdown.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
+
 
 class DashboardDesktopView extends StatelessWidget {
   const DashboardDesktopView({Key? key}) : super(key: key);
@@ -25,20 +24,13 @@ class DashboardDesktopView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => serviceLocator<DashboardBloc>()
-            ..add(LoadPiechartData(DateTime.now(), null, null)),
+          create: (context) => DashboardBloc()..add(LoadPiechartData(DateTime.now(), null, null)),
         ),
         BlocProvider(
-          create: (context) => serviceLocator<PlutotableBloc>()
-            ..add(
-              FetchTableDataEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: DateTime(2024, 1),
-              ),
-            ),
+          create: (context) => PlutotableBloc()..add(FetchTableDataEvent(selectedDate: DateTime.now(), selectedMonth: DateTime(2024, 1))),
         ),
-        BlocProvider(
-          create: (context) => serviceLocator<CustombuttonBloc>(),
+         BlocProvider(
+          create: (context) => CustombuttonBloc(),
         ),
       ],
       child: Scaffold(
@@ -52,50 +44,31 @@ class DashboardDesktopView extends StatelessWidget {
                   Expanded(
                     flex: 4,
                     child: SizedBox(
-                      height: UIHelpers.screenHeight(context) * 0.25,
+                      height: UIHelpers.screenHeight(context)/11,
                       child: BlocBuilder<DashboardBloc, DashboardState>(
                         builder: (context, state) {
                           if (state is FetchCountDataLoading) {
-                            return Center(
-                                child: LoadingWidget(
-                              width: UIHelpers.screenWidth(context),
-                              height: UIHelpers.screenHeight(context) * 0.25,
-                            ));
+                            return  Center(child: LoadingWidget(width: UIHelpers.screenWidth(context), height: UIHelpers.screenHeight(context)/11,));
                           } else if (state is DashboardDataSuccess) {
-                            num totalCount =
-                                (state.countData?.spamMarketing ?? 0) +
-                                    (state.countData?.noActionRequired ?? 0) +
-                                    (state.countData?.genuineQuery ?? 0) +
-                                    (state.countData?.acknowledgement ?? 0);
+                            num totalCount = (state.countData?.spamMarketing ?? 0) +
+                                (state.countData?.noActionRequired ?? 0) +
+                                (state.countData?.genuineQuery ?? 0);
                             return Row(
                               children: [
                                 CountContainer(
                                   text: 'Spam',
                                   icon: 'assets/icons/Spam.svg',
-                                  count: state.countData?.spamMarketing
-                                          .toString() ??
-                                      '0',
+                                  count: state.countData?.spamMarketing.toString() ?? '0',
                                 ),
                                 CountContainer(
                                   text: 'No Action Required',
                                   icon: 'assets/icons/NotSpam.svg',
-                                  count: state.countData?.noActionRequired
-                                          .toString() ??
-                                      '0',
+                                  count: state.countData?.noActionRequired.toString() ?? '0',
                                 ),
                                 CountContainer(
                                   text: 'Genuine Query',
                                   icon: 'assets/icons/genuine.svg',
-                                  count: state.countData?.genuineQuery
-                                          .toString() ??
-                                      '0',
-                                ),
-                                CountContainer(
-                                  text: 'Acknowledgement Required',
-                                  icon: 'assets/icons/acknowledgement.svg',
-                                  count: state.countData?.acknowledgement
-                                          .toString() ??
-                                      '0',
+                                  count: state.countData?.genuineQuery.toString() ?? '0',
                                 ),
                                 CountContainer(
                                   text: 'Total',
@@ -109,7 +82,7 @@ class DashboardDesktopView extends StatelessWidget {
                           } else {
                             return const Row(
                               children: [
-                                CountContainer(
+                                  CountContainer(
                                   text: 'Spam',
                                   icon: 'assets/icons/Spam.svg',
                                   count: '0',
@@ -122,11 +95,6 @@ class DashboardDesktopView extends StatelessWidget {
                                 CountContainer(
                                   text: 'Genuine Query',
                                   icon: 'assets/icons/genuine.svg',
-                                  count: '0',
-                                ),
-                                CountContainer(
-                                  text: 'Acknowledgement Required',
-                                  icon: 'assets/icons/acknowledgement.svg',
                                   count: '0',
                                 ),
                                 CountContainer(
@@ -148,28 +116,24 @@ class DashboardDesktopView extends StatelessWidget {
                         selectedButtonText = state.selectedButtonText;
                       }
 
-                      if (state is CustomButtonInitial &&
-                          state.selectedButtonText == 'Ticket Classification') {
+                      if (state is CustomButtonInitial && state.selectedButtonText == 'Ticket Classification') {
                         selectedButtonText = state.selectedButtonText;
                       }
 
                       return Row(
                         children: [
-                          CustomButton(
+                          CustomElevatedButton(
                             text: 'Ticket Classification',
-                            isSelected:
-                                selectedButtonText == 'Ticket Classification',
+                            isSelected: selectedButtonText == 'Ticket Classification',
                             onPressed: () {
-                              BlocProvider.of<CustombuttonBloc>(context).add(
-                                  SelectButtonEvent('Ticket Classification'));
+                              BlocProvider.of<CustombuttonBloc>(context).add( SelectButtonEvent('Ticket Classification'));
                             },
                           ),
-                          CustomButton(
+                          CustomElevatedButton(
                             text: 'AI Query Answer',
                             isSelected: selectedButtonText == 'AI Query Answer',
                             onPressed: () {
-                              BlocProvider.of<CustombuttonBloc>(context)
-                                  .add(SelectButtonEvent('AI Query Answer'));
+                              BlocProvider.of<CustombuttonBloc>(context).add( SelectButtonEvent('AI Query Answer'));
                             },
                           ),
                         ],
@@ -192,11 +156,8 @@ class DashboardDesktopView extends StatelessWidget {
                                 return DateSelectionWidget(
                                   selectedDate: selectedDate,
                                   onChanged: (newDate) {
-                                    BlocProvider.of<DashboardBloc>(context)
-                                        .add(UpdateSelectedDateEvent(newDate));
-                                    BlocProvider.of<PlutotableBloc>(context)
-                                        .add(SelectDateEvent(
-                                            selectedDate: newDate));
+                                    BlocProvider.of<DashboardBloc>(context).add(UpdateSelectedDateEvent(newDate));
+                                    BlocProvider.of<PlutotableBloc>(context).add(SelectDateEvent(selectedDate: newDate));
                                   },
                                   label: 'Day',
                                   isInteractive: true,
@@ -213,150 +174,37 @@ class DashboardDesktopView extends StatelessWidget {
                                 return CustomDropdown(
                                   selectedValue: selectMonth,
                                   items: const [
-                                    'January',
-                                    'February',
-                                    'March',
-                                    'April',
-                                    'May',
-                                    'June',
-                                    'July',
-                                    'August',
-                                    'September',
-                                    'October',
-                                    'November',
-                                    'December'
+                                    'January', 'February', 'March', 'April', 'May', 'June',
+                                    'July', 'August', 'September', 'October', 'November', 'December'
                                   ],
                                   onChanged: (DateTime? value) {
                                     if (value != null) {
-                                      BlocProvider.of<DashboardBloc>(context)
-                                          .add(UpdateSelectedMonthEvent(value));
-                                      BlocProvider.of<PlutotableBloc>(context)
-                                          .add(SelectMonthEvent(
-                                              selectedMonth: value));
+                                      BlocProvider.of<DashboardBloc>(context).add(UpdateSelectedMonthEvent(value));
+                                      BlocProvider.of<PlutotableBloc>(context).add(SelectMonthEvent(selectedMonth: value));
                                     }
                                   },
                                   label: 'Month',
                                 );
                               },
                             ),
-                            BlocBuilder<PlutotableBloc, PlutotableState>(
-                              builder: (context, state) {
-                                if (state is FetchTableDataSuccess) {
-                                  List<TableItem> initialTableData = [];
-                                  DateTime selectedDate = DateTime.now();
-                                  DateTime selectedMonth = DateTime(2024 - 01);
-                                  return CustomFilterDropdown(
-                                      selectedValue:
-                                          state.selectedClassification,
-                                      items: const [
-                                        'Select',
-                                        'Spam/Marketing',
-                                        'No Action Required',
-                                        'Genuine Query',
-                                        'Acknowledgement required'
-                                      ],
-                                      onChanged: (String? value) {
-                                        if (value != null) {
-                                          BlocProvider.of<PlutotableBloc>(
-                                                  context,
-                                                  listen: false)
-                                              .add(
-                                            FilterClassificationEvent(
-                                                initialTableData,
-                                                selectedDate,
-                                                selectedMonth,
-                                                value),
-                                          );
-                                        }
-                                      },
-                                      label: 'Classification');
-                                } else {
-                                  return Container();
-                                }
-                              },
-                            ),
-                            BlocBuilder<PlutotableBloc, PlutotableState>(
-                              builder: (context, state) {
-                                if (state is FetchTableDataSuccess) {
-                                  return CustomFilterDropdown(
-                                      selectedValue: state.selectedValidation,
-                                      items: const [
-                                        'Select',
-                                        'correct',
-                                        'incorrect',
-                                      ],
-                                      onChanged: (String? value) {
-                                        if (value != null) {
-                                          BlocProvider.of<PlutotableBloc>(
-                                                  context,
-                                                  listen: false)
-                                              .add(FilterValidationEvent(
-                                                  value,
-                                                  state.tableData.items,
-                                                  state.selectedDate,
-                                                  state.selectedMonth, state.selectedClassification));
-                                        }
-                                      },
-                                      label: 'Validation');
-                                } else {
-                                  return Container();
-                                }
-                              },
-                            )
                           ],
                         ),
                       ),
-                      const Tooltip(
-                          message: 'download csv file',
-                          child: ExportButton(icon: 'assets/icons/Export.svg')),
+                      const Spacer(),
+                      const Tooltip(message:'download csv file',  child: ExportButton(icon: 'assets/icons/Export.svg')),
                     ],
                   ),
                   BlocBuilder<CustombuttonBloc, CustombuttonState>(
                     builder: (context, state) {
-                      if (state is ButtonSelectedState &&
-                          state.selectedButtonText == 'Ticket Classification') {
+                      if (state is ButtonSelectedState && state.selectedButtonText == 'Ticket Classification') {
                         return Expanded(
                           flex: 7,
-                          child: BlocConsumer<PlutotableBloc, PlutotableState>(
-                            listener: (context, state) {
-                              if (state is UpdateValidationSuccess) {
-                                context.read<PlutotableBloc>().add(
-                                    FetchTableDataEvent(
-                                        selectedDate: state.selectedDate,
-                                        selectedMonth: state.selectedMonth));
-                              } else if (state is UpdateValidationSuccess ||
-                                  state is UpdateValidationError) {
-                                context.read<PlutotableBloc>().add(
-                                    FetchTableDataEvent(
-                                        selectedDate: DateTime.now(),
-                                        selectedMonth: DateTime(2024 - 01)));
-                                Navigator.of(context).pop();
-                              }
-                            },
+                          child: BlocBuilder<PlutotableBloc, PlutotableState>(
                             builder: (context, state) {
-                              if (state is UpdateValidationLoading) {
-                                return Center(
-                                  child: LoadingWidget(
-                                    height:
-                                        UIHelpers.screenHeight(context) * 0.4,
-                                    width:
-                                        UIHelpers.screenWidth(context) * 0.65,
-                                    radius: 8,
-                                  ),
-                                );
-                              }
                               if (state is FetchTableDataLoading) {
-                                return Center(
-                                    child: LoadingWidget(
-                                  height: UIHelpers.screenHeight(context) * 0.4,
-                                  width: UIHelpers.screenWidth(context) * 0.65,
-                                  radius: 8,
-                                ));
+                                return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context)/2,width: UIHelpers.screenWidth(context)/1.5,radius: 8,));
                               } else if (state is FetchTableDataSuccess) {
-                                return PlutoTableWidget(
-                                    tableData: state.tableData,
-                                    selectedDate: state.selectedDate,
-                                    selectedMonth: state.selectedMonth);
+                                return PlutoTableWidget(tableData: state.tableData);
                               } else if (state is FetchTableDataError) {
                                 return const Center(child: EmptyWidget());
                               } else {
@@ -365,50 +213,15 @@ class DashboardDesktopView extends StatelessWidget {
                             },
                           ),
                         );
-                      } else if (state is CustomButtonInitial) {
+                      } else if (state is CustomButtonInitial ) {
                         return Expanded(
                           flex: 7,
-                          child: BlocConsumer<PlutotableBloc, PlutotableState>(
-                            listener: (context, state) {
-                              if (state is UpdateValidationSuccess) {
-                                context.read<PlutotableBloc>().add(
-                                    FetchTableDataEvent(
-                                        selectedDate: state.selectedDate,
-                                        selectedMonth: state.selectedMonth));
-                              } else if (state is UpdateValidationSuccess ||
-                                  state is UpdateValidationError) {
-                                context.read<PlutotableBloc>().add(
-                                    FetchTableDataEvent(
-                                        selectedDate: DateTime.now(),
-                                        selectedMonth: DateTime(2024 - 01)));
-                                Navigator.of(context).pop();
-                              }
-                            },
+                          child: BlocBuilder<PlutotableBloc, PlutotableState>(
                             builder: (context, state) {
-                              if (state is UpdateValidationLoading) {
-                                return Center(
-                                  child: LoadingWidget(
-                                    height:
-                                        UIHelpers.screenHeight(context) * 0.4,
-                                    width:
-                                        UIHelpers.screenWidth(context) * 0.65,
-                                    radius: 8,
-                                  ),
-                                );
-                              }
                               if (state is FetchTableDataLoading) {
-                                return Center(
-                                    child: LoadingWidget(
-                                  height: UIHelpers.screenHeight(context) * 0.4,
-                                  width: UIHelpers.screenWidth(context) * 0.65,
-                                  radius: 8,
-                                ));
+                                return Center(child: LoadingWidget(height: UIHelpers.screenHeight(context)/2,width: UIHelpers.screenWidth(context)/1.5,radius: 8,));
                               } else if (state is FetchTableDataSuccess) {
-                                return PlutoTableWidget(
-                                  tableData: state.tableData,
-                                  selectedDate: state.selectedDate,
-                                  selectedMonth: state.selectedMonth,
-                                );
+                                return PlutoTableWidget(tableData: state.tableData);
                               } else if (state is FetchTableDataError) {
                                 return const Center(child: EmptyWidget());
                               } else {
@@ -418,15 +231,16 @@ class DashboardDesktopView extends StatelessWidget {
                           ),
                         );
                       } else {
-                        return SizedBox(
-                          height: UIHelpers.screenHeight(context) * 0.3,
-                          child: const Center(
+                        return Container(
+                          height: UIHelpers.screenHeight(context)/2,
+                          child: Center(
                             child: Text('No Data available'),
                           ),
                         );
                       }
                     },
                   ),
+               
                 ],
               ),
             ),
@@ -435,12 +249,7 @@ class DashboardDesktopView extends StatelessWidget {
               child: BlocBuilder<DashboardBloc, DashboardState>(
                 builder: (context, state) {
                   if (state is PiechartLoading) {
-                    return Center(
-                        child: LoadingWidget(
-                      width: UIHelpers.screenWidth(context) * 0.2,
-                      height: UIHelpers.screenHeight(context) * 0.6,
-                      radius: 8,
-                    ));
+                    return Center(child: LoadingWidget(width: UIHelpers.screenWidth(context)/4,height: UIHelpers.screenHeight(context)/1.3,radius: 8,));
                   } else if (state is DashboardDataSuccess) {
                     return PieChartWidget(data: state.pieChartData);
                   } else if (state is PieChartError) {

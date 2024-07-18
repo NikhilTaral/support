@@ -20,8 +20,6 @@ class TableItem extends Equatable {
   final String reasoning;
   final String createdAt;
   final String ticketDescription;
-  final String classificationValidation;
-  final String classificationValidationReason;
 
   const TableItem({
     required this.id,
@@ -29,11 +27,9 @@ class TableItem extends Equatable {
     required this.hsPipelineStage,
     required this.reasoning,
     required this.createdAt,
-    required this.ticketDescription,
-    required this.classificationValidation,
-    required this.classificationValidationReason
+    required this.ticketDescription
   });
 
   @override
-  List<Object?> get props => [id, classification, hsPipelineStage, reasoning, createdAt,ticketDescription, classificationValidation,classificationValidationReason];
+  List<Object?> get props => [id, classification, hsPipelineStage, reasoning, createdAt,ticketDescription];
 }

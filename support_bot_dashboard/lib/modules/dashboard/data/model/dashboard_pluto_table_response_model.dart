@@ -38,7 +38,7 @@ class DashboardPlutotableResponseModel {
 }
 
 class Data {
-    final num totalRecords;
+    final int totalRecords;
     final List<Item> items;
     final String lastEvaluatedKey;
 
@@ -68,8 +68,6 @@ class Item {
   final CreatedAt reasoning;
   final CreatedAt createdAt;
   final CreatedAt ticketDescription;
-  final CreatedAt classificationValidation;
-  final CreatedAt classificationValidationReason;
 
   Item({
     required this.classification,
@@ -77,9 +75,7 @@ class Item {
     required this.id,
     required this.reasoning,
     required this.createdAt,
-    required this.ticketDescription,
-    required this.classificationValidation,
-    required this.classificationValidationReason
+    required this.ticketDescription
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -90,8 +86,6 @@ class Item {
       reasoning: json.containsKey("reasoning") ? CreatedAt.fromJson(json["reasoning"]) : CreatedAt(s: ''),
       createdAt: json.containsKey("CreatedAt") ? CreatedAt.fromJson(json["CreatedAt"]) : CreatedAt(s: ''), 
       ticketDescription: json.containsKey("Ticket_Description") ? CreatedAt.fromJson(json["Ticket_Description"]) : CreatedAt(s: ''),
-       classificationValidation: json.containsKey("classificationValidation") ? CreatedAt.fromJson(json["classificationValidation"]) : CreatedAt(s: ''),
-        classificationValidationReason: json.containsKey("classificationValidationReason") ? CreatedAt.fromJson(json["classificationValidationReason"]) : CreatedAt(s: ''),
     );
   }
 
@@ -101,9 +95,7 @@ class Item {
     "id": id.toJson(),
     "reasoning": reasoning.toJson(),
     "CreatedAt": createdAt.toJson(),
-    "ticketDescription": createdAt.toJson(),
-    "classificationValidation": createdAt.toJson(),
-    "classificationValidationReason": createdAt.toJson()
+    "ticketDescription": createdAt.toJson()
   };
 }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DateSelectionWidget extends StatelessWidget {
@@ -27,11 +26,10 @@ class DateSelectionWidget extends StatelessWidget {
               border: Border.all(color: SupportBotColors.gray),
               borderRadius: BorderRadius.circular(5.0),
             ),
-            padding:
-                const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
+            padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
             margin: const EdgeInsets.only(top: 20, left: 25, right: 1),
-            height: UIHelpers.screenHeight(context) * 0.05,
-            width: UIHelpers.screenWidth(context) * 0.1,
+            height: UIHelpers.screenHeight(context)/18,
+            width: UIHelpers.screenWidth(context)/7,
             child: GestureDetector(
               onTap: isInteractive
                   ? () async {
@@ -54,12 +52,11 @@ class DateSelectionWidget extends StatelessWidget {
                       selectedDate != DateTime.now()
                           ? selectedDate.toIso8601String().substring(0, 10)
                           : 'Select date',
-                      style: SupportBotTextstyle.dateText,
+                      style: const TextStyle(color: SupportBotColors.black, fontSize: 16),
                       overflow: TextOverflow.clip,
                     ),
                   ),
-                  Icon(Icons.calendar_month,
-                      color: SupportBotColors.bluePrimary.shade500),
+                 Icon(Icons.calendar_month, color: SupportBotColors.bluePrimary.shade500),
                 ],
               ),
             ),
@@ -71,7 +68,13 @@ class DateSelectionWidget extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             color: SupportBotColors.white,
-            child: Text(label, style: SupportBotTextstyle.dateLabel),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: SupportBotColors.gray,
+                fontSize: 12,
+              ),
+            ),
           ),
         ),
       ],

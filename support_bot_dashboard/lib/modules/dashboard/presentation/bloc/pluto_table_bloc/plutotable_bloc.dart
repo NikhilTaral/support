@@ -4,33 +4,29 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
+
 part 'plutotable_event.dart';
 part 'plutotable_state.dart';
 
 class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
-  DashboardTableAttributeModel? initialData;
   PlutotableBloc() : super(PlutotableInitial()) {
     on<FetchTableDataEvent>(_onFetchTableDataEvent);
     on<SelectDateEvent>(_onSelectDateEvent);
     on<SelectMonthEvent>(_onSelectMonthEvent);
-    on<UpdateValidationEvent>(_onUpdateValidationEvent);
-    on<FilterClassificationEvent>(_onFilterClassificationEvent);
-    on<FilterValidationEvent>(_onFilterValidationEvent);
   }
 
-  FutureOr<void> _onFetchTableDataEvent(
-      FetchTableDataEvent event, Emitter<PlutotableState> emit) async {
-    emit(FetchTableDataLoading());
-    try {
-      final repository = serviceLocator<DashboardTableDatausecase>();
-      final response =
-          await repository.invoke(event.selectedDate, event.selectedMonth);
-      if (response.isLeft) {
+FutureOr<void> _onFetchTableDataEvent(FetchTableDataEvent event, Emitter<PlutotableState> emit) async {
+  emit(FetchTableDataLoading());
+  try {
+    print('Fetching table data for ${event.selectedDate}, ${event.selectedMonth}');
+    final repository = serviceLocator<DashboardTableDatausecase>();
+    final response = await repository.invoke(event.selectedDate, event.selectedMonth);
+    response.fold(
+      (failure) {
+        print('Failed to fetch data: $failure'); 
         emit(FetchTableDataError("Failed to fetch data"));
-      } else {
-        final model = response.right;
-
+      },
+      (model) {
         if (model.success == true) {
           List<TableItem> items = (model.data?.items as List<Item>).map((item) {
             return TableItem(
@@ -38,11 +34,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               classification: item.classification.s,
               hsPipelineStage: item.hsPipelineStage.s,
               reasoning: item.reasoning.s,
-              createdAt: item.createdAt.s,
+              createdAt: item.createdAt.s, 
               ticketDescription: item.ticketDescription.s,
-              classificationValidation: item.classificationValidation.s,
-              classificationValidationReason:
-                  item.classificationValidationReason.s,
             );
           }).toList();
 
@@ -51,133 +44,33 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             items: items,
           );
 
-          initialData = tableData;
-
           emit(FetchTableDataSuccess(
-              selectedClassification: "Select",
-              tableData: tableData,
-              selectedDate: event.selectedDate ?? DateTime.now(),
-              selectedMonth: event.selectedMonth ?? DateTime(2024 - 01),
-              selectedValidation: 'Select'));
+            tableData: tableData,
+            selectedDate: event.selectedDate ?? DateTime.now(),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+          ));
         } else {
+          print('Fetch data success but model.success is false'); 
           emit(FetchTableDataError(model.message ?? 'Unknown error'));
         }
-      }
-    } catch (e) {
-      emit(FetchTableDataError("Exception occurred: $e"));
-    }
-  }
-
-  FutureOr<void> _onSelectDateEvent(
-      SelectDateEvent event, Emitter<PlutotableState> emit) {
-    emit(UpdateDateState(selectedDate: event.selectedDate));
-    add(FetchTableDataEvent(
-        selectedDate: event.selectedDate, selectedMonth: DateTime(2024 - 01)));
-  }
-
-  FutureOr<void> _onSelectMonthEvent(
-      SelectMonthEvent event, Emitter<PlutotableState> emit) {
-    emit(UpdateMonthState(selectedMonth: event.selectedMonth));
-    add(FetchTableDataEvent(
-        selectedDate: null, selectedMonth: event.selectedMonth));
-  }
-
-  FutureOr<void> _onUpdateValidationEvent(
-      UpdateValidationEvent event, Emitter<PlutotableState> emit) async {
-    emit(UpdateValidationLoading());
-    try {
-      final repository = serviceLocator<DashboardValidationUsecase>();
-      await repository.invoke(event.id, event.validation, event.reason);
-      emit(UpdateValidationSuccess(
-          selectedDate: event.selectedDate ?? DateTime.now(),
-          selectedMonth: event.selectedMonth ?? DateTime(2024 - 01)));
-    } catch (e) {
-      emit(UpdateValidationError('Exception occurred: $e'));
-    }
-  }
-
-  FutureOr<void> _onFilterClassificationEvent(
-      FilterClassificationEvent event, Emitter<PlutotableState> emit) async {
-    emit(FetchTableDataLoading());
-
-    if (event.selectedClassification == 'Select') {
-      emit(FetchTableDataSuccess(
-          selectedClassification: event.selectedClassification,
-          tableData: initialData!,
-          selectedDate: event.selectedDate,
-          selectedMonth: event.selectedMonth,
-          selectedValidation: 'Select'));
-    } else {
-      final filteredData = await filterClassificationData(
-        initialData!,
-        event.selectedClassification,
-      );
-      emit(FetchTableDataSuccess(
-        selectedClassification: event.selectedClassification,
-        tableData: filteredData,
-        selectedDate: event.selectedDate,
-        selectedMonth: event.selectedMonth,
-        selectedValidation: 'Select',
-      ));
-    }
-  }
-
-  Future<DashboardTableAttributeModel> filterClassificationData(
-      DashboardTableAttributeModel initialData,
-      String selectedClassification) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final filteredItems = initialData.items.where((item) {
-      return item.classification == selectedClassification;
-    }).toList();
-
-    return DashboardTableAttributeModel(
-      totalRecords: filteredItems.length,
-      items: filteredItems,
+      },
     );
+  } catch (e) {
+    print('Exception occurred: $e'); 
+    emit(FetchTableDataError("Exception occurred: $e"));
+  }
+}
+
+
+  FutureOr<void> _onSelectDateEvent(SelectDateEvent event, Emitter<PlutotableState> emit) {
+  emit(UpdateDateState(selectedDate: event.selectedDate));
+  print('Dateeee ->>>>> ${event.selectedDate}');
+    add(FetchTableDataEvent(selectedDate: event.selectedDate,selectedMonth: DateTime(2024, 1)));
+
   }
 
-  FutureOr<void> _onFilterValidationEvent(
-      FilterValidationEvent event, Emitter<PlutotableState> emit) async {
-    emit(FetchTableDataLoading());
-
-    if (event.selectedValidation == 'Select') {
-      emit(FetchTableDataSuccess(
-          selectedClassification: 'Select',
-          tableData: initialData!,
-          selectedDate: event.selectedDate,
-          selectedMonth: event.selectedMonth,
-          selectedValidation: event.selectedValidation));
-    } else {
-      final filterdClassificationData = await filterClassificationData(
-        initialData!,
-        event.selectedClassification,
-      );
-      final filteredData = await filterValidationData(
-        filterdClassificationData,
-        event.selectedValidation,
-      );
-      emit(FetchTableDataSuccess(
-        selectedClassification: 'Select',
-        tableData: filteredData,
-        selectedDate: event.selectedDate,
-        selectedMonth: event.selectedMonth,
-        selectedValidation: event.selectedValidation,
-      ));
-    }
-  }
-
-  Future<DashboardTableAttributeModel> filterValidationData(
-      DashboardTableAttributeModel initialData,
-      String selectedValidation) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final filteredItems = initialData.items.where((item) {
-      return item.classificationValidation == selectedValidation;
-    }).toList();
-    return DashboardTableAttributeModel(
-      totalRecords: filteredItems.length,
-      items: filteredItems,
-    );
+  FutureOr<void> _onSelectMonthEvent(SelectMonthEvent event, Emitter<PlutotableState> emit) {
+      emit(UpdateMonthState(selectedMonth:event.selectedMonth ));
+    add(FetchTableDataEvent(selectedDate: null, selectedMonth: event.selectedMonth));
   }
 }
