@@ -16,19 +16,22 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: UIHelpers.screenWidth(context) * 0.2,
-      height: UIHelpers.screenHeight(context) * 0.05,
-      child: Container(
-        margin: const EdgeInsets.only(left: 20, top: 3),
-        width: MediaQuery.of(context).size.width * 0.4,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isSelected ? SupportBotColors.bluePrimary.shade500 : SupportBotColors.blueSecondary.shade200,
-            foregroundColor: isSelected ? SupportBotColors.white : SupportBotColors.black,
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: SizedBox(
+        width: UIHelpers.screenWidth(context) * 0.2,
+        height: UIHelpers.screenHeight(context) * 0.05,
+        child: Container(
+          margin: const EdgeInsets.only(left: 20),
+          width: MediaQuery.of(context).size.width * 0.4,
+          child: ElevatedButton(
+            onPressed: onPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isSelected ? SupportBotColors.bluePrimary.shade500 : SupportBotColors.blueSecondary.shade200,
+              foregroundColor: isSelected ? SupportBotColors.white : SupportBotColors.black,
+            ),
+            child: Text(text),
           ),
-          child: Text(text),
         ),
       ),
     );

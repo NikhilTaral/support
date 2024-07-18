@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
@@ -9,7 +10,8 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dat
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pie_chart_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_dropdown.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
@@ -50,7 +52,7 @@ class DashboardDesktopView extends StatelessWidget {
                   Expanded(
                     flex: 4,
                     child: SizedBox(
-                      height: UIHelpers.screenHeight(context) *0.25,
+                      height: UIHelpers.screenHeight(context) * 0.25,
                       child: BlocBuilder<DashboardBloc, DashboardState>(
                         builder: (context, state) {
                           if (state is FetchCountDataLoading) {
@@ -208,7 +210,7 @@ class DashboardDesktopView extends StatelessWidget {
                                 if (state is DashboardDataSuccess) {
                                   selectMonth = state.selectedMonth;
                                 }
-                                return CustomMonthDropdown(
+                                return CustomDropdown(
                                   selectedValue: selectMonth,
                                   items: const [
                                     'January',
@@ -237,10 +239,73 @@ class DashboardDesktopView extends StatelessWidget {
                                 );
                               },
                             ),
+                            BlocBuilder<PlutotableBloc, PlutotableState>(
+                              builder: (context, state) {
+                                if (state is FetchTableDataSuccess) {
+                                  List<TableItem> initialTableData = [];
+                                  DateTime selectedDate = DateTime.now();
+                                  DateTime selectedMonth = DateTime(2024 - 01);
+                                  return CustomFilterDropdown(
+                                      selectedValue:
+                                          state.selectedClassification,
+                                      items: const [
+                                        'Select',
+                                        'Spam/Marketing',
+                                        'No Action Required',
+                                        'Genuine Query',
+                                        'Acknowledgement required'
+                                      ],
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          BlocProvider.of<PlutotableBloc>(
+                                                  context,
+                                                  listen: false)
+                                              .add(
+                                            FilterClassificationEvent(
+                                                initialTableData,
+                                                selectedDate,
+                                                selectedMonth,
+                                                value),
+                                          );
+                                        }
+                                      },
+                                      label: 'Classification');
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                            BlocBuilder<PlutotableBloc, PlutotableState>(
+                              builder: (context, state) {
+                                if (state is FetchTableDataSuccess) {
+                                  return CustomFilterDropdown(
+                                      selectedValue: state.selectedValidation,
+                                      items: const [
+                                        'Select',
+                                        'correct',
+                                        'incorrect',
+                                      ],
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          BlocProvider.of<PlutotableBloc>(
+                                                  context,
+                                                  listen: false)
+                                              .add(FilterValidationEvent(
+                                                  value,
+                                                  state.tableData.items,
+                                                  state.selectedDate,
+                                                  state.selectedMonth, state.selectedClassification));
+                                        }
+                                      },
+                                      label: 'Validation');
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            )
                           ],
                         ),
                       ),
-                      const Spacer(),
                       const Tooltip(
                           message: 'download csv file',
                           child: ExportButton(icon: 'assets/icons/Export.svg')),
@@ -272,8 +337,10 @@ class DashboardDesktopView extends StatelessWidget {
                               if (state is UpdateValidationLoading) {
                                 return Center(
                                   child: LoadingWidget(
-                                    height: UIHelpers.screenHeight(context) * 0.4,
-                                    width: UIHelpers.screenWidth(context) * 0.65,
+                                    height:
+                                        UIHelpers.screenHeight(context) * 0.4,
+                                    width:
+                                        UIHelpers.screenWidth(context) * 0.65,
                                     radius: 8,
                                   ),
                                 );
@@ -321,8 +388,10 @@ class DashboardDesktopView extends StatelessWidget {
                               if (state is UpdateValidationLoading) {
                                 return Center(
                                   child: LoadingWidget(
-                                    height: UIHelpers.screenHeight(context) * 0.4,
-                                    width: UIHelpers.screenWidth(context) * 0.65,
+                                    height:
+                                        UIHelpers.screenHeight(context) * 0.4,
+                                    width:
+                                        UIHelpers.screenWidth(context) * 0.65,
                                     radius: 8,
                                   ),
                                 );

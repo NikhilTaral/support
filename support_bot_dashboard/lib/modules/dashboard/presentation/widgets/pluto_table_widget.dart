@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
@@ -23,51 +22,18 @@ class PlutoTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         UIHelpers.verticalSpaceTinySmall,
         Padding(
           padding: const EdgeInsets.all(16),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: _calculateMaxHeight(tableData.items.length),
-            ),
+          child: SizedBox(
+            height: 300,
             child: PlutoGrid(
               columns: [
                 PlutoColumn(
                   title: 'ID',
                   field: 'id',
-                  type: PlutoColumnType.text(),
-                  enableFilterMenuItem: false,
-                  enableHideColumnMenuItem: false,
-                  textAlign: PlutoColumnTextAlign.start,
-                  titlePadding: const EdgeInsets.all(8),
-                  backgroundColor: SupportBotColors.blueSecondary.shade100,
-                  enableContextMenu: false,
-                  enableDropToResize: false,
-                  enableEditingMode: false,
-                  enableColumnDrag: false,
-                  readOnly: true,
-                ),
-                PlutoColumn(
-                  title: 'Created At',
-                  field: 'createdAt',
-                  type: PlutoColumnType.date(),
-                  enableFilterMenuItem: false,
-                  enableHideColumnMenuItem: false,
-                  textAlign: PlutoColumnTextAlign.start,
-                  titlePadding: const EdgeInsets.all(8),
-                  backgroundColor: SupportBotColors.blueSecondary.shade100,
-                  enableContextMenu: false,
-                  enableDropToResize: false,
-                  enableEditingMode: false,
-                  enableColumnDrag: false,
-                  readOnly: true,
-                ),
-                PlutoColumn(
-                  title: 'Pipeline Stage',
-                  field: 'hSPipelineStage',
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -100,7 +66,7 @@ class PlutoTableWidget extends StatelessWidget {
                       cursor: SystemMouseCursors.click,
                       child: CustomToolTip(
                         message: value.toString(),
-                        width: 200,
+                        width: 400,
                         toolTipDirection: CustomToolTip.toolTipRight,
                         isMobile: false,
                         child: Text(
@@ -116,15 +82,15 @@ class PlutoTableWidget extends StatelessWidget {
                   title: 'Classification',
                   field: 'classification',
                   type: PlutoColumnType.text(),
-                  enableFilterMenuItem: false,
+                  enableFilterMenuItem: true,
                   enableHideColumnMenuItem: false,
                   textAlign: PlutoColumnTextAlign.start,
                   titlePadding: const EdgeInsets.all(8),
                   backgroundColor: SupportBotColors.blueSecondary.shade100,
-                  enableContextMenu: false,
-                  enableDropToResize: false,
-                  enableEditingMode: false,
-                  enableColumnDrag: false,
+                  enableContextMenu: true,
+                  enableDropToResize: true,
+                  enableEditingMode: true,
+                  enableColumnDrag: true,
                   readOnly: true,
                 ),
                 PlutoColumn(
@@ -147,7 +113,7 @@ class PlutoTableWidget extends StatelessWidget {
                       cursor: SystemMouseCursors.click,
                       child: CustomToolTip(
                         message: value.toString(),
-                        width: 200,
+                        width: 400,
                         toolTipDirection: CustomToolTip.toolTipRight,
                         isMobile: false,
                         child: Text(
@@ -176,7 +142,7 @@ class PlutoTableWidget extends StatelessWidget {
                   renderer: (PlutoColumnRendererContext _) {
                     return ValidationReasonRenderer(
                       rowID: _.row.cells['id']?.value ?? "",
-                      plutotableBloc: serviceLocator<PlutotableBloc>(),
+                      plutotableBloc: context.read<PlutotableBloc>(),
                       date: selectedDate,
                       month: selectedMonth,
                       row: _.row,
@@ -197,6 +163,23 @@ class PlutoTableWidget extends StatelessWidget {
                   enableEditingMode: false,
                   enableColumnDrag: false,
                   readOnly: true,
+                  renderer: (PlutoColumnRendererContext context) {
+                    final value = context.cell.value ?? '';
+                    return MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: CustomToolTip(
+                        message: value.toString(),
+                        width: 400,
+                        toolTipDirection: CustomToolTip.toolTipRight,
+                        isMobile: false,
+                        child: Text(
+                          value.toString(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
               rows: tableData.items.map((item) {
@@ -204,9 +187,7 @@ class PlutoTableWidget extends StatelessWidget {
                   cells: {
                     'id': PlutoCell(value: item.id),
                     'classification': PlutoCell(value: item.classification),
-                    'hSPipelineStage': PlutoCell(value: item.hsPipelineStage),
                     'reasoning': PlutoCell(value: item.reasoning),
-                    'createdAt': PlutoCell(value: item.createdAt),
                     'ticketDescription':
                         PlutoCell(value: item.ticketDescription),
                     'validation':
@@ -240,18 +221,6 @@ class PlutoTableWidget extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  double _calculateMaxHeight(int itemCount) {
-    const double rowHeight = 25;
-    const double headerHeight = 30;
-    const double maxVisibleRows = 10;
-    const double paddingHeight = 30;
-    if (itemCount <= maxVisibleRows) {
-      return rowHeight * itemCount + headerHeight + paddingHeight;
-    } else {
-      return rowHeight * maxVisibleRows + headerHeight + paddingHeight;
-    }
   }
 }
 
@@ -313,8 +282,9 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                   if (state is UpdateValidationSuccess) {
                     Navigator.of(context).pop();
                     context.read<PlutotableBloc>().add(FetchTableDataEvent(
-                        selectedDate: widget.date,
-                        selectedMonth: widget.month));
+                          selectedDate: widget.date,
+                          selectedMonth: widget.month,
+                        ));
                   }
                 },
                 builder: (context, state) {

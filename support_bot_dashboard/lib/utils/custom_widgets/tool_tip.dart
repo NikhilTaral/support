@@ -84,7 +84,7 @@ class CustomToolTip extends StatefulWidget {
     required this.width,
     this.prefersAbove,
     this.messagePadding = const EdgeInsets.all(5.0),
-    this.maxMessageLines = 10,
+    this.maxMessageLines = 20,
     this.minMargin = 5.0,
     this.messageTextOverflow = TextOverflow.ellipsis,
     this.toolTipDirection,

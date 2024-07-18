@@ -15,53 +15,56 @@ class CountContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        margin: const EdgeInsets.only(left: 20),
-        height: UIHelpers.screenHeight(context) * 0.2,
-        decoration: BoxDecoration(
-            color: SupportBotColors.bluePrimary.shade400,
-            borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-                flex: 3,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 30),
+        child: Container(
+          margin: const EdgeInsets.only(left: 20),
+          height: UIHelpers.screenHeight(context) * 0.4,
+          decoration: BoxDecoration(
+              color: SupportBotColors.bluePrimary.shade400,
+              borderRadius: BorderRadius.circular(8)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: SvgPicture.asset(
+                      icon,
+                      width: 40,
+                      height: 40,
+                    ),
+                  )),
+              Expanded(
+                flex: 7,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: SvgPicture.asset(
-                    icon,
-                    width: 40,
-                    height: 40,
-                  ),
-                )),
-            Expanded(
-              flex: 7,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10, right: 15),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        flex: 6,
-                        child: Text(
-                          count,
-                          style: SupportBotTextstyle.headingH3,
-                          textAlign: TextAlign.right,
+                  padding: const EdgeInsets.only(top: 10, right: 15),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: Text(
+                            count,
+                            style: SupportBotTextstyle.headingH3,
+                            textAlign: TextAlign.right,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Text(
-                          text,
-                          style: SupportBotTextstyle.countLabel,
-                          textAlign: TextAlign.right,
-                          overflow: TextOverflow.visible,
+                        Expanded(
+                          flex: 4,
+                          child: Text(
+                            text,
+                            style: SupportBotTextstyle.countLabel,
+                            textAlign: TextAlign.right,
+                            overflow: TextOverflow.visible,
+                          ),
                         ),
-                      ),
-                    ]),
-              ),
-            )
-          ],
+                      ]),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
