@@ -7,9 +7,8 @@ class LoadPiechartData extends DashboardEvent {
   final DateTime? selectedMonth;
   final DashboardChartAttributeModel? countData;
 
-  LoadPiechartData(this.selectedDate, this.selectedMonth,  this.countData);
+  LoadPiechartData(this.selectedDate, this.selectedMonth, this.countData);
 }
-
 
 class UpdateSelectedDateEvent extends DashboardEvent {
   final DateTime selectedDate;
@@ -23,10 +22,13 @@ class UpdateSelectedMonthEvent extends DashboardEvent {
   UpdateSelectedMonthEvent(this.selectedMonth);
 }
 
-class FetchCountDataEvent extends DashboardEvent{
+class FetchCountDataEvent extends DashboardEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final DashboardChartAttributeModel? pieChartData;
 
-  FetchCountDataEvent({required this.pieChartData,required this.selectedDate, required this.selectedMonth});
+  FetchCountDataEvent(
+      { this.pieChartData,
+       this.selectedDate,
+      required this.selectedMonth});
 }
