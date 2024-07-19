@@ -294,7 +294,9 @@ class DashboardDesktopView extends StatelessWidget {
                                                   value,
                                                   state.tableData.items,
                                                   state.selectedDate,
-                                                  state.selectedMonth, state.selectedClassification));
+                                                  state.selectedMonth,
+                                                  state
+                                                      .selectedClassification));
                                         }
                                       },
                                       label: 'Validation');
