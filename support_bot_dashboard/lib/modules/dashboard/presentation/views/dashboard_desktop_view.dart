@@ -253,7 +253,7 @@ class DashboardDesktopView extends StatelessWidget {
                                         'Spam/Marketing',
                                         'No Action Required',
                                         'Genuine Query',
-                                        'Acknowledgement required'
+                                        'Acknowledgement Required'
                                       ],
                                       onChanged: (String? value) {
                                         if (value != null) {
