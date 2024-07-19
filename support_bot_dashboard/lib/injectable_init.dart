@@ -3,10 +3,13 @@ import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_table_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_Repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/usecases/v3_login_usecases.dart';
@@ -44,5 +47,9 @@ Future<void> initServiceLocator() async {
       () => DashboardTableDatausecase());
   serviceLocator.registerLazySingleton<DashboardChartdataUsecase>(
       () => DashboardChartdataUsecase());
+  serviceLocator.registerLazySingleton<DashboardValidationUsecase>(
+      () => DashboardValidationUsecase());
   serviceLocator.registerFactory<DashboardBloc>(() => DashboardBloc());
+  serviceLocator.registerFactory<PlutotableBloc>(() => PlutotableBloc());
+  serviceLocator.registerFactory<CustombuttonBloc>(() => CustombuttonBloc());
 }

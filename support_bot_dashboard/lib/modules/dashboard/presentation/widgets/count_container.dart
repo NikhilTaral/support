@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class CountContainer extends StatelessWidget {
@@ -16,11 +17,10 @@ class CountContainer extends StatelessWidget {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.only(left: 20),
-        height: UIHelpers.screenHeight(context)/6,
+        height: UIHelpers.screenHeight(context) / 6,
         decoration: BoxDecoration(
             color: SupportBotColors.bluePrimary.shade400,
-          borderRadius: BorderRadius.circular(8)
-        ),
+            borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -45,10 +45,7 @@ class CountContainer extends StatelessWidget {
                         flex: 6,
                         child: Text(
                           count,
-                          style: const TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                              color: SupportBotColors.white),
+                          style: SupportBotTextstyle.headingH3,
                           textAlign: TextAlign.right,
                         ),
                       ),
@@ -56,8 +53,7 @@ class CountContainer extends StatelessWidget {
                         flex: 4,
                         child: Text(
                           text,
-                          style: const TextStyle(
-                              fontSize: 14, color: SupportBotColors.white),
+                          style: SupportBotTextstyle.countLabel,
                           textAlign: TextAlign.right,
                           overflow: TextOverflow.visible,
                         ),

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-class CustomElevatedButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final String text;
   final bool isSelected;
   final VoidCallback onPressed;
 
-  const CustomElevatedButton({
+  const CustomButton({
     Key? key,
     required this.text,
     this.isSelected = false,

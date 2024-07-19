@@ -48,6 +48,27 @@ class SupportBotTextstyle {
       fontSize: 12, 
   );
 
+    // Count container label
+  static const TextStyle countLabel = TextStyle(
+    fontSize: 14,
+    fontFamily: _fontFamily,
+    color: SupportBotColors.white
+  );
+
+  //date text
+  static const TextStyle dateText = TextStyle(
+    fontSize: 16,
+    fontFamily: _fontFamily,
+    color: SupportBotColors.black
+  );
+
+  //date label
+  static const TextStyle dateLabel = TextStyle(
+    fontSize: 12,
+    fontFamily: _fontFamily,
+    color: SupportBotColors.gray
+  );
+
 // Font size 48
   static final TextStyle headingH1 = TextStyle(
     color: _fontColor,
@@ -66,6 +87,14 @@ class SupportBotTextstyle {
     fontWeight: FontWeight.normal,
     letterSpacing: 0.36,
     height: 32.0 / 24.0,
+  );
+
+      // Font size 35
+  static const TextStyle headingH3 = TextStyle(
+    color: SupportBotColors.white,
+    fontSize: 35,
+    fontWeight: FontWeight.bold,
+    fontFamily: _fontFamily
   );
 
   // Font size 32

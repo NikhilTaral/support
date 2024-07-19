@@ -1,4 +1,3 @@
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
@@ -8,7 +7,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PieChartWidget extends StatefulWidget {
   final DashboardChartAttributeModel? data;
-   const PieChartWidget({super.key, this.data});
+  const PieChartWidget({super.key, this.data});
 
   @override
   State<PieChartWidget> createState() => _PieChartWidgetState(data: data);
@@ -24,6 +23,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   Widget build(BuildContext context) {
     List<Color> blueShades = [
       const Color.fromARGB(255, 153, 172, 187),
+      const Color.fromARGB(255, 61, 121, 170),
       const Color.fromARGB(255, 28, 88, 136),
       const Color.fromARGB(255, 17, 58, 98),
     ];
@@ -33,6 +33,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       ChartData(label: 'Genuine Query', value: data?.genuineQuery),
       ChartData(label: 'No Action Required', value: data?.noActionRequired),
       ChartData(label: 'Spam/Marketing', value: data?.spamMarketing),
+      ChartData(label: 'Acknowledgement Required', value: data?.acknowledgement)
     ];
 
     return Column(
@@ -58,7 +59,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                       touchedIndex = -1;
                       return;
                     }
-                    touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
                   });
                 },
               ),
@@ -68,10 +70,12 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                 chartData.length,
                 (index) {
                   final isTouched = index == touchedIndex;
-                  final double fontSize = isTouched ? 16 : 11;
+                  final double fontSize = isTouched ? 16 : 16;
                   return PieChartSectionData(
                     value: chartData[index].value?.toDouble() ?? 0,
-                    title: '${chartData[index].label}\n${chartData[index].value}',
+                    title: isTouched
+                        ? '${chartData[index].label}: ${chartData[index].value}'
+                        : null,
                     color: blueShades[index % blueShades.length],
                     radius: radius,
                     titleStyle: SupportBotTextstyle.pierchartNormal.copyWith(

@@ -43,6 +43,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             genuineQuery: model.data?.genuineQuery ?? 0,
             noActionRequired: model.data?.noActionRequired ?? 0,
             spamMarketing: model.data?.spamMarketing ?? 0,
+            acknowledgement: model.data?.acknowledgement ?? 0
           );
 
           emit(DashboardDataSuccess(
@@ -73,6 +74,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               genuineQuery: model.data?.genuineQuery ?? 0,
               noActionRequired: model.data?.noActionRequired ?? 0,
               spamMarketing: model.data?.spamMarketing ?? 0,
+              acknowledgement: model.data?.acknowledgement ?? 0
             );
 
             emit(DashboardDataSuccess(
