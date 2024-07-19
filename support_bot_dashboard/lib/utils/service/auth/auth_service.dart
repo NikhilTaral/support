@@ -124,6 +124,7 @@ class AuthService {
     _idToken = oktaAuthResult.idToken;
     await _storage.setString(oktaAuthResult.accessToken,
         key: SecureStorageKey.accessToken);
+        print("oktaAuthResult.accessToken >>> ${oktaAuthResult.accessToken}");
     await _storage.setString(oktaAuthResult.idToken,
         key: SecureStorageKey.idToken);
     // await _storage.setString(oktaAuthResult.refreshToken,
