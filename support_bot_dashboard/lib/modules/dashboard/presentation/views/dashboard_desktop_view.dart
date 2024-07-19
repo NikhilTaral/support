@@ -187,6 +187,72 @@ class DashboardDesktopView extends StatelessWidget {
                                 );
                               },
                             ),
+                            BlocBuilder<PlutotableBloc, PlutotableState>(
+                              builder: (context, state) {
+                                if (state is FetchTableDataSuccess) {
+                                  List<TableItem> initialTableData = [];
+                                  DateTime selectedDate = DateTime.now();
+                                  DateTime selectedMonth = DateTime(2024 - 01);
+                                  return CustomFilterDropdown(
+                                      selectedValue:
+                                          state.selectedClassification,
+                                      items: const [
+                                        'Select',
+                                        'Spam/Marketing',
+                                        'No Action Required',
+                                        'Genuine Query',
+                                        'Acknowledgement Required'
+                                      ],
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          BlocProvider.of<PlutotableBloc>(
+                                                  context,
+                                                  listen: false)
+                                              .add(
+                                            FilterClassificationEvent(
+                                                initialTableData,
+                                                selectedDate,
+                                                selectedMonth,
+                                                value),
+                                          );
+                                        }
+                                      },
+                                      label: 'Classification');
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                            BlocBuilder<PlutotableBloc, PlutotableState>(
+                              builder: (context, state) {
+                                if (state is FetchTableDataSuccess) {
+                                  return CustomFilterDropdown(
+                                      selectedValue: state.selectedValidation,
+                                      items: const [
+                                        'Select',
+                                        'correct',
+                                        'incorrect',
+                                      ],
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          BlocProvider.of<PlutotableBloc>(
+                                                  context,
+                                                  listen: false)
+                                              .add(FilterValidationEvent(
+                                                  value,
+                                                  state.tableData.items,
+                                                  state.selectedDate,
+                                                  state.selectedMonth,
+                                                  state
+                                                      .selectedClassification));
+                                        }
+                                      },
+                                      label: 'Validation');
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            )
                           ],
                         ),
                       ),
