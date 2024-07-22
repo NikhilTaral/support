@@ -26,8 +26,10 @@ class PiechartDataSuccess extends DashboardState {
 
 class PieChartError extends DashboardState {
   final String message;
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
 
-  PieChartError({required this.message});
+  PieChartError({required this.message, required this.selectedDate, required this.selectedMonth});
 }
 
 class DateUpdatedState extends DashboardState {
@@ -53,9 +55,11 @@ class FetchCountDataSuccess extends DashboardState{
 }
 
 class FetchCountDataError extends DashboardState{
-  final String message;
+  final String message;  
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
 
-  FetchCountDataError({required this.message});
+  FetchCountDataError({required this.message, required this.selectedDate, required this.selectedMonth});
 }
 
 class DashboardDataSuccess extends DashboardState {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/iconsax.dart';
 
-class ExpV3Icons {
-  const ExpV3Icons._();
+class SupportBotIcons {
+  const SupportBotIcons._();
   static const IconData note = Iconsax.note_21;
   static const IconData filter = Iconsax.filter;
   static const IconData arrowSwap = Iconsax.arrow_swap;

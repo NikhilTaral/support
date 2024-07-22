@@ -188,6 +188,8 @@ class DashboardDesktopView extends StatelessWidget {
                                 DateTime selectedDate = DateTime.now();
                                 if (state is DashboardDataSuccess) {
                                   selectedDate = state.selectedDate;
+                                } else if (state is PieChartError) {
+                                  selectedDate = state.selectedDate;
                                 }
                                 return DateSelectionWidget(
                                   selectedDate: selectedDate,
@@ -208,6 +210,8 @@ class DashboardDesktopView extends StatelessWidget {
                               builder: (context, state) {
                                 DateTime selectMonth = DateTime(2024, 1);
                                 if (state is DashboardDataSuccess) {
+                                  selectMonth = state.selectedMonth;
+                                }  else if (state is PieChartError) {
                                   selectMonth = state.selectedMonth;
                                 }
                                 return CustomMonthDropdown(

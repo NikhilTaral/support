@@ -245,7 +245,7 @@ class V3LoginView extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             margin: const EdgeInsets.only(right: 8.0),
             child: const Icon(
-              ExpV3Icons.closeCircle,
+              SupportBotIcons.closeCircle,
               // ExpV3Icons.exclamationCircle,
               size: 24.0,
               color: Colors.white,

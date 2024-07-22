@@ -143,7 +143,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
 
     if (event.selectedValidation == 'Select') {
       emit(FetchTableDataSuccess(
-          selectedClassification: 'Select',
+          selectedClassification: event.selectedClassification,
           tableData: initialData!,
           selectedDate: event.selectedDate,
           selectedMonth: event.selectedMonth,
@@ -158,7 +158,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         event.selectedValidation,
       );
       emit(FetchTableDataSuccess(
-        selectedClassification: 'Select',
+        selectedClassification: event.selectedClassification,
         tableData: filteredData,
         selectedDate: event.selectedDate,
         selectedMonth: event.selectedMonth,

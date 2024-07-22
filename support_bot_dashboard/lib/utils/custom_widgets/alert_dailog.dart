@@ -53,13 +53,13 @@ extension ExpAlertStyleColorExtension on ExpAlertStyle {
   IconData iconData() {
     switch (this) {
       case ExpAlertStyle.success:
-        return ExpV3Icons.verify;
+        return SupportBotIcons.verify;
       case ExpAlertStyle.info:
-        return ExpV3Icons.infoCircle;
+        return SupportBotIcons.infoCircle;
       case ExpAlertStyle.warning:
-        return ExpV3Icons.danger;
+        return SupportBotIcons.danger;
       case ExpAlertStyle.danger:
-        return ExpV3Icons.danger;
+        return SupportBotIcons.danger;
     }
   }
 }
