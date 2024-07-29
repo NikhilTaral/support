@@ -25,14 +25,14 @@ class SupportBotTextstyle {
   //Piechart label
   static const TextStyle pierchartLabel = TextStyle(
       fontFamily: _fontFamily,
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: FontWeight.w400,
       color: SupportBotColors.black);
 
   //Piechart heading
   static const TextStyle pierchartHeading = TextStyle(
       fontFamily: _fontFamily,
-      fontSize: 24,
+      fontSize: 22,
       fontWeight: FontWeight.w600,
       color: SupportBotColors.black);
 

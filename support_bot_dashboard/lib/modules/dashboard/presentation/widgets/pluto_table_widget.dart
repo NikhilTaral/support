@@ -28,7 +28,7 @@ class PlutoTableWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: 250,
+            height: 313,
             child: PlutoGrid(
               columns: [
                 PlutoColumn(
@@ -168,7 +168,7 @@ class PlutoTableWidget extends StatelessWidget {
                     return MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: value.toString().isEmpty
-                          ? Text('N/A')
+                          ? const Text('N/A')
                           : CustomToolTip(
                               message: value.toString(),
                               width: 400,

@@ -72,8 +72,8 @@ class DashboardDesktopView extends StatelessWidget {
                                   return Center(
                                       child: LoadingWidget(
                                     width: UIHelpers.screenWidth(context),
-                                    height:
-                                        UIHelpers.screenHeight(context) * 0.25,
+                                    height: UIHelpers.screenHeight(context) / 6,
+                                    radius: 8,
                                   ));
                                 } else if (state is DashboardDataSuccess) {
                                   num totalCount = (state
@@ -318,8 +318,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                 state.selectedValidation,
                                             items: const [
                                               'Select',
-                                              'Correct',
-                                              'Incorrect',
+                                              'correct',
+                                              'incorrect',
                                             ],
                                             onChanged: (String? value) {
                                               if (value != null) {
@@ -392,15 +392,14 @@ class DashboardDesktopView extends StatelessWidget {
                                       );
                                     }
                                     if (state is FetchTableDataLoading) {
-                                      return Center(
-                                          child: LoadingWidget(
+                                      return LoadingWidget(
                                         height:
                                             UIHelpers.screenHeight(context) *
-                                                0.4,
+                                                0.5,
                                         width: UIHelpers.screenWidth(context) *
-                                            0.65,
+                                            0.9,
                                         radius: 8,
-                                      ));
+                                      );
                                     } else if (state is FetchTableDataSuccess) {
                                       return PlutoTableWidget(
                                           tableData: state.tableData,
@@ -416,7 +415,7 @@ class DashboardDesktopView extends StatelessWidget {
                               );
                             } else if (state is CustomButtonInitial) {
                               return Expanded(
-                                flex: 7,
+                                flex: 8,
                                 child: BlocConsumer<PlutotableBloc,
                                     PlutotableState>(
                                   listener: (context, state) {
@@ -490,8 +489,12 @@ class DashboardDesktopView extends StatelessWidget {
                             } else {
                               return SizedBox(
                                 height: UIHelpers.screenHeight(context) * 0.5,
-                                child: const Center(
-                                  child: Text('No Data Available'),
+                                child: Center(
+                                  child: Text('No Data Available',
+                                      style: SupportBotTextstyle.subheadingH6
+                                          .copyWith(
+                                              fontWeight: FontWeight.w300,
+                                              decoration: TextDecoration.none)),
                                 ),
                               );
                             }
@@ -501,7 +504,7 @@ class DashboardDesktopView extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: BlocBuilder<DashboardBloc, DashboardState>(
                       builder: (context, state) {
                         if (state is PiechartLoading) {
