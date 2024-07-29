@@ -266,7 +266,6 @@ class AuthService {
     _idToken = null;
     await _storage.remove(key: SecureStorageKey.accessToken);
     await _storage.remove(key: SecureStorageKey.idToken);
-    // await _storage.remove(key: SecureStorageKey.refreshToken);
   }
 
   Future<void> clearUserProfile() async {
