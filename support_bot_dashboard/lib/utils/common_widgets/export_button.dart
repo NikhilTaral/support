@@ -15,13 +15,13 @@ class ExportButton extends StatelessWidget {
   const ExportButton({
     Key? key,
     required this.icon,
-    this.iconSize = 30.0,
+    this.iconSize = 25.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 30),
+      margin: const EdgeInsets.only(top: 25),
       padding: const EdgeInsets.only(right: 16), 
       child: TextButton(
         onPressed: () async {

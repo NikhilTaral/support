@@ -12,14 +12,16 @@ class FetchTableDataSuccess extends PlutotableState {
   final String selectedValidation;
   final DateTime selectedDate;
   final DateTime selectedMonth;
+  final bool noDataAvailable;
 
-  FetchTableDataSuccess(
-      {required this.tableData,
-      required this.selectedDate,
-      required this.selectedMonth,
-      required this.selectedClassification,
-      required this.selectedValidation
-      });
+  FetchTableDataSuccess({
+    required this.tableData,
+    required this.selectedDate,
+    required this.selectedMonth,
+    required this.selectedClassification,
+    required this.selectedValidation,
+    required this.noDataAvailable,
+  });
 }
 
 class FetchTableDataError extends PlutotableState {

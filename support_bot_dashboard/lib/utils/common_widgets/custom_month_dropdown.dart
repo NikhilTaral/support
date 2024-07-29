@@ -41,7 +41,7 @@ class CustomMonthDropdown extends StatelessWidget {
               child: Text(value),
             );
           }).toList(),
-          icon: const Icon(Icons.arrow_drop_down),
+          icon: const Icon(Icons.keyboard_arrow_down_rounded),
           iconSize: 30,
           isExpanded: true,
           focusColor: SupportBotColors.white,

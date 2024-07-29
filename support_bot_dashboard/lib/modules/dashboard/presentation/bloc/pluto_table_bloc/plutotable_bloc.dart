@@ -54,11 +54,14 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           initialData = tableData;
 
           emit(FetchTableDataSuccess(
-              selectedClassification: "Select",
-              tableData: tableData,
-              selectedDate: event.selectedDate ?? DateTime.now(),
-              selectedMonth: event.selectedMonth ?? DateTime(2024 - 01),
-              selectedValidation: 'Select'));
+            selectedClassification: "Select",
+            tableData: tableData,
+            selectedDate: event.selectedDate ?? DateTime.now(),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 01),
+            selectedValidation: 'Select',
+            noDataAvailable:
+                items.isEmpty, // Set this flag based on the fetched items
+          ));
         } else {
           emit(FetchTableDataError(model.message ?? 'Unknown error'));
         }
@@ -102,11 +105,13 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
 
     if (event.selectedClassification == 'Select') {
       emit(FetchTableDataSuccess(
-          selectedClassification: event.selectedClassification,
-          tableData: initialData!,
-          selectedDate: event.selectedDate,
-          selectedMonth: event.selectedMonth,
-          selectedValidation: 'Select'));
+        selectedClassification: event.selectedClassification,
+        tableData: initialData!,
+        selectedDate: event.selectedDate,
+        selectedMonth: event.selectedMonth,
+        selectedValidation: 'Select',
+        noDataAvailable: false, // Add a flag for no data
+      ));
     } else {
       final filteredData = await filterClassificationData(
         initialData!,
@@ -118,6 +123,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         selectedDate: event.selectedDate,
         selectedMonth: event.selectedMonth,
         selectedValidation: 'Select',
+        noDataAvailable: filteredData.items.isEmpty,
       ));
     }
   }
@@ -143,11 +149,13 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
 
     if (event.selectedValidation == 'Select') {
       emit(FetchTableDataSuccess(
-          selectedClassification: event.selectedClassification,
-          tableData: initialData!,
-          selectedDate: event.selectedDate,
-          selectedMonth: event.selectedMonth,
-          selectedValidation: event.selectedValidation));
+        selectedClassification: event.selectedClassification,
+        tableData: initialData!,
+        selectedDate: event.selectedDate,
+        selectedMonth: event.selectedMonth,
+        selectedValidation: event.selectedValidation,
+        noDataAvailable: false, // Add a flag for no data
+      ));
     } else {
       final filterdClassificationData = await filterClassificationData(
         initialData!,
@@ -163,6 +171,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         selectedDate: event.selectedDate,
         selectedMonth: event.selectedMonth,
         selectedValidation: event.selectedValidation,
+        noDataAvailable:
+            filteredData.items.isEmpty, // Set the flag based on data
       ));
     }
   }

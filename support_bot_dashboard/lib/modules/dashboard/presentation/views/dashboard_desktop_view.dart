@@ -18,6 +18,8 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdow
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
@@ -271,35 +273,38 @@ class DashboardDesktopView extends StatelessWidget {
                                   BlocBuilder<PlutotableBloc, PlutotableState>(
                                     builder: (context, state) {
                                       if (state is FetchTableDataSuccess) {
-                                        List<TableItem> initialTableData = [];
-                                        DateTime selectedDate = DateTime.now();
+                                        DateTime selectedDate =
+                                            state.selectedDate;
                                         DateTime selectedMonth =
-                                            DateTime(2024 - 01);
+                                            state.selectedMonth;
+
                                         return CustomFilterDropdown(
-                                            selectedValue:
-                                                state.selectedClassification,
-                                            items: const [
-                                              'Select',
-                                              'Spam/Marketing',
-                                              'No Action Required',
-                                              'Genuine Query',
-                                              'Acknowledgement Required'
-                                            ],
-                                            onChanged: (String? value) {
-                                              if (value != null) {
-                                                BlocProvider.of<PlutotableBloc>(
-                                                        context,
-                                                        listen: false)
-                                                    .add(
-                                                  FilterClassificationEvent(
-                                                      initialTableData,
-                                                      selectedDate,
-                                                      selectedMonth,
-                                                      value),
-                                                );
-                                              }
-                                            },
-                                            label: 'Classification');
+                                          selectedValue:
+                                              state.selectedClassification,
+                                          items: const [
+                                            'Select',
+                                            'Spam/Marketing',
+                                            'No Action Required',
+                                            'Genuine Query',
+                                            'Acknowledgement Required'
+                                          ],
+                                          onChanged: (String? value) {
+                                            if (value != null) {
+                                              BlocProvider.of<PlutotableBloc>(
+                                                      context,
+                                                      listen: false)
+                                                  .add(
+                                                FilterClassificationEvent(
+                                                  state.tableData.items,
+                                                  selectedDate,
+                                                  selectedMonth,
+                                                  value,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          label: 'Classification',
+                                        );
                                       } else {
                                         return Container();
                                       }
@@ -313,8 +318,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                 state.selectedValidation,
                                             items: const [
                                               'Select',
-                                              'correct',
-                                              'incorrect',
+                                              'Correct',
+                                              'Incorrect',
                                             ],
                                             onChanged: (String? value) {
                                               if (value != null) {
@@ -340,7 +345,7 @@ class DashboardDesktopView extends StatelessWidget {
                               ),
                             ),
                             const Tooltip(
-                                message: 'download csv file',
+                                message: 'Download CSV File',
                                 child: ExportButton(
                                     icon: 'assets/icons/Export.svg')),
                           ],
@@ -457,6 +462,18 @@ class DashboardDesktopView extends StatelessWidget {
                                         radius: 8,
                                       ));
                                     } else if (state is FetchTableDataSuccess) {
+                                      if (state.noDataAvailable) {
+                                        return Center(
+                                          child: Text('No Data Available',
+                                              style: SupportBotTextstyle
+                                                  .subheadingH6
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      decoration:
+                                                          TextDecoration.none)),
+                                        );
+                                      }
                                       return PlutoTableWidget(
                                         tableData: state.tableData,
                                         selectedDate: state.selectedDate,
@@ -474,7 +491,7 @@ class DashboardDesktopView extends StatelessWidget {
                               return SizedBox(
                                 height: UIHelpers.screenHeight(context) * 0.5,
                                 child: const Center(
-                                  child: Text('No Data available'),
+                                  child: Text('No Data Available'),
                                 ),
                               );
                             }

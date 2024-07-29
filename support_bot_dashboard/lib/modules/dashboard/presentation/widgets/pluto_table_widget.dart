@@ -28,7 +28,7 @@ class PlutoTableWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: 300,
+            height: 250,
             child: PlutoGrid(
               columns: [
                 PlutoColumn(
@@ -150,7 +150,7 @@ class PlutoTableWidget extends StatelessWidget {
                   },
                 ),
                 PlutoColumn(
-                  title: 'Validation_Reason',
+                  title: 'Validation Reason',
                   field: 'validation_reason',
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
@@ -164,20 +164,22 @@ class PlutoTableWidget extends StatelessWidget {
                   enableColumnDrag: false,
                   readOnly: true,
                   renderer: (PlutoColumnRendererContext context) {
-                    final value = context.cell.value ?? '';
+                    final value = context.cell.value ?? 'N/A';
                     return MouseRegion(
                       cursor: SystemMouseCursors.click,
-                      child: CustomToolTip(
-                        message: value.toString(),
-                        width: 400,
-                        toolTipDirection: CustomToolTip.toolTipRight,
-                        isMobile: false,
-                        child: Text(
-                          value.toString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+                      child: value.toString().isEmpty
+                          ? Text('N/A')
+                          : CustomToolTip(
+                              message: value.toString(),
+                              width: 400,
+                              toolTipDirection: CustomToolTip.toolTipRight,
+                              isMobile: false,
+                              child: Text(
+                                value.toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                     );
                   },
                 ),
