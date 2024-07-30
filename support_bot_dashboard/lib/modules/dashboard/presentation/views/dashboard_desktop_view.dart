@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:support_bot_dashboard/config/router/go_route/app_route_constant.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
@@ -18,7 +15,6 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdow
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
@@ -31,7 +27,7 @@ class DashboardDesktopView extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<DashboardBloc>()
-            ..add(LoadPiechartData(DateTime.now(), null, null)),
+            ..add(FetchDashboardDataEvent(DateTime.now(), null, null)),
         ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
@@ -55,10 +51,10 @@ class DashboardDesktopView extends StatelessWidget {
               navigateTo: () {},
               text: "",
             ),
-            Expanded(
+            Flexible(
               child: Row(
                 children: [
-                  Expanded(
+                  Flexible(
                     flex: 7,
                     child: Column(
                       children: [
@@ -67,40 +63,40 @@ class DashboardDesktopView extends StatelessWidget {
                           child: SizedBox(
                             child: BlocBuilder<DashboardBloc, DashboardState>(
                               builder: (context, state) {
-                                if (state is FetchCountDataLoading) {
+                                if (state is DashboardDataLoading) {
                                   return Center(
                                       child: LoadingWidget(
-                                    width: UIHelpers.screenWidth(context),
-                                    height: UIHelpers.screenHeight(context) / 6,
+                                    width: UIHelpers.screenWidth(context) * 0.75,
+                                    height: UIHelpers.screenHeight(context) * 0.2,
                                     radius: 8,
                                   ));
                                 } else if (state is DashboardDataSuccess) {
                                   num totalCount = (state
-                                              .countData?.spamMarketing ??
+                                              .pieChartData?.spamMarketing ??
                                           0) +
-                                      (state.countData?.noActionRequired ?? 0) +
-                                      (state.countData?.genuineQuery ?? 0) +
-                                      (state.countData?.acknowledgement ?? 0);
+                                      (state.pieChartData?.noActionRequired ?? 0) +
+                                      (state.pieChartData?.genuineQuery ?? 0) +
+                                      (state.pieChartData?.acknowledgement ?? 0);
                                   return Row(
                                     children: [
                                       CountContainer(
                                         text: 'Spam',
                                         icon: 'assets/icons/Spam.svg',
-                                        count: state.countData?.spamMarketing
+                                        count: state.pieChartData?.spamMarketing
                                                 .toString() ??
                                             '0',
                                       ),
                                       CountContainer(
                                         text: 'No Action Required',
                                         icon: 'assets/icons/NotSpam.svg',
-                                        count: state.countData?.noActionRequired
+                                        count: state.pieChartData?.noActionRequired
                                                 .toString() ??
                                             '0',
                                       ),
                                       CountContainer(
                                         text: 'Genuine Query',
                                         icon: 'assets/icons/genuine.svg',
-                                        count: state.countData?.genuineQuery
+                                        count: state.pieChartData?.genuineQuery
                                                 .toString() ??
                                             '0',
                                       ),
@@ -108,7 +104,7 @@ class DashboardDesktopView extends StatelessWidget {
                                         text: 'Acknowledgement Required',
                                         icon:
                                             'assets/icons/acknowledgement.svg',
-                                        count: state.countData?.acknowledgement
+                                        count: state.pieChartData?.acknowledgement
                                                 .toString() ??
                                             '0',
                                       ),
@@ -119,7 +115,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       ),
                                     ],
                                   );
-                                } else if (state is FetchCountDataError) {
+                                } else if (state is DashboardDataError) {
                                   return const Center(child: EmptyWidget());
                                 } else {
                                   return const Row(
@@ -199,7 +195,7 @@ class DashboardDesktopView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
+                            Flexible(
                               flex: 2,
                               child: Row(
                                 children: [
@@ -208,7 +204,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       DateTime selectedDate = DateTime.now();
                                       if (state is DashboardDataSuccess) {
                                         selectedDate = state.selectedDate;
-                                      } else if (state is PieChartError) {
+                                      } else if (state is DashboardDataError) {
                                         selectedDate = state.selectedDate;
                                       }
                                       return DateSelectionWidget(
@@ -234,7 +230,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       DateTime selectMonth = DateTime(2024, 1);
                                       if (state is DashboardDataSuccess) {
                                         selectMonth = state.selectedMonth;
-                                      } else if (state is PieChartError) {
+                                      } else if (state is DashboardDataError) {
                                         selectMonth = state.selectedMonth;
                                       }
                                       return CustomMonthDropdown(
@@ -354,7 +350,7 @@ class DashboardDesktopView extends StatelessWidget {
                             if (state is ButtonSelectedState &&
                                 state.selectedButtonText ==
                                     'Ticket Classification') {
-                              return Expanded(
+                              return Flexible(
                                 flex: 8,
                                 child: BlocConsumer<PlutotableBloc,
                                     PlutotableState>(
@@ -413,7 +409,7 @@ class DashboardDesktopView extends StatelessWidget {
                                 ),
                               );
                             } else if (state is CustomButtonInitial) {
-                              return Expanded(
+                              return Flexible(
                                 flex: 8,
                                 child: BlocConsumer<PlutotableBloc,
                                     PlutotableState>(
@@ -456,7 +452,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             UIHelpers.screenHeight(context) *
                                                 0.4,
                                         width: UIHelpers.screenWidth(context) *
-                                            0.65,
+                                            0.75,
                                         radius: 8,
                                       ));
                                     } else if (state is FetchTableDataSuccess) {
@@ -502,20 +498,20 @@ class DashboardDesktopView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Expanded(
+                  Flexible(
                     flex: 2,
                     child: BlocBuilder<DashboardBloc, DashboardState>(
                       builder: (context, state) {
-                        if (state is PiechartLoading) {
+                        if (state is DashboardDataLoading) {
                           return Center(
                               child: LoadingWidget(
                             width: UIHelpers.screenWidth(context) * 0.2,
-                            height: UIHelpers.screenHeight(context) * 0.6,
+                            height: UIHelpers.screenHeight(context) * 0.85,
                             radius: 8,
                           ));
                         } else if (state is DashboardDataSuccess) {
                           return PieChartWidget(data: state.pieChartData);
-                        } else if (state is PieChartError) {
+                        } else if (state is DashboardDataError) {
                           return const Center(child: EmptyWidget());
                         } else {
                           return Container();

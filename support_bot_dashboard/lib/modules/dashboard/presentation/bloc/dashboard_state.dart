@@ -54,23 +54,21 @@ class FetchCountDataSuccess extends DashboardState{
   FetchCountDataSuccess({required this.data, required this.selecedDate, required this.selectedMonth});
 }
 
-class FetchCountDataError extends DashboardState{
+class DashboardDataError extends DashboardState{
   final String message;  
   final DateTime selectedDate;
   final DateTime selectedMonth;
 
-  FetchCountDataError({required this.message, required this.selectedDate, required this.selectedMonth});
+  DashboardDataError({required this.message, required this.selectedDate, required this.selectedMonth});
 }
 
 class DashboardDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? pieChartData;
-  final DashboardChartAttributeModel? countData;
   final DateTime selectedDate;
   final DateTime selectedMonth;
 
   DashboardDataSuccess({
     required this.pieChartData,
-    required this.countData,
     required this.selectedDate,
     required this.selectedMonth,
   });

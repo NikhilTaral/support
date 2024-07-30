@@ -2,14 +2,13 @@ part of 'dashboard_bloc.dart';
 
 abstract class DashboardEvent {}
 
-class LoadPiechartData extends DashboardEvent {
+class FetchDashboardDataEvent extends DashboardEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
-  final DashboardChartAttributeModel? countData;
+  final DashboardChartAttributeModel? pieChartData;
 
-  LoadPiechartData(this.selectedDate, this.selectedMonth,  this.countData);
+  FetchDashboardDataEvent(this.selectedDate, this.selectedMonth, this.pieChartData);
 }
-
 
 class UpdateSelectedDateEvent extends DashboardEvent {
   final DateTime selectedDate;
@@ -21,12 +20,4 @@ class UpdateSelectedMonthEvent extends DashboardEvent {
   final DateTime selectedMonth;
 
   UpdateSelectedMonthEvent(this.selectedMonth);
-}
-
-class FetchCountDataEvent extends DashboardEvent{
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
-  final DashboardChartAttributeModel? pieChartData;
-
-  FetchCountDataEvent({required this.pieChartData,required this.selectedDate, required this.selectedMonth});
 }

@@ -28,12 +28,13 @@ class PlutoTableWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: 325,
+            height: 324,
             child: PlutoGrid(
               columns: [
                 PlutoColumn(
                   title: 'ID',
                   field: 'id',
+                  width:UIHelpers.screenWidth(context) * 0.1,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -49,6 +50,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Ticket Description',
                   field: 'ticketDescription',
+                  width:UIHelpers.screenWidth(context) * 0.25,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -81,6 +83,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Classification',
                   field: 'classification',
+                  width:UIHelpers.screenWidth(context) * 0.18,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: true,
                   enableHideColumnMenuItem: false,
@@ -96,6 +99,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Reasoning',
                   field: 'reasoning',
+                  width:UIHelpers.screenWidth(context) * 0.2,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -128,6 +132,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Validation',
                   field: 'validation',
+                  width:UIHelpers.screenWidth(context) * 0.15,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -152,6 +157,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Validation Reason',
                   field: 'validation_reason',
+                  width:UIHelpers.screenWidth(context) * 0.15,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -342,7 +348,7 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 16), // Space between buttons
+                    UIHelpers.horizontalSpaceRegular,
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: SupportBotColors.bluePrimary,
@@ -385,64 +391,61 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
     return Column(
       children: [
         Flexible(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              // width: 175,
-              child: DropdownButton<String>(
-                isExpanded: true,
-                value: _selectedValue,
-                items: [
-                  DropdownMenuItem<String>(
-                    value: 'Select',
-                    child: Text('Select',
-                        style: SupportBotTextstyle.hint.copyWith(
+          child: SizedBox(
+            // width: 175,
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: _selectedValue,
+              items: [
+                DropdownMenuItem<String>(
+                  value: 'Select',
+                  child: Text('Select',
+                      style: SupportBotTextstyle.hint.copyWith(
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.none,
+                        color: SupportBotColors.gray.shade700,
+                      )),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'correct',
+                  child: Text('Correct',
+                      style: SupportBotTextstyle.hint.copyWith(
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.none,
+                        color: SupportBotColors.black,
+                      )),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'incorrect',
+                  child: Text('Incorrect',
+                      style: SupportBotTextstyle.hint.copyWith(
                           fontWeight: FontWeight.w500,
                           decoration: TextDecoration.none,
-                          color: SupportBotColors.gray.shade700,
-                        )),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'correct',
-                    child: Text('Correct',
-                        style: SupportBotTextstyle.hint.copyWith(
-                          fontWeight: FontWeight.w500,
-                          decoration: TextDecoration.none,
-                          color: SupportBotColors.black,
-                        )),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'incorrect',
-                    child: Text('Incorrect',
-                        style: SupportBotTextstyle.hint.copyWith(
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.none,
-                            color: SupportBotColors.black)),
-                  ),
-                ],
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedValue = newValue!;
-                    widget.row.cells['validation']!.value = _selectedValue;
-                    if (_selectedValue == 'incorrect') {
-                      _showPopup(rowId);
-                    } else {
-                      context.read<PlutotableBloc>().add(UpdateValidationEvent(
-                          id: rowId,
-                          validation: _selectedValue,
-                          reason: '',
-                          selectedDate: widget.date,
-                          selectedMonth: widget.month));
-                    }
-                  });
-                },
-                icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                iconSize: 30,
-                iconEnabledColor: SupportBotColors.gray.shade800,
-                iconDisabledColor: SupportBotColors.gray.shade800,
-                underline: const SizedBox.shrink(),
-                dropdownColor: Colors.white,
-              ),
+                          color: SupportBotColors.black)),
+                ),
+              ],
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedValue = newValue!;
+                  widget.row.cells['validation']!.value = _selectedValue;
+                  if (_selectedValue == 'incorrect') {
+                    _showPopup(rowId);
+                  } else {
+                    context.read<PlutotableBloc>().add(UpdateValidationEvent(
+                        id: rowId,
+                        validation: _selectedValue,
+                        reason: '',
+                        selectedDate: widget.date,
+                        selectedMonth: widget.month));
+                  }
+                });
+              },
+              icon: const Icon(Icons.keyboard_arrow_down_rounded),
+              iconSize: 30,
+              iconEnabledColor: SupportBotColors.gray.shade800,
+              iconDisabledColor: SupportBotColors.gray.shade800,
+              underline: const SizedBox.shrink(),
+              dropdownColor: Colors.white,
             ),
           ),
         ),

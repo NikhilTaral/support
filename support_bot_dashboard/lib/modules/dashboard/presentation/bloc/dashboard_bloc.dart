@@ -10,108 +10,70 @@ part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitial()) {
-    on<LoadPiechartData>(_onLoadPiechartData);
     on<UpdateSelectedMonthEvent>(_onUpdateSelectedMonthEvent);
     on<UpdateSelectedDateEvent>(_onUpdateSelectedDateEvent);
-    on<FetchCountDataEvent>(_onFetchCountDataEvent);
+    on<FetchDashboardDataEvent>(_onFetchDashboardData);
   }
 
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
     emit(DateUpdatedState(event.selectedDate));
-    add(LoadPiechartData(event.selectedDate, DateTime(2024, 1), null));
+    add(FetchDashboardDataEvent(event.selectedDate, DateTime(2024, 1), null));
   }
 
   Future<void> _onUpdateSelectedMonthEvent(
       UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async {
     emit(MonthUpdatedState(event.selectedMonth));
     print(event.selectedMonth);
-    add(LoadPiechartData(null, event.selectedMonth, null));
+    add(FetchDashboardDataEvent(null, event.selectedMonth, null));
   }
 
-  Future<void> _onLoadPiechartData(
-      LoadPiechartData event, Emitter<DashboardState> emit) async {
-    emit(PiechartLoading());
+  Future<void> _onFetchDashboardData(
+      FetchDashboardDataEvent event, Emitter<DashboardState> emit) async {
+    emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardChartdataUsecase>();
+
+    // Fetch both count data and pie chart data
     final response =
         await repository.invoke(event.selectedDate, event.selectedMonth);
 
     if (response.isLeft) {
-      emit(PieChartError(
-          message: "Failed to fetch data",
-          selectedDate: event.selectedDate ?? DateTime.now(),
-          selectedMonth: event.selectedMonth ?? DateTime(2024, 1)));
+      emit(DashboardDataError(
+        message: "Failed to fetch data",
+        selectedDate: event.selectedDate ?? DateTime.now(),
+        selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+      ));
     } else {
       try {
         final model =
             dashboardChartResponseModelFromJson(jsonEncode(response.right));
 
         if (model.success == true) {
-          final dashboardchartdata = DashboardChartAttributeModel(
-              genuineQuery: model.data?.genuineQuery ?? 0,
-              noActionRequired: model.data?.noActionRequired ?? 0,
-              spamMarketing: model.data?.spamMarketing ?? 0,
-              acknowledgement: model.data?.acknowledgement ?? 0);
+          final dashboardChartData = DashboardChartAttributeModel(
+            genuineQuery: model.data?.genuineQuery ?? 0,
+            noActionRequired: model.data?.noActionRequired ?? 0,
+            spamMarketing: model.data?.spamMarketing ?? 0,
+            acknowledgement: model.data?.acknowledgement ?? 0,
+          );
 
           emit(DashboardDataSuccess(
-            pieChartData: dashboardchartdata,
-            countData: event.countData,
+            pieChartData: dashboardChartData,
             selectedDate: event.selectedDate ?? DateTime.now(),
             selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
           ));
-
-          add(FetchCountDataEvent(
-              selectedDate: event.selectedDate,
-              selectedMonth: event.selectedMonth,
-              pieChartData: dashboardchartdata));
         } else {
-          emit(PieChartError(
-              message: model.message ?? 'Unknown error',
-              selectedDate: event.selectedDate ?? DateTime.now(),
-              selectedMonth: event.selectedMonth ?? DateTime(2024, 1)));
+          emit(DashboardDataError(
+            message: model.message ?? 'Unknown error',
+            selectedDate: event.selectedDate ?? DateTime.now(),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+          ));
         }
       } catch (e) {
-        emit(PieChartError(
-            message: 'Failed to parse data',
-            selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024, 1)));
-      }
-    }
-  }
-
-  Future<void> _onFetchCountDataEvent(
-      FetchCountDataEvent event, Emitter<DashboardState> emit) async {
-    emit(FetchCountDataLoading());
-    final repository = serviceLocator<DashboardChartdataUsecase>();
-    final response =
-        await repository.invoke(event.selectedDate, event.selectedMonth);
-    if (response.isLeft) {
-      emit(FetchCountDataError(
-          message: "Failed to fetch data",
-          selectedDate: event.selectedDate ?? DateTime.now(),
-          selectedMonth: event.selectedMonth ?? DateTime(2024 - 01)));
-    } else {
-      final model = response.right;
-
-      if (model.success == true) {
-        final dashboardchartdata = DashboardChartAttributeModel(
-          genuineQuery: model.data?.genuineQuery ?? 0,
-          noActionRequired: model.data?.noActionRequired ?? 0,
-          spamMarketing: model.data?.spamMarketing ?? 0,
-          acknowledgement: model.data?.acknowledgement ?? 0,
-        );
-
-        emit(DashboardDataSuccess(
-          pieChartData: event.pieChartData,
-          countData: dashboardchartdata,
+        emit(DashboardDataError(
+          message: 'Failed to parse data',
           selectedDate: event.selectedDate ?? DateTime.now(),
           selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
         ));
-      } else {
-        emit(FetchCountDataError(
-            message: model.message ?? 'Unknown error',
-            selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024 - 01)));
       }
     }
   }

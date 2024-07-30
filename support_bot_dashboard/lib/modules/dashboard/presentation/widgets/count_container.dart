@@ -14,7 +14,7 @@ class CountContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Flexible(
       child: Container(
         margin: const EdgeInsets.only(left: 20),
         height: UIHelpers.screenHeight(context) / 6,
