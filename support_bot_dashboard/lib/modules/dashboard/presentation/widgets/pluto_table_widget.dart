@@ -24,11 +24,11 @@ class PlutoTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        UIHelpers.verticalSpaceTinySmall,
+        UIHelpers.verticalSpaceTiny,
         Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: 313,
+            height: 325,
             child: PlutoGrid(
               columns: [
                 PlutoColumn(
@@ -87,10 +87,10 @@ class PlutoTableWidget extends StatelessWidget {
                   textAlign: PlutoColumnTextAlign.start,
                   titlePadding: const EdgeInsets.all(8),
                   backgroundColor: SupportBotColors.blueSecondary.shade100,
-                  enableContextMenu: true,
-                  enableDropToResize: true,
-                  enableEditingMode: true,
-                  enableColumnDrag: true,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
                   readOnly: true,
                 ),
                 PlutoColumn(
@@ -274,68 +274,105 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
         return BlocProvider.value(
           value: context.read<PlutotableBloc>(),
           child: AlertDialog(
-            title: const Text('Email Validation Details',
-                style: TextStyle(fontSize: 20)),
-            content: SizedBox(
-              width: UIHelpers.screenWidth(context) * 0.4,
-              height: UIHelpers.screenHeight(context) * 0.3,
-              child: BlocConsumer<PlutotableBloc, PlutotableState>(
-                listener: (context, state) {
-                  if (state is UpdateValidationSuccess) {
-                    Navigator.of(context).pop();
-                    context.read<PlutotableBloc>().add(FetchTableDataEvent(
-                          selectedDate: widget.date,
-                          selectedMonth: widget.month,
-                        ));
-                  }
-                },
-                builder: (context, state) {
-                  if (state is UpdateValidationLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+              title: const Text('Email Validation Details'),
+              backgroundColor: SupportBotColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              content: SizedBox(
+                width: UIHelpers.screenWidth(context) * 0.3,
+                height: UIHelpers.screenHeight(context) * 0.2,
+                child: BlocConsumer<PlutotableBloc, PlutotableState>(
+                  listener: (context, state) {
+                    if (state is UpdateValidationSuccess) {
+                      Navigator.of(context).pop();
+                      context.read<PlutotableBloc>().add(FetchTableDataEvent(
+                            selectedDate: widget.date,
+                            selectedMonth: widget.month,
+                          ));
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is UpdateValidationLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        onChanged: (value) {
-                          reason = value;
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Enter your comments here',
-                          contentPadding: const EdgeInsets.all(16.0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          onChanged: (value) {
+                            reason = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Enter your comments here...',
+                            contentPadding: const EdgeInsets.all(16.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
                           ),
+                          maxLines: 5,
                         ),
-                        maxLines: 5,
+                      ],
+                    );
+                  },
+                ),
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: SupportBotColors.danger,
+                        foregroundColor: SupportBotColors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 40),
                       ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  String validationStatus = _selectedValue;
-                  context.read<PlutotableBloc>().add(UpdateValidationEvent(
-                      id: rowId,
-                      validation: validationStatus,
-                      reason: reason,
-                      selectedDate: widget.date,
-                      selectedMonth: widget.month));
-                },
-              ),
-            ],
-          ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: SupportBotTextstyle.hint.copyWith(
+                          color: SupportBotColors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16), // Space between buttons
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: SupportBotColors.bluePrimary,
+                        foregroundColor: SupportBotColors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 40),
+                      ),
+                      onPressed: () {
+                        String validationStatus = _selectedValue;
+                        context.read<PlutotableBloc>().add(
+                            UpdateValidationEvent(
+                                id: rowId,
+                                validation: validationStatus,
+                                reason: reason,
+                                selectedDate: widget.date,
+                                selectedMonth: widget.month));
+                      },
+                      child: Text(
+                        "Save",
+                        style: SupportBotTextstyle.hint.copyWith(
+                          color: SupportBotColors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
         );
       },
     );
@@ -348,42 +385,64 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
     return Column(
       children: [
         Flexible(
-          child: SizedBox(
-            width: 120,
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: _selectedValue,
-              items: [
-                DropdownMenuItem<String>(
-                  value: 'Select',
-                  child: Text('Select',
-                      style: TextStyle(color: Colors.grey.shade400)),
-                ),
-                const DropdownMenuItem<String>(
-                  value: 'correct',
-                  child: Text('Correct'),
-                ),
-                const DropdownMenuItem<String>(
-                  value: 'incorrect',
-                  child: Text('Incorrect'),
-                ),
-              ],
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedValue = newValue!;
-                  widget.row.cells['validation']!.value = _selectedValue;
-                  if (_selectedValue == 'incorrect') {
-                    _showPopup(rowId);
-                  } else {
-                    context.read<PlutotableBloc>().add(UpdateValidationEvent(
-                        id: rowId,
-                        validation: _selectedValue,
-                        reason: '',
-                        selectedDate: widget.date,
-                        selectedMonth: widget.month));
-                  }
-                });
-              },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              // width: 175,
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: _selectedValue,
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'Select',
+                    child: Text('Select',
+                        style: SupportBotTextstyle.hint.copyWith(
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.none,
+                          color: SupportBotColors.gray.shade700,
+                        )),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'correct',
+                    child: Text('Correct',
+                        style: SupportBotTextstyle.hint.copyWith(
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.none,
+                          color: SupportBotColors.black,
+                        )),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'incorrect',
+                    child: Text('Incorrect',
+                        style: SupportBotTextstyle.hint.copyWith(
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                            color: SupportBotColors.black)),
+                  ),
+                ],
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedValue = newValue!;
+                    widget.row.cells['validation']!.value = _selectedValue;
+                    if (_selectedValue == 'incorrect') {
+                      _showPopup(rowId);
+                    } else {
+                      context.read<PlutotableBloc>().add(UpdateValidationEvent(
+                          id: rowId,
+                          validation: _selectedValue,
+                          reason: '',
+                          selectedDate: widget.date,
+                          selectedMonth: widget.month));
+                    }
+                  });
+                },
+                icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                iconSize: 30,
+                iconEnabledColor: SupportBotColors.gray.shade800,
+                iconDisabledColor: SupportBotColors.gray.shade800,
+                underline: const SizedBox.shrink(),
+                dropdownColor: Colors.white,
+              ),
             ),
           ),
         ),

@@ -65,7 +65,6 @@ class DashboardDesktopView extends StatelessWidget {
                         Expanded(
                           flex: 4,
                           child: SizedBox(
-                            height: UIHelpers.screenHeight(context) * 0.25,
                             child: BlocBuilder<DashboardBloc, DashboardState>(
                               builder: (context, state) {
                                 if (state is FetchCountDataLoading) {
@@ -356,7 +355,7 @@ class DashboardDesktopView extends StatelessWidget {
                                 state.selectedButtonText ==
                                     'Ticket Classification') {
                               return Expanded(
-                                flex: 7,
+                                flex: 8,
                                 child: BlocConsumer<PlutotableBloc,
                                     PlutotableState>(
                                   listener: (context, state) {
