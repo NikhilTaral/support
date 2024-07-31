@@ -34,7 +34,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'ID',
                   field: 'id',
-                  width:UIHelpers.screenWidth(context) * 0.1,
+                  width: UIHelpers.screenWidth(context) * 0.1,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -50,7 +50,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Ticket Description',
                   field: 'ticketDescription',
-                  width:UIHelpers.screenWidth(context) * 0.25,
+                  width: UIHelpers.screenWidth(context) * 0.25,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -83,7 +83,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Classification',
                   field: 'classification',
-                  width:UIHelpers.screenWidth(context) * 0.18,
+                  width: UIHelpers.screenWidth(context) * 0.18,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: true,
                   enableHideColumnMenuItem: false,
@@ -99,7 +99,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Reasoning',
                   field: 'reasoning',
-                  width:UIHelpers.screenWidth(context) * 0.2,
+                  width: UIHelpers.screenWidth(context) * 0.2,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -132,7 +132,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Validation',
                   field: 'validation',
-                  width:UIHelpers.screenWidth(context) * 0.15,
+                  width: UIHelpers.screenWidth(context) * 0.15,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -157,7 +157,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: 'Validation Reason',
                   field: 'validation_reason',
-                  width:UIHelpers.screenWidth(context) * 0.15,
+                  width: UIHelpers.screenWidth(context) * 0.15,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
