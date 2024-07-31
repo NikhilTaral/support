@@ -66,17 +66,21 @@ class DashboardDesktopView extends StatelessWidget {
                                 if (state is DashboardDataLoading) {
                                   return Center(
                                       child: LoadingWidget(
-                                    width: UIHelpers.screenWidth(context) * 0.75,
-                                    height: UIHelpers.screenHeight(context) * 0.2,
+                                    width:
+                                        UIHelpers.screenWidth(context) * 0.75,
+                                    height:
+                                        UIHelpers.screenHeight(context) * 0.2,
                                     radius: 8,
                                   ));
                                 } else if (state is DashboardDataSuccess) {
                                   num totalCount = (state
                                               .pieChartData?.spamMarketing ??
                                           0) +
-                                      (state.pieChartData?.noActionRequired ?? 0) +
+                                      (state.pieChartData?.noActionRequired ??
+                                          0) +
                                       (state.pieChartData?.genuineQuery ?? 0) +
-                                      (state.pieChartData?.acknowledgement ?? 0);
+                                      (state.pieChartData?.acknowledgement ??
+                                          0);
                                   return Row(
                                     children: [
                                       CountContainer(
@@ -89,7 +93,8 @@ class DashboardDesktopView extends StatelessWidget {
                                       CountContainer(
                                         text: 'No Action Required',
                                         icon: 'assets/icons/NotSpam.svg',
-                                        count: state.pieChartData?.noActionRequired
+                                        count: state
+                                                .pieChartData?.noActionRequired
                                                 .toString() ??
                                             '0',
                                       ),
@@ -104,7 +109,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         text: 'Acknowledgement Required',
                                         icon:
                                             'assets/icons/acknowledgement.svg',
-                                        count: state.pieChartData?.acknowledgement
+                                        count: state
+                                                .pieChartData?.acknowledgement
                                                 .toString() ??
                                             '0',
                                       ),
@@ -347,9 +353,10 @@ class DashboardDesktopView extends StatelessWidget {
                         ),
                         BlocBuilder<CustombuttonBloc, CustombuttonState>(
                           builder: (context, state) {
-                            if (state is ButtonSelectedState &&
-                                state.selectedButtonText ==
-                                    'Ticket Classification') {
+                            if (state is CustomButtonInitial ||
+                                (state is ButtonSelectedState &&
+                                    state.selectedButtonText ==
+                                        'Ticket Classification')) {
                               return Flexible(
                                 flex: 8,
                                 child: BlocConsumer<PlutotableBloc,
@@ -357,77 +364,21 @@ class DashboardDesktopView extends StatelessWidget {
                                   listener: (context, state) {
                                     if (state is UpdateValidationSuccess) {
                                       context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
+                                            FetchTableDataEvent(
                                               selectedDate: state.selectedDate,
                                               selectedMonth:
-                                                  state.selectedMonth));
+                                                  state.selectedMonth,
+                                            ),
+                                          );
                                     } else if (state
                                             is UpdateValidationSuccess ||
                                         state is UpdateValidationError) {
                                       context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
+                                            FetchTableDataEvent(
                                               selectedDate: DateTime.now(),
-                                              selectedMonth:
-                                                  DateTime(2024 - 01)));
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                  builder: (context, state) {
-                                    if (state is UpdateValidationLoading) {
-                                      return Center(
-                                        child: LoadingWidget(
-                                          height:
-                                              UIHelpers.screenHeight(context) *
-                                                  0.4,
-                                          width:
-                                              UIHelpers.screenWidth(context) *
-                                                  0.65,
-                                          radius: 8,
-                                        ),
-                                      );
-                                    }
-                                    if (state is FetchTableDataLoading) {
-                                      return LoadingWidget(
-                                        height:
-                                            UIHelpers.screenHeight(context) *
-                                                0.5,
-                                        width: UIHelpers.screenWidth(context) *
-                                            0.9,
-                                        radius: 8,
-                                      );
-                                    } else if (state is FetchTableDataSuccess) {
-                                      return PlutoTableWidget(
-                                          tableData: state.tableData,
-                                          selectedDate: state.selectedDate,
-                                          selectedMonth: state.selectedMonth);
-                                    } else if (state is FetchTableDataError) {
-                                      return const Center(child: EmptyWidget());
-                                    } else {
-                                      return Container();
-                                    }
-                                  },
-                                ),
-                              );
-                            } else if (state is CustomButtonInitial) {
-                              return Flexible(
-                                flex: 8,
-                                child: BlocConsumer<PlutotableBloc,
-                                    PlutotableState>(
-                                  listener: (context, state) {
-                                    if (state is UpdateValidationSuccess) {
-                                      context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
-                                              selectedDate: state.selectedDate,
-                                              selectedMonth:
-                                                  state.selectedMonth));
-                                    } else if (state
-                                            is UpdateValidationSuccess ||
-                                        state is UpdateValidationError) {
-                                      context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
-                                              selectedDate: DateTime.now(),
-                                              selectedMonth:
-                                                  DateTime(2024 - 01)));
+                                              selectedMonth: DateTime(2024, 1),
+                                            ),
+                                          );
                                       Navigator.of(context).pop();
                                     }
                                   },
@@ -447,25 +398,28 @@ class DashboardDesktopView extends StatelessWidget {
                                     }
                                     if (state is FetchTableDataLoading) {
                                       return Center(
-                                          child: LoadingWidget(
-                                        height:
-                                            UIHelpers.screenHeight(context) *
-                                                0.4,
-                                        width: UIHelpers.screenWidth(context) *
-                                            0.75,
-                                        radius: 8,
-                                      ));
+                                        child: LoadingWidget(
+                                          height:
+                                              UIHelpers.screenHeight(context) *
+                                                  0.4,
+                                          width:
+                                              UIHelpers.screenWidth(context) *
+                                                  0.75,
+                                          radius: 8,
+                                        ),
+                                      );
                                     } else if (state is FetchTableDataSuccess) {
                                       if (state.noDataAvailable) {
                                         return Center(
-                                          child: Text('No Data Available',
-                                              style: SupportBotTextstyle
-                                                  .subheadingH6
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      decoration:
-                                                          TextDecoration.none)),
+                                          child: Text(
+                                            'No Data Available',
+                                            style: SupportBotTextstyle
+                                                .subheadingH6
+                                                .copyWith(
+                                              fontWeight: FontWeight.w300,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                          ),
                                         );
                                       }
                                       return PlutoTableWidget(
@@ -485,11 +439,14 @@ class DashboardDesktopView extends StatelessWidget {
                               return SizedBox(
                                 height: UIHelpers.screenHeight(context) * 0.5,
                                 child: Center(
-                                  child: Text('No Data Available',
-                                      style: SupportBotTextstyle.subheadingH6
-                                          .copyWith(
-                                              fontWeight: FontWeight.w300,
-                                              decoration: TextDecoration.none)),
+                                  child: Text(
+                                    'No Data Available',
+                                    style: SupportBotTextstyle.subheadingH6
+                                        .copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ),
                                 ),
                               );
                             }
