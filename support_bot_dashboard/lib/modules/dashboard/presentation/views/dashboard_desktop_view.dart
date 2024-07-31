@@ -15,7 +15,6 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdow
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
@@ -388,39 +387,30 @@ class DashboardDesktopView extends StatelessWidget {
                                         child: LoadingWidget(
                                           height:
                                               UIHelpers.screenHeight(context) *
-                                                  0.4,
-                                          width:
-                                              UIHelpers.screenWidth(context) *
-                                                  0.65,
-                                          radius: 8,
-                                        ),
-                                      );
-                                    }
-                                    if (state is FetchTableDataLoading) {
-                                      return Center(
-                                        child: LoadingWidget(
-                                          height:
-                                              UIHelpers.screenHeight(context) *
-                                                  0.4,
+                                                  0.43,
                                           width:
                                               UIHelpers.screenWidth(context) *
                                                   0.75,
                                           radius: 8,
                                         ),
                                       );
+                                    }
+                                    if (state is FetchTableDataLoading) {
+                                      return Center(
+                                          child: LoadingWidget(
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.43,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.75,
+                                        radius: 8,
+                                      ));
+                                    } else if (state is FetchTableDataEmpty) {
+                                      return const EmptyWidget();
                                     } else if (state is FetchTableDataSuccess) {
                                       if (state.noDataAvailable) {
-                                        return Center(
-                                          child: Text(
-                                            'No Data Available',
-                                            style: SupportBotTextstyle
-                                                .subheadingH6
-                                                .copyWith(
-                                              fontWeight: FontWeight.w300,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        );
+                                        return const Center(
+                                            child: EmptyWidget());
                                       }
                                       return PlutoTableWidget(
                                         tableData: state.tableData,
@@ -438,16 +428,7 @@ class DashboardDesktopView extends StatelessWidget {
                             } else {
                               return SizedBox(
                                 height: UIHelpers.screenHeight(context) * 0.5,
-                                child: Center(
-                                  child: Text(
-                                    'No Data Available',
-                                    style: SupportBotTextstyle.subheadingH6
-                                        .copyWith(
-                                      fontWeight: FontWeight.w300,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                  ),
-                                ),
+                                child: const Center(child: EmptyWidget()),
                               );
                             }
                           },

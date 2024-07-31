@@ -30,6 +30,8 @@ class FetchTableDataError extends PlutotableState {
   FetchTableDataError(this.message);
 }
 
+class FetchTableDataEmpty extends PlutotableState {}
+
 class UpdateDateState extends PlutotableState {
   final DateTime selectedDate;
 

@@ -63,7 +63,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 items.isEmpty, // Set this flag based on the fetched items
           ));
         } else {
-          emit(FetchTableDataError(model.message ?? 'Unknown error'));
+          emit(FetchTableDataEmpty());
         }
       }
     } catch (e) {

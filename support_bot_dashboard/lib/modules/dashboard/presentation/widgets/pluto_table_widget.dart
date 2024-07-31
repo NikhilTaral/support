@@ -28,7 +28,7 @@ class PlutoTableWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: 324,
+            height: UIHelpers.screenHeight(context) * 0.44,
             child: PlutoGrid(
               columns: [
                 PlutoColumn(
