@@ -249,18 +249,20 @@ class ValidationReasonRenderer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ValidationReasonRendererState createState() =>
-      _ValidationReasonRendererState();
+  _ValidationReasonRendererState createState() => _ValidationReasonRendererState();
 }
 
 class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
   late String _selectedValue;
+  late String _previousValue;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _reason = '';
 
   @override
   void initState() {
     super.initState();
-    _selectedValue =
-        _validateValue(widget.row.cells['validation']?.value ?? 'Select');
+    _selectedValue = _validateValue(widget.row.cells['validation']?.value ?? 'Select');
+    _previousValue = _selectedValue;
   }
 
   String _validateValue(String value) {
@@ -275,40 +277,42 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
     showDialog(
       context: context,
       builder: (BuildContext _) {
-        String reason = '';
-
         return BlocProvider.value(
           value: context.read<PlutotableBloc>(),
           child: AlertDialog(
-              title: const Text('Email Validation Details'),
-              backgroundColor: SupportBotColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              content: SizedBox(
-                width: UIHelpers.screenWidth(context) * 0.3,
-                height: UIHelpers.screenHeight(context) * 0.2,
-                child: BlocConsumer<PlutotableBloc, PlutotableState>(
-                  listener: (context, state) {
-                    if (state is UpdateValidationSuccess) {
-                      Navigator.of(context).pop();
-                      context.read<PlutotableBloc>().add(FetchTableDataEvent(
-                            selectedDate: widget.date,
-                            selectedMonth: widget.month,
-                          ));
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is UpdateValidationLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+            title: const Text('Email Validation Details'),
+            backgroundColor: SupportBotColors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            content: SizedBox(
+              width: UIHelpers.screenWidth(context) * 0.3,
+              height: UIHelpers.screenHeight(context) * 0.2,
+              child: BlocConsumer<PlutotableBloc, PlutotableState>(
+                listener: (context, state) {
+                  if (state is UpdateValidationSuccess) {
+                    Navigator.of(context).pop();
+                  }
+                },
+                builder: (context, state) {
+                  if (state is UpdateValidationLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                    return Column(
+                  return Form(
+                    key: _formKey,
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        TextField(
+                        TextFormField(
                           onChanged: (value) {
-                            reason = value;
+                            _reason = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your comments';
+                            }
+                            return null;
                           },
                           decoration: InputDecoration(
                             hintText: 'Enter your comments here...',
@@ -317,68 +321,74 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          maxLines: 5,
+                          maxLines: 4,
                         ),
                       ],
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-              actions: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: SupportBotColors.danger,
-                        foregroundColor: SupportBotColors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 40),
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: SupportBotColors.danger,
+                      foregroundColor: SupportBotColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        "Cancel",
-                        style: SupportBotTextstyle.hint.copyWith(
-                          color: SupportBotColors.white,
-                        ),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _selectedValue = _previousValue;
+                        widget.row.cells['validation']!.value = _selectedValue;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Cancel",
+                      style: SupportBotTextstyle.hint.copyWith(
+                        color: SupportBotColors.white,
                       ),
                     ),
-                    UIHelpers.horizontalSpaceRegular,
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: SupportBotColors.bluePrimary,
-                        foregroundColor: SupportBotColors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 40),
+                  ),
+                  UIHelpers.horizontalSpaceRegular,
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: SupportBotColors.bluePrimary,
+                      foregroundColor: SupportBotColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      onPressed: () {
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
                         String validationStatus = _selectedValue;
-                        context.read<PlutotableBloc>().add(
-                            UpdateValidationEvent(
-                                id: rowId,
-                                validation: validationStatus,
-                                reason: reason,
-                                selectedDate: widget.date,
-                                selectedMonth: widget.month));
-                      },
-                      child: Text(
-                        "Save",
-                        style: SupportBotTextstyle.hint.copyWith(
-                          color: SupportBotColors.white,
-                        ),
+                        context.read<PlutotableBloc>().add(UpdateValidationEvent(
+                          id: rowId,
+                          validation: validationStatus,
+                          reason: _reason,
+                          selectedDate: widget.date,
+                          selectedMonth: widget.month,
+                        ));
+                      }
+                    },
+                    child: Text(
+                      "Save",
+                      style: SupportBotTextstyle.hint.copyWith(
+                        color: SupportBotColors.white,
                       ),
                     ),
-                  ],
-                ),
-              ]),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
@@ -392,51 +402,59 @@ class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
       children: [
         Flexible(
           child: SizedBox(
-            // width: 175,
             child: DropdownButton<String>(
               isExpanded: true,
               value: _selectedValue,
               items: [
                 DropdownMenuItem<String>(
                   value: 'Select',
-                  child: Text('Select',
-                      style: SupportBotTextstyle.hint.copyWith(
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.none,
-                        color: SupportBotColors.gray.shade700,
-                      )),
+                  child: Text(
+                    'Select',
+                    style: SupportBotTextstyle.hint.copyWith(
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                      color: SupportBotColors.gray.shade700,
+                    ),
+                  ),
                 ),
                 DropdownMenuItem<String>(
                   value: 'correct',
-                  child: Text('Correct',
-                      style: SupportBotTextstyle.hint.copyWith(
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.none,
-                        color: SupportBotColors.black,
-                      )),
+                  child: Text(
+                    'Correct',
+                    style: SupportBotTextstyle.hint.copyWith(
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                      color: SupportBotColors.black,
+                    ),
+                  ),
                 ),
                 DropdownMenuItem<String>(
                   value: 'incorrect',
-                  child: Text('Incorrect',
-                      style: SupportBotTextstyle.hint.copyWith(
-                          fontWeight: FontWeight.w500,
-                          decoration: TextDecoration.none,
-                          color: SupportBotColors.black)),
+                  child: Text(
+                    'Incorrect',
+                    style: SupportBotTextstyle.hint.copyWith(
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                      color: SupportBotColors.black,
+                    ),
+                  ),
                 ),
               ],
               onChanged: (String? newValue) {
                 setState(() {
+                  _previousValue = _selectedValue; 
                   _selectedValue = newValue!;
                   widget.row.cells['validation']!.value = _selectedValue;
                   if (_selectedValue == 'incorrect') {
                     _showPopup(rowId);
                   } else {
                     context.read<PlutotableBloc>().add(UpdateValidationEvent(
-                        id: rowId,
-                        validation: _selectedValue,
-                        reason: '',
-                        selectedDate: widget.date,
-                        selectedMonth: widget.month));
+                      id: rowId,
+                      validation: _selectedValue,
+                      reason: '',
+                      selectedDate: widget.date,
+                      selectedMonth: widget.month,
+                    ));
                   }
                 });
               },

@@ -69,8 +69,9 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
     });
     final response = await http.post(uri, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return await getDashboardTableData(
-          selectedDate: DateTime.now(), selectedMonth: DateTime(2024, 1));
+      // return await getDashboardTableData(
+      //     selectedDate: DateTime.now(), selectedMonth: DateTime(2024, 1));
+      return Right(response);
     } else {
       return Left(ServerFailure(message: 'Data updation failed'));
     }
