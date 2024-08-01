@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_sidebar.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -62,8 +63,8 @@ class PlutoTableWidget extends StatelessWidget {
                   enableEditingMode: false,
                   enableColumnDrag: false,
                   readOnly: true,
-                  renderer: (PlutoColumnRendererContext context) {
-                    final value = context.cell.value ?? '';
+                  renderer: (PlutoColumnRendererContext rendererContext) {
+                    final value = rendererContext.cell.value ?? '';
                     return MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: CustomToolTip(
@@ -204,7 +205,7 @@ class PlutoTableWidget extends StatelessWidget {
                   enableEditingMode: false,
                   enableColumnDrag: false,
                   readOnly: true,
-                  renderer: (PlutoColumnRendererContext context) {
+                  renderer: (PlutoColumnRendererContext rendererContext) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -217,8 +218,10 @@ class PlutoTableWidget extends StatelessWidget {
                             child: PopupMenuButton<String>(
                               icon: const Icon(Icons.more_vert_rounded),
                               onSelected: (String newValue) {
-                                context.row.cells['actions']?.value = newValue;
+                                rendererContext.row.cells['actions']?.value = newValue;
                                 if (newValue == 'View') {
+                                  PlutoRow row= rendererContext.row;
+                                  _showSidebar(context, row);
                                 } else if (newValue == 'Change') {}
                               },
                               offset: const Offset(-40, 0),
@@ -294,7 +297,24 @@ class PlutoTableWidget extends StatelessWidget {
       ],
     );
   }
-}
+  void _showSidebar(BuildContext context, PlutoRow row) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.7, right: 0),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.3,
+            child: CustomSidebar(
+              rowData: row,
+            ),
+          ),
+        );
+      },
+    );
+  }
+  }
+
 
 class ValidationReasonRenderer extends StatefulWidget {
   final String rowID;
