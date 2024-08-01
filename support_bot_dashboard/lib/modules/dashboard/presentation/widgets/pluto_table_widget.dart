@@ -194,7 +194,7 @@ class PlutoTableWidget extends StatelessWidget {
                   title: 'Actions',
                   field: 'actions',
                   type: PlutoColumnType.text(),
-                  width: MediaQuery.of(context).size.width * 0.07,
+                  width: UIHelpers.screenWidth(context) * 0.07,
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
                   textAlign: PlutoColumnTextAlign.center,
@@ -302,9 +302,9 @@ class PlutoTableWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          insetPadding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.7, right: 0),
+          insetPadding: EdgeInsets.only(left: UIHelpers.screenWidth(context) * 0.7, right: 0),
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.3,
+            width: UIHelpers.screenWidth(context) * 0.3,
             child: CustomSidebar(
               rowData: row,
             ),

@@ -10,8 +10,8 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dat
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pie_chart_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdown.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
@@ -42,7 +42,6 @@ class DashboardDesktopView extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: Column(
           children: [
             NavBar(
@@ -50,115 +49,97 @@ class DashboardDesktopView extends StatelessWidget {
               navigateTo: () {},
               text: "",
             ),
-            Flexible(
-              child: Row(
+           Row(
                 children: [
                   Flexible(
-                    flex: 7,
+                    flex: 8,
                     child: Column(
                       children: [
-                        Expanded(
-                          flex: 4,
-                          child: SizedBox(
-                            child: BlocBuilder<DashboardBloc, DashboardState>(
-                              builder: (context, state) {
-                                if (state is DashboardDataLoading) {
-                                  return Center(
-                                      child: LoadingWidget(
-                                    width:
-                                        UIHelpers.screenWidth(context) * 0.75,
-                                    height:
-                                        UIHelpers.screenHeight(context) * 0.2,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20,bottom: 20),
+                          child: BlocBuilder<DashboardBloc, DashboardState>(
+                            builder: (context, state) {
+                              if (state is DashboardDataLoading) {
+                                return Center(
+                                  child: LoadingWidget(
+                                    width: UIHelpers.screenWidth(context) * 0.75,
+                                    height: UIHelpers.screenHeight(context) * 0.2,
                                     radius: 8,
-                                  ));
-                                } else if (state is DashboardDataSuccess) {
-                                  num totalCount = (state
-                                              .pieChartData?.spamMarketing ??
-                                          0) +
-                                      (state.pieChartData?.noActionRequired ??
-                                          0) +
-                                      (state.pieChartData?.genuineQuery ?? 0) +
-                                      (state.pieChartData?.acknowledgement ??
-                                          0);
-                                  return Row(
-                                    children: [
-                                      CountContainer(
-                                        text: 'Spam',
-                                        icon: 'assets/icons/Spam.svg',
-                                        count: state.pieChartData?.spamMarketing
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'No Action Required',
-                                        icon: 'assets/icons/NotSpam.svg',
-                                        count: state
-                                                .pieChartData?.noActionRequired
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Genuine Query',
-                                        icon: 'assets/icons/genuine.svg',
-                                        count: state.pieChartData?.genuineQuery
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Acknowledgement Required',
-                                        icon:
-                                            'assets/icons/acknowledgement.svg',
-                                        count: state
-                                                .pieChartData?.acknowledgement
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Total',
-                                        icon: 'assets/icons/TotalTicket.svg',
-                                        count: totalCount.toString(),
-                                      ),
-                                    ],
-                                  );
-                                } else if (state is DashboardDataError) {
-                                  return const Center(child: EmptyWidget());
-                                } else {
-                                  return const Row(
-                                    children: [
-                                      CountContainer(
-                                        text: 'Spam',
-                                        icon: 'assets/icons/Spam.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'No Action Required',
-                                        icon: 'assets/icons/NotSpam.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Genuine Query',
-                                        icon: 'assets/icons/genuine.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Acknowledgement Required',
-                                        icon:
-                                            'assets/icons/acknowledgement.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Total',
-                                        icon: 'assets/icons/TotalTicket.svg',
-                                        count: '0',
-                                      ),
-                                    ],
-                                  );
-                                }
-                              },
-                            ),
+                                  ),
+                                );
+                              } else if (state is DashboardDataSuccess) {
+                                num totalCount = (state.pieChartData?.spamMarketing ?? 0) +
+                                    (state.pieChartData?.noActionRequired ?? 0) +
+                                    (state.pieChartData?.genuineQuery ?? 0) +
+                                    (state.pieChartData?.acknowledgement ?? 0);
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    CountContainer(
+                                      text: 'Spam',
+                                      icon: 'assets/icons/Spam.svg',
+                                      count: state.pieChartData?.spamMarketing.toString() ?? '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'No Action Required',
+                                      icon: 'assets/icons/NotSpam.svg',
+                                      count: state.pieChartData?.noActionRequired.toString() ?? '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'Genuine Query',
+                                      icon: 'assets/icons/genuine.svg',
+                                      count: state.pieChartData?.genuineQuery.toString() ?? '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'Acknowledgement Required',
+                                      icon: 'assets/icons/acknowledgement.svg',
+                                      count: state.pieChartData?.acknowledgement.toString() ?? '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'Total',
+                                      icon: 'assets/icons/TotalTicket.svg',
+                                      count: totalCount.toString(),
+                                    ),
+                                  ],
+                                );
+                              } else if (state is DashboardDataError) {
+                                return const Center(child: EmptyWidget());
+                              } else {
+                                return const Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    CountContainer(
+                                      text: 'Spam',
+                                      icon: 'assets/icons/Spam.svg',
+                                      count: '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'No Action Required',
+                                      icon: 'assets/icons/NotSpam.svg',
+                                      count: '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'Genuine Query',
+                                      icon: 'assets/icons/genuine.svg',
+                                      count: '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'Acknowledgement Required',
+                                      icon: 'assets/icons/acknowledgement.svg',
+                                      count: '0',
+                                    ),
+                                    CountContainer(
+                                      text: 'Total',
+                                      icon: 'assets/icons/TotalTicket.svg',
+                                      count: '0',
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
                           ),
                         ),
-                        BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                         BlocBuilder<CustombuttonBloc, CustombuttonState>(
                           builder: (context, state) {
                             String selectedButtonText = '';
                             if (state is ButtonSelectedState) {
@@ -197,12 +178,10 @@ class DashboardDesktopView extends StatelessWidget {
                             );
                           },
                         ),
-                        Row(
+                          Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Flexible(
-                              flex: 2,
-                              child: Row(
+                            Row(
                                 children: [
                                   BlocBuilder<DashboardBloc, DashboardState>(
                                     builder: (context, state) {
@@ -229,7 +208,6 @@ class DashboardDesktopView extends StatelessWidget {
                                       );
                                     },
                                   ),
-                                  UIHelpers.horizontalSpaceSmall,
                                   BlocBuilder<DashboardBloc, DashboardState>(
                                     builder: (context, state) {
                                       DateTime selectMonth = DateTime(2024, 1);
@@ -343,22 +321,20 @@ class DashboardDesktopView extends StatelessWidget {
                                   )
                                 ],
                               ),
-                            ),
+                            
                             const Tooltip(
                                 message: 'Download CSV File',
                                 child: ExportButton(
                                     icon: 'assets/icons/Export.svg')),
                           ],
                         ),
-                        BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                         BlocBuilder<CustombuttonBloc, CustombuttonState>(
                           builder: (context, state) {
                             if (state is CustomButtonInitial ||
                                 (state is ButtonSelectedState &&
                                     state.selectedButtonText ==
                                         'Ticket Classification')) {
-                              return Flexible(
-                                flex: 8,
-                                child: BlocConsumer<PlutotableBloc,
+                              return  BlocConsumer<PlutotableBloc,
                                     PlutotableState>(
                                   listener: (context, state) {
                                     if (state is UpdateValidationSuccess) {
@@ -409,8 +385,9 @@ class DashboardDesktopView extends StatelessWidget {
                                       return const EmptyWidget();
                                     } else if (state is FetchTableDataSuccess) {
                                       if (state.noDataAvailable) {
-                                        return const Center(
-                                            child: EmptyWidget());
+                                        return SizedBox(
+                                            height: UIHelpers.screenHeight(context) * 0.5,
+                                            child: const EmptyWidget());
                                       }
                                       return PlutoTableWidget(
                                         tableData: state.tableData,
@@ -423,7 +400,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       return Container();
                                     }
                                   },
-                                ),
+                                
                               );
                             } else {
                               return SizedBox(
@@ -433,20 +410,24 @@ class DashboardDesktopView extends StatelessWidget {
                             }
                           },
                         ),
+
                       ],
                     ),
+                    
                   ),
+                  UIHelpers.horizontalSpaceSmall,
                   Flexible(
                     flex: 2,
                     child: BlocBuilder<DashboardBloc, DashboardState>(
                       builder: (context, state) {
                         if (state is DashboardDataLoading) {
                           return Center(
-                              child: LoadingWidget(
-                            width: UIHelpers.screenWidth(context) * 0.2,
-                            height: UIHelpers.screenHeight(context) * 0.85,
-                            radius: 8,
-                          ));
+                            child: LoadingWidget(
+                              width: UIHelpers.screenWidth(context) * 0.2,
+                              height: UIHelpers.screenHeight(context) * 0.85,
+                              radius: 8,
+                            ),
+                          );
                         } else if (state is DashboardDataSuccess) {
                           return PieChartWidget(data: state.pieChartData);
                         } else if (state is DashboardDataError) {
@@ -459,7 +440,7 @@ class DashboardDesktopView extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+          
           ],
         ),
       ),

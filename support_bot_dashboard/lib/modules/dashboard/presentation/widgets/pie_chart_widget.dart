@@ -28,7 +28,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       const Color.fromARGB(255, 28, 88, 136),
       const Color.fromARGB(255, 17, 58, 98),
     ];
-    double radius = UIHelpers.screenWidth(context) / 11;
+    double radius = UIHelpers.screenWidth(context) * 0.08;
 
     final chartData = [
       ChartData(label: 'Genuine Query', value: data?.genuineQuery),
@@ -60,7 +60,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               child: Divider(color: SupportBotColors.blueSecondary.shade200),
             ),
             SizedBox(
-              height: UIHelpers.screenHeight(context) / 1.8,
+              height: UIHelpers.screenHeight(context) * 0.5,
               child: PieChart(
                 PieChartData(
                   pieTouchData: PieTouchData(
@@ -113,8 +113,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        width: UIHelpers.screenWidth(context) / 76,
-                        height: UIHelpers.screenHeight(context) / 45,
+                        width: UIHelpers.screenWidth(context) * 0.01,
+                        height: UIHelpers.screenHeight(context) * 0.02,
                         color: blueShades[index % blueShades.length],
                       ),
                       UIHelpers.horizontalSpaceTiny,
