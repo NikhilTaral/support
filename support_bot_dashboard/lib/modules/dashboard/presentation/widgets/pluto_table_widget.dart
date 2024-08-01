@@ -189,6 +189,69 @@ class PlutoTableWidget extends StatelessWidget {
                     );
                   },
                 ),
+                PlutoColumn(
+                  title: 'Actions',
+                  field: 'actions',
+                  type: PlutoColumnType.text(),
+                  width: MediaQuery.of(context).size.width * 0.07,
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.center,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                  renderer: (PlutoColumnRendererContext context) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Align(
+                          child: PopupMenuTheme(
+                            data: const PopupMenuThemeData(
+                              color:
+                                  SupportBotColors.white,
+                            ),
+                            child: PopupMenuButton<String>(
+                              icon: const Icon(Icons.more_vert_rounded),
+                              onSelected: (String newValue) {
+                                context.row.cells['actions']?.value = newValue;
+                                if (newValue == 'View') {
+                                } else if (newValue == 'Change') {}
+                              },
+                              offset: const Offset(-40, 0),
+                              itemBuilder: (BuildContext context) =>
+                                  <PopupMenuEntry<String>>[
+                                PopupMenuItem<String>(
+                                  value: 'View',
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.visibility),
+                                      UIHelpers.horizontalSpaceTiny,
+                                      const Text('View'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'Revert',
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.edit),
+                                      UIHelpers.horizontalSpaceTiny,
+                                      const Text('Revert'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ],
               rows: tableData.items.map((item) {
                 return PlutoRow(
@@ -202,6 +265,7 @@ class PlutoTableWidget extends StatelessWidget {
                         PlutoCell(value: item.classificationValidation),
                     'validation_reason':
                         PlutoCell(value: item.classificationValidationReason),
+                    'actions': PlutoCell(value: 'View')
                   },
                 );
               }).toList(),
