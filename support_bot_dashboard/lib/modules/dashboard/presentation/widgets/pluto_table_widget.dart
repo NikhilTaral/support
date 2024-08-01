@@ -219,10 +219,7 @@ class PlutoTableWidget extends StatelessWidget {
                               icon: const Icon(Icons.more_vert_rounded),
                               onSelected: (String newValue) {
                                 rendererContext.row.cells['actions']?.value = newValue;
-                                if (newValue == 'View') {
-                                  PlutoRow row= rendererContext.row;
-                                  _showSidebar(context, row);
-                                } else if (newValue == 'Change') {}
+                                
                               },
                               offset: const Offset(-40, 0),
                               itemBuilder: (BuildContext context) =>
@@ -241,7 +238,7 @@ class PlutoTableWidget extends StatelessWidget {
                                   value: 'Revert',
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.edit),
+                                      const Icon(Icons.loop_rounded),
                                       UIHelpers.horizontalSpaceTiny,
                                       const Text('Revert'),
                                     ],

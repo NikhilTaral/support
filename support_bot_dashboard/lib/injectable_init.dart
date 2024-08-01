@@ -3,12 +3,15 @@ import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_table_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_validation_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/revert_classification_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_validation_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/revert_classification_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
@@ -56,4 +59,10 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerFactory<DashboardBloc>(() => DashboardBloc());
   serviceLocator.registerFactory<PlutotableBloc>(() => PlutotableBloc());
   serviceLocator.registerFactory<CustombuttonBloc>(() => CustombuttonBloc());
+
+  //Revert Classification Bloc
+  serviceLocator.registerLazySingleton<RevertClassificationUsecase>(
+      () => RevertClassificationUsecase());
+  serviceLocator.registerLazySingleton<RevertClassificationRepository>(
+      () => RevertClassificationRepoImpl());
 }
