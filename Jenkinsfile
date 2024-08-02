@@ -87,74 +87,74 @@ pipeline
           }
         }
     }
-//    stage('Deploy - Qa') {
-//      when {
-//        branch 'qa'
-//      }
-//
-//      steps
-//      {
-//        git(url: 'https://bitbucket.org/exp-realty/exp-tf-qa.git', branch: 'master', credentialsId: 'exp-jenkins')
-//            withCredentials([[
-//              $class: 'AmazonWebServicesCredentialsBinding',
-//              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-//              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-//              credentialsId: 'jenkins-qa-user'
-//            ]]) {
-//            script
-//            {
-//              docker.image('public.ecr.aws/l2j8b6z4/docker-terragrunt:jenkins-3')
-//                .inside("-u 0 -v $WORKSPACE:/data -v /var/lib/jenkins/.ssh:/data/.ssh -e BITBUCKET_USER=exp-jenkins -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}")
-//                {
-//                  sh """
-//                  aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile exp-qa
-//                  aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile exp-qa
-//                  aws configure set region us-east-1 --profile exp-qa
-//
-//                  cd /data/account/exp-realty-qa/us-east-1/support-bot/dashboard/ecs
-//                  terragrunt init -reconfigure
-//                  terragrunt plan --terragrunt-log-level trace -input=false -var 'image=${TF_VAR_app_image}'
-//                  terragrunt apply -auto-approve -input=false -var 'image=${TF_VAR_app_image}'
-//                  """
-//                }
-//              }
-//            }
-//        }
-//      }
-//    stage('Deploy - Prod') {
-//      when {
-//        branch 'main'
-//      }
-//
-//      steps
-//      {
-//        git(url: 'https://bitbucket.org/exp-realty/exp-tf-prod.git', branch: 'master', credentialsId: 'exp-jenkins')
-//            withCredentials([[
-//              $class: 'AmazonWebServicesCredentialsBinding',
-//              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-//              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-//              credentialsId: '88caba18-4691-47c5-92a9-e66ee83da4e4'
-//            ]]) {
-//            script
-//            {
-//              docker.image('public.ecr.aws/l2j8b6z4/docker-terragrunt:jenkins-3')
-//                .inside("-u 0 -v $WORKSPACE:/data -v /var/lib/jenkins/.ssh:/data/.ssh -e BITBUCKET_USER=exp-jenkins -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}")
-//                {
-//                  sh """
-//                  aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile exp-production
-//                  aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile exp-production
-//                  aws configure set region us-east-1 --profile exp-production
-//
-//                  cd /data/account/exp-realty-prod/us-east-1/support-bot/dashboard/ecs
-//                  terragrunt init -reconfigure
-//                  terragrunt plan --terragrunt-log-level trace -input=false -var 'image=${TF_VAR_app_image}'
-//                  terragrunt apply -auto-approve -input=false -var 'image=${TF_VAR_app_image}'
-//                  """
-//                }
-//          }
-//      }
-//    }
-//  }
+    stage('Deploy - Qa') {
+      when {
+        branch 'qa'
+      }
+
+      steps
+      {
+        git(url: 'https://bitbucket.org/exp-realty/exp-tf-qa.git', branch: 'master', credentialsId: 'exp-jenkins')
+            withCredentials([[
+              $class: 'AmazonWebServicesCredentialsBinding',
+              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+              credentialsId: 'jenkins-qa-user'
+            ]]) {
+            script
+            {
+              docker.image('public.ecr.aws/l2j8b6z4/docker-terragrunt:jenkins-3')
+                .inside("-u 0 -v $WORKSPACE:/data -v /var/lib/jenkins/.ssh:/data/.ssh -e BITBUCKET_USER=exp-jenkins -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}")
+                {
+                  sh """
+                  aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile exp-qa
+                  aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile exp-qa
+                  aws configure set region us-east-1 --profile exp-qa
+
+                  cd /data/account/exp-realty-qa/us-east-1/support-bot/dashboard/ecs
+                  terragrunt init -reconfigure
+                  terragrunt plan --terragrunt-log-level trace -input=false -var 'image=${TF_VAR_app_image}'
+                  terragrunt apply -auto-approve -input=false -var 'image=${TF_VAR_app_image}'
+                  """
+                }
+              }
+            }
+        }
+      }
+    stage('Deploy - Prod') {
+      when {
+        branch 'main'
+      }
+
+      steps
+      {
+        git(url: 'https://bitbucket.org/exp-realty/exp-tf-prod.git', branch: 'master', credentialsId: 'exp-jenkins')
+            withCredentials([[
+              $class: 'AmazonWebServicesCredentialsBinding',
+              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+              credentialsId: '88caba18-4691-47c5-92a9-e66ee83da4e4'
+            ]]) {
+            script
+            {
+              docker.image('public.ecr.aws/l2j8b6z4/docker-terragrunt:jenkins-3')
+                .inside("-u 0 -v $WORKSPACE:/data -v /var/lib/jenkins/.ssh:/data/.ssh -e BITBUCKET_USER=exp-jenkins -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}")
+                {
+                  sh """
+                  aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile exp-production
+                  aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile exp-production
+                  aws configure set region us-east-1 --profile exp-production
+
+                  cd /data/account/exp-realty-prod/us-east-1/support-bot/dashboard/ecs
+                  terragrunt init -reconfigure
+                  terragrunt plan --terragrunt-log-level trace -input=false -var 'image=${TF_VAR_app_image}'
+                  terragrunt apply -auto-approve -input=false -var 'image=${TF_VAR_app_image}'
+                  """
+                }
+          }
+      }
+    }
+  }
   }
   environment {
     VERSION = 'latest'
