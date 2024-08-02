@@ -1,0 +1,50 @@
+{
+  "@@locale": "en",
+    "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
+    "@signInPageTextPart1": {
+        "description": "By clicking “GET STARTED” you are agreeing to our "
+    },
+    "signInPageTextPart2": "Privacy Policy,",
+    "@signInPageTextPart2": {
+        "description": "Privacy Policy,"
+    },
+    "signInPageTextPart3": " our ",
+    "@signInPageTextPart3": {
+        "description": " our "
+    },
+    "signInPageTextPart4": "Terms & Conditions",
+    "@signInPageTextPart4": {
+        "description": "Terms & Conditions"
+    },
+    "signInPageText": "Enter the email and the name that was used on your join application.",
+    "@signInPageText": {
+        "description": "Enter the email and the name that was used on your join application."
+    },
+    "v3OnboardingLoginJoinEmailSentSubtitle": "We’ve sent a link for your joining application to {email}. Click the link to kick-start your application process.",
+  "@v3OnboardingLoginJoinEmailSentSubtitle": {
+    "description": "Onboarding login view email sent screen subtitle",
+    "placeholders": {
+      "email": {}
+    }
+  },
+    "signInPageTextPart5": " as well as the anonymous recording of the application process for the purposes of improving this website and its performance. No personally identifying information will be recorded or displayed.",
+    "@signInPageTextPart5": {
+        "description": "as well as the anonymous recording of the application process for the purposes of improving this website and its performance. No personally identifying information will be recorded or displayed."
+    },
+    "fromJoinAppTitle": "From Join App",
+    "@fromJoinAppTitle": {
+      "description": "from Join App Title"
+    },
+    "fromJoinAppDownloadTitle": "Download MyeXp app to get the latest updates about your application",
+    "@fromJoinAppDownloadTitle": {
+      "description": "from Join App Download Title"
+    },
+    "fromJoinAppOrTitle": "or",
+    "@fromJoinAppOrTitle": {
+      "description": "from Join App OR Title"
+    },
+    "fromJoinAppSignInButtonTitle": "Continue on Web",
+    "@fromJoinAppSignInButtonTitle": {
+      "description": "From Join App Sign In Button Title"
+    }
+}
