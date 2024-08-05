@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
@@ -10,6 +11,7 @@ part 'plutotable_state.dart';
 
 class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
   DashboardTableAttributeModel? initialData;
+ List<PlutoRow>? rows;
   PlutotableBloc() : super(PlutotableInitial()) {
     on<FetchTableDataEvent>(_onFetchTableDataEvent);
     on<SelectDateEvent>(_onSelectDateEvent);
@@ -17,6 +19,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     on<UpdateValidationEvent>(_onUpdateValidationEvent);
     on<FilterClassificationEvent>(_onFilterClassificationEvent);
     on<FilterValidationEvent>(_onFilterValidationEvent);
+    on<CustomSidebarLoadRowData>(_onCustomSidebarLoadRowData);
   }
 
   FutureOr<void> _onFetchTableDataEvent(
@@ -27,7 +30,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       final response =
           await repository.invoke(event.selectedDate, event.selectedMonth);
       if (response.isLeft) {
-        emit(FetchTableDataError("Failed to fetch data"));
+        emit(FetchTableDataError(message: "Failed to fetch data"));
       } else {
         final model = response.right;
 
@@ -43,6 +46,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               classificationValidation: item.classificationValidation.s,
               classificationValidationReason:
                   item.classificationValidationReason.s,
+             isUpdatedToHubspot: item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
             );
           }).toList();
 
@@ -60,14 +64,14 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             selectedMonth: event.selectedMonth ?? DateTime(2024, 01),
             selectedValidation: 'Select',
             noDataAvailable:
-                items.isEmpty, // Set this flag based on the fetched items
+                items.isEmpty, 
           ));
         } else {
-          emit(FetchTableDataError(model.message ?? 'Unknown error'));
+          emit(FetchTableDataEmpty());
         }
       }
     } catch (e) {
-      emit(FetchTableDataError("Exception occurred: $e"));
+      emit(FetchTableDataError(message: "Exception occurred: $e"));
     }
   }
 
@@ -95,7 +99,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           selectedDate: event.selectedDate ?? DateTime.now(),
           selectedMonth: event.selectedMonth ?? DateTime(2024 - 01)));
     } catch (e) {
-      emit(UpdateValidationError('Exception occurred: $e'));
+      emit(UpdateValidationError(errorMessage: 'Exception occurred: $e'));
     }
   }
 
@@ -110,7 +114,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         selectedDate: event.selectedDate,
         selectedMonth: event.selectedMonth,
         selectedValidation: 'Select',
-        noDataAvailable: false, // Add a flag for no data
+        noDataAvailable: false, 
       ));
     } else {
       final filteredData = await filterClassificationData(
@@ -154,7 +158,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         selectedDate: event.selectedDate,
         selectedMonth: event.selectedMonth,
         selectedValidation: event.selectedValidation,
-        noDataAvailable: false, // Add a flag for no data
+        noDataAvailable: false, 
       ));
     } else {
       final filterdClassificationData = await filterClassificationData(
@@ -172,7 +176,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         selectedMonth: event.selectedMonth,
         selectedValidation: event.selectedValidation,
         noDataAvailable:
-            filteredData.items.isEmpty, // Set the flag based on data
+            filteredData.items.isEmpty, 
       ));
     }
   }
@@ -189,5 +193,11 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       totalRecords: filteredItems.length,
       items: filteredItems,
     );
+  }
+
+  FutureOr<void> _onCustomSidebarLoadRowData(CustomSidebarLoadRowData event, Emitter<PlutotableState> emit) {
+     if (event.rowIndex >= 0 && event.rowIndex < rows!.length) {
+        emit(CustomSidebarLoaded(event.rowIndex));
+      }
   }
 }

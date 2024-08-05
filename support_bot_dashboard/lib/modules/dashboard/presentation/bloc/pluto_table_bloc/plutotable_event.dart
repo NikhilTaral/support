@@ -62,3 +62,9 @@ class FilterValidationEvent extends PlutotableEvent {
   FilterValidationEvent(this.selectedValidation, this.initialTableData,
       this.selectedDate, this.selectedMonth, this.selectedClassification);
 }
+
+class CustomSidebarLoadRowData extends PlutotableEvent {
+  final int rowIndex;
+
+  CustomSidebarLoadRowData(this.rowIndex);
+}

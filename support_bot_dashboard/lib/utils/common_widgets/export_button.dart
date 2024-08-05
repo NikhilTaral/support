@@ -55,11 +55,12 @@ class ExportButton extends StatelessWidget {
   void _exportTableDataToCsv(BuildContext context, DashboardTableAttributeModel tableData) {
     List<List<dynamic>> rows = [];
 
-    rows.add(['ID', 'Classification', 'Pipeline Stage', 'Reasoning', 'Created At']);
+    rows.add(['ID', 'Ticket Description', 'Classification', 'Pipeline Stage', 'Reasoning', 'Created At']);
 
     for (var item in tableData.items) {
       rows.add([
         item.id,
+        item.ticketDescription,
         item.classification,
         item.hsPipelineStage,
         item.reasoning,

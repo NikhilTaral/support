@@ -75,16 +75,19 @@ class Item {
   final CreatedAt ticketDescription;
   final CreatedAt classificationValidation;
   final CreatedAt classificationValidationReason;
+  final IsUpdatedToHubspot? isUpdatedToHubspot;
 
-  Item(
-      {required this.classification,
-      required this.hsPipelineStage,
-      required this.id,
-      required this.reasoning,
-      required this.createdAt,
-      required this.ticketDescription,
-      required this.classificationValidation,
-      required this.classificationValidationReason});
+  Item({
+    required this.classification,
+    required this.hsPipelineStage,
+    required this.id,
+    required this.reasoning,
+    required this.createdAt,
+    required this.ticketDescription,
+    required this.classificationValidation,
+    required this.classificationValidationReason,
+    required this.isUpdatedToHubspot,
+  });
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
@@ -113,6 +116,9 @@ class Item {
           json.containsKey("classificationValidationReason")
               ? CreatedAt.fromJson(json["classificationValidationReason"])
               : CreatedAt(s: ''),
+      isUpdatedToHubspot: json["isUpdatedToHubspot"] == null
+          ? null
+          : IsUpdatedToHubspot.fromJson(json["isUpdatedToHubspot"]),
     );
   }
 
@@ -124,7 +130,8 @@ class Item {
         "CreatedAt": createdAt.toJson(),
         "ticketDescription": createdAt.toJson(),
         "classificationValidation": createdAt.toJson(),
-        "classificationValidationReason": createdAt.toJson()
+        "classificationValidationReason": createdAt.toJson(),
+          "isUpdatedToHubspot": isUpdatedToHubspot?.toJson(),
       };
 }
 
@@ -141,6 +148,23 @@ class CreatedAt {
 
   Map<String, dynamic> toJson() => {
         "S": s,
+      };
+}
+
+class IsUpdatedToHubspot {
+  final bool isUpdatedToHubspotBool;
+
+  IsUpdatedToHubspot({
+    required this.isUpdatedToHubspotBool,
+  });
+
+  factory IsUpdatedToHubspot.fromJson(Map<String, dynamic> json) =>
+      IsUpdatedToHubspot(
+        isUpdatedToHubspotBool: json["BOOL"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "BOOL": isUpdatedToHubspotBool,
       };
 }
 
