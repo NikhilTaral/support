@@ -6,8 +6,8 @@ import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
 class RevertClassificationUsecase implements UseCaseOneInput<String, dynamic> {
   @override
-  Future<Either<Failure, dynamic>> invoke(id) async {
+  Future<Either<Failure, dynamic>> invoke(ticketId) async {
     return await serviceLocator<RevertClassificationRepository>()
-        .revertClassification(id: id);
+        .revertClassification(ticketId: ticketId);
   }
 }

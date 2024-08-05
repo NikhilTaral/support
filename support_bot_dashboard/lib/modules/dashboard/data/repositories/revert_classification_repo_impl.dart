@@ -8,14 +8,14 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 class RevertClassificationRepoImpl extends RevertClassificationRepository {
   @override
-  Future<Either<Failure, dynamic>> revertClassification({String? id}) async {
-    final uri = Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/revertTicketUpdate');
+  Future<Either<Failure, dynamic>> revertClassification({String? ticketId}) async {
+    final uri = Uri.parse('${EnvConfig.EXP_API_URL}/hubspot/revertTicketUpdate');
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': "${await getToken()}",
     };
     final body = jsonEncode({
-      'id': id,
+      'ticketId': ticketId,
     });
     final response = await http.post(uri, headers: headers, body: body);
     if (response.statusCode == 200) {

@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -31,15 +33,16 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     double radius = UIHelpers.screenWidth(context) * 0.08;
 
     final chartData = [
-      ChartData(label: 'Genuine Query', value: data?.genuineQuery),
-      ChartData(label: 'No Action Required', value: data?.noActionRequired),
-      ChartData(label: 'Spam/Marketing', value: data?.spamMarketing),
-      ChartData(label: 'Acknowledgement Required', value: data?.acknowledgement)
+      ChartData(label:  S.of(context).genuineQuery, value: data?.genuineQuery),
+      ChartData(label:  S.of(context).noActionRequired, value: data?.noActionRequired),
+      ChartData(label:  S.of(context).spam, value: data?.spamMarketing),
+      ChartData(label:  S.of(context).acknowledgementRequired, value: data?.acknowledgement)
     ];
 
     return Padding(
-      padding: const EdgeInsets.only(top: 25, bottom: 25, left: 15, right: 15),
+      padding: const EdgeInsets.only(bottom: 25, left: 15, right: 15),
       child: Container(
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.grey.shade300,
@@ -51,8 +54,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             UIHelpers.verticalSpaceRegular,
-            const Text(
-              'Ticket Classification',
+             Text(
+               S.of(context).ticketClassification,
               style: SupportBotTextstyle.pierchartHeading,
             ),
             Padding(
@@ -109,20 +112,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                 chartData.length,
                 (index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: UIHelpers.screenWidth(context) * 0.01,
-                        height: UIHelpers.screenHeight(context) * 0.02,
-                        color: blueShades[index % blueShades.length],
-                      ),
-                      UIHelpers.horizontalSpaceTiny,
-                      Text(
-                        chartData[index].label ?? '',
-                        style: SupportBotTextstyle.pierchartLabel,
-                      ),
-                    ],
+                  child: _piechartDetails(
+                    color: blueShades[index % blueShades.length],
+                    label: chartData[index].label ?? '',
                   ),
                 ),
               ),
@@ -130,6 +122,24 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _piechartDetails({required Color color, required String label}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: UIHelpers.screenWidth(context) * 0.01,
+          height: UIHelpers.screenHeight(context) * 0.02,
+          color: color,
+        ),
+        UIHelpers.horizontalSpaceTiny,
+        Text(
+          label,
+          style: SupportBotTextstyle.pierchartLabel,
+        ),
+      ],
     );
   }
 }

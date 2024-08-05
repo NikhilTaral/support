@@ -9,6 +9,7 @@ part 'revert_classification_state.dart';
 
 class RevertClassificationBloc
     extends Bloc<RevertClassificationEvent, RevertClassificationState> {
+  bool isUpdatedToHubspot = false;
   RevertClassificationBloc() : super(RevertClassificationInitialState()) {
     on<RevertClassificationInitialEvent>(_onRevertClassificationInitialEvent);
   }
@@ -16,13 +17,19 @@ class RevertClassificationBloc
   FutureOr<void> _onRevertClassificationInitialEvent(
       RevertClassificationInitialEvent event,
       Emitter<RevertClassificationState> emit) async {
+    print('loading');
     emit(RevertClassificationLoadingState());
     try {
-      final repository = serviceLocator<RevertClassificationUsecase>();
-      await repository.invoke(event.ticketid);
-      emit(RevertClassificationSuccessState());
+      if (isUpdatedToHubspot == false) {
+        final repository = serviceLocator<RevertClassificationUsecase>();
+        await repository.invoke(event.ticketId);
+        print('success');
+        emit(RevertClassificationSuccessState());
+      } else {
+        emit(RevertClassificationFailureState(message: 'Not updated to hubspot'));
+      }
     } catch (e) {
-      emit(RevertClassificationFailureState('Exception occurred: $e'));
+      emit(RevertClassificationFailureState(message: 'Exception occurred: $e'));
     }
   }
 }

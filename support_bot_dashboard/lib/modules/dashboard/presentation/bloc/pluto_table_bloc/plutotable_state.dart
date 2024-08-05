@@ -27,7 +27,7 @@ class FetchTableDataSuccess extends PlutotableState {
 class FetchTableDataError extends PlutotableState {
   final String message;
 
-  FetchTableDataError(this.message);
+  FetchTableDataError({required this.message});
 }
 
 class FetchTableDataEmpty extends PlutotableState {}
@@ -57,5 +57,17 @@ class UpdateValidationSuccess extends PlutotableState {
 class UpdateValidationError extends PlutotableState {
   final String errorMessage;
 
-  UpdateValidationError(this.errorMessage);
+  UpdateValidationError({required this.errorMessage});
+}
+
+class CustomSidebarInitial extends PlutotableState {
+  final int initialIndex;
+
+  CustomSidebarInitial(this.initialIndex);
+}
+
+class CustomSidebarLoaded extends PlutotableState {
+  final int currentIndex;
+
+  CustomSidebarLoaded(this.currentIndex);
 }

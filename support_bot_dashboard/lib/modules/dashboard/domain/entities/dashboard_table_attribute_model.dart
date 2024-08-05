@@ -22,16 +22,19 @@ class TableItem extends Equatable {
   final String ticketDescription;
   final String classificationValidation;
   final String classificationValidationReason;
+  final bool? isUpdatedToHubspot;
 
-  const TableItem(
-      {required this.id,
-      required this.classification,
-      required this.hsPipelineStage,
-      required this.reasoning,
-      required this.createdAt,
-      required this.ticketDescription,
-      required this.classificationValidation,
-      required this.classificationValidationReason});
+  const TableItem({
+    required this.id,
+    required this.classification,
+    required this.hsPipelineStage,
+    required this.reasoning,
+    required this.createdAt,
+    required this.ticketDescription,
+    required this.classificationValidation,
+    required this.classificationValidationReason,
+    this.isUpdatedToHubspot, 
+  });
 
   @override
   List<Object?> get props => [
@@ -42,6 +45,7 @@ class TableItem extends Equatable {
         createdAt,
         ticketDescription,
         classificationValidation,
-        classificationValidationReason
+        classificationValidationReason,
+        isUpdatedToHubspot,
       ];
 }

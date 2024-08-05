@@ -5,8 +5,19 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class CustomSidebar extends StatelessWidget {
   final PlutoRow rowData;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+  final bool isNextEnabled;
+  final bool isPreviousEnabled;
 
-  const CustomSidebar({Key? key, required this.rowData}) : super(key: key);
+  const CustomSidebar(
+      {Key? key,
+      required this.rowData,
+      required this.onNext,
+      required this.isNextEnabled,
+      required this.onPrevious,
+      required this.isPreviousEnabled})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +40,38 @@ class CustomSidebar extends StatelessWidget {
             Icons.arrow_back_ios_new,
             size: 14,
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: isPreviousEnabled ? onPrevious : null,
+          color: isPreviousEnabled ? Colors.black : Colors.grey,
         ),
+        actions: [
+          IconButton(
+              onPressed: isNextEnabled ? onNext : null,
+              color: isNextEnabled ? Colors.black : Colors.grey,
+              icon: const Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+              ))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Divider(height: 1, color: Colors.grey[300]),
-             Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildRow('ID:', id),
-                    _buildRow('Description:', description),
-                    _buildRow('Reasoning:', reasoning),
-                    _buildRow('Validation:', validation),
-                    _buildRow('Validation Reason:', validationReason),
-                  ],
-                ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildRow('ID:', id),
+                  _buildRow('Description:', description),
+                  _buildRow('Reasoning:', reasoning),
+                  _buildRow(
+                      'Validation:', validation.isEmpty ? 'N/A' : validation),
+                  _buildRow('Validation Reason:',
+                      validationReason.isEmpty ? 'N/A' : validationReason),
+                ],
               ),
-           
+            ),
           ],
         ),
       ),
