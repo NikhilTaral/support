@@ -258,11 +258,10 @@ class DashboardDesktopView extends StatelessWidget {
                                                     listen: false)
                                                 .add(
                                               FilterClassificationEvent(
-                                                selectedDate,
-                                                selectedMonth,
-                                                value,
-                                                ""
-                                              ),
+                                                  selectedDate,
+                                                  selectedMonth,
+                                                  value,
+                                                  ""),
                                             );
                                           }
                                         },
@@ -291,7 +290,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                       listen: false)
                                                   .add(FilterValidationEvent(
                                                       value,
-                                                     
                                                       state.selectedDate,
                                                       state.selectedMonth,
                                                       state
@@ -392,35 +390,55 @@ class DashboardDesktopView extends StatelessWidget {
                                 },
                               );
                             } else {
-                              return const AIQueryAnswerWidget();
+                              return SizedBox(
+                                  height: UIHelpers.screenHeight(context) * 0.5,
+                                  child: const Center(child: EmptyWidget()));
                             }
                           },
                         ),
                       ],
                     ),
                   ),
-                  Flexible(
-                    flex: 2,
-                    child: BlocBuilder<DashboardBloc, DashboardState>(
+                  BlocBuilder<CustombuttonBloc, CustombuttonState>(
                       builder: (context, state) {
-                        if (state is DashboardDataLoading) {
-                          return Center(
-                            child: LoadingWidget(
-                              width: UIHelpers.screenWidth(context) * 0.2,
-                              height: UIHelpers.screenHeight(context) * 0.85,
-                              radius: 8,
-                            ),
-                          );
-                        } else if (state is DashboardDataSuccess) {
-                          return PieChartWidget(data: state.pieChartData);
-                        } else if (state is DashboardDataError) {
-                          return const Center(child: EmptyWidget());
-                        } else {
-                          return Container();
-                        }
-                      },
-                    ),
-                  ),
+                    if (state is CustomButtonInitial ||
+                        (state is ButtonSelectedState &&
+                            state.selectedButtonText ==
+                                'Ticket Classification')) {
+                     return  Flexible(
+                        flex: 2,
+                        child: BlocBuilder<DashboardBloc, DashboardState>(
+                          builder: (context, state) {
+                            if (state is DashboardDataLoading) {
+                              return Center(
+                                child: LoadingWidget(
+                                  width: UIHelpers.screenWidth(context) * 0.2,
+                                  height:
+                                      UIHelpers.screenHeight(context) * 0.85,
+                                  radius: 8,
+                                ),
+                              );
+                            } else if (state is DashboardDataSuccess) {
+                              return PieChartWidget(data: state.pieChartData);
+                            } else if (state is DashboardDataError) {
+                              return const Center(child: EmptyWidget());
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                      );
+                    } else {
+                      return SizedBox(
+                         width: UIHelpers.screenWidth(context) * 0.2,
+                                  height:
+                                      UIHelpers.screenHeight(context) * 0.85,
+                          child: const Center(child: EmptyWidget()));
+                    }
+                    
+                  }
+
+                  )
                 ],
               ),
             ],
