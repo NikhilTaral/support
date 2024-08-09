@@ -33,10 +33,13 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     double radius = UIHelpers.screenWidth(context) * 0.08;
 
     final chartData = [
-      ChartData(label:  S.of(context).genuineQuery, value: data?.genuineQuery),
-      ChartData(label:  S.of(context).noActionRequired, value: data?.noActionRequired),
-      ChartData(label:  S.of(context).spam, value: data?.spamMarketing),
-      ChartData(label:  S.of(context).acknowledgementRequired, value: data?.acknowledgement)
+      ChartData(label: S.of(context).genuineQuery, value: data?.genuineQuery),
+      ChartData(
+          label: S.of(context).noActionRequired, value: data?.noActionRequired),
+      ChartData(label: S.of(context).spam, value: data?.spamMarketing),
+      ChartData(
+          label: S.of(context).acknowledgementRequired,
+          value: data?.acknowledgement)
     ];
 
     return Padding(
@@ -54,8 +57,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             UIHelpers.verticalSpaceRegular,
-             Text(
-               S.of(context).ticketClassification,
+            Text(
+              S.of(context).ticketClassification,
               style: SupportBotTextstyle.pierchartHeading,
             ),
             Padding(
@@ -127,7 +130,6 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 
   Widget _piechartDetails({required Color color, required String label}) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: UIHelpers.screenWidth(context) * 0.01,
@@ -135,9 +137,11 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           color: color,
         ),
         UIHelpers.horizontalSpaceTiny,
-        Text(
-          label,
-          style: SupportBotTextstyle.pierchartLabel,
+        Expanded(
+          child: Text(
+            label,
+            style: SupportBotTextstyle.pierchartLabel,
+          ),
         ),
       ],
     );

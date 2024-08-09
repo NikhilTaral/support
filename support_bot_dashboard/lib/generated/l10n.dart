@@ -173,9 +173,9 @@ class S {
   /// `Export`
   String get export {
     return Intl.message(
-      'Download CSV File',
+      'Export CSV File',
       name: 'export',
-      desc: 'Download CSV File',
+      desc: 'Export CSV File',
       args: [],
     );
   }

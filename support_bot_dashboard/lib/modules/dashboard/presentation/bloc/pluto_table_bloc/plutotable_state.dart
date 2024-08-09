@@ -9,7 +9,7 @@ class FetchTableDataLoading extends PlutotableState {}
 class FetchTableDataSuccess extends PlutotableState {
   final DashboardTableAttributeModel tableData;
   final String selectedClassification;
-  final String selectedValidation;
+  final String? selectedValidation;
   final DateTime selectedDate;
   final DateTime selectedMonth;
   final bool noDataAvailable;
@@ -19,7 +19,7 @@ class FetchTableDataSuccess extends PlutotableState {
     required this.selectedDate,
     required this.selectedMonth,
     required this.selectedClassification,
-    required this.selectedValidation,
+     this.selectedValidation,
     required this.noDataAvailable,
   });
 }

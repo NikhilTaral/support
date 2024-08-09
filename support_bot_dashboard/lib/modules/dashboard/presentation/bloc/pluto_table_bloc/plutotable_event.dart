@@ -5,8 +5,10 @@ abstract class PlutotableEvent {}
 class FetchTableDataEvent extends PlutotableEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
+    final String? selectedClassification;
+  final String? selectedClassificationValidation;
 
-  FetchTableDataEvent({this.selectedDate, this.selectedMonth});
+  FetchTableDataEvent({this.selectedClassification, this.selectedClassificationValidation, this.selectedDate, this.selectedMonth});
 }
 
 class SelectDateEvent extends PlutotableEvent {

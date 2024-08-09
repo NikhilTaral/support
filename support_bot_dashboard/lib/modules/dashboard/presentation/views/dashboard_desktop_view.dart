@@ -278,7 +278,7 @@ class DashboardDesktopView extends StatelessWidget {
                                     if (state is FetchTableDataSuccess) {
                                       return CustomFilterDropdown(
                                           selectedValue:
-                                              state.selectedValidation,
+                                              state.selectedValidation ?? "",
                                           items: const [
                                             'Select',
                                             'correct',

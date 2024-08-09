@@ -241,7 +241,7 @@ class PlutoTableWidget extends StatelessWidget {
                         PlutoCell(value: item.classificationValidationReason),
                     'isUpdatedToHubspot':
                         PlutoCell(value: item.isUpdatedToHubspot),
-                     'status': PlutoCell(value: item.isUpdatedToHubspot == true ? "updated" : "not updated"),
+                     'status': PlutoCell(value: item.isUpdatedToHubspot == true ? "Updated" : "Not Updated"),
                     'actions': PlutoCell(value: 'View'),
                   },
                 );

@@ -47,9 +47,9 @@
   "@validation": {
     "description": "Validation"
   },
-  "export": "Download CSV File",
+  "export": "Export CSV File",
   "@export": {
-    "description": "Download CSV File"
+    "description": "Export CSV File"
   },
   "save": "Save",
   "@save": {
