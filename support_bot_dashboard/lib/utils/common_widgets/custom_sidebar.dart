@@ -91,7 +91,7 @@ class CustomSidebar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
+            child: SelectableText(
               value,
               style: SupportBotTextstyle.siebarLabel,
             ),
