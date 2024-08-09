@@ -151,16 +151,16 @@ class DashboardDesktopView extends StatelessWidget {
                                             'Ticket Classification'));
                                   },
                                 ),
-                                CustomButton(
-                                  text: S.of(context).aiQueryAnswer,
-                                  isSelected:
-                                      selectedButtonText == 'AI Query Answer',
-                                  onPressed: () {
-                                    BlocProvider.of<CustombuttonBloc>(context)
-                                        .add(SelectButtonEvent(
-                                            'AI Query Answer'));
-                                  },
-                                ),
+                                // CustomButton(
+                                //   text: S.of(context).aiQueryAnswer,
+                                //   isSelected:
+                                //       selectedButtonText == 'AI Query Answer',
+                                //   onPressed: () {
+                                //     BlocProvider.of<CustombuttonBloc>(context)
+                                //         .add(SelectButtonEvent(
+                                //             'AI Query Answer'));
+                                //   },
+                                // ),
                               ],
                             );
                           },
