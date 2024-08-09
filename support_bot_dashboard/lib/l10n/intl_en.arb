@@ -71,6 +71,10 @@
   "@actions": {
     "description": "Actions"
   },
+  "status": "Status",
+  "@status": {
+    "description": "Status"
+  },
   "save": "Save",
   "@save": {
     "description": "Save"
@@ -102,6 +106,14 @@
   "alreadyUpdated": "The ticket has already been updated to HubSpot.",
   "@alreadyUpdated": {
     "description": "The ticket has already been updated to HubSpot."
+  },
+  "revertClassifcation": "This classification does not support revert feature",
+  "@revertClassifcation": {
+    "description": "This classification does not support revert feature"
+  },
+  "changeClassifcation": "Change Classification",
+  "@changeClassifcation": {
+    "description": "Change Classification"
   },
   "statusUpdated": "Update Status",
   "@statusUpdated": {

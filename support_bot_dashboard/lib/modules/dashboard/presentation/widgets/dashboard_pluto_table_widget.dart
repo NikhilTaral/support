@@ -54,7 +54,7 @@ class PlutoTableWidget extends StatelessWidget {
                 PlutoColumn(
                   title: S.of(context).ticketDescription,
                   field: 'ticketDescription',
-                  width: UIHelpers.screenWidth(context) * 0.25,
+                  width: UIHelpers.screenWidth(context) * 0.2,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -193,6 +193,22 @@ class PlutoTableWidget extends StatelessWidget {
                     );
                   },
                 ),
+                 PlutoColumn(
+                  title: S.of(context).status,
+                  field: 'status',
+                  type: PlutoColumnType.text(),
+                  width: UIHelpers.screenWidth(context) * 0.13,
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.center,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                ),
                 PlutoColumn(
                   title: S.of(context).actions,
                   field: 'actions',
@@ -225,7 +241,8 @@ class PlutoTableWidget extends StatelessWidget {
                         PlutoCell(value: item.classificationValidationReason),
                     'isUpdatedToHubspot':
                         PlutoCell(value: item.isUpdatedToHubspot),
-                    'actions': PlutoCell(value: 'View')
+                     'status': PlutoCell(value: item.isUpdatedToHubspot == true ? "updated" : "not updated"),
+                    'actions': PlutoCell(value: 'View'),
                   },
                 );
               }).toList(),
@@ -273,11 +290,11 @@ class ValidationReasonRenderer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ValidationReasonRendererState createState() =>
-      _ValidationReasonRendererState();
+  ValidationReasonRendererState createState() =>
+      ValidationReasonRendererState();
 }
 
-class _ValidationReasonRendererState extends State<ValidationReasonRenderer> {
+class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
   late String _selectedValue;
   late String _previousValue;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -524,7 +541,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
                 value: S.of(context).view,
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
                     _showSidebar(context, rows, currentIndex);
                   },
@@ -539,19 +556,25 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
               ),
               PopupMenuItem<String>(
                 value: S.of(context).revert,
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
                     print(isUpdatedToHubspot);
-                    if (!isUpdatedToHubspot &&
-                        classification == 'Spam/Marketing') {
+                    if( classification == 'Spam/Marketing'){
+                      if (!isUpdatedToHubspot) {
                       serviceLocator<RevertClassificationBloc>().add(
                         RevertClassificationInitialEvent(ticketId: id),
                       );
                       _showUpdatedToHubspotPopup(
                           context, S.of(context).revertSuccess);
+                      }
+                      else{
+                        _showUpdatedToHubspotPopup(
+                          context, S.of(context).alreadyUpdated);
+                      }
+                    
                     } else {
                       _showUpdatedToHubspotPopup(
-                          context, S.of(context).alreadyUpdated);
+                          context, S.of(context).revertClassifcation);
                     }
                   },
                   child: Row(
@@ -636,3 +659,6 @@ void _showUpdatedToHubspotPopup(BuildContext context, String message) {
     },
   );
 }
+
+
+

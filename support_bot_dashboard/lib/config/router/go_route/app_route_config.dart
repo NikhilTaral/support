@@ -7,31 +7,38 @@ import 'package:support_bot_dashboard/modules/login_v3/presentation/pages/v3_log
 import 'package:support_bot_dashboard/utils/service/auth/auth_service.dart';
 
 class MyAppRoutes {
-  GoRouter router = GoRouter(routes: [
-    GoRoute(
-      redirect: redirect,
-      name: MyAppRouteName.main,
-      path: '/',
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: Dashboard());
+  GoRouter router = GoRouter(
+      errorPageBuilder: (context, state) =>
+          const MaterialPage(child: V3LoginScreen()),
+      redirect: (context, state) async {
+        return await redirect(context, state);
       },
-    ),
-    GoRoute(
-      redirect: redirect,
-      path: "/login",
-      pageBuilder: (context, state) => const MaterialPage(child: V3LoginScreen()),
-    ),
-    GoRoute(
-      redirect: redirect,
-      name: MyAppRouteName.dashboard,
-      path: '/dashboard',
-      pageBuilder: (context, state) {
-        final queryParams = state.queryParams;
-        final code = queryParams['code'];
-        return const MaterialPage(child: Dashboard());
-      },
-    ),
-  ]);
+      routes: [
+        GoRoute(
+          redirect: redirect,
+          name: MyAppRouteName.main,
+          path: '/',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: Dashboard());
+          },
+        ),
+        GoRoute(
+          redirect: redirect,
+          path: "/login",
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: V3LoginScreen()),
+        ),
+        GoRoute(
+          redirect: redirect,
+          name: MyAppRouteName.dashboard,
+          path: '/dashboard',
+          pageBuilder: (context, state) {
+            final queryParams = state.queryParams;
+            final code = queryParams['code'];
+            return const MaterialPage(child: Dashboard());
+          },
+        ),
+      ]);
 }
 
 Future<String?> redirect(BuildContext context, GoRouterState state) async {

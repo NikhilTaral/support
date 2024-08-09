@@ -204,6 +204,21 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
                   ),
                 ),
               ),
+                PopupMenuItem<String>(
+                value: S.of(context).changeClassifcation,
+                child: GestureDetector(
+                  onTap: () {
+                   
+                  },
+                  child: Row(
+                    children: [
+                      const Icon(Icons.loop_rounded),
+                      UIHelpers.horizontalSpaceTiny,
+                      Text(S.of(context).changeClassifcation),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

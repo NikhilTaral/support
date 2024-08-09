@@ -44,22 +44,24 @@ class SelectClassificationEvent extends PlutotableEvent {
 
 class FilterClassificationEvent extends PlutotableEvent {
   final String selectedClassification;
-  final List<TableItem> initialTableData;
+  final String selectedClassificationValidation;
   final DateTime selectedDate;
   final DateTime selectedMonth;
 
-  FilterClassificationEvent(this.initialTableData, this.selectedDate,
-      this.selectedMonth, this.selectedClassification);
+  FilterClassificationEvent(
+      this.selectedDate,
+      this.selectedMonth,
+      this.selectedClassification,
+      this.selectedClassificationValidation);
 }
 
 class FilterValidationEvent extends PlutotableEvent {
-  final String selectedValidation;
+  final String selectedClassificationValidation;
   final String selectedClassification;
-  final List<TableItem> initialTableData;
   final DateTime selectedDate;
   final DateTime selectedMonth;
 
-  FilterValidationEvent(this.selectedValidation, this.initialTableData,
+  FilterValidationEvent(this.selectedClassificationValidation,
       this.selectedDate, this.selectedMonth, this.selectedClassification);
 }
 

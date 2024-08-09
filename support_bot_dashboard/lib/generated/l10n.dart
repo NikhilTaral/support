@@ -230,6 +230,16 @@ class S {
     );
   }
 
+  /// `status`
+  String get status {
+    return Intl.message(
+      'Status',
+      name: 'status',
+      desc: 'Status',
+      args: [],
+    );
+  }
+
    /// `save`
   String get save {
     return Intl.message(
@@ -256,6 +266,16 @@ class S {
       'View',
       name: 'view',
       desc: 'View',
+      args: [],
+    );
+  }
+
+   /// `changeClassification`
+  String get changeClassifcation {
+    return Intl.message(
+      'Change Classification',
+      name: 'changeClassifcation',
+      desc: 'Change Classification',
       args: [],
     );
   }
@@ -306,6 +326,16 @@ class S {
       'The ticket has already been updated to HubSpot.',
       name: 'alreadyUpdated',
       desc: 'The ticket has already been updated to HubSpot.',
+      args: [],
+    );
+  }
+
+  /// `revertClassification`
+  String get revertClassifcation {
+    return Intl.message(
+      'This classification does not support revert feature',
+      name: 'revertClassifcation',
+      desc: 'This classification does not support revert feature',
       args: [],
     );
   }

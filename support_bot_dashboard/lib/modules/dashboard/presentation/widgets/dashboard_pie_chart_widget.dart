@@ -86,11 +86,11 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                     chartData.length,
                     (index) {
                       final isTouched = index == touchedIndex;
-                      final double fontSize = isTouched ? 16 : 16;
+                      final double fontSize = isTouched ? 12 : 14;
                       return PieChartSectionData(
                         value: chartData[index].value?.toDouble() ?? 0,
                         title: isTouched
-                            ? '${chartData[index].label}: ${chartData[index].value}'
+                            ? '${chartData[index].label}\n${chartData[index].value}'
                             : null,
                         color: blueShades[index % blueShades.length],
                         radius: radius,
