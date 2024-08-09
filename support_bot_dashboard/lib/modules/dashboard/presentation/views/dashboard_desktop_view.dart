@@ -373,7 +373,7 @@ class DashboardDesktopView extends StatelessWidget {
                                           height:
                                               UIHelpers.screenHeight(context) *
                                                   0.5,
-                                          child: const Text('empty'));
+                                          child: const EmptyWidget());
                                     }
                                     return PlutoTableWidget(
                                       tableData: state.tableData,

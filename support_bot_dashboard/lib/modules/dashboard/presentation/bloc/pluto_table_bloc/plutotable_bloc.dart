@@ -56,8 +56,6 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             items: items,
           );
 
-          initialData = tableData;
-
           emit(FetchTableDataSuccess(
             selectedClassification: "Select",
             tableData: tableData,
@@ -154,8 +152,6 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               items: items,
             );
 
-            initialData = tableData;
-
             emit(FetchTableDataSuccess(
               selectedClassification: event.selectedClassification,
               tableData: tableData,
@@ -224,8 +220,6 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               totalRecords: model.data?.totalRecords,
               items: items,
             );
-
-            initialData = tableData;
 
             emit(FetchTableDataSuccess(
               selectedClassification: event.selectedClassification,
