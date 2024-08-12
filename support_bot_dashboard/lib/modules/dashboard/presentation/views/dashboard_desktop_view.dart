@@ -104,7 +104,22 @@ class DashboardDesktopView extends StatelessWidget {
                                   }),
                                 );
                               } else if (state is DashboardDataError) {
-                                return const Center(child: EmptyWidget());
+                                final List<CountContainerData> countContainers =
+                                    getCountContainerData(context);
+
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: List.generate(
+                                      countContainers.length, (index) {
+                                    final data = countContainers[index];
+                                    return CountContainer(
+                                      text: data.text,
+                                      icon: data.iconPath,
+                                      count: data.count,
+                                    );
+                                  }),
+                                );
                               } else {
                                 final List<CountContainerData> countContainers =
                                     getCountContainerData(context);
@@ -371,7 +386,8 @@ class DashboardDesktopView extends StatelessWidget {
                                           height:
                                               UIHelpers.screenHeight(context) *
                                                   0.5,
-                                          child: const EmptyWidget());
+                                          child: const Center(
+                                              child: EmptyWidget()));
                                     }
                                     return PlutoTableWidget(
                                       tableData: state.tableData,
@@ -405,7 +421,7 @@ class DashboardDesktopView extends StatelessWidget {
                         (state is ButtonSelectedState &&
                             state.selectedButtonText ==
                                 'Ticket Classification')) {
-                     return  Flexible(
+                      return Flexible(
                         flex: 2,
                         child: BlocBuilder<DashboardBloc, DashboardState>(
                           builder: (context, state) {
@@ -430,15 +446,11 @@ class DashboardDesktopView extends StatelessWidget {
                       );
                     } else {
                       return SizedBox(
-                         width: UIHelpers.screenWidth(context) * 0.2,
-                                  height:
-                                      UIHelpers.screenHeight(context) * 0.85,
+                          width: UIHelpers.screenWidth(context) * 0.2,
+                          height: UIHelpers.screenHeight(context) * 0.85,
                           child: const Center(child: EmptyWidget()));
                     }
-                    
-                  }
-
-                  )
+                  })
                 ],
               ),
             ],
