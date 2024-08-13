@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/config/environment/env_config.dart';
+import 'package:support_bot_dashboard/core/prerequisites/api_prerequisites.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
 import 'package:support_bot_dashboard/utils/service/failure.dart';
@@ -14,6 +15,7 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
         Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
     final headers = {
       'Content-Type': 'application/json',
+      'Authorization': "${await getToken()}",
     };
 
     Map<String, dynamic> body = {};
@@ -49,6 +51,4 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
           ServerFailure(message: 'Failed to load dashboard table data'));
     }
   }
-
-  
 }
