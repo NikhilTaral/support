@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
@@ -13,14 +12,15 @@ class PieChartWidget extends StatefulWidget {
   const PieChartWidget({super.key, this.data});
 
   @override
-  State<PieChartWidget> createState() => _PieChartWidgetState(data: data);
+  State<PieChartWidget> createState() => PieChartWidgetState(data: data);
 }
 
-class _PieChartWidgetState extends State<PieChartWidget> {
+
+class PieChartWidgetState extends State<PieChartWidget> {
   final DashboardChartAttributeModel? data;
   int? touchedIndex;
 
-  _PieChartWidgetState({required this.data});
+  PieChartWidgetState({required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +41,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           label: S.of(context).acknowledgementRequired,
           value: data?.acknowledgement)
     ];
+
+    final nonZeroChartData = chartData.where((data) => data.value != null && data.value! > 0).toList();
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 25, left: 15, right: 15),
@@ -78,22 +80,21 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                           touchedIndex = -1;
                           return;
                         }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!.touchedSectionIndex;
+                        touchedIndex = pieTouchResponse.touchedSection?.touchedSectionIndex ?? 0;
                       });
                     },
                   ),
                   centerSpaceRadius: 1,
                   sectionsSpace: 1,
                   sections: List.generate(
-                    chartData.length,
+                    nonZeroChartData.length,
                     (index) {
                       final isTouched = index == touchedIndex;
                       final double fontSize = isTouched ? 12 : 14;
                       return PieChartSectionData(
-                        value: chartData[index].value?.toDouble() ?? 0,
+                        value: nonZeroChartData[index].value?.toDouble() ?? 0.0,
                         title: isTouched
-                            ? '${chartData[index].label}\n${chartData[index].value}'
+                            ? '${nonZeroChartData[index].label}\n${nonZeroChartData[index].value}'
                             : null,
                         color: blueShades[index % blueShades.length],
                         radius: radius,
@@ -112,12 +113,12 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(
-                chartData.length,
+                nonZeroChartData.length,
                 (index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: _piechartDetails(
                     color: blueShades[index % blueShades.length],
-                    label: chartData[index].label ?? '',
+                    label: nonZeroChartData[index].label ?? '',
                   ),
                 ),
               ),
