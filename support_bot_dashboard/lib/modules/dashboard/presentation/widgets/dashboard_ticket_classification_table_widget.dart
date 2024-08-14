@@ -27,7 +27,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
       required this.selectedDate})
       : super(key: key);
 
-   PlutoColumn buildPlutoColumn({
+  PlutoColumn buildPlutoColumn({
     required String title,
     required String field,
     required PlutoColumnType type,
@@ -37,7 +37,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
     bool enableHideColumnMenuItem = false,
     PlutoColumnTextAlign textAlign = PlutoColumnTextAlign.start,
     EdgeInsets titlePadding = const EdgeInsets.all(8),
-    Color backgroundColor = const Color(0xFFE9ECF4), 
+    Color backgroundColor = const Color(0xFFE9ECF4),
     bool enableContextMenu = false,
     bool enableDropToResize = false,
     bool enableEditingMode = false,
@@ -187,13 +187,18 @@ class TicketClassificationTableWidget extends StatelessWidget {
       return PlutoRow(
         cells: {
           TicketClassificationGridKey.id: PlutoCell(value: item.id),
-          TicketClassificationGridKey.classification: PlutoCell(value: item.classification),
-          TicketClassificationGridKey.reasoning: PlutoCell(value: item.reasoning),
-          TicketClassificationGridKey.ticketDescription: PlutoCell(value: item.ticketDescription),
-          TicketClassificationGridKey.validation: PlutoCell(value: item.classificationValidation),
+          TicketClassificationGridKey.classification:
+              PlutoCell(value: item.classification),
+          TicketClassificationGridKey.reasoning:
+              PlutoCell(value: item.reasoning),
+          TicketClassificationGridKey.ticketDescription:
+              PlutoCell(value: item.ticketDescription),
+          TicketClassificationGridKey.validation:
+              PlutoCell(value: item.classificationValidation),
           TicketClassificationGridKey.validationReason:
               PlutoCell(value: item.classificationValidationReason),
-          TicketClassificationGridKey.isUpdatedToHubspot: PlutoCell(value: item.isUpdatedToHubspot),
+          TicketClassificationGridKey.isUpdatedToHubspot:
+              PlutoCell(value: item.isUpdatedToHubspot),
           TicketClassificationGridKey.status: PlutoCell(
               value:
                   item.isUpdatedToHubspot == true ? "Updated" : "Not Updated"),
@@ -202,21 +207,21 @@ class TicketClassificationTableWidget extends StatelessWidget {
       );
     }).toList();
 
-    return PlutoTableWidget(
-      columns: columns,
-      rows: rows
-    );
+    return PlutoTableWidget(columns: columns, rows: rows);
   }
 }
 
 Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
-  final id = rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
+  final id =
+      rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
-  final isUpdatedToHubspot =
-      rendererContext.row.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value ?? true;
-  final classification =
-      rendererContext.row.cells[TicketClassificationGridKey.classification]?.value ?? "";
+  final isUpdatedToHubspot = rendererContext
+          .row.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value ??
+      true;
+  final classification = rendererContext
+          .row.cells[TicketClassificationGridKey.classification]?.value ??
+      "";
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -244,12 +249,13 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
                   ),
                 ),
               ),
-              PopupMenuItem<String>(
-                value: S.of(context).revert,
-                child: InkWell(
-                  onTap: () {
-                    print(isUpdatedToHubspot);
-                    if (classification == 'Spam/Marketing') {
+              if (classification == 'Spam/Marketing')
+                PopupMenuItem<String>(
+                  value: S.of(context).revert,
+                  child: InkWell(
+                    onTap: () {
+                      print(isUpdatedToHubspot);
+
                       if (isUpdatedToHubspot) {
                         serviceLocator<RevertClassificationBloc>().add(
                           RevertClassificationInitialEvent(ticketId: id),
@@ -260,21 +266,16 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
                         _showUpdatedToHubspotPopup(
                             context, S.of(context).alreadyUpdated);
                       }
-                    } else {
-                      _showUpdatedToHubspotPopup(
-
-                          context, S.of(context).revertClassifcation);
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      const Icon(Icons.loop_rounded),
-                      UIHelpers.horizontalSpaceTiny,
-                      Text(S.of(context).revert),
-                    ],
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.loop_rounded),
+                        UIHelpers.horizontalSpaceTiny,
+                        Text(S.of(context).revert),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
