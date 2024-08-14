@@ -13,10 +13,7 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
       {DateTime? selectedDate, DateTime? selectedMonth}) async {
     final uri =
         Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': "${await getToken()}",
-    };
+    
 
     Map<String, dynamic> body = {};
 
@@ -31,7 +28,11 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
 
     final encodedBody = jsonEncode(body);
 
-    final response = await http.post(uri, headers: headers, body: encodedBody);
+    final response = await http.post(uri, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': await getToken(),
+    }, 
+    body: encodedBody);
 
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {

@@ -79,7 +79,6 @@ class CustomSidebar extends StatelessWidget {
   }
 
   Widget _buildRow(String title, String value) {
-    print(value);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(

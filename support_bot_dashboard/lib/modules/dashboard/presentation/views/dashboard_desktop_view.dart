@@ -7,12 +7,11 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/revert_classification/revert_classification_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container_data.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_date_selection_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pie_chart_widget.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pluto_table_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ticket_classification_table_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
@@ -185,6 +184,7 @@ class DashboardDesktopView extends StatelessWidget {
                           children: [
                             Row(
                               children: [
+                                // Date dropdown
                                 BlocBuilder<DashboardBloc, DashboardState>(
                                   builder: (context, state) {
                                     DateTime selectedDate = DateTime.now();
@@ -208,6 +208,7 @@ class DashboardDesktopView extends StatelessWidget {
                                     );
                                   },
                                 ),
+                                // Month dropdown
                                 BlocBuilder<DashboardBloc, DashboardState>(
                                   builder: (context, state) {
                                     DateTime selectMonth = DateTime(2024, 1);
@@ -248,83 +249,93 @@ class DashboardDesktopView extends StatelessWidget {
                                     );
                                   },
                                 ),
+                                // Classification dropdown
                                 BlocBuilder<PlutotableBloc, PlutotableState>(
                                   builder: (context, state) {
+                                    DateTime selectedDate = DateTime.now();
+                                    DateTime selectedMonth = DateTime(2024, 01);
+                                    String selectedClassification = '';
                                     if (state is FetchTableDataSuccess) {
-                                      DateTime selectedDate =
-                                          state.selectedDate;
-                                      DateTime selectedMonth =
-                                          state.selectedMonth;
-
-                                      return CustomFilterDropdown(
-                                        selectedValue:
-                                            state.selectedClassification,
-                                        items: const [
-                                          'Select',
-                                          'Spam/Marketing',
-                                          'No Action Required',
-                                          'Genuine Query',
-                                          'Acknowledgement Required'
-                                        ],
-                                        onChanged: (String? value) {
-                                          if (value != null) {
-                                            BlocProvider.of<PlutotableBloc>(
-                                                    context,
-                                                    listen: false)
-                                                .add(
-                                              FilterClassificationEvent(
+                                      selectedDate = state.selectedDate;
+                                      selectedMonth = state.selectedMonth;
+                                      selectedClassification =
+                                          state.selectedClassification;
+                                    }
+                                    final classificationItems = [
+                                      'Select',
+                                      'Spam/Marketing',
+                                      'No Action Required',
+                                      'Genuine Query',
+                                      'Acknowledgement Required'
+                                    ];
+                                    return CustomFilterDropdown(
+                                      selectedValue: selectedClassification,
+                                      items: classificationItems,
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          BlocProvider.of<PlutotableBloc>(
+                                                  context,
+                                                  listen: false)
+                                              .add(FilterClassificationEvent(
                                                   selectedDate,
                                                   selectedMonth,
                                                   value,
-                                                  ""),
-                                            );
-                                          }
-                                        },
-                                        label: S.of(context).classification,
-                                      );
-                                    } else {
-                                      return Container();
-                                    }
+                                                  ""));
+                                        }
+                                      },
+                                      label: S.of(context).classification,
+                                    );
                                   },
                                 ),
+                                // Validation dropdown
                                 BlocBuilder<PlutotableBloc, PlutotableState>(
                                   builder: (context, state) {
+                                    DateTime selectedDate = DateTime.now();
+                                    DateTime selectedMonth = DateTime(2024, 01);
+                                    String? selectedValidation = '';
+                                    String selectedClassification = '';
                                     if (state is FetchTableDataSuccess) {
-                                      return CustomFilterDropdown(
-                                          selectedValue:
-                                              state.selectedValidation ?? "",
-                                          items: const [
-                                            'Select',
-                                            'correct',
-                                            'incorrect',
-                                          ],
-                                          onChanged: (String? value) {
-                                            if (value != null) {
-                                              BlocProvider.of<PlutotableBloc>(
-                                                      context,
-                                                      listen: false)
-                                                  .add(FilterValidationEvent(
-                                                      value,
-                                                      state.selectedDate,
-                                                      state.selectedMonth,
-                                                      state
-                                                          .selectedClassification));
-                                            }
-                                          },
-                                          label: S.of(context).validation);
-                                    } else {
-                                      return Container();
+                                      selectedDate = state.selectedDate;
+                                      selectedMonth = state.selectedMonth;
+                                      selectedClassification =
+                                          state.selectedClassification;
+                                      selectedValidation =
+                                          state.selectedValidation;
                                     }
+                                    final validationItems = [
+                                      'Select',
+                                      'correct',
+                                      'incorrect'
+                                    ];
+                                    return CustomFilterDropdown(
+                                      selectedValue: selectedValidation ?? "",
+                                      items: validationItems,
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          BlocProvider.of<PlutotableBloc>(
+                                                  context,
+                                                  listen: false)
+                                              .add(FilterValidationEvent(
+                                                  value,
+                                                  selectedDate,
+                                                  selectedMonth,
+                                                  selectedClassification));
+                                        }
+                                      },
+                                      label: S.of(context).validation,
+                                    );
                                   },
-                                )
+                                ),
                               ],
                             ),
                             Tooltip(
-                                message: S.of(context).export,
-                                child: const ExportButton(
-                                    icon: 'assets/icons/Export.svg')),
+                              message: S.of(context).export,
+                              child: const ExportButton(
+                                  icon: 'assets/icons/Export.svg'),
+                            ),
                           ],
                         ),
+
                         BlocBuilder<CustombuttonBloc, CustombuttonState>(
                           builder: (context, state) {
                             if (state is CustomButtonInitial ||
@@ -379,7 +390,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         height:
                                             UIHelpers.screenHeight(context) *
                                                 0.5,
-                                        child: const EmptyWidget());
+                                        child:
+                                            const Center(child: EmptyWidget()));
                                   } else if (state is FetchTableDataSuccess) {
                                     if (state.noDataAvailable) {
                                       return SizedBox(
@@ -389,7 +401,7 @@ class DashboardDesktopView extends StatelessWidget {
                                           child: const Center(
                                               child: EmptyWidget()));
                                     }
-                                    return PlutoTableWidget(
+                                    return TicketClassificationTableWidget(
                                       tableData: state.tableData,
                                       selectedDate: state.selectedDate,
                                       selectedMonth: state.selectedMonth,
@@ -399,7 +411,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         height:
                                             UIHelpers.screenHeight(context) *
                                                 0.5,
-                                        child: const EmptyWidget());
+                                        child:
+                                            const Center(child: EmptyWidget()));
                                   } else {
                                     return Container();
                                   }
