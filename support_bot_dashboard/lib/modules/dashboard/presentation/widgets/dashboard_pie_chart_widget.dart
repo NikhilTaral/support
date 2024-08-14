@@ -45,8 +45,10 @@ class PieChartWidgetState extends State<PieChartWidget> {
     final nonZeroChartData = chartData.where((data) => data.value != null && data.value! > 0).toList();
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 25, left: 15, right: 15),
+      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
       child: Container(
+        // width: UIHelpers.screenWidth(context) * 0.19,
+        height: UIHelpers.screenHeight(context) * 0.81,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(
