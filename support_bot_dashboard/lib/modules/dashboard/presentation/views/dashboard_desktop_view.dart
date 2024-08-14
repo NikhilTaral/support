@@ -259,6 +259,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         selectedDate = state.selectedDate;
                                         selectedMonth = state.selectedMonth;
                                         selectedClassification =
+                                          state.selectedClassification;
+                                    } else if (state is FetchTableDataError) {
+                                      selectedClassification =
                                             state.selectedClassification;
                                       }
                                       final classificationItems = [
@@ -298,6 +301,11 @@ class DashboardDesktopView extends StatelessWidget {
                                         selectedDate = state.selectedDate;
                                         selectedMonth = state.selectedMonth;
                                         selectedClassification =
+                                          state.selectedClassification;
+                                      selectedValidation =
+                                          state.selectedValidation;
+                                    } else if (state is FetchTableDataError) {
+                                      selectedClassification =
                                             state.selectedClassification;
                                         selectedValidation =
                                             state.selectedValidation;
@@ -335,8 +343,7 @@ class DashboardDesktopView extends StatelessWidget {
                               ),
                             ],
                           ),
-                
-                          BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                                          BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
                               if (state is CustomButtonInitial ||
                                   (state is ButtonSelectedState &&

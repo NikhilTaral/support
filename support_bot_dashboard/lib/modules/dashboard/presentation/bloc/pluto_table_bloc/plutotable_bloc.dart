@@ -31,7 +31,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       final response =
           await repository.invoke(event.selectedDate, event.selectedMonth);
       if (response.isLeft) {
-        emit(FetchTableDataError(message: "Failed to fetch data"));
+        emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
       } else {
         final model = response.right;
 
@@ -72,7 +72,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         }
       }
     } catch (e) {
-      emit(FetchTableDataError(message: "Exception occurred: $e"));
+      emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
     }
   }
 
@@ -127,7 +127,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             event.selectedClassification,
             event.selectedClassificationValidation);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data"));
+          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
           final model = response.right;
           if (model.success == true) {
@@ -164,7 +164,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           }
         }
       } catch (e) {
-        emit(FetchTableDataError(message: "Exception occurred: $e"));
+        emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
       }
     }
   }
@@ -180,7 +180,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         final response = await repository.invoke(event.selectedDate,
             event.selectedMonth, event.selectedClassification, null);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data"));
+          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
           final model = response.right;
           if (model.success == true) {
@@ -240,7 +240,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             event.selectedClassification,
             event.selectedClassificationValidation);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data"));
+          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
           final model = response.right;
 
@@ -280,7 +280,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           }
         }
       } catch (e) {
-        emit(FetchTableDataError(message: "Exception occurred: $e"));
+        emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
       }
     }
   }
