@@ -264,7 +264,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
                             context, S.of(context).revertSuccess);
                       } else {
                         _showUpdatedToHubspotPopup(
-                            context, S.of(context).alreadyUpdated);
+                            context, S.of(context).noRevert);
                       }
                     },
                     child: Row(

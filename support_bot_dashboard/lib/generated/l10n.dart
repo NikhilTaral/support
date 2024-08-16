@@ -331,11 +331,11 @@ class S {
   }
 
   /// `alreadyUpdated`
-  String get alreadyUpdated {
+  String get noRevert {
     return Intl.message(
-      'The ticket has already been updated to HubSpot.',
-      name: 'alreadyUpdated',
-      desc: 'The ticket has already been updated to HubSpot.',
+      'No changes to revert.',
+      name: 'noRevert',
+      desc: 'No changes to revert.',
       args: [],
     );
   }

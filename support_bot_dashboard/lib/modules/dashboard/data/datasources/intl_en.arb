@@ -103,9 +103,9 @@
   "@revertSuccess": {
     "description": "Ticket stage reverted successfully"
   },
-  "alreadyUpdated": "The ticket has already been updated to HubSpot.",
-  "@alreadyUpdated": {
-    "description": "The ticket has already been updated to HubSpot."
+  "noRevert": "No changes to revert.",
+  "@noRevert": {
+    "description": "No changes to revert."
   },
   "revertClassifcation": "This classification does not support revert feature",
   "@revertClassifcation": {
