@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
@@ -10,17 +9,16 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PieChartWidget extends StatefulWidget {
   final DashboardChartAttributeModel? data;
-  const PieChartWidget({super.key, this.data});
+  final bool isAIQuery;
+
+  const PieChartWidget({super.key, this.data, this.isAIQuery = false});
 
   @override
-  State<PieChartWidget> createState() => _PieChartWidgetState(data: data);
+  State<PieChartWidget> createState() => _PieChartWidgetState();
 }
 
 class _PieChartWidgetState extends State<PieChartWidget> {
-  final DashboardChartAttributeModel? data;
   int? touchedIndex;
-
-  _PieChartWidgetState({required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +30,27 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     ];
     double radius = UIHelpers.screenWidth(context) * 0.08;
 
-    final chartData = [
-      ChartData(label: S.of(context).genuineQuery, value: data?.genuineQuery),
-      ChartData(
-          label: S.of(context).noActionRequired, value: data?.noActionRequired),
-      ChartData(label: S.of(context).spam, value: data?.spamMarketing),
-      ChartData(
-          label: S.of(context).acknowledgementRequired,
-          value: data?.acknowledgement)
-    ];
+    final chartData = widget.isAIQuery
+        ? [
+            ChartData(
+                label: S.of(context).genuineQuery,
+                value: widget.data?.genuineQuery),
+            ChartData(
+                label: S.of(context).noActionRequired,
+                value: widget.data?.noActionRequired),
+          ]
+        : [
+            ChartData(
+                label: S.of(context).genuineQuery,
+                value: widget.data?.genuineQuery),
+            ChartData(
+                label: S.of(context).noActionRequired,
+                value: widget.data?.noActionRequired),
+            ChartData(label: S.of(context).spam, value: widget.data?.spamMarketing),
+            ChartData(
+                label: S.of(context).acknowledgementRequired,
+                value: widget.data?.acknowledgement)
+          ];
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 25, left: 15, right: 15),
@@ -58,7 +68,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           children: [
             UIHelpers.verticalSpaceRegular,
             Text(
-              S.of(context).ticketClassification,
+              widget.isAIQuery
+                  ? S.of(context).aiQueryAnswer
+                  : S.of(context).ticketClassification,
               style: SupportBotTextstyle.pierchartHeading,
             ),
             Padding(

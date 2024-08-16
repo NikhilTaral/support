@@ -166,16 +166,16 @@ class DashboardDesktopView extends StatelessWidget {
                                             'Ticket Classification'));
                                   },
                                 ),
-                                // CustomButton(
-                                //   text: S.of(context).aiQueryAnswer,
-                                //   isSelected:
-                                //       selectedButtonText == 'AI Query Answer',
-                                //   onPressed: () {
-                                //     BlocProvider.of<CustombuttonBloc>(context)
-                                //         .add(SelectButtonEvent(
-                                //             'AI Query Answer'));
-                                //   },
-                                // ),
+                                CustomButton(
+                                  text: S.of(context).aiQueryAnswer,
+                                  isSelected:
+                                      selectedButtonText == 'AI Query Answer',
+                                  onPressed: () {
+                                    BlocProvider.of<CustombuttonBloc>(context)
+                                        .add(SelectButtonEvent(
+                                            'AI Query Answer'));
+                                  },
+                                ),
                               ],
                             );
                           },
@@ -435,7 +435,8 @@ class DashboardDesktopView extends StatelessWidget {
                                 ),
                               );
                             } else if (state is DashboardDataSuccess) {
-                              return PieChartWidget(data: state.pieChartData);
+                              return PieChartWidget(
+                                  data: state.pieChartData, isAIQuery: false);
                             } else if (state is DashboardDataError) {
                               return const Center(child: EmptyWidget());
                             } else {
@@ -445,10 +446,34 @@ class DashboardDesktopView extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return SizedBox(
-                          width: UIHelpers.screenWidth(context) * 0.2,
-                          height: UIHelpers.screenHeight(context) * 0.85,
-                          child: const Center(child: EmptyWidget()));
+                      return Flexible(
+                        flex: 2,
+                        child: BlocBuilder<DashboardBloc, DashboardState>(
+                          builder: (context, state) {
+                            if (state is DashboardDataLoading) {
+                              return Center(
+                                child: LoadingWidget(
+                                  width: UIHelpers.screenWidth(context) * 0.2,
+                                  height:
+                                      UIHelpers.screenHeight(context) * 0.85,
+                                  radius: 8,
+                                ),
+                              );
+                            } else if (state is DashboardDataSuccess) {
+                              return PieChartWidget(
+                                  data: state.pieChartData, isAIQuery: true);
+                            } else if (state is DashboardDataError) {
+                              return const Center(child: EmptyWidget());
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                      );
+                      // SizedBox(
+                      //     width: UIHelpers.screenWidth(context) * 0.2,
+                      //     height: UIHelpers.screenHeight(context) * 0.85,
+                      //     child: const Center(child: EmptyWidget()));
                     }
                   })
                 ],
