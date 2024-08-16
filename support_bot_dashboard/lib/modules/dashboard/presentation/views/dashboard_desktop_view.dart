@@ -84,11 +84,11 @@ class DashboardDesktopView extends StatelessWidget {
                                         0) +
                                     (state.pieChartData?.genuineQuery ?? 0) +
                                     (state.pieChartData?.acknowledgement ?? 0);
-                          
+
                                 final List<CountContainerData> countContainers =
                                     getCountContainerData(context,
                                         state: state, totalCount: totalCount);
-                          
+
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -105,7 +105,7 @@ class DashboardDesktopView extends StatelessWidget {
                               } else if (state is DashboardDataError) {
                                 final List<CountContainerData> countContainers =
                                     getCountContainerData(context);
-                          
+
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -122,7 +122,7 @@ class DashboardDesktopView extends StatelessWidget {
                               } else {
                                 final List<CountContainerData> countContainers =
                                     getCountContainerData(context);
-                          
+
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -146,13 +146,13 @@ class DashboardDesktopView extends StatelessWidget {
                               if (state is ButtonSelectedState) {
                                 selectedButtonText = state.selectedButtonText;
                               }
-                
+
                               if (state is CustomButtonInitial &&
                                   state.selectedButtonText ==
                                       'Ticket Classification') {
                                 selectedButtonText = state.selectedButtonText;
                               }
-                
+
                               return Row(
                                 children: [
                                   CustomButton(
@@ -196,10 +196,12 @@ class DashboardDesktopView extends StatelessWidget {
                                       return DateSelectionWidget(
                                         selectedDate: selectedDate,
                                         onChanged: (newDate) {
-                                          BlocProvider.of<DashboardBloc>(context)
+                                          BlocProvider.of<DashboardBloc>(
+                                                  context)
                                               .add(UpdateSelectedDateEvent(
                                                   newDate));
-                                          BlocProvider.of<PlutotableBloc>(context)
+                                          BlocProvider.of<PlutotableBloc>(
+                                                  context)
                                               .add(SelectDateEvent(
                                                   selectedDate: newDate));
                                         },
@@ -253,15 +255,16 @@ class DashboardDesktopView extends StatelessWidget {
                                   BlocBuilder<PlutotableBloc, PlutotableState>(
                                     builder: (context, state) {
                                       DateTime selectedDate = DateTime.now();
-                                      DateTime selectedMonth = DateTime(2024, 01);
+                                      DateTime selectedMonth =
+                                          DateTime(2024, 01);
                                       String selectedClassification = '';
                                       if (state is FetchTableDataSuccess) {
                                         selectedDate = state.selectedDate;
                                         selectedMonth = state.selectedMonth;
                                         selectedClassification =
-                                          state.selectedClassification;
-                                    } else if (state is FetchTableDataError) {
-                                      selectedClassification =
+                                            state.selectedClassification;
+                                      } else if (state is FetchTableDataError) {
+                                        selectedClassification =
                                             state.selectedClassification;
                                       }
                                       final classificationItems = [
@@ -294,18 +297,19 @@ class DashboardDesktopView extends StatelessWidget {
                                   BlocBuilder<PlutotableBloc, PlutotableState>(
                                     builder: (context, state) {
                                       DateTime selectedDate = DateTime.now();
-                                      DateTime selectedMonth = DateTime(2024, 01);
+                                      DateTime selectedMonth =
+                                          DateTime(2024, 01);
                                       String? selectedValidation = '';
                                       String selectedClassification = '';
                                       if (state is FetchTableDataSuccess) {
                                         selectedDate = state.selectedDate;
                                         selectedMonth = state.selectedMonth;
                                         selectedClassification =
-                                          state.selectedClassification;
-                                      selectedValidation =
-                                          state.selectedValidation;
-                                    } else if (state is FetchTableDataError) {
-                                      selectedClassification =
+                                            state.selectedClassification;
+                                        selectedValidation =
+                                            state.selectedValidation;
+                                      } else if (state is FetchTableDataError) {
+                                        selectedClassification =
                                             state.selectedClassification;
                                         selectedValidation =
                                             state.selectedValidation;
@@ -343,7 +347,7 @@ class DashboardDesktopView extends StatelessWidget {
                               ),
                             ],
                           ),
-                                          BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                          BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
                               if (state is CustomButtonInitial ||
                                   (state is ButtonSelectedState &&
@@ -356,10 +360,12 @@ class DashboardDesktopView extends StatelessWidget {
                                       context.read<PlutotableBloc>().add(
                                             FetchTableDataEvent(
                                               selectedDate: state.selectedDate,
-                                              selectedMonth: state.selectedMonth,
+                                              selectedMonth:
+                                                  state.selectedMonth,
                                             ),
                                           );
-                                    } else if (state is UpdateValidationSuccess ||
+                                    } else if (state
+                                            is UpdateValidationSuccess ||
                                         state is UpdateValidationError) {
                                       context.read<PlutotableBloc>().add(
                                             FetchTableDataEvent(
@@ -377,8 +383,9 @@ class DashboardDesktopView extends StatelessWidget {
                                           height:
                                               UIHelpers.screenHeight(context) *
                                                   0.43,
-                                          width: UIHelpers.screenWidth(context) *
-                                              0.78,
+                                          width:
+                                              UIHelpers.screenWidth(context) *
+                                                  0.78,
                                           radius: 8,
                                         ),
                                       );
@@ -386,10 +393,11 @@ class DashboardDesktopView extends StatelessWidget {
                                     if (state is FetchTableDataLoading) {
                                       return Center(
                                           child: LoadingWidget(
-                                        height: UIHelpers.screenHeight(context) *
-                                            0.43,
-                                        width:
-                                            UIHelpers.screenWidth(context) * 0.78,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.43,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.78,
                                         radius: 8,
                                       ));
                                     } else if (state is FetchTableDataEmpty) {
@@ -397,14 +405,14 @@ class DashboardDesktopView extends StatelessWidget {
                                           height:
                                               UIHelpers.screenHeight(context) *
                                                   0.5,
-                                          child:
-                                              const Center(child: EmptyWidget()));
+                                          child: const Center(
+                                              child: EmptyWidget()));
                                     } else if (state is FetchTableDataSuccess) {
                                       if (state.noDataAvailable) {
                                         return SizedBox(
-                                            height:
-                                                UIHelpers.screenHeight(context) *
-                                                    0.5,
+                                            height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.5,
                                             child: const Center(
                                                 child: EmptyWidget()));
                                       }
@@ -418,8 +426,8 @@ class DashboardDesktopView extends StatelessWidget {
                                           height:
                                               UIHelpers.screenHeight(context) *
                                                   0.5,
-                                          child:
-                                              const Center(child: EmptyWidget()));
+                                          child: const Center(
+                                              child: EmptyWidget()));
                                     } else {
                                       return Container();
                                     }
@@ -427,7 +435,8 @@ class DashboardDesktopView extends StatelessWidget {
                                 );
                               } else {
                                 return SizedBox(
-                                    height: UIHelpers.screenHeight(context) * 0.5,
+                                    height:
+                                        UIHelpers.screenHeight(context) * 0.5,
                                     child: const Center(child: EmptyWidget()));
                               }
                             },
@@ -443,23 +452,64 @@ class DashboardDesktopView extends StatelessWidget {
                                   'Ticket Classification')) {
                         return Flexible(
                           flex: 2,
-                          child: BlocBuilder<DashboardBloc, DashboardState>(
-                            builder: (context, state) {
-                              if (state is DashboardDataLoading) {
-                                return LoadingWidget(
-                                  width: UIHelpers.screenWidth(context) * 0.19,
-                                  height:
-                                      UIHelpers.screenHeight(context) * 0.82,
-                                  radius: 8,
-                                );
-                              } else if (state is DashboardDataSuccess) {
-                                return PieChartWidget(data: state.pieChartData);
-                              } else if (state is DashboardDataError) {
-                                return const Center(child: EmptyWidget());
-                              } else {
-                                return Container();
-                              }
-                            },
+                          child: Column(
+                            children: [
+                              // BlocBuilder<PlutotableBloc, PlutotableState>(
+                              //   builder: (context, state) {
+                              //     DateTime selectedDate = DateTime.now();
+                              //     DateTime selectedMonth = DateTime(2024, 01);
+                              //     String selectedPipeline = '';
+                              //     if (state is FetchTableDataSuccess) {
+                              //       selectedDate = state.selectedDate;
+                              //       selectedMonth = state.selectedMonth;
+                              //       selectedPipeline = state.selectedPipeline;
+                              //     }
+                              //     final pipelineItems = [
+                              //       'Select',
+                              //       'ECD',
+                              //       'Southwest Broker',
+                              //     ];
+                              //     return SizedBox(
+                              //       width: UIHelpers.screenWidth(context),
+                              //       child: CustomFilterDropdown(
+                              //         selectedValue: selectedPipeline,
+                              //         items: pipelineItems,
+                              //         onChanged: (String? value) {
+                              //           if (value != null) {
+                              //             BlocProvider.of<PlutotableBloc>(context,
+                              //                     listen: false)
+                              //                 .add(FilterPipelineEvent(
+                              //                     selectedDate,
+                              //                     selectedMonth,
+                              //                     ""));
+                              //           }
+                              //         },
+                              //         label: S.of(context).pipelineType,
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
+                              BlocBuilder<DashboardBloc, DashboardState>(
+                                builder: (context, state) {
+                                  if (state is DashboardDataLoading) {
+                                    return LoadingWidget(
+                                      width:
+                                          UIHelpers.screenWidth(context) * 0.19,
+                                      height: UIHelpers.screenHeight(context) *
+                                          0.82,
+                                      radius: 8,
+                                    );
+                                  } else if (state is DashboardDataSuccess) {
+                                    return PieChartWidget(
+                                        data: state.pieChartData);
+                                  } else if (state is DashboardDataError) {
+                                    return const Center(child: EmptyWidget());
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         );
                       } else {

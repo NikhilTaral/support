@@ -13,6 +13,7 @@ class FetchTableDataSuccess extends PlutotableState {
   final DateTime selectedDate;
   final DateTime selectedMonth;
   final bool noDataAvailable;
+  final String selectedPipeline;
 
   FetchTableDataSuccess({
     required this.tableData,
@@ -21,6 +22,7 @@ class FetchTableDataSuccess extends PlutotableState {
     required this.selectedClassification,
     required this.selectedValidation,
     required this.noDataAvailable,
+    required this.selectedPipeline,
   });
 }
 

@@ -15,7 +15,6 @@ class PieChartWidget extends StatefulWidget {
   State<PieChartWidget> createState() => PieChartWidgetState(data: data);
 }
 
-
 class PieChartWidgetState extends State<PieChartWidget> {
   final DashboardChartAttributeModel? data;
   int? touchedIndex;
@@ -42,7 +41,9 @@ class PieChartWidgetState extends State<PieChartWidget> {
           value: data?.acknowledgement)
     ];
 
-    final nonZeroChartData = chartData.where((data) => data.value != null && data.value! > 0).toList();
+    final nonZeroChartData = chartData
+        .where((data) => data.value != null && data.value! > 0)
+        .toList();
 
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
@@ -57,75 +58,79 @@ class PieChartWidgetState extends State<PieChartWidget> {
           ),
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            UIHelpers.verticalSpaceRegular,
-            Text(
-              S.of(context).ticketClassification,
-              style: SupportBotTextstyle.pierchartHeading,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 10, left: 10),
-              child: Divider(color: SupportBotColors.blueSecondary.shade200),
-            ),
-            SizedBox(
-              height: UIHelpers.screenHeight(context) * 0.5,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse.touchedSection?.touchedSectionIndex ?? 0;
-                      });
-                    },
-                  ),
-                  centerSpaceRadius: 1,
-                  sectionsSpace: 1,
-                  sections: List.generate(
-                    nonZeroChartData.length,
-                    (index) {
-                      final isTouched = index == touchedIndex;
-                      final double fontSize = isTouched ? 12 : 14;
-                      return PieChartSectionData(
-                        value: nonZeroChartData[index].value?.toDouble() ?? 0.0,
-                        title: isTouched
-                            ? '${nonZeroChartData[index].label}\n${nonZeroChartData[index].value}'
-                            : null,
-                        color: blueShades[index % blueShades.length],
-                        radius: radius,
-                        titleStyle:
-                            SupportBotTextstyle.pierchartNormal.copyWith(
-                          fontSize: fontSize,
-                        ),
-                        showTitle: true,
-                      );
-                    },
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              UIHelpers.verticalSpaceRegular,
+              Text(
+                S.of(context).ticketClassification,
+                style: SupportBotTextstyle.pierchartHeading,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10, left: 10),
+                child: Divider(color: SupportBotColors.blueSecondary.shade200),
+              ),
+              SizedBox(
+                height: UIHelpers.screenHeight(context) * 0.5,
+                child: PieChart(
+                  PieChartData(
+                    pieTouchData: PieTouchData(
+                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            touchedIndex = -1;
+                            return;
+                          }
+                          touchedIndex = pieTouchResponse
+                                  .touchedSection?.touchedSectionIndex ??
+                              0;
+                        });
+                      },
+                    ),
+                    centerSpaceRadius: 1,
+                    sectionsSpace: 1,
+                    sections: List.generate(
+                      nonZeroChartData.length,
+                      (index) {
+                        final isTouched = index == touchedIndex;
+                        final double fontSize = isTouched ? 12 : 14;
+                        return PieChartSectionData(
+                          value: nonZeroChartData[index].value?.toDouble() ?? 0.0,
+                          title: isTouched
+                              ? '${nonZeroChartData[index].label}\n${nonZeroChartData[index].value}'
+                              : null,
+                          color: blueShades[index % blueShades.length],
+                          radius: radius,
+                          titleStyle:
+                              SupportBotTextstyle.pierchartNormal.copyWith(
+                            fontSize: fontSize,
+                          ),
+                          showTitle: true,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            UIHelpers.horizontalSpaceSmallRegular,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(
-                nonZeroChartData.length,
-                (index) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: _piechartDetails(
-                    color: blueShades[index % blueShades.length],
-                    label: nonZeroChartData[index].label ?? '',
+              UIHelpers.horizontalSpaceSmallRegular,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(
+                  nonZeroChartData.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: _piechartDetails(
+                      color: blueShades[index % blueShades.length],
+                      label: nonZeroChartData[index].label ?? '',
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -140,10 +145,12 @@ class PieChartWidgetState extends State<PieChartWidget> {
           color: color,
         ),
         UIHelpers.horizontalSpaceTiny,
-        Expanded(
+        Flexible(
           child: Text(
             label,
             style: SupportBotTextstyle.pierchartLabel,
+            softWrap: true,
+            overflow: TextOverflow.visible,
           ),
         ),
       ],

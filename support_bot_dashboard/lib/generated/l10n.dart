@@ -60,6 +60,16 @@ class S {
     );
   }
 
+  /// `Pipeline Type`
+  String get pipelineType {
+    return Intl.message(
+      'Pipeline Type',
+      name: 'pipelineType',
+      desc: 'Pipeline Type',
+      args: [],
+    );
+  }
+
   /// `Ticket Classification`
   String get ticketClassification {
     return Intl.message(
@@ -180,7 +190,7 @@ class S {
     );
   }
 
-   /// `id`
+  /// `id`
   String get id {
     return Intl.message(
       'ID',
@@ -190,7 +200,7 @@ class S {
     );
   }
 
-   /// `ticketDescription`
+  /// `ticketDescription`
   String get ticketDescription {
     return Intl.message(
       'Ticket Description',
@@ -200,7 +210,7 @@ class S {
     );
   }
 
-   /// `reasoning`
+  /// `reasoning`
   String get reasoning {
     return Intl.message(
       'Reasoning',
@@ -210,7 +220,7 @@ class S {
     );
   }
 
-   /// `validationReason`
+  /// `validationReason`
   String get validationReason {
     return Intl.message(
       'Validation Reason',
@@ -220,7 +230,7 @@ class S {
     );
   }
 
-   /// `actions`
+  /// `actions`
   String get actions {
     return Intl.message(
       'Actions',
@@ -240,7 +250,7 @@ class S {
     );
   }
 
-   /// `save`
+  /// `save`
   String get save {
     return Intl.message(
       'Save',
@@ -250,7 +260,7 @@ class S {
     );
   }
 
-   /// `revert`
+  /// `revert`
   String get revert {
     return Intl.message(
       'Revert',
@@ -260,7 +270,7 @@ class S {
     );
   }
 
-   /// `view`
+  /// `view`
   String get view {
     return Intl.message(
       'View',
@@ -270,7 +280,7 @@ class S {
     );
   }
 
-   /// `changeClassification`
+  /// `changeClassification`
   String get changeClassifcation {
     return Intl.message(
       'Change Classification',
@@ -280,7 +290,7 @@ class S {
     );
   }
 
-   /// `emailValidations`
+  /// `emailValidations`
   String get emailValidations {
     return Intl.message(
       'Email Validation Details',
@@ -290,7 +300,7 @@ class S {
     );
   }
 
-   /// `comments`
+  /// `comments`
   String get comments {
     return Intl.message(
       'Please enter your comments',
@@ -300,7 +310,7 @@ class S {
     );
   }
 
-   /// `cancel`
+  /// `cancel`
   String get cancel {
     return Intl.message(
       'Cancel',
@@ -310,7 +320,7 @@ class S {
     );
   }
 
-   /// `revertSuccess`
+  /// `revertSuccess`
   String get revertSuccess {
     return Intl.message(
       'Ticket stage reverted successfully',
@@ -320,7 +330,7 @@ class S {
     );
   }
 
-   /// `alreadyUpdated`
+  /// `alreadyUpdated`
   String get alreadyUpdated {
     return Intl.message(
       'The ticket has already been updated to HubSpot.',
@@ -340,7 +350,7 @@ class S {
     );
   }
 
-   /// `statusUpdated`
+  /// `statusUpdated`
   String get statusUpdated {
     return Intl.message(
       'Update Status',
@@ -350,7 +360,7 @@ class S {
     );
   }
 
-   /// `ok`
+  /// `ok`
   String get ok {
     return Intl.message(
       'Ok',
@@ -360,7 +370,7 @@ class S {
     );
   }
 
-   /// `link`
+  /// `link`
   String get link {
     return Intl.message(
       'Link',
