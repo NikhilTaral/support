@@ -370,17 +370,18 @@ class DashboardDesktopView extends StatelessWidget {
                                             ),
                                           );
                                       Navigator.of(context).pop();
-                                    }
-                                     else  if (state is RevertClassificationSuccessState) {
+                                    } else if (state
+                                        is RevertClassificationSuccessState) {
                                       context.read<PlutotableBloc>().add(
                                             FetchTableDataEvent(
-                                              selectedDate: state.selectedDate,
-                                              selectedMonth:
-                                                  state.selectedMonth,
-                                                  selectedClassification: state.selectedClassification
-                                            ),
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth:
+                                                    state.selectedMonth,
+                                                selectedClassification: state
+                                                    .selectedClassification),
                                           );
-                                    } 
+                                    }
                                   },
                                   builder: (context, state) {
                                     if (state is UpdateValidationLoading) {
@@ -396,7 +397,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         ),
                                       );
                                     }
-                                    if (state is RevertClassificationLoadingState) {
+                                    if (state
+                                        is RevertClassificationLoadingState) {
                                       return Center(
                                         child: LoadingWidget(
                                           height:
@@ -520,7 +522,8 @@ class DashboardDesktopView extends StatelessWidget {
                                     );
                                   } else if (state is DashboardDataSuccess) {
                                     return PieChartWidget(
-                                        data: state.pieChartData);
+                                        data: state.pieChartData,
+                                        isAIQuery: false);
                                   } else if (state is DashboardDataError) {
                                     return const Center(child: EmptyWidget());
                                   } else {
@@ -532,10 +535,35 @@ class DashboardDesktopView extends StatelessWidget {
                           ),
                         );
                       } else {
-                        return SizedBox(
-                            width: UIHelpers.screenWidth(context) * 0.2,
-                            height: UIHelpers.screenHeight(context) * 0.85,
-                            child: const Center(child: EmptyWidget()));
+                        return Flexible(
+                          flex: 2,
+                          child: BlocBuilder<DashboardBloc, DashboardState>(
+                            builder: (context, state) {
+                              if (state is DashboardDataLoading) {
+                                return Center(
+                                  child: LoadingWidget(
+                                    width: UIHelpers.screenWidth(context) * 0.2,
+                                    height:
+                                        UIHelpers.screenHeight(context) * 0.85,
+                                    radius: 8,
+                                  ),
+                                );
+                              } else if (state is DashboardDataSuccess) {
+                                return PieChartWidget(
+                                    data: state.pieChartData, isAIQuery: true);
+                              } else if (state is DashboardDataError) {
+                                return const Center(child: EmptyWidget());
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
+                        );
+
+                        // SizedBox(
+                        //     width: UIHelpers.screenWidth(context) * 0.2,
+                        //     height: UIHelpers.screenHeight(context) * 0.85,
+                        //     child: const Center(child: EmptyWidget()));
                       }
                     })
                   ],
