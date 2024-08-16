@@ -26,6 +26,7 @@ class CustomSidebar extends StatelessWidget {
     final reasoning = rowData.cells['reasoning']?.value ?? 'N/A';
     final validation = rowData.cells['validation']?.value ?? 'N/A';
     final validationReason = rowData.cells['validation_reason']?.value ?? 'N/A';
+    final status = rowData.cells['status']?.value ?? 'N/A';
 
     return Scaffold(
       appBar: AppBar(
@@ -69,6 +70,7 @@ class CustomSidebar extends StatelessWidget {
                       'Validation:', validation.isEmpty ? 'N/A' : validation),
                   _buildRow('Validation Reason:',
                       validationReason.isEmpty ? 'N/A' : validationReason),
+                  _buildRow('Status:', status),
                 ],
               ),
             ),

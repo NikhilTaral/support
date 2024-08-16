@@ -17,7 +17,6 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_c
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/revert_classification/revert_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/usecases/v3_login_usecases.dart';
@@ -72,5 +71,4 @@ Future<void> initServiceLocator() async {
       () => RevertClassificationUsecase());
   serviceLocator.registerLazySingleton<RevertClassificationRepository>(
       () => RevertClassificationRepoImpl());
-  serviceLocator.registerFactory<RevertClassificationBloc>(() => RevertClassificationBloc());
 }

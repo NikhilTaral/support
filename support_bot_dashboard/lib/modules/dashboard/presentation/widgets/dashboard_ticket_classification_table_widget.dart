@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
-import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ticket_classification_gridkey.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/revert_classification/revert_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_validation_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_sidebar.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.dart';
@@ -179,7 +177,11 @@ class TicketClassificationTableWidget extends StatelessWidget {
         type: PlutoColumnType.text(),
         width: UIHelpers.screenWidth(context) * 0.07,
         textAlign: PlutoColumnTextAlign.center,
-        renderer: actionsRenderer,
+        renderer:(context) =>  actionsRenderer(
+          context,
+          selectedDate,
+          selectedMonth,
+        ),
       ),
     ];
 
@@ -211,78 +213,90 @@ class TicketClassificationTableWidget extends StatelessWidget {
   }
 }
 
-Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
-  final id =
-      rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
+Widget actionsRenderer(
+  PlutoColumnRendererContext rendererContext,
+  DateTime selectedDate,
+  DateTime selectedMonth,
+) {
+  final id = rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
-  final isUpdatedToHubspot = rendererContext
-          .row.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value ??
-      true;
-  final classification = rendererContext
-          .row.cells[TicketClassificationGridKey.classification]?.value ??
-      "";
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Align(
-        child: PopupMenuTheme(
-          data: const PopupMenuThemeData(
-            color: SupportBotColors.white,
-          ),
-          child: PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded),
-            offset: const Offset(-40, 0),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: S.of(context).view,
-                child: InkWell(
-                  onTap: () {
-                    _showSidebar(context, rows, currentIndex);
-                  },
-                  child: Row(
-                    children: [
-                      const Icon(Icons.visibility),
-                      UIHelpers.horizontalSpaceTiny,
-                      const Text('View'),
-                    ],
-                  ),
-                ),
-              ),
-              if (classification == 'Spam/Marketing')
-                PopupMenuItem<String>(
-                  value: S.of(context).revert,
-                  child: InkWell(
-                    onTap: () {
-                      print(isUpdatedToHubspot);
+  final isUpdatedToHubspot = rendererContext.row.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value ?? true;
+  final classification = rendererContext.row.cells[TicketClassificationGridKey.classification]?.value ?? "";
 
-                      if (isUpdatedToHubspot) {
-                        serviceLocator<RevertClassificationBloc>().add(
-                          RevertClassificationInitialEvent(ticketId: id),
-                        );
-                        _showUpdatedToHubspotPopup(
-                            context, S.of(context).revertSuccess);
-                      } else {
-                        _showUpdatedToHubspotPopup(
-                            context, S.of(context).noRevert);
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.loop_rounded),
-                        UIHelpers.horizontalSpaceTiny,
-                        Text(S.of(context).revert),
-                      ],
+  return BlocConsumer<PlutotableBloc, PlutotableState>(
+    listener: (context, state) {
+      if (state is RevertClassificationSuccessState) {
+        Navigator.pop(context);
+      }
+    },
+    builder: (context, state) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Align(
+            child: PopupMenuTheme(
+              data: const PopupMenuThemeData(
+                color: SupportBotColors.white,
+              ),
+              child: PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert_rounded),
+                offset: const Offset(-40, 0),
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: S.of(context).view,
+                    child: InkWell(
+                      onTap: () {
+                        _showSidebar(context, rows, currentIndex);
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.visibility),
+                          UIHelpers.horizontalSpaceTiny,
+                          const Text('View'),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-            ],
+                  if (classification == 'Spam/Marketing')
+                    PopupMenuItem<String>(
+                      value: S.of(context).revert,
+                      child: InkWell(
+                        onTap: () {
+                          if (isUpdatedToHubspot) {
+                            context.read<PlutotableBloc>().add(
+                              RevertClassificationEvent(
+                                ticketId: id,
+                                selectedDate: selectedDate,
+                                selectedMonth: selectedMonth,
+                                selectedClassification: classification
+                              ),
+                            );
+                             _showUpdatedToHubspotPopup(context, S.of(context).revertSuccess);
+                          } else {
+                            _showUpdatedToHubspotPopup(
+                                context, S.of(context).noRevert);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.loop_rounded),
+                            UIHelpers.horizontalSpaceTiny,
+                            Text(S.of(context).revert),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-    ],
+        ],
+      );
+    },
   );
 }
+
 
 void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex) {
   bool isNextEnabled = currentIndex < rows.length - 1;

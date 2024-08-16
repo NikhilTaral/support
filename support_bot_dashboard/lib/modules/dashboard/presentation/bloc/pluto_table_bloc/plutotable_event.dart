@@ -90,3 +90,11 @@ class CustomSidebarLoadRowData extends PlutotableEvent {
 
   CustomSidebarLoadRowData(this.rowIndex);
 }
+
+class RevertClassificationEvent extends PlutotableEvent {
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
+   final String selectedClassification;
+  String ticketId;
+  RevertClassificationEvent({required this.selectedDate,required this.selectedMonth, required this.ticketId, required this.selectedClassification});
+}

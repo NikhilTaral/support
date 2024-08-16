@@ -75,3 +75,21 @@ class CustomSidebarLoaded extends PlutotableState {
 
   CustomSidebarLoaded(this.currentIndex);
 }
+
+final class RevertClassificationSuccessState extends PlutotableState {
+   final DateTime selectedDate;
+  final DateTime selectedMonth;
+  final String selectedClassification;
+  RevertClassificationSuccessState(this.selectedDate, this.selectedMonth, this.selectedClassification);
+}
+
+final class RevertClassificationLoadingState
+    extends PlutotableState {}
+
+final class RevertClassificationEmptyState extends PlutotableState {}
+
+final class RevertClassificationFailureState extends PlutotableState {
+  final String message;
+
+  RevertClassificationFailureState({required this.message});
+}

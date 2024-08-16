@@ -6,7 +6,6 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/revert_classification/revert_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container_data.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_date_selection_widget.dart';
@@ -42,9 +41,6 @@ class DashboardDesktopView extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => serviceLocator<CustombuttonBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => serviceLocator<RevertClassificationBloc>(),
         ),
       ],
       child: Scaffold(
@@ -375,9 +371,32 @@ class DashboardDesktopView extends StatelessWidget {
                                           );
                                       Navigator.of(context).pop();
                                     }
+                                     else  if (state is RevertClassificationSuccessState) {
+                                      context.read<PlutotableBloc>().add(
+                                            FetchTableDataEvent(
+                                              selectedDate: state.selectedDate,
+                                              selectedMonth:
+                                                  state.selectedMonth,
+                                                  selectedClassification: state.selectedClassification
+                                            ),
+                                          );
+                                    } 
                                   },
                                   builder: (context, state) {
                                     if (state is UpdateValidationLoading) {
+                                      return Center(
+                                        child: LoadingWidget(
+                                          height:
+                                              UIHelpers.screenHeight(context) *
+                                                  0.43,
+                                          width:
+                                              UIHelpers.screenWidth(context) *
+                                                  0.78,
+                                          radius: 8,
+                                        ),
+                                      );
+                                    }
+                                    if (state is RevertClassificationLoadingState) {
                                       return Center(
                                         child: LoadingWidget(
                                           height:

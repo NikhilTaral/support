@@ -7,11 +7,13 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_filter_classification_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
 part 'plutotable_event.dart';
 part 'plutotable_state.dart';
 
 class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
   DashboardTableAttributeModel? initialData;
+   bool isUpdatedToHubspot = false;
   List<PlutoRow>? rows;
   PlutotableBloc() : super(PlutotableInitial()) {
     on<FetchTableDataEvent>(_onFetchTableDataEvent);
@@ -20,7 +22,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     on<UpdateValidationEvent>(_onUpdateValidationEvent);
     on<FilterClassificationEvent>(_onFilterClassificationEvent);
     on<FilterValidationEvent>(_onFilterValidationEvent);
-    on<CustomSidebarLoadRowData>(_onCustomSidebarLoadRowData);
+    on<RevertClassificationEvent>(_onRevertClassificationEvent);
   }
 
   FutureOr<void> _onFetchTableDataEvent(
@@ -285,10 +287,20 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     }
   }
 
-  FutureOr<void> _onCustomSidebarLoadRowData(
-      CustomSidebarLoadRowData event, Emitter<PlutotableState> emit) {
-    if (event.rowIndex >= 0 && event.rowIndex < rows!.length) {
-      emit(CustomSidebarLoaded(event.rowIndex));
+
+  FutureOr<void> _onRevertClassificationEvent(RevertClassificationEvent event, Emitter<PlutotableState> emit) async{
+    emit(RevertClassificationLoadingState());
+    try {
+      if (isUpdatedToHubspot == false) {
+        final repository = serviceLocator<RevertClassificationUsecase>();
+        await repository.invoke(event.ticketId);
+        print('success');
+        emit(RevertClassificationSuccessState(event.selectedDate,event.selectedMonth, event.selectedClassification));
+      } else {
+        emit(RevertClassificationFailureState(message: 'Not updated to hubspot'));
+      }
+    } catch (e) {
+      emit(RevertClassificationFailureState(message: 'Exception occurred: $e'));
     }
   }
 }
