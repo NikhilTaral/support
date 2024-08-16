@@ -241,7 +241,7 @@ class AuthService {
 
     final apiProvider = serviceLocator<ApiProvider>();
     final response =
-        await apiProvider.getData(subUrl: 'profile', body: {
+        await apiProvider.getData(url: 'profile', body: {
       'username': username,
     });
 

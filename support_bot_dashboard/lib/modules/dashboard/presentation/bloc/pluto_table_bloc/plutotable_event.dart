@@ -5,10 +5,16 @@ abstract class PlutotableEvent {}
 class FetchTableDataEvent extends PlutotableEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
-    final String? selectedClassification;
+  final String? selectedClassification;
   final String? selectedClassificationValidation;
+  final String? selectedPipeline;
 
-  FetchTableDataEvent({this.selectedClassification, this.selectedClassificationValidation, this.selectedDate, this.selectedMonth});
+  FetchTableDataEvent(
+      {this.selectedClassification,
+      this.selectedClassificationValidation,
+      this.selectedDate,
+      this.selectedMonth,
+      this.selectedPipeline});
 }
 
 class SelectDateEvent extends PlutotableEvent {
@@ -44,17 +50,20 @@ class SelectClassificationEvent extends PlutotableEvent {
   SelectClassificationEvent({required this.selectedClassification});
 }
 
+class SelectPipelineEvent extends PlutotableEvent {
+  final String selectedPipeline;
+
+  SelectPipelineEvent({required this.selectedPipeline});
+}
+
 class FilterClassificationEvent extends PlutotableEvent {
   final String selectedClassification;
   final String selectedClassificationValidation;
   final DateTime selectedDate;
   final DateTime selectedMonth;
 
-  FilterClassificationEvent(
-      this.selectedDate,
-      this.selectedMonth,
-      this.selectedClassification,
-      this.selectedClassificationValidation);
+  FilterClassificationEvent(this.selectedDate, this.selectedMonth,
+      this.selectedClassification, this.selectedClassificationValidation);
 }
 
 class FilterValidationEvent extends PlutotableEvent {
@@ -67,8 +76,25 @@ class FilterValidationEvent extends PlutotableEvent {
       this.selectedDate, this.selectedMonth, this.selectedClassification);
 }
 
+class FilterPipelineEvent extends PlutotableEvent {
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
+  final String selectedPipeline;
+
+  FilterPipelineEvent(
+      this.selectedDate, this.selectedMonth, this.selectedPipeline);
+}
+
 class CustomSidebarLoadRowData extends PlutotableEvent {
   final int rowIndex;
 
   CustomSidebarLoadRowData(this.rowIndex);
+}
+
+class RevertClassificationEvent extends PlutotableEvent {
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
+   final String selectedClassification;
+  String ticketId;
+  RevertClassificationEvent({required this.selectedDate,required this.selectedMonth, required this.ticketId, required this.selectedClassification});
 }

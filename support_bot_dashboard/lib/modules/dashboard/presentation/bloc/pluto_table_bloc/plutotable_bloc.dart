@@ -7,11 +7,13 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_filter_classification_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
 part 'plutotable_event.dart';
 part 'plutotable_state.dart';
 
 class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
   DashboardTableAttributeModel? initialData;
+   bool isUpdatedToHubspot = false;
   List<PlutoRow>? rows;
   PlutotableBloc() : super(PlutotableInitial()) {
     on<FetchTableDataEvent>(_onFetchTableDataEvent);
@@ -20,7 +22,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     on<UpdateValidationEvent>(_onUpdateValidationEvent);
     on<FilterClassificationEvent>(_onFilterClassificationEvent);
     on<FilterValidationEvent>(_onFilterValidationEvent);
-    on<CustomSidebarLoadRowData>(_onCustomSidebarLoadRowData);
+    on<RevertClassificationEvent>(_onRevertClassificationEvent);
   }
 
   FutureOr<void> _onFetchTableDataEvent(
@@ -31,7 +33,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       final response =
           await repository.invoke(event.selectedDate, event.selectedMonth);
       if (response.isLeft) {
-        emit(FetchTableDataError(message: "Failed to fetch data"));
+        emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
       } else {
         final model = response.right;
 
@@ -60,19 +62,19 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           initialData = tableData;
 
           emit(FetchTableDataSuccess(
-            selectedClassification: event.selectedClassification ?? "",
-            tableData: tableData,
-            selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024, 01),
-            selectedValidation: event.selectedClassificationValidation ?? "",
-            noDataAvailable: items.isEmpty,
-          ));
+              selectedClassification: event.selectedClassification ?? "",
+              tableData: tableData,
+              selectedDate: event.selectedDate ?? DateTime.now(),
+              selectedMonth: event.selectedMonth ?? DateTime(2024, 01),
+              selectedValidation: event.selectedClassificationValidation ?? "",
+              noDataAvailable: items.isEmpty,
+              selectedPipeline: event.selectedPipeline ?? ""));
         } else {
           emit(FetchTableDataEmpty());
         }
       }
     } catch (e) {
-      emit(FetchTableDataError(message: "Exception occurred: $e"));
+      emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
     }
   }
 
@@ -110,13 +112,13 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
 
     if (event.selectedClassification == 'Select') {
       emit(FetchTableDataSuccess(
-        selectedClassification: "Select",
-        tableData: initialData!,
-        selectedDate: event.selectedDate,
-        selectedMonth: event.selectedMonth,
-        selectedValidation: 'Select',
-        noDataAvailable: false,
-      ));
+          selectedClassification: "Select",
+          tableData: initialData!,
+          selectedDate: event.selectedDate,
+          selectedMonth: event.selectedMonth,
+          selectedValidation: 'Select',
+          noDataAvailable: false,
+          selectedPipeline: 'Select'));
     } else {
       try {
         final repository =
@@ -127,7 +129,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             event.selectedClassification,
             event.selectedClassificationValidation);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data"));
+          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
           final model = response.right;
           if (model.success == true) {
@@ -152,19 +154,19 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               items: items,
             );
             emit(FetchTableDataSuccess(
-              selectedClassification: event.selectedClassification,
-              tableData: tableData,
-              selectedDate: event.selectedDate,
-              selectedMonth: event.selectedMonth,
-              selectedValidation: 'Select',
-              noDataAvailable: items.isEmpty,
-            ));
+                selectedClassification: event.selectedClassification,
+                tableData: tableData,
+                selectedDate: event.selectedDate,
+                selectedMonth: event.selectedMonth,
+                selectedValidation: 'Select',
+                noDataAvailable: items.isEmpty,
+                selectedPipeline: 'Select'));
           } else {
             emit(FetchTableDataEmpty());
           }
         }
       } catch (e) {
-        emit(FetchTableDataError(message: "Exception occurred: $e"));
+        emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
       }
     }
   }
@@ -180,7 +182,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         final response = await repository.invoke(event.selectedDate,
             event.selectedMonth, event.selectedClassification, null);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data"));
+          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
           final model = response.right;
           if (model.success == true) {
@@ -207,13 +209,13 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             );
 
             emit(FetchTableDataSuccess(
-              selectedClassification: event.selectedClassification,
-              tableData: tableData,
-              selectedDate: event.selectedDate,
-              selectedMonth: event.selectedMonth,
-              selectedValidation: 'Select',
-              noDataAvailable: items.isEmpty,
-            ));
+                selectedClassification: event.selectedClassification,
+                tableData: tableData,
+                selectedDate: event.selectedDate,
+                selectedMonth: event.selectedMonth,
+                selectedValidation: 'Select',
+                noDataAvailable: items.isEmpty,
+                selectedPipeline: 'Select'));
           } else {
             emit(FetchTableDataEmpty());
           }
@@ -221,13 +223,13 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       } else {
         // both classification and validation are "Select"
         emit(FetchTableDataSuccess(
-          selectedClassification: 'Select',
-          tableData: initialData!,
-          selectedDate: event.selectedDate,
-          selectedMonth: event.selectedMonth,
-          selectedValidation: 'Select',
-          noDataAvailable: initialData!.items.isEmpty,
-        ));
+            selectedClassification: 'Select',
+            tableData: initialData!,
+            selectedDate: event.selectedDate,
+            selectedMonth: event.selectedMonth,
+            selectedValidation: 'Select',
+            noDataAvailable: initialData!.items.isEmpty,
+            selectedPipeline: 'Select'));
       }
     } else {
       // both classification and validation filters
@@ -240,7 +242,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             event.selectedClassification,
             event.selectedClassificationValidation);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data"));
+          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
           final model = response.right;
 
@@ -268,27 +270,37 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             );
 
             emit(FetchTableDataSuccess(
-              selectedClassification: event.selectedClassification,
-              tableData: tableData,
-              selectedDate: event.selectedDate,
-              selectedMonth: event.selectedMonth,
-              selectedValidation: event.selectedClassificationValidation,
-              noDataAvailable: items.isEmpty,
-            ));
+                selectedClassification: event.selectedClassification,
+                tableData: tableData,
+                selectedDate: event.selectedDate,
+                selectedMonth: event.selectedMonth,
+                selectedValidation: event.selectedClassificationValidation,
+                noDataAvailable: items.isEmpty,
+                selectedPipeline: 'Select'));
           } else {
             emit(FetchTableDataEmpty());
           }
         }
       } catch (e) {
-        emit(FetchTableDataError(message: "Exception occurred: $e"));
+        emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
       }
     }
   }
 
-  FutureOr<void> _onCustomSidebarLoadRowData(
-      CustomSidebarLoadRowData event, Emitter<PlutotableState> emit) {
-    if (event.rowIndex >= 0 && event.rowIndex < rows!.length) {
-      emit(CustomSidebarLoaded(event.rowIndex));
+
+  FutureOr<void> _onRevertClassificationEvent(RevertClassificationEvent event, Emitter<PlutotableState> emit) async{
+    emit(RevertClassificationLoadingState());
+    try {
+      if (isUpdatedToHubspot == false) {
+        final repository = serviceLocator<RevertClassificationUsecase>();
+        await repository.invoke(event.ticketId);
+        print('success');
+        emit(RevertClassificationSuccessState(event.selectedDate,event.selectedMonth, event.selectedClassification));
+      } else {
+        emit(RevertClassificationFailureState(message: 'Not updated to hubspot'));
+      }
+    } catch (e) {
+      emit(RevertClassificationFailureState(message: 'Exception occurred: $e'));
     }
   }
 }
