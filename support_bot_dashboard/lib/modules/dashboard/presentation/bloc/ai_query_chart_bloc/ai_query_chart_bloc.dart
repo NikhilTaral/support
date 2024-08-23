@@ -17,6 +17,7 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
 
   FutureOr<void> _onFetchAiQueryChartData(
       FetchAiQueryChartData event, Emitter<AiQueryChartState> emit) async {
+        emit(AiQueryChartLoading());
     try {
       final repository = serviceLocator<DashboardAiQueryChartUsecase>();
       final response =
