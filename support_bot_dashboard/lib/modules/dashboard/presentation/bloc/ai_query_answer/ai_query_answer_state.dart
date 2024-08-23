@@ -1,0 +1,36 @@
+part of 'ai_query_answer_bloc.dart';
+
+abstract class AiQueryAnswerState {}
+
+class AiQueryAnswerInitial extends AiQueryAnswerState{}
+
+class AiQueryAnswerLoading extends AiQueryAnswerState{}
+
+class AiQueryAnswerSuccess extends AiQueryAnswerState{
+  final DashboardAiQueryAttributeModel data;
+   final DateTime selectedDate;
+  final DateTime selectedMonth;
+
+  AiQueryAnswerSuccess({required this.data, required this.selectedDate, required this.selectedMonth});
+}
+
+class AiQUeryAnswerFailure extends AiQueryAnswerState{
+  final String message;
+
+  AiQUeryAnswerFailure({required this.message});
+}
+
+class AiQueryAnswerEmpty extends AiQueryAnswerState{}
+
+class UpdateSelectedDateState extends AiQueryAnswerState {
+  final DateTime selectedDate;
+
+  UpdateSelectedDateState({required this.selectedDate});
+}
+
+class UpdateSelectedMonthState extends AiQueryAnswerState {
+  final DateTime selectedMonth;
+
+  UpdateSelectedMonthState({required this.selectedMonth});
+}
+

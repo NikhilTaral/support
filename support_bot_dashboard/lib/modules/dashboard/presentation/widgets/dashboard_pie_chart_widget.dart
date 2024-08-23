@@ -2,13 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PieChartWidget extends StatefulWidget {
-  final DashboardChartAttributeModel? data;
+  final Object? data;
   final bool isAIQuery;
 
   const PieChartWidget({super.key, this.data, this.isAIQuery = false});
@@ -18,7 +19,7 @@ class PieChartWidget extends StatefulWidget {
 }
 
 class PieChartWidgetState extends State<PieChartWidget> {
-  final DashboardChartAttributeModel? data;
+  final Object? data;
   int? touchedIndex;
 
   PieChartWidgetState({required this.data});
@@ -33,27 +34,35 @@ class PieChartWidgetState extends State<PieChartWidget> {
     ];
     double radius = UIHelpers.screenWidth(context) * 0.08;
 
-    final chartData = widget.isAIQuery
-        ? [
-            ChartData(
-                label: S.of(context).genuineQuery,
-                value: widget.data?.genuineQuery),
-            ChartData(
-                label: S.of(context).noActionRequired,
-                value: widget.data?.noActionRequired),
-          ]
-        : [
-            ChartData(
-                label: S.of(context).genuineQuery,
-                value: widget.data?.genuineQuery),
-            ChartData(
-                label: S.of(context).noActionRequired,
-                value: widget.data?.noActionRequired),
-            ChartData(label: S.of(context).spam, value: widget.data?.spamMarketing),
-            ChartData(
-                label: S.of(context).acknowledgementRequired,
-                value: widget.data?.acknowledgement)
-          ];
+    List<ChartData> chartData;
+
+    if (widget.isAIQuery && data is DashboardAiQueryChartAttributeModel) {
+      final aiData = data as DashboardAiQueryChartAttributeModel;
+      chartData = [
+        ChartData(
+            label: 'AI Query Answer',
+            value: aiData.aiQueryAnswer),
+        ChartData(
+            label: 'Ai Query Not Answer',
+            value: aiData.aiQueryNotAnswer),
+      ];
+    } else if (data is DashboardChartAttributeModel) {
+      final dashboardData = data as DashboardChartAttributeModel;
+      chartData = [
+        ChartData(
+            label: S.of(context).genuineQuery,
+            value: dashboardData.genuineQuery),
+        ChartData(
+            label: S.of(context).noActionRequired,
+            value: dashboardData.noActionRequired),
+        ChartData(label: S.of(context).spam, value: dashboardData.spamMarketing),
+        ChartData(
+            label: S.of(context).acknowledgementRequired,
+            value: dashboardData.acknowledgement)
+      ];
+    } else {
+      chartData = [];
+    }
 
     final nonZeroChartData = chartData
         .where((data) => data.value != null && data.value! > 0)
@@ -62,8 +71,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
       child: Container(
-        // width: UIHelpers.screenWidth(context) * 0.19,
-        height: UIHelpers.screenHeight(context) * 0.81,
+        height: UIHelpers.screenHeight(context) * 0.77,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(
@@ -173,3 +181,4 @@ class PieChartWidgetState extends State<PieChartWidget> {
     );
   }
 }
+
