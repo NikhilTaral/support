@@ -515,6 +515,55 @@ class DashboardDesktopView extends StatelessWidget {
                                             );
                                           },
                                         ),
+                                        SizedBox(width: 10),
+                                          // Classification dropdown
+                                        BlocBuilder<PlutotableBloc,
+                                            PlutotableState>(
+                                          builder: (context, state) {
+                                            DateTime selectedDate =
+                                                DateTime.now();
+                                            DateTime selectedMonth =
+                                                DateTime(2024, 01);
+                                            String selectedClassification = '';
+                                            if (state
+                                                is FetchTableDataSuccess) {
+                                              selectedDate = state.selectedDate;
+                                              selectedMonth =
+                                                  state.selectedMonth;
+                                              selectedClassification =
+                                                  state.selectedClassification;
+                                            }
+                                            final classificationItems = [
+                                              'Select',
+                                              'Answer',
+                                              'Not ANswer'
+                                            ];
+                                            return CustomFilterDropdown(
+                                              selectedValue:
+                                                  selectedClassification,
+                                              items: classificationItems,
+                                              onChanged: (String? value) {
+                                                if (value != null) {
+                                                  BlocProvider.of<
+                                                              PlutotableBloc>(
+                                                          context,
+                                                          listen: false)
+                                                      .add(
+                                                          FilterClassificationEvent(
+                                                              selectedDate,
+                                                              selectedMonth,
+                                                              value,
+                                                              ""));
+                                                }
+                                              },
+                                              label:
+                                                  S.of(context).classification,
+                                              width: UIHelpers.screenWidth(
+                                                      context) *
+                                                  0.14,
+                                            );
+                                          },
+                                        ),
                                         const Spacer(),
                                         Tooltip(
                                           message: S.of(context).export,

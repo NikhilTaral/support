@@ -16,15 +16,17 @@ class AiQueryAnswerTableItem extends Equatable {
   final String? createdAt;
   final String? ticketDescription;
   final String? aIResponse;
+  final String? classification;
   final bool? isAnswerEdited;
   final bool? answerValidation;
   final String? answerValidationReason;
 
-  const AiQueryAnswerTableItem(
+  const AiQueryAnswerTableItem( 
       {required this.id,
       required this.createdAt,
       required this.ticketDescription,
       required this.aIResponse,
+      required this.classification,
       required this.isAnswerEdited,
       required this.answerValidation,
       required this.answerValidationReason});
@@ -35,6 +37,7 @@ class AiQueryAnswerTableItem extends Equatable {
         createdAt,
         ticketDescription,
         aIResponse,
+        classification,
         isAnswerEdited,
         answerValidation,
         answerValidationReason

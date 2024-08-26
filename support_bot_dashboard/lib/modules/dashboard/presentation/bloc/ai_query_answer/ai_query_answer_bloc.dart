@@ -38,6 +38,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               createdAt: item.createdAt ?? "",
               ticketDescription: item.ticketDescription,
               aIResponse: item.aIResponse,
+              classification: item.classification,
               isAnswerEdited: item.isAnswerEdited,
               answerValidation: item.answerValidation,
               answerValidationReason: item.answerValidationReason);

@@ -69,6 +69,22 @@ class AIQueryAnswerWidget extends StatelessWidget {
               },
             ),
             PlutoColumn(
+              title: S.of(context).classification,
+              field: 'classification',
+              width: UIHelpers.screenWidth(context) * 0.1,
+              type: PlutoColumnType.text(),
+              enableFilterMenuItem: false,
+              enableHideColumnMenuItem: false,
+              textAlign: PlutoColumnTextAlign.start,
+              titlePadding: const EdgeInsets.all(8),
+              backgroundColor: SupportBotColors.blueSecondary.shade100,
+              enableContextMenu: false,
+              enableDropToResize: false,
+              enableEditingMode: false,
+              enableColumnDrag: false,
+              readOnly: true,
+            ),
+            PlutoColumn(
               title: S.of(context).aiQueryAnswer,
               field: 'aiQueryAnswer',
               width: UIHelpers.screenWidth(context) * 0.25,
@@ -125,6 +141,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
                     'id': PlutoCell(value: item.id),
                     'ticketDescription':
                         PlutoCell(value: item.ticketDescription),
+                    'classification': PlutoCell(value: item.classification),
                     'aiQueryAnswer':
                         PlutoCell(value: item.aIResponse),
                     'actions': PlutoCell(value: 'View'),
@@ -217,6 +234,7 @@ void _showDetails(
   final row = rows[currentIndex];
   final id = row.cells['id']?.value ?? "";
   final description = row.cells['ticketDescription']?.value ?? "";
+  final classification = row.cells['classification']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
   // final link = row.cells['link']?.value ?? "";
 
@@ -287,6 +305,7 @@ void _showDetails(
                     const Divider(),
                     _buildDetailRow('Ticket Id :', id),
                     _buildDetailRow('Ticket Description :', description),
+                    _buildDetailRow('Classification :', classification),
                     if (isEditing)
                       _buildEditableRow(
                           'AI Query Answer :', aiQueryAnswerController)
