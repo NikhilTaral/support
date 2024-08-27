@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_chart_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_filter_classification_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_filter_classification_repo_impl.dart';
@@ -63,13 +64,10 @@ Future<void> initServiceLocator() async {
       () => DashboardChartDataRepoImpl());
   serviceLocator.registerLazySingleton<DashboardValidationRepository>(
       () => DashboardValidationRepoImpl());
-  serviceLocator
-      .registerLazySingleton<DashboardFilterClassificationDataRepository>(
-          () => DashboardFIlterClassificationRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardAiQueryRepository>(
-      () => DashboardAiQueryRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardAiQueryChartDataRepository>(
-      () => DashboardAiQueryChartRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardFilterClassificationDataRepository>(()=> DashboardFIlterClassificationRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardAiQueryRepository>(()=> DashboardAiQueryRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardAiQueryChartDataRepository>(()=> DashboardAiQueryChartRepoImpl());
+  serviceLocator.registerLazySingleton<FilterAiQueryAnswerRepository>(()=> DashboardAiQueryFilterClassificationRepoImpl());
 
   // Dashboard usecase
   serviceLocator.registerLazySingleton<DashboardTableDatausecase>(
@@ -78,16 +76,12 @@ Future<void> initServiceLocator() async {
       () => DashboardChartdataUsecase());
   serviceLocator.registerLazySingleton<DashboardValidationUsecase>(
       () => DashboardValidationUsecase());
-  serviceLocator
-      .registerLazySingleton<DashboardFilterClassificationDatausecase>(
-          () => DashboardFilterClassificationDatausecase());
-  serviceLocator.registerLazySingleton<
-          DashboardFilterClassificationValidationDatausecase>(
-      () => DashboardFilterClassificationValidationDatausecase());
-  serviceLocator.registerLazySingleton<DashboardAiQueryUsecase>(
-      () => DashboardAiQueryUsecase());
-  serviceLocator.registerLazySingleton<DashboardAiQueryChartUsecase>(
-      () => DashboardAiQueryChartUsecase());
+  serviceLocator.registerLazySingleton<DashboardFilterClassificationDatausecase>(
+      () => DashboardFilterClassificationDatausecase());
+  serviceLocator.registerLazySingleton<DashboardFilterClassificationValidationDatausecase>(()=> DashboardFilterClassificationValidationDatausecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryUsecase>(()=> DashboardAiQueryUsecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryChartUsecase>(()=>DashboardAiQueryChartUsecase());
+  serviceLocator.registerLazySingleton<DashboardFilterAiQueryUsecase>(()=>DashboardFilterAiQueryUsecase());
 
   // Dashboard bloc
   serviceLocator.registerFactory<DashboardBloc>(() => DashboardBloc());

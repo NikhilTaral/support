@@ -30,3 +30,10 @@ class UpdateAiAnswerInitialEvent extends AiQueryAnswerEvent {
       required this.selectedDate,
       required this.selectedMonth});
 }
+class FilterAiAnsweClassificationEvent extends AiQueryAnswerEvent{
+  final bool? selectedClassification;
+  final DateTime selectDate;
+  final DateTime selectMonth;
+
+  FilterAiAnsweClassificationEvent({required this.selectedClassification, required this.selectDate, required this.selectMonth});
+}

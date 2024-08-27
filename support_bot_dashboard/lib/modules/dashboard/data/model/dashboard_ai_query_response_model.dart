@@ -57,7 +57,7 @@ class Items {
   final String? createdAt;
   final String? ticketDescription;
   final String? aIResponse;
-  final String? classification;
+  final bool? classification;
   final bool? isAnswerEdited;
   final bool? answerValidation;
   final String? answerValidationReason;
@@ -81,14 +81,14 @@ class Items {
       isAnswerEdited = json['isAnswerEdited'] as bool?,
       answerValidation = json['answerValidation'] as bool?,
       answerValidationReason = json['answerValidationReason'] as String?,
-      classification = json['classification'] as String?;
+      classification = json['answerStatus'] as bool?;
 
   Map<String, dynamic> toJson() => {
     'id' : id,
     'CreatedAt' : createdAt,
     'Ticket_Description' : ticketDescription,
     'AI_Response' : aIResponse,
-    'classification': classification,
+    'answerStatus': classification,
     'isAnswerEdited' : isAnswerEdited,
     'answerValidation' : answerValidation,
     'answerValidationReason' : answerValidationReason

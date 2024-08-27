@@ -148,16 +148,18 @@ class AIQueryAnswerWidget extends StatelessWidget {
             ),
           ],
           rows: aiQuerytableData.items.map((item) {
-            return PlutoRow(
-              cells: {
-                'id': PlutoCell(value: item.id),
-                'ticketDescription': PlutoCell(value: item.ticketDescription),
-                'classification': PlutoCell(value: item.classification),
-                'aiQueryAnswer': PlutoCell(value: item.aIResponse),
-                'actions': PlutoCell(value: 'View'),
-              },
-            );
-          }).toList(),
+                return PlutoRow(
+                  cells: {
+                    'id': PlutoCell(value: item.id),
+                    'ticketDescription':
+                        PlutoCell(value: item.ticketDescription),
+                    'classification': PlutoCell(value: item.classification == true ? "Answer" : "Not Answer"),
+                    'aiQueryAnswer':
+                        PlutoCell(value: item.aIResponse),
+                    'actions': PlutoCell(value: 'View'),
+                  },
+                );
+              }).toList(),
           configuration: PlutoGridConfiguration(
             style: PlutoGridStyleConfig(
               enableColumnBorderHorizontal: false,

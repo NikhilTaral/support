@@ -12,3 +12,11 @@ class DashboardAiQueryUsecase implements UseCaseThreeInput {
             selectedDate: date, selectedMonth: month, pipeline: pipeline);
   }
 }
+
+class DashboardFilterAiQueryUsecase implements UseCaseThreeInput{
+   @override
+  Future<Either<Failure, dynamic>> invoke(
+      date, month, selectedClassification) async {
+    return await serviceLocator<FilterAiQueryAnswerRepository>().getFilterAiQueryData(selecedDate: date,selectedMonth: month,selectedClassification: selectedClassification);
+  }
+}

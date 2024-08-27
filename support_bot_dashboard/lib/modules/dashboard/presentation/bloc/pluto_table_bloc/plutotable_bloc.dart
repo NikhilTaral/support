@@ -31,7 +31,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     try {
       final repository = serviceLocator<DashboardTableDatausecase>();
       final response =
-          await repository.invoke(event.selectedDate, event.selectedMonth);
+          await repository.invoke(event.selectedDate, event.selectedMonth,'11257490');
       if (response.isLeft) {
         emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
       } else {
@@ -127,7 +127,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             event.selectedDate,
             event.selectedMonth,
             event.selectedClassification,
-            event.selectedClassificationValidation);
+            event.selectedClassificationValidation,'11257490');
         if (response.isLeft) {
           emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
@@ -180,7 +180,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         final repository =
             serviceLocator<DashboardFilterClassificationDatausecase>();
         final response = await repository.invoke(event.selectedDate,
-            event.selectedMonth, event.selectedClassification, null);
+            event.selectedMonth, event.selectedClassification, null, '11257490');
         if (response.isLeft) {
           emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {
@@ -240,7 +240,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             event.selectedDate,
             event.selectedMonth,
             event.selectedClassification,
-            event.selectedClassificationValidation);
+            event.selectedClassificationValidation,'11257490');
         if (response.isLeft) {
           emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
         } else {

@@ -546,7 +546,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             final classificationItems = [
                                               'Select',
                                               'Answer',
-                                              'Not ANswer'
+                                              'Not Answer'
                                             ];
                                             return CustomFilterDropdown(
                                               selectedValue:
@@ -554,16 +554,30 @@ class DashboardDesktopView extends StatelessWidget {
                                               items: classificationItems,
                                               onChanged: (String? value) {
                                                 if (value != null) {
+                                                  bool? isAnswer;
+                                                  if (value == 'Answer') {
+                                                    isAnswer = true;
+                                                  } else if (value ==
+                                                      'Not Answer') {
+                                                    isAnswer = false;
+                                                  } else {
+                                                    isAnswer =
+                                                        null; // Handle 'Select' or other cases
+                                                  }
+
                                                   BlocProvider.of<
-                                                              PlutotableBloc>(
+                                                              AiQueryAnswerBloc>(
                                                           context,
                                                           listen: false)
                                                       .add(
-                                                          FilterClassificationEvent(
-                                                              selectedDate,
-                                                              selectedMonth,
-                                                              value,
-                                                              ""));
+                                                    FilterAiAnsweClassificationEvent(
+                                                      selectedClassification:
+                                                          isAnswer,
+                                                      selectDate: selectedDate,
+                                                      selectMonth:
+                                                          selectedMonth,
+                                                    ),
+                                                  );
                                                 }
                                               },
                                               label:
@@ -817,7 +831,12 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
-                                    return const Center(child: EmptyWidget());
+                                    return SizedBox(
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        child:
+                                            const Center(child: EmptyWidget()));
                                   } else {
                                     return Container();
                                   }
@@ -894,7 +913,12 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         isAIQuery: true);
                                   } else if (state is AiQueryChartFailure) {
-                                    return const Center(child: EmptyWidget());
+                                    return SizedBox(
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        child:
+                                            const Center(child: EmptyWidget()));
                                   } else {
                                     return Container();
                                   }

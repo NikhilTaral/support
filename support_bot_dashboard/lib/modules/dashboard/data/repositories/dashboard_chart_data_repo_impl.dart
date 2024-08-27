@@ -7,7 +7,7 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 class DashboardChartDataRepoImpl extends DashboardChartDataRepository {
   @override
   Future<Either<Failure, dynamic>> getDashboardChartData(
-      DateTime? selectedDate, DateTime? selectedMonth) async {
+      DateTime? selectedDate, DateTime? selectedMonth, String? pipeline) async {
     final ApiProvider _apiProvider = serviceLocator<ApiProvider>();
 
     Map<String, dynamic> body = {};
@@ -19,6 +19,10 @@ class DashboardChartDataRepoImpl extends DashboardChartDataRepository {
     if (selectedMonth != null) {
       body['month'] =
           '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
+    }
+
+    if(pipeline != null){
+      body['pipeline'] = '11257490';
     }
 
     dynamic response;

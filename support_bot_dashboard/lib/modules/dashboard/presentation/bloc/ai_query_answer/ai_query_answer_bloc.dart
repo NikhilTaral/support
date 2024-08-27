@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_query_response_model.dart';
@@ -16,7 +16,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     on<SelectedDateEvent>(_onSelectedDateEvent);
     on<SelectedMonthEvent>(_onSelectedMonthEvent);
     on<UpdateAiAnswerInitialEvent>(UpdateAiAnswers);
-  
+    on<FilterAiAnsweClassificationEvent>(_onFilterAiAnsweClassificationEvent);
   }
 
   FutureOr<void> _onAiQueryAnswerEvent(
@@ -24,8 +24,8 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     emit(AiQueryAnswerLoading());
     try {
       final repository = serviceLocator<DashboardAiQueryUsecase>();
-      final response =
-          await repository.invoke(event.selectedDate, event.selectedMonth, "11257490");
+      final response = await repository.invoke(
+          event.selectedDate, event.selectedMonth, "11257490");
       if (response.isLeft) {
         emit(AiQUeryAnswerFailure(message: 'Failed to fetch data'));
       } else {
@@ -45,7 +45,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
 
         final aiQueryAnswerTableData =
             DashboardAiQueryAttributeModel(items: items);
-      
+
         emit(AiQueryAnswerSuccess(
             data: aiQueryAnswerTableData,
             selectedDate: event.selectedDate,
@@ -70,39 +70,54 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         selectedDate: DateTime.now(), selectedMonth: event.selectedMonth));
   }
 
-  FutureOr<void> UpdateAiAnswers(UpdateAiAnswerInitialEvent event, Emitter<AiQueryAnswerState> emit) async{
-     emit(UpdateAiAnswerLoadingState());
+  FutureOr<void> UpdateAiAnswers(UpdateAiAnswerInitialEvent event,
+      Emitter<AiQueryAnswerState> emit) async {
+    emit(UpdateAiAnswerLoadingState());
     final repository = serviceLocator<UpdateAiAnswerUsecase>();
     final response = await repository.invoke(event.ticketId, event.newAnswer);
-      emit(UpdateAiAnswerSuccessState(
-         // data: aiQueryAnswerTableData,
-          selectedDate: event.selectedDate,
-          selectedMonth: event.selectedMonth, ticketId: event.ticketId, newAnswer: event.newAnswer));
-  //   if (response.isLeft) {
-  //     emit(UpdateAiAnswerFailureState());
-  //   } else {
-  //     final model = DashboardAiQueryResponseModel.fromJson(response.right);
-  //     print(model);
-  //     List<AiQueryAnswerTableItem> items =
-  //         (model.data?.items as List<Items>).map((item) {
-  //       return AiQueryAnswerTableItem(
-  //           id: item.id ?? "",
-  //           createdAt: item.createdAt ?? "",
-  //           ticketDescription: item.ticketDescription,
-  //           aIResponse: item.aIResponse,
-  //           classification: item.classification,
-  //           isAnswerEdited: item.isAnswerEdited,
-  //           answerValidation: item.answerValidation,
-  //           answerValidationReason: item.answerValidationReason);
-  //     }).toList();
-  //   print('12');
-  //     final aiQueryAnswerTableData =
-  //         DashboardAiQueryAttributeModel(items: items);
-  // print("23");
-  //     emit(UpdateAiAnswerSuccessState(
-  //         data: aiQueryAnswerTableData,
-  //         selectedDate: event.selectedDate,
-  //         selectedMonth: event.selectedMonth, ticketId: event.ticketId, newAnswer: event.newAnswer));
-  //   }
+    emit(UpdateAiAnswerSuccessState(
+        // data: aiQueryAnswerTableData,
+        selectedDate: event.selectedDate,
+        selectedMonth: event.selectedMonth,
+        ticketId: event.ticketId,
+        newAnswer: event.newAnswer));
+  }
+
+  FutureOr<void> _onFilterAiAnsweClassificationEvent(
+      FilterAiAnsweClassificationEvent event,
+      Emitter<AiQueryAnswerState> emit) async {
+    emit(AiQueryAnswerLoading());
+    try {
+      final repository = serviceLocator<DashboardFilterAiQueryUsecase>();
+      final response = await repository.invoke(
+          event.selectDate, event.selectMonth, event.selectedClassification);
+      if (response.isLeft) {
+        emit(AiQUeryAnswerFailure(message: "Failed to fetch data"));
+      } else {
+        final model = DashboardAiQueryResponseModel.fromJson(response.right);
+        List<AiQueryAnswerTableItem> items =
+            (model.data?.items as List<Items>).map((item) {
+          return AiQueryAnswerTableItem(
+              id: item.id ?? "",
+              createdAt: item.createdAt ?? "",
+              ticketDescription: item.ticketDescription,
+              aIResponse: item.aIResponse,
+              classification: item.classification,
+              isAnswerEdited: item.isAnswerEdited,
+              answerValidation: item.answerValidation,
+              answerValidationReason: item.answerValidationReason);
+        }).toList();
+
+        final aiQueryAnswerTableData =
+            DashboardAiQueryAttributeModel(items: items);
+
+        emit(AiQueryAnswerSuccess(
+            data: aiQueryAnswerTableData,
+            selectedDate: event.selectDate,
+            selectedMonth: event.selectMonth));
+      }
+    } catch (e) {
+      emit(AiQUeryAnswerFailure(message: 'Exception occured $e'));
+    }
   }
 }

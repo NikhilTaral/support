@@ -14,7 +14,8 @@ class DashboardFIlterClassificationRepoImpl
       {DateTime? selectedDate,
       DateTime? selectedMonth,
       String? classification,
-      String? classificationValidation}) async {
+      String? classificationValidation,
+       String? pipeline}) async {
     final uri =
         Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
     final headers = {
@@ -40,6 +41,10 @@ class DashboardFIlterClassificationRepoImpl
     if (classificationValidation != null &&
         classificationValidation.isNotEmpty) {
       body['classificationValidation'] = classificationValidation;
+    }
+
+    if(pipeline != null){
+      body['pipeline'] = '11257490';
     }
 
     final encodedBody = jsonEncode(body);
