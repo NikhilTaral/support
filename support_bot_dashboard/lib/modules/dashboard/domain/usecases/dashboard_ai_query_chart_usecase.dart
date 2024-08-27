@@ -4,11 +4,10 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class DashboardAiQueryChartUsecase implements UseCaseTwoInput{
-   @override
-  Future<Either<Failure, dynamic>> invoke(
-      date, month) async {
+class DashboardAiQueryChartUsecase implements UseCaseThreeInput {
+  @override
+  Future<Either<Failure, dynamic>> invoke(date, month, pipeline) async {
     return await serviceLocator<DashboardAiQueryChartDataRepository>()
-        .getAiQueryChartData(date,month);
+        .getAiQueryChartData(date, month, pipeline);
   }
 }

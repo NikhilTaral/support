@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AIQueryAnswerWidget extends StatelessWidget {
-   final DashboardAiQueryAttributeModel aiQuerytableData;
-  const AIQueryAnswerWidget({super.key, required this.aiQuerytableData});
+  final DashboardAiQueryAttributeModel aiQuerytableData;
+  final DateTime selectedMonth;
+  final DateTime selectedDate;
+  const AIQueryAnswerWidget(
+      {super.key,
+      required this.aiQuerytableData,
+      required this.selectedMonth,
+      required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
@@ -132,22 +140,24 @@ class AIQueryAnswerWidget extends StatelessWidget {
               enableEditingMode: false,
               enableColumnDrag: false,
               readOnly: true,
-              renderer: actionsRenderer,
+              renderer: (rendererContext) => actionsRenderer(
+                rendererContext,
+                selectedDate: selectedDate,
+                selectedMonth: selectedMonth,
+              ),
             ),
           ],
           rows: aiQuerytableData.items.map((item) {
-                return PlutoRow(
-                  cells: {
-                    'id': PlutoCell(value: item.id),
-                    'ticketDescription':
-                        PlutoCell(value: item.ticketDescription),
-                    'classification': PlutoCell(value: item.classification),
-                    'aiQueryAnswer':
-                        PlutoCell(value: item.aIResponse),
-                    'actions': PlutoCell(value: 'View'),
-                  },
-                );
-              }).toList(),
+            return PlutoRow(
+              cells: {
+                'id': PlutoCell(value: item.id),
+                'ticketDescription': PlutoCell(value: item.ticketDescription),
+                'classification': PlutoCell(value: item.classification),
+                'aiQueryAnswer': PlutoCell(value: item.aIResponse),
+                'actions': PlutoCell(value: 'View'),
+              },
+            );
+          }).toList(),
           configuration: PlutoGridConfiguration(
             style: PlutoGridStyleConfig(
               enableColumnBorderHorizontal: false,
@@ -173,7 +183,8 @@ class AIQueryAnswerWidget extends StatelessWidget {
   }
 }
 
-Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
+Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
+    {required DateTime selectedDate, required DateTime selectedMonth}) {
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
   return Row(
@@ -192,7 +203,8 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
                 value: S.of(context).view,
                 child: InkWell(
                   onTap: () {
-                    _showDetails(context, rows, currentIndex);
+                    _showDetails(context, rows, currentIndex, selectedDate,
+                        selectedMonth);
                   },
                   child: Row(
                     children: [
@@ -203,12 +215,10 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
                   ),
                 ),
               ),
-                PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: S.of(context).changeClassifcation,
                 child: InkWell(
-                  onTap: () {
-                   
-                  },
+                  onTap: () {},
                   child: Row(
                     children: [
                       const Icon(Icons.loop_rounded),
@@ -226,11 +236,11 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
   );
 }
 
-void _showDetails(
-    BuildContext context, List<PlutoRow> rows, int currentIndex) async {
+void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
+    DateTime selectedDate, DateTime selectedMonth) async {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
-
+  final blocContext = context;
   final row = rows[currentIndex];
   final id = row.cells['id']?.value ?? "";
   final description = row.cells['ticketDescription']?.value ?? "";
@@ -239,14 +249,14 @@ void _showDetails(
   // final link = row.cells['link']?.value ?? "";
 
   final result = await showDialog<Map<String, String>>(
-    context: context,
-    builder: (BuildContext context) {
+    context: blocContext,
+    builder: (BuildContext blocContext) {
       final aiQueryAnswerController =
           TextEditingController(text: aiQueryAnswer);
       // final linkController = TextEditingController(text: link);
       bool isEditing = false;
       return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (BuildContext blocContext, StateSetter setState) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -263,7 +273,8 @@ void _showDetails(
                       ? () {
                           Navigator.pop(context);
                           if (isPreviousEnabled) {
-                            _showDetails(context, rows, currentIndex - 1);
+                            _showDetails(blocContext, rows, currentIndex - 1,
+                                selectedDate, selectedMonth);
                           }
                         }
                       : null,
@@ -284,7 +295,8 @@ void _showDetails(
                         ? () {
                             Navigator.pop(context);
                             if (isNextEnabled) {
-                              _showDetails(context, rows, currentIndex + 1);
+                              _showDetails(context, rows, currentIndex + 1,
+                                  selectedDate, selectedMonth);
                             }
                           }
                         : null,
@@ -314,7 +326,7 @@ void _showDetails(
                     // if (isEditing)
                     //   _buildEditableRow('Link :', linkController)
                     // else
-                      // _buildDetailRow('Link :', link),
+                    // _buildDetailRow('Link :', link),
                   ],
                 ),
               ),
@@ -347,6 +359,16 @@ void _showDetails(
                   ElevatedButton.icon(
                     onPressed: () {
                       if (isEditing) {
+                        print("object");
+
+                        BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                          UpdateAiAnswerInitialEvent(
+                            ticketId: id,
+                            newAnswer: aiQueryAnswerController.text,
+                            selectedDate: selectedDate,
+                            selectedMonth: selectedMonth,
+                          ),
+                        );
                         Navigator.of(context).pop({
                           'aiQueryAnswer': aiQueryAnswerController.text,
                           // 'link': linkController.text,
@@ -426,7 +448,8 @@ Widget _buildEditableRow(String title, TextEditingController controller) {
           controller: controller,
           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),

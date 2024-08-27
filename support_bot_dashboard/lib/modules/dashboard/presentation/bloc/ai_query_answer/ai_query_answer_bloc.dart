@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_query_chart_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_query_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_chart_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_update_ai_query_usecase.dart';
 
 part 'ai_query_answer_event.dart';
 part 'ai_query_answer_state.dart';
@@ -17,6 +15,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     on<FetchAiQueryAnswerEvent>(_onAiQueryAnswerEvent);
     on<SelectedDateEvent>(_onSelectedDateEvent);
     on<SelectedMonthEvent>(_onSelectedMonthEvent);
+    on<UpdateAiAnswerInitialEvent>(UpdateAiAnswers);
   
   }
 
@@ -26,7 +25,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     try {
       final repository = serviceLocator<DashboardAiQueryUsecase>();
       final response =
-          await repository.invoke(event.selectedDate, event.selectedMonth);
+          await repository.invoke(event.selectedDate, event.selectedMonth, "11257490");
       if (response.isLeft) {
         emit(AiQUeryAnswerFailure(message: 'Failed to fetch data'));
       } else {
@@ -46,7 +45,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
 
         final aiQueryAnswerTableData =
             DashboardAiQueryAttributeModel(items: items);
-
+      
         emit(AiQueryAnswerSuccess(
             data: aiQueryAnswerTableData,
             selectedDate: event.selectedDate,
@@ -69,5 +68,41 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     emit(UpdateSelectedMonthState(selectedMonth: event.selectedMonth));
     add(FetchAiQueryAnswerEvent(
         selectedDate: DateTime.now(), selectedMonth: event.selectedMonth));
+  }
+
+  FutureOr<void> UpdateAiAnswers(UpdateAiAnswerInitialEvent event, Emitter<AiQueryAnswerState> emit) async{
+     emit(UpdateAiAnswerLoadingState());
+    final repository = serviceLocator<UpdateAiAnswerUsecase>();
+    final response = await repository.invoke(event.ticketId, event.newAnswer);
+      emit(UpdateAiAnswerSuccessState(
+         // data: aiQueryAnswerTableData,
+          selectedDate: event.selectedDate,
+          selectedMonth: event.selectedMonth, ticketId: event.ticketId, newAnswer: event.newAnswer));
+  //   if (response.isLeft) {
+  //     emit(UpdateAiAnswerFailureState());
+  //   } else {
+  //     final model = DashboardAiQueryResponseModel.fromJson(response.right);
+  //     print(model);
+  //     List<AiQueryAnswerTableItem> items =
+  //         (model.data?.items as List<Items>).map((item) {
+  //       return AiQueryAnswerTableItem(
+  //           id: item.id ?? "",
+  //           createdAt: item.createdAt ?? "",
+  //           ticketDescription: item.ticketDescription,
+  //           aIResponse: item.aIResponse,
+  //           classification: item.classification,
+  //           isAnswerEdited: item.isAnswerEdited,
+  //           answerValidation: item.answerValidation,
+  //           answerValidationReason: item.answerValidationReason);
+  //     }).toList();
+  //   print('12');
+  //     final aiQueryAnswerTableData =
+  //         DashboardAiQueryAttributeModel(items: items);
+  // print("23");
+  //     emit(UpdateAiAnswerSuccessState(
+  //         data: aiQueryAnswerTableData,
+  //         selectedDate: event.selectedDate,
+  //         selectedMonth: event.selectedMonth, ticketId: event.ticketId, newAnswer: event.newAnswer));
+  //   }
   }
 }

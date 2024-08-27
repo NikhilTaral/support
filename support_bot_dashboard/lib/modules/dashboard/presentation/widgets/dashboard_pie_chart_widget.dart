@@ -43,7 +43,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
             label: 'AI Query Answer',
             value: aiData.aiQueryAnswer),
         ChartData(
-            label: 'Ai Query Not Answer',
+            label: 'AI Query Not Answer',
             value: aiData.aiQueryNotAnswer),
       ];
     } else if (data is DashboardChartAttributeModel) {

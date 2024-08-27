@@ -19,3 +19,14 @@ class SelectedMonthEvent extends AiQueryAnswerEvent {
 
   SelectedMonthEvent({required this.selectedMonth});
 }
+class UpdateAiAnswerInitialEvent extends AiQueryAnswerEvent {
+  final String? ticketId;
+  final String? newAnswer;
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
+  UpdateAiAnswerInitialEvent( 
+      {required this.ticketId,
+      required this.newAnswer,
+      required this.selectedDate,
+      required this.selectedMonth});
+}

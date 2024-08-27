@@ -4,9 +4,11 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_chart_repository.dart';
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 
-class DashboardAiQueryChartRepoImpl extends DashboardAiQueryChartDataRepository{
+class DashboardAiQueryChartRepoImpl
+    extends DashboardAiQueryChartDataRepository {
   @override
-  Future<Either<Failure, dynamic>> getAiQueryChartData(DateTime? selectedDate, DateTime? selectedMonth) async{
+  Future<Either<Failure, dynamic>> getAiQueryChartData(
+      DateTime? selectedDate, DateTime? selectedMonth, String? pipeline) async {
     final ApiProvider _apiProvider = serviceLocator<ApiProvider>();
 
     Map<String, dynamic> body = {};
@@ -19,6 +21,9 @@ class DashboardAiQueryChartRepoImpl extends DashboardAiQueryChartDataRepository{
       body['month'] =
           '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
     }
+    if (pipeline != null) {
+      body['pipeline'] = '11257490';
+    }
 
     dynamic response;
     response = await _apiProvider.getData(
@@ -30,5 +35,4 @@ class DashboardAiQueryChartRepoImpl extends DashboardAiQueryChartDataRepository{
     }
     return Right(response);
   }
-
 }

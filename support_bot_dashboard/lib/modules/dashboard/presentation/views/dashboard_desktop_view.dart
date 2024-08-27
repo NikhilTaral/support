@@ -62,6 +62,16 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedMonth: DateTime(2024 - 01)),
             ),
         ),
+        // BlocProvider(
+        //   create: (context) => serviceLocator<UpdateAiAnswerBloc>()
+        //     ..add(
+        //       UpdateAiAnswerInitialEvent(
+        //           ticketId: "",
+        //           newAnswer: "",
+        //           selectedDate: DateTime.now(),
+        //           selectedMonth: DateTime(2024 - 01)),
+        //     ),
+        // ),
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -516,7 +526,7 @@ class DashboardDesktopView extends StatelessWidget {
                                           },
                                         ),
                                         SizedBox(width: 10),
-                                          // Classification dropdown
+                                        // Classification dropdown
                                         BlocBuilder<PlutotableBloc,
                                             PlutotableState>(
                                           builder: (context, state) {
@@ -688,8 +698,14 @@ class DashboardDesktopView extends StatelessWidget {
                                   },
                                 );
                               } else {
-                                return BlocBuilder<AiQueryAnswerBloc,
+                                return BlocConsumer<AiQueryAnswerBloc,
                                         AiQueryAnswerState>(
+                                          listener: (context, state) {
+                                            print(state);
+                                            if(state is UpdateAiAnswerSuccessState){
+                                              context.read<AiQueryAnswerBloc>().add(FetchAiQueryAnswerEvent(selectedDate: state.selectedDate, selectedMonth: state.selectedMonth));
+                                            }
+                                          },
                                     builder: (context, state) {
                                   if (state is AiQueryAnswerLoading) {
                                     return Center(
@@ -710,8 +726,11 @@ class DashboardDesktopView extends StatelessWidget {
                                   } else if (state is AiQueryAnswerSuccess) {
                                     return AIQueryAnswerWidget(
                                       aiQuerytableData: state.data,
+                                      selectedDate: state.selectedDate,
+                                      selectedMonth: state.selectedMonth,
                                     );
-                                  } else if (state is AiQUeryAnswerFailure) {
+                                  } 
+                                  else if (state is AiQUeryAnswerFailure) {
                                     return SizedBox(
                                         height:
                                             UIHelpers.screenHeight(context) *

@@ -17,11 +17,11 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
 
   FutureOr<void> _onFetchAiQueryChartData(
       FetchAiQueryChartData event, Emitter<AiQueryChartState> emit) async {
-        emit(AiQueryChartLoading());
+    emit(AiQueryChartLoading());
     try {
       final repository = serviceLocator<DashboardAiQueryChartUsecase>();
-      final response =
-          await repository.invoke(event.selectedDate, event.selectedMonth);
+      final response = await repository.invoke(
+          event.selectedDate, event.selectedMonth, "11257490");
       if (response.isLeft) {
         emit(AiQueryChartFailure(message: 'Failed to fetch chart data'));
       } else {
@@ -43,13 +43,15 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
     }
   }
 
-  FutureOr<void> _onSelectedChartDateEvent(SelectedChartDateEvent event, Emitter<AiQueryChartState> emit) {
-     emit(UpdateSelectedChartDateState(selectedDate: event.selectedDate));
+  FutureOr<void> _onSelectedChartDateEvent(
+      SelectedChartDateEvent event, Emitter<AiQueryChartState> emit) {
+    emit(UpdateSelectedChartDateState(selectedDate: event.selectedDate));
     add(FetchAiQueryChartData(
         selectedDate: event.selectedDate, selectedMonth: DateTime(2024 - 01)));
   }
 
-  FutureOr<void> _onSelectedChartMonthEvent(SelectedChartMonthEvent event, Emitter<AiQueryChartState> emit) {
+  FutureOr<void> _onSelectedChartMonthEvent(
+      SelectedChartMonthEvent event, Emitter<AiQueryChartState> emit) {
     emit(UpdateSelectedChartMonthState(selectedMonth: event.selectedMonth));
     add(FetchAiQueryChartData(
         selectedDate: DateTime.now(), selectedMonth: event.selectedMonth));

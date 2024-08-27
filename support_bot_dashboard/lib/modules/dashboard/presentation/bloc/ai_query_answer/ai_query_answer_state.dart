@@ -34,3 +34,22 @@ class UpdateSelectedMonthState extends AiQueryAnswerState {
   UpdateSelectedMonthState({required this.selectedMonth});
 }
 
+final class UpdateAiAnswerLoadingState extends AiQueryAnswerState {}
+
+final class UpdateAiAnswerSuccessState extends AiQueryAnswerState {
+ // final DashboardAiQueryAttributeModel data;
+  final String? ticketId;
+  final String? newAnswer;
+  final DateTime selectedDate;
+  final DateTime selectedMonth;
+
+  UpdateAiAnswerSuccessState(
+      {
+        //required this.data,
+      required this.selectedDate,
+      required this.selectedMonth, required this.ticketId, required this.newAnswer});
+}
+
+final class UpdateAiAnswerFailureState extends AiQueryAnswerState {}
+
+final class UpdateAiAnswerEmptyState extends AiQueryAnswerState {}
