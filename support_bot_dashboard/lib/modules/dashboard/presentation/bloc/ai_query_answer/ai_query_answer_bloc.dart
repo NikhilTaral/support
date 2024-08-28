@@ -90,7 +90,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     try {
       final repository = serviceLocator<DashboardFilterAiQueryUsecase>();
       final response = await repository.invoke(
-          event.selectDate, event.selectMonth, event.selectedClassification);
+          event.selectDate, event.selectMonth, event.selectedClassification,"11257490");
       if (response.isLeft) {
         emit(AiQUeryAnswerFailure(message: "Failed to fetch data"));
       } else {

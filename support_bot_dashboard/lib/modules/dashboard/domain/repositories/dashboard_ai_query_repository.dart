@@ -7,5 +7,5 @@ abstract class DashboardAiQueryRepository {
 }
 
 abstract class FilterAiQueryAnswerRepository {
-  Future<Either<Failure, dynamic>> getFilterAiQueryData({DateTime? selecedDate, DateTime? selectedMonth, bool? selectedClassification});
+  Future<Either<Failure, dynamic>> getFilterAiQueryData({DateTime? selecedDate, DateTime? selectedMonth, bool? selectedClassification, String? pipeline});
 }
