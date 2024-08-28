@@ -35,7 +35,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
     bool enableHideColumnMenuItem = false,
     PlutoColumnTextAlign textAlign = PlutoColumnTextAlign.start,
     EdgeInsets titlePadding = const EdgeInsets.all(8),
-    Color backgroundColor = const Color(0xFFE9ECF4),
+    Color backgroundColor = const Color(0xFFE7E7E9),
     bool enableContextMenu = false,
     bool enableDropToResize = false,
     bool enableEditingMode = false,

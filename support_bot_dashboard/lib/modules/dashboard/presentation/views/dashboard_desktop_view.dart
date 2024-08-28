@@ -422,7 +422,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         Tooltip(
                                           message: S.of(context).export,
                                           child: const ExportButton(
-                                              icon: 'assets/icons/Export.svg'),
+                                              icon: 'assets/icons/Export.svg',
+                                              selectedButtonText: "Ticket Classification"),
                                         ),
                                       ],
                                     ),
@@ -565,8 +566,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                       'Not Answer') {
                                                     isAnswer = false;
                                                   } else {
-                                                    isAnswer =
-                                                        null; // Handle 'Select' or other cases
+                                                    isAnswer = null;
                                                   }
 
                                                   BlocProvider.of<
@@ -596,7 +596,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         Tooltip(
                                           message: S.of(context).export,
                                           child: const ExportButton(
-                                              icon: 'assets/icons/Export.svg'),
+                                            icon: 'assets/icons/Export.svg',
+                                            selectedButtonText: "AI Query Answer",
+                                          ),
                                         ),
                                       ],
                                     ),
