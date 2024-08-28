@@ -10,7 +10,7 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
   @override
   Future<Either<Failure, dynamic>> getDashboardTableData(
-      {DateTime? selectedDate, DateTime? selectedMonth}) async {
+      {DateTime? selectedDate, DateTime? selectedMonth,  String? pipeline}) async {
     final uri =
         Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
     
@@ -24,6 +24,10 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
     if (selectedMonth != null) {
       body['month'] =
           '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
+    }
+
+    if(pipeline != null){
+      body['pipeline'] = '11257490';
     }
 
     final encodedBody = jsonEncode(body);

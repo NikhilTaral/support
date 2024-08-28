@@ -1,5 +1,3 @@
-// lib/modules/dashboard/data/count_container_data.dart
-
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';

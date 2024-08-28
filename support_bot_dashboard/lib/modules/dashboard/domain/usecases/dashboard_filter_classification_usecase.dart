@@ -4,20 +4,20 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class DashboardFilterClassificationDatausecase implements UseCaseFourInput{
+class DashboardFilterClassificationDatausecase implements UseCaseFiveInput{
   @override
   Future<Either<Failure, dynamic>> invoke(
-      date, month, classification, classificationValidation) async {
+      date, month, classification, classificationValidation,pipeline) async {
     return await serviceLocator<DashboardFilterClassificationDataRepository>()
-        .getDashboardClassificationData(selectedDate: date, selectedMonth: month, classification: classification, classificationValidation: classificationValidation);
+        .getDashboardClassificationData(selectedDate: date, selectedMonth: month, classification: classification, classificationValidation: classificationValidation,pipeline: pipeline);
   }
 }
 
-class DashboardFilterClassificationValidationDatausecase implements UseCaseFourInput{
+class DashboardFilterClassificationValidationDatausecase implements UseCaseFiveInput{
   @override
   Future<Either<Failure, dynamic>> invoke(
-      date, month, classification, classificationValidation) async {
+      date, month, classification, classificationValidation,pipeline) async {
     return await serviceLocator<DashboardFilterClassificationValidationDataRepository>()
-        .getDashboardClassificationValidationData(selectedDate: date, selectedMonth: month, classification: classification, );
+        .getDashboardClassificationValidationData(selectedDate: date, selectedMonth: month, classification: classification, pipeline: pipeline);
   }
 }

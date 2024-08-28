@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AIQueryAnswerWidget extends StatelessWidget {
-  const AIQueryAnswerWidget({super.key});
+  final DashboardAiQueryAttributeModel aiQuerytableData;
+  final DateTime selectedMonth;
+  final DateTime selectedDate;
+  const AIQueryAnswerWidget(
+      {super.key,
+      required this.aiQuerytableData,
+      required this.selectedMonth,
+      required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +59,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
               enableColumnDrag: false,
               readOnly: true,
               renderer: (PlutoColumnRendererContext rendererContext) {
-                final value = rendererContext.cell.value ?? '';
+                final value = rendererContext.cell.value ?? "N/A";
                 return MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: CustomToolTip(
@@ -65,6 +75,22 @@ class AIQueryAnswerWidget extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            PlutoColumn(
+              title: S.of(context).classification,
+              field: 'answeredStatus',
+              width: UIHelpers.screenWidth(context) * 0.1,
+              type: PlutoColumnType.text(),
+              enableFilterMenuItem: false,
+              enableHideColumnMenuItem: false,
+              textAlign: PlutoColumnTextAlign.start,
+              titlePadding: const EdgeInsets.all(8),
+              backgroundColor: SupportBotColors.blueSecondary.shade100,
+              enableContextMenu: false,
+              enableDropToResize: false,
+              enableEditingMode: false,
+              enableColumnDrag: false,
+              readOnly: true,
             ),
             PlutoColumn(
               title: S.of(context).aiQueryAnswer,
@@ -82,7 +108,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
               enableColumnDrag: false,
               readOnly: true,
               renderer: (PlutoColumnRendererContext rendererContext) {
-                final value = rendererContext.cell.value ?? '';
+                final value = rendererContext.cell.value ?? "N/A";
                 return MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: CustomToolTip(
@@ -100,22 +126,6 @@ class AIQueryAnswerWidget extends StatelessWidget {
               },
             ),
             PlutoColumn(
-              title: S.of(context).link,
-              field: 'link',
-              width: UIHelpers.screenWidth(context) * 0.1,
-              type: PlutoColumnType.text(),
-              enableFilterMenuItem: false,
-              enableHideColumnMenuItem: false,
-              textAlign: PlutoColumnTextAlign.start,
-              titlePadding: const EdgeInsets.all(8),
-              backgroundColor: SupportBotColors.blueSecondary.shade100,
-              enableContextMenu: false,
-              enableDropToResize: false,
-              enableEditingMode: false,
-              enableColumnDrag: false,
-              readOnly: true,
-            ),
-            PlutoColumn(
               title: S.of(context).actions,
               field: 'actions',
               type: PlutoColumnType.text(),
@@ -130,25 +140,26 @@ class AIQueryAnswerWidget extends StatelessWidget {
               enableEditingMode: false,
               enableColumnDrag: false,
               readOnly: true,
-              renderer: actionsRenderer,
+              renderer: (rendererContext) => actionsRenderer(
+                rendererContext,
+                selectedDate: selectedDate,
+                selectedMonth: selectedMonth,
+              ),
             ),
           ],
-          rows: [
-            PlutoRow(cells: {
-              'id': PlutoCell(value: '2345678'),
-              'ticketDescription': PlutoCell(value: 'Text cell value1'),
-              'aiQueryAnswer': PlutoCell(value: 'Text cell value1'),
-              'link': PlutoCell(value: 'www.google.com'),
-              'actions': PlutoCell(value: 'View')
-            }),
-            PlutoRow(cells: {
-              'id': PlutoCell(value: '2345679'),
-              'ticketDescription': PlutoCell(value: 'Text cell value2'),
-              'aiQueryAnswer': PlutoCell(value: 'Text cell value2'),
-              'link': PlutoCell(value: 'www.google.com'),
-              'actions': PlutoCell(value: 'View')
-            })
-          ],
+          rows: aiQuerytableData.items.map((item) {
+                return PlutoRow(
+                  cells: {
+                    'id': PlutoCell(value: item.id ?? "N/A"),
+                    'ticketDescription':
+                        PlutoCell(value: item.ticketDescription ?? "N/A"),
+                    'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answer" : "Not Answer"),
+                    'aiQueryAnswer':
+                        PlutoCell(value: item.aIResponse ?? "N/A"),
+                    'actions': PlutoCell(value: 'View'),
+                  },
+                );
+              }).toList(),
           configuration: PlutoGridConfiguration(
             style: PlutoGridStyleConfig(
               enableColumnBorderHorizontal: false,
@@ -174,7 +185,8 @@ class AIQueryAnswerWidget extends StatelessWidget {
   }
 }
 
-Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
+Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
+    {required DateTime selectedDate, required DateTime selectedMonth}) {
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
   return Row(
@@ -191,9 +203,10 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
                 value: S.of(context).view,
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
-                    _showDetails(context, rows, currentIndex);
+                    _showDetails(context, rows, currentIndex, selectedDate,
+                        selectedMonth);
                   },
                   child: Row(
                     children: [
@@ -204,12 +217,10 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
                   ),
                 ),
               ),
-                PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: S.of(context).changeClassifcation,
-                child: GestureDetector(
-                  onTap: () {
-                   
-                  },
+                child: InkWell(
+                  onTap: () {},
                   child: Row(
                     children: [
                       const Icon(Icons.loop_rounded),
@@ -227,26 +238,27 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext) {
   );
 }
 
-void _showDetails(
-    BuildContext context, List<PlutoRow> rows, int currentIndex) async {
+void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
+    DateTime selectedDate, DateTime selectedMonth) async {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
-
+  final blocContext = context;
   final row = rows[currentIndex];
   final id = row.cells['id']?.value ?? "";
   final description = row.cells['ticketDescription']?.value ?? "";
+  final answeredStatus = row.cells['answeredStatus']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
-  final link = row.cells['link']?.value ?? "";
+  // final link = row.cells['link']?.value ?? "";
 
   final result = await showDialog<Map<String, String>>(
-    context: context,
-    builder: (BuildContext context) {
+    context: blocContext,
+    builder: (BuildContext blocContext) {
       final aiQueryAnswerController =
           TextEditingController(text: aiQueryAnswer);
-      final linkController = TextEditingController(text: link);
+      // final linkController = TextEditingController(text: link);
       bool isEditing = false;
       return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (BuildContext blocContext, StateSetter setState) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -263,7 +275,8 @@ void _showDetails(
                       ? () {
                           Navigator.pop(context);
                           if (isPreviousEnabled) {
-                            _showDetails(context, rows, currentIndex - 1);
+                            _showDetails(blocContext, rows, currentIndex - 1,
+                                selectedDate, selectedMonth);
                           }
                         }
                       : null,
@@ -284,7 +297,8 @@ void _showDetails(
                         ? () {
                             Navigator.pop(context);
                             if (isNextEnabled) {
-                              _showDetails(context, rows, currentIndex + 1);
+                              _showDetails(context, rows, currentIndex + 1,
+                                  selectedDate, selectedMonth);
                             }
                           }
                         : null,
@@ -295,25 +309,28 @@ void _showDetails(
                     ))
               ],
             ),
-            content: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.4,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Divider(),
-                  _buildDetailRow('Ticket Id :', id),
-                  _buildDetailRow('Ticket Description :', description),
-                  if (isEditing)
-                    _buildEditableRow(
-                        'AI Query Answer :', aiQueryAnswerController)
-                  else
-                    _buildDetailRow('AI Query Answer :', aiQueryAnswer),
-                  if (isEditing)
-                    _buildEditableRow('Link :', linkController)
-                  else
-                    _buildDetailRow('Link :', link),
-                ],
+            content: SingleChildScrollView(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Divider(),
+                    _buildDetailRow('Ticket Id :', id),
+                    _buildDetailRow('Ticket Description :', description),
+                    _buildDetailRow('answeredStatus :', answeredStatus),
+                    if (isEditing)
+                      _buildEditableRow(
+                          'AI Query Answer :', aiQueryAnswerController)
+                    else
+                      _buildDetailRow('AI Query Answer :', aiQueryAnswer),
+                    // if (isEditing)
+                    //   _buildEditableRow('Link :', linkController)
+                    // else
+                    // _buildDetailRow('Link :', link),
+                  ],
+                ),
               ),
             ),
             actions: <Widget>[
@@ -344,9 +361,19 @@ void _showDetails(
                   ElevatedButton.icon(
                     onPressed: () {
                       if (isEditing) {
+                        print("object");
+
+                        BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                          UpdateAiAnswerInitialEvent(
+                            ticketId: id,
+                            newAnswer: aiQueryAnswerController.text,
+                            selectedDate: selectedDate,
+                            selectedMonth: selectedMonth,
+                          ),
+                        );
                         Navigator.of(context).pop({
                           'aiQueryAnswer': aiQueryAnswerController.text,
-                          'link': linkController.text,
+                          // 'link': linkController.text,
                         });
                       } else {
                         setState(() {
@@ -360,7 +387,7 @@ void _showDetails(
                     ),
                     label: Text(
                       isEditing ? 'Save' : 'Edit',
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: SupportBotColors.bluePrimary.shade500,
@@ -396,12 +423,12 @@ Widget _buildDetailRow(String title, String value) {
       children: [
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           value,
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
         ),
       ],
     ),
@@ -416,18 +443,20 @@ Widget _buildEditableRow(String title, TextEditingController controller) {
       children: [
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         TextField(
           controller: controller,
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
+          maxLines: 7,
         ),
       ],
     ),

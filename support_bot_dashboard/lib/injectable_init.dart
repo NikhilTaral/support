@@ -1,19 +1,31 @@
 import 'package:get_it/get_it.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_chart_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_filter_classification_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_filter_classification_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_table_data_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_update_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_validation_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/revert_classification_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_chart_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_update_ai_query_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_validation_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/revert_classification_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_chart_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_filter_classification_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_update_ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
@@ -45,7 +57,7 @@ Future<void> initServiceLocator() async {
   //Local Storage
   serviceLocator.registerFactory<LocalStorage>(() => LocalStorage());
 
-  // Dashboard
+  // Dashboard repositories
   serviceLocator.registerLazySingleton<DashboardTableDataRepository>(
       () => DashboardTableDataRepoImpl());
   serviceLocator.registerLazySingleton<DashboardChartDataRepository>(
@@ -53,6 +65,11 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<DashboardValidationRepository>(
       () => DashboardValidationRepoImpl());
   serviceLocator.registerLazySingleton<DashboardFilterClassificationDataRepository>(()=> DashboardFIlterClassificationRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardAiQueryRepository>(()=> DashboardAiQueryRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardAiQueryChartDataRepository>(()=> DashboardAiQueryChartRepoImpl());
+  serviceLocator.registerLazySingleton<FilterAiQueryAnswerRepository>(()=> DashboardAiQueryFilterClassificationRepoImpl());
+
+  // Dashboard usecase
   serviceLocator.registerLazySingleton<DashboardTableDatausecase>(
       () => DashboardTableDatausecase());
   serviceLocator.registerLazySingleton<DashboardChartdataUsecase>(
@@ -62,13 +79,28 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<DashboardFilterClassificationDatausecase>(
       () => DashboardFilterClassificationDatausecase());
   serviceLocator.registerLazySingleton<DashboardFilterClassificationValidationDatausecase>(()=> DashboardFilterClassificationValidationDatausecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryUsecase>(()=> DashboardAiQueryUsecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryChartUsecase>(()=>DashboardAiQueryChartUsecase());
+  serviceLocator.registerLazySingleton<DashboardFilterAiQueryUsecase>(()=>DashboardFilterAiQueryUsecase());
+
+  // Dashboard bloc
   serviceLocator.registerFactory<DashboardBloc>(() => DashboardBloc());
   serviceLocator.registerFactory<PlutotableBloc>(() => PlutotableBloc());
   serviceLocator.registerFactory<CustombuttonBloc>(() => CustombuttonBloc());
+  serviceLocator.registerFactory<AiQueryAnswerBloc>(() => AiQueryAnswerBloc());
+  serviceLocator.registerFactory<AiQueryChartBloc>(() => AiQueryChartBloc());
 
   //Revert Classification Bloc
   serviceLocator.registerLazySingleton<RevertClassificationUsecase>(
       () => RevertClassificationUsecase());
   serviceLocator.registerLazySingleton<RevertClassificationRepository>(
       () => RevertClassificationRepoImpl());
+
+  //Update AI Query Bloc
+  
+  //serviceLocator.registerFactory<UpdateAiAnswerBloc>(() => UpdateAiAnswerBloc());
+  serviceLocator.registerLazySingleton<UpdateAiAnswerUsecase>(
+      () => UpdateAiAnswerUsecase());
+  serviceLocator.registerLazySingleton<UpdateAiAnswerRepository>(
+      () => UpdateAiAnswerRepoImpl());
 }
