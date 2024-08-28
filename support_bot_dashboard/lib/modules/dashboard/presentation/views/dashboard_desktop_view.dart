@@ -423,7 +423,8 @@ class DashboardDesktopView extends StatelessWidget {
                                           message: S.of(context).export,
                                           child: const ExportButton(
                                               icon: 'assets/icons/Export.svg',
-                                              selectedButtonText: "Ticket Classification"),
+                                              selectedButtonText:
+                                                  "Ticket Classification"),
                                         ),
                                       ],
                                     ),
@@ -532,30 +533,35 @@ class DashboardDesktopView extends StatelessWidget {
                                         ),
                                         UIHelpers.horizontalSpaceSmall,
                                         // Classification dropdown
-                                        BlocBuilder<PlutotableBloc,
-                                            PlutotableState>(
+                                        BlocBuilder<AiQueryAnswerBloc,
+                                            AiQueryAnswerState>(
                                           builder: (context, state) {
                                             DateTime selectedDate =
                                                 DateTime.now();
                                             DateTime selectedMonth =
                                                 DateTime(2024, 01);
-                                            String selectedClassification = '';
-                                            if (state
-                                                is FetchTableDataSuccess) {
+                                            bool? selectedClassification = null;
+                                            String? classification = 'Select';
+
+                                            if (state is AiQueryAnswerSuccess) {
                                               selectedDate = state.selectedDate;
                                               selectedMonth =
                                                   state.selectedMonth;
                                               selectedClassification =
                                                   state.selectedClassification;
+                                              classification =
+                                                  state.classification;
                                             }
+
                                             final classificationItems = [
                                               'Select',
                                               'Answer',
                                               'Not Answer'
                                             ];
+                                            print(classification);
                                             return CustomFilterDropdown(
                                               selectedValue:
-                                                  selectedClassification,
+                                                  classification ?? 'Select',
                                               items: classificationItems,
                                               onChanged: (String? value) {
                                                 if (value != null) {
@@ -568,7 +574,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                   } else {
                                                     isAnswer = null;
                                                   }
-
                                                   BlocProvider.of<
                                                               AiQueryAnswerBloc>(
                                                           context,
@@ -597,7 +602,8 @@ class DashboardDesktopView extends StatelessWidget {
                                           message: S.of(context).export,
                                           child: const ExportButton(
                                             icon: 'assets/icons/Export.svg',
-                                            selectedButtonText: "AI Query Answer",
+                                            selectedButtonText:
+                                                "AI Query Answer",
                                           ),
                                         ),
                                       ],

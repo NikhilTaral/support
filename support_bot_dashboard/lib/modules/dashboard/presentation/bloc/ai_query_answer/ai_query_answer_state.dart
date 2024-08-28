@@ -10,8 +10,10 @@ class AiQueryAnswerSuccess extends AiQueryAnswerState{
   final DashboardAiQueryAttributeModel data;
    final DateTime selectedDate;
   final DateTime selectedMonth;
+  final bool? selectedClassification;
+  final String? classification;
 
-  AiQueryAnswerSuccess({required this.data, required this.selectedDate, required this.selectedMonth});
+  AiQueryAnswerSuccess({required this.data, required this.selectedDate, required this.selectedMonth,required this.selectedClassification, required this.classification});
 }
 
 class AiQUeryAnswerFailure extends AiQueryAnswerState{
@@ -47,7 +49,8 @@ final class UpdateAiAnswerSuccessState extends AiQueryAnswerState {
       {
         //required this.data,
       required this.selectedDate,
-      required this.selectedMonth, required this.ticketId, required this.newAnswer});
+      required this.selectedMonth, required this.ticketId, required this.newAnswer,
+    });
 }
 
 final class UpdateAiAnswerFailureState extends AiQueryAnswerState {}

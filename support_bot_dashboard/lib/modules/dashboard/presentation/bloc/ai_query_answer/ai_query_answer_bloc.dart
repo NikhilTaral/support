@@ -49,7 +49,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         emit(AiQueryAnswerSuccess(
             data: aiQueryAnswerTableData,
             selectedDate: event.selectedDate,
-            selectedMonth: event.selectedMonth));
+            selectedMonth: event.selectedMonth, selectedClassification: null,classification: 'Select'));
       }
     } catch (e) {
       emit(AiQUeryAnswerFailure(message: 'Exception occured $e'));
@@ -114,7 +114,11 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         emit(AiQueryAnswerSuccess(
             data: aiQueryAnswerTableData,
             selectedDate: event.selectDate,
-            selectedMonth: event.selectMonth));
+            selectedMonth: event.selectMonth, selectedClassification: event.selectedClassification, classification: event.selectedClassification == true
+                                                      ? 'Answer'
+                                                      : event.selectedClassification ==
+                                                              false
+                                                          ? 'Not Answer': 'Select'),);
       }
     } catch (e) {
       emit(AiQUeryAnswerFailure(message: 'Exception occured $e'));
