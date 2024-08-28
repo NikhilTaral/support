@@ -76,7 +76,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
         type: PlutoColumnType.text(),
         width: UIHelpers.screenWidth(context) * 0.2,
         renderer: (PlutoColumnRendererContext rendererContext) {
-          final value = rendererContext.cell.value ?? '';
+          final value = rendererContext.cell.value ?? "N/A";
           return MouseRegion(
             cursor: SystemMouseCursors.click,
             child: CustomToolTip(
@@ -106,7 +106,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
         type: PlutoColumnType.text(),
         width: UIHelpers.screenWidth(context) * 0.2,
         renderer: (PlutoColumnRendererContext context) {
-          final value = context.cell.value ?? '';
+          final value = context.cell.value ?? "N/A";
           return MouseRegion(
             cursor: SystemMouseCursors.click,
             child: CustomToolTip(
@@ -131,7 +131,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
         readOnly: false,
         renderer: (PlutoColumnRendererContext plutoRenderercontext) {
           return ValidationReasonRenderer(
-            rowID: plutoRenderercontext.row.cells['id']?.value ?? "",
+            rowID: plutoRenderercontext.row.cells['id']?.value ?? "N/A",
             plutotableBloc: context.read<PlutotableBloc>(),
             date: selectedDate,
             month: selectedMonth,
@@ -177,7 +177,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
         type: PlutoColumnType.text(),
         width: UIHelpers.screenWidth(context) * 0.07,
         textAlign: PlutoColumnTextAlign.center,
-        renderer:(context) =>  actionsRenderer(
+        renderer: (context) => actionsRenderer(
           context,
           selectedDate,
           selectedMonth,
@@ -188,17 +188,26 @@ class TicketClassificationTableWidget extends StatelessWidget {
     final rows = tableData.items.map((item) {
       return PlutoRow(
         cells: {
-          TicketClassificationGridKey.id: PlutoCell(value: item.id),
-          TicketClassificationGridKey.classification:
-              PlutoCell(value: item.classification),
-          TicketClassificationGridKey.reasoning:
-              PlutoCell(value: item.reasoning),
-          TicketClassificationGridKey.ticketDescription:
-              PlutoCell(value: item.ticketDescription),
-          TicketClassificationGridKey.validation:
-              PlutoCell(value: item.classificationValidation),
-          TicketClassificationGridKey.validationReason:
-              PlutoCell(value: item.classificationValidationReason),
+          TicketClassificationGridKey.id:
+              PlutoCell(value: item.id?.isEmpty ?? true ? 'N/A' : item.id),
+          TicketClassificationGridKey.classification: PlutoCell(
+              value: item.classification?.isEmpty ?? true
+                  ? 'N/A'
+                  : item.classification),
+          TicketClassificationGridKey.reasoning: PlutoCell(
+              value: item.reasoning?.isEmpty ?? true ? 'N/A' : item.reasoning),
+          TicketClassificationGridKey.ticketDescription: PlutoCell(
+              value: item.ticketDescription?.isEmpty ?? true
+                  ? 'N/A'
+                  : item.ticketDescription),
+          TicketClassificationGridKey.validation: PlutoCell(
+              value: item.classificationValidation?.isEmpty ?? true
+                  ? 'N/A'
+                  : item.classificationValidation),
+          TicketClassificationGridKey.validationReason: PlutoCell(
+              value: item.classificationValidationReason?.isEmpty ?? true
+                  ? 'N/A'
+                  : item.classificationValidationReason),
           TicketClassificationGridKey.isUpdatedToHubspot:
               PlutoCell(value: item.isUpdatedToHubspot),
           TicketClassificationGridKey.status: PlutoCell(
@@ -218,11 +227,16 @@ Widget actionsRenderer(
   DateTime selectedDate,
   DateTime selectedMonth,
 ) {
-  final id = rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
+  final id =
+      rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
-  final isUpdatedToHubspot = rendererContext.row.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value ?? true;
-  final classification = rendererContext.row.cells[TicketClassificationGridKey.classification]?.value ?? "";
+  final isUpdatedToHubspot = rendererContext
+          .row.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value ??
+      true;
+  final classification = rendererContext
+          .row.cells[TicketClassificationGridKey.classification]?.value ??
+      "";
 
   return BlocConsumer<PlutotableBloc, PlutotableState>(
     listener: (context, state) {
@@ -265,14 +279,14 @@ Widget actionsRenderer(
                         onTap: () {
                           if (isUpdatedToHubspot) {
                             context.read<PlutotableBloc>().add(
-                              RevertClassificationEvent(
-                                ticketId: id,
-                                selectedDate: selectedDate,
-                                selectedMonth: selectedMonth,
-                                selectedClassification: classification
-                              ),
-                            );
-                             _showUpdatedToHubspotPopup(context, S.of(context).revertSuccess);
+                                  RevertClassificationEvent(
+                                      ticketId: id,
+                                      selectedDate: selectedDate,
+                                      selectedMonth: selectedMonth,
+                                      selectedClassification: classification),
+                                );
+                            _showUpdatedToHubspotPopup(
+                                context, S.of(context).revertSuccess);
                           } else {
                             _showUpdatedToHubspotPopup(
                                 context, S.of(context).noRevert);
@@ -296,7 +310,6 @@ Widget actionsRenderer(
     },
   );
 }
-
 
 void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex) {
   bool isNextEnabled = currentIndex < rows.length - 1;

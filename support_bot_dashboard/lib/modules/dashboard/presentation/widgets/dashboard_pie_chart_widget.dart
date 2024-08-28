@@ -71,7 +71,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
       child: Container(
-        height: UIHelpers.screenHeight(context) * 0.77,
+        height: UIHelpers.screenHeight(context) * 0.74,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           border: Border.all(
