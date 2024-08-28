@@ -16,7 +16,7 @@ class AiQueryAnswerTableItem extends Equatable {
   final String? createdAt;
   final String? ticketDescription;
   final String? aIResponse;
-  final bool? classification;
+  final bool? answeredStatus;
   final bool? isAnswerEdited;
   final bool? answerValidation;
   final String? answerValidationReason;
@@ -26,7 +26,7 @@ class AiQueryAnswerTableItem extends Equatable {
       required this.createdAt,
       required this.ticketDescription,
       required this.aIResponse,
-      required this.classification,
+      required this.answeredStatus,
       required this.isAnswerEdited,
       required this.answerValidation,
       required this.answerValidationReason});
@@ -37,7 +37,7 @@ class AiQueryAnswerTableItem extends Equatable {
         createdAt,
         ticketDescription,
         aIResponse,
-        classification,
+        answeredStatus,
         isAnswerEdited,
         answerValidation,
         answerValidationReason

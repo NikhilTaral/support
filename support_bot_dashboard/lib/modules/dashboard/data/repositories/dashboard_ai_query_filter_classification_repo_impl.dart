@@ -21,7 +21,7 @@ class DashboardAiQueryFilterClassificationRepoImpl extends FilterAiQueryAnswerRe
     }
 
      if (selectedClassification != null) {
-      body['answerStatus'] = selectedClassification;
+      body['answeredStatus'] = selectedClassification;
     }
 
     dynamic response;

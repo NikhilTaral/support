@@ -4,16 +4,25 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardPipelineFilterDropdownWidget extends StatelessWidget {
-   final String selectedValue;
+  final String selectedValue;
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final String label;
   final double width;
-  const DashboardPipelineFilterDropdownWidget({super.key, required this.selectedValue, required this.items, required this.onChanged, required this.label, required this.width});
+
+  const DashboardPipelineFilterDropdownWidget({
+    super.key,
+    required this.selectedValue,
+    required this.items,
+    required this.onChanged,
+    required this.label,
+    required this.width,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -22,7 +31,7 @@ class DashboardPipelineFilterDropdownWidget extends StatelessWidget {
           ),
           padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
           margin:
-              const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
+              const EdgeInsets.only(top: 15, bottom: 10, left: 15, right: 1),
           height: UIHelpers.screenHeight(context) * 0.05,
           width: width,
           child: DropdownButtonHideUnderline(
@@ -45,8 +54,8 @@ class DashboardPipelineFilterDropdownWidget extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: 25,
-          top: 20,
+          left: 20,
+          top: 5,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             color: SupportBotColors.white,

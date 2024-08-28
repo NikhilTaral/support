@@ -22,6 +22,7 @@ import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
+import 'package:support_bot_dashboard/config/environment/env_config.dart';
 
 class DashboardDesktopView extends StatelessWidget {
   const DashboardDesktopView({Key? key}) : super(key: key);
@@ -83,7 +84,7 @@ class DashboardDesktopView extends StatelessWidget {
                 text: "",
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15, bottom: 8),
+                padding: const EdgeInsets.only(top: 15, bottom: 10),
                 child: Row(
                   children: [
                     Flexible(
@@ -96,7 +97,7 @@ class DashboardDesktopView extends StatelessWidget {
                                 return Center(
                                   child: LoadingWidget(
                                     width:
-                                        UIHelpers.screenWidth(context) * 0.75,
+                                        UIHelpers.screenWidth(context) * 0.78,
                                     height:
                                         UIHelpers.screenHeight(context) * 0.2,
                                     radius: 8,
@@ -182,32 +183,35 @@ class DashboardDesktopView extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      CustomButton(
-                                        text:
-                                            S.of(context).ticketClassification,
-                                        isSelected: selectedButtonText ==
-                                            'Ticket Classification',
-                                        onPressed: () {
-                                          BlocProvider.of<CustombuttonBloc>(
-                                                  context)
-                                              .add(SelectButtonEvent(
-                                                  'Ticket Classification'));
-                                        },
-                                      ),
-                                      CustomButton(
-                                        text: S.of(context).aiQueryAnswer,
-                                        isSelected: selectedButtonText ==
-                                            'AI Query Answer',
-                                        onPressed: () {
-                                          BlocProvider.of<CustombuttonBloc>(
-                                                  context)
-                                              .add(SelectButtonEvent(
-                                                  'AI Query Answer'));
-                                        },
-                                      ),
+                                      if (EnvConfig.ENV != 'dev' ||
+                                          EnvConfig.ENV != 'qa')
+                                        CustomButton(
+                                          text: S
+                                              .of(context)
+                                              .ticketClassification,
+                                          isSelected: selectedButtonText ==
+                                              'Ticket Classification',
+                                          onPressed: () {
+                                            BlocProvider.of<CustombuttonBloc>(
+                                                    context)
+                                                .add(SelectButtonEvent(
+                                                    'Ticket Classification'));
+                                          },
+                                        ),
+                                      if (EnvConfig.ENV != 'prod')
+                                        CustomButton(
+                                          text: S.of(context).aiQueryAnswer,
+                                          isSelected: selectedButtonText ==
+                                              'AI Query Answer',
+                                          onPressed: () {
+                                            BlocProvider.of<CustombuttonBloc>(
+                                                    context)
+                                                .add(SelectButtonEvent(
+                                                    'AI Query Answer'));
+                                          },
+                                        ),
                                     ],
                                   ),
-
                                   // for Ticket Classification
                                   if (selectedButtonText ==
                                       'Ticket Classification')
@@ -418,7 +422,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         Tooltip(
                                           message: S.of(context).export,
                                           child: const ExportButton(
-                                              icon: 'assets/icons/Export.svg'),
+                                              icon: 'assets/icons/Export.svg',
+                                              selectedButtonText: "Ticket Classification"),
                                         ),
                                       ],
                                     ),
@@ -525,7 +530,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             );
                                           },
                                         ),
-                                        SizedBox(width: 10),
+                                        UIHelpers.horizontalSpaceSmall,
                                         // Classification dropdown
                                         BlocBuilder<PlutotableBloc,
                                             PlutotableState>(
@@ -561,8 +566,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                       'Not Answer') {
                                                     isAnswer = false;
                                                   } else {
-                                                    isAnswer =
-                                                        null; // Handle 'Select' or other cases
+                                                    isAnswer = null;
                                                   }
 
                                                   BlocProvider.of<
@@ -592,7 +596,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         Tooltip(
                                           message: S.of(context).export,
                                           child: const ExportButton(
-                                              icon: 'assets/icons/Export.svg'),
+                                            icon: 'assets/icons/Export.svg',
+                                            selectedButtonText: "AI Query Answer",
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -714,13 +720,16 @@ class DashboardDesktopView extends StatelessWidget {
                               } else {
                                 return BlocConsumer<AiQueryAnswerBloc,
                                         AiQueryAnswerState>(
-                                          listener: (context, state) {
-                                            print(state);
-                                            if(state is UpdateAiAnswerSuccessState){
-                                              context.read<AiQueryAnswerBloc>().add(FetchAiQueryAnswerEvent(selectedDate: state.selectedDate, selectedMonth: state.selectedMonth));
-                                            }
-                                          },
-                                    builder: (context, state) {
+                                    listener: (context, state) {
+                                  print(state);
+                                  if (state is UpdateAiAnswerSuccessState) {
+                                    context.read<AiQueryAnswerBloc>().add(
+                                        FetchAiQueryAnswerEvent(
+                                            selectedDate: state.selectedDate,
+                                            selectedMonth:
+                                                state.selectedMonth));
+                                  }
+                                }, builder: (context, state) {
                                   if (state is AiQueryAnswerLoading) {
                                     return Center(
                                         child: LoadingWidget(
@@ -743,8 +752,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       selectedDate: state.selectedDate,
                                       selectedMonth: state.selectedMonth,
                                     );
-                                  } 
-                                  else if (state is AiQUeryAnswerFailure) {
+                                  } else if (state is AiQUeryAnswerFailure) {
                                     return SizedBox(
                                         height:
                                             UIHelpers.screenHeight(context) *
@@ -791,7 +799,6 @@ class DashboardDesktopView extends StatelessWidget {
                                       .contains(selectedPipeline)) {
                                     selectedPipeline = pipelineItems.first;
                                   }
-
                                   return SizedBox(
                                     width: UIHelpers.screenWidth(context),
                                     child:
@@ -823,7 +830,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       width:
                                           UIHelpers.screenWidth(context) * 0.19,
                                       height: UIHelpers.screenHeight(context) *
-                                          0.82,
+                                          0.75,
                                       radius: 8,
                                     );
                                   } else if (state is DashboardDataSuccess) {
@@ -901,7 +908,7 @@ class DashboardDesktopView extends StatelessWidget {
                                     return Center(
                                       child: LoadingWidget(
                                         width: UIHelpers.screenWidth(context) *
-                                            0.17,
+                                            0.19,
                                         height:
                                             UIHelpers.screenHeight(context) *
                                                 0.75,

@@ -37,7 +37,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               createdAt: item.createdAt ?? "",
               ticketDescription: item.ticketDescription,
               aIResponse: item.aIResponse,
-              classification: item.classification,
+              answeredStatus: item.answeredStatus,
               isAnswerEdited: item.isAnswerEdited,
               answerValidation: item.answerValidation,
               answerValidationReason: item.answerValidationReason);
@@ -102,7 +102,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               createdAt: item.createdAt ?? "",
               ticketDescription: item.ticketDescription,
               aIResponse: item.aIResponse,
-              classification: item.classification,
+              answeredStatus: item.answeredStatus,
               isAnswerEdited: item.isAnswerEdited,
               answerValidation: item.answerValidation,
               answerValidationReason: item.answerValidationReason);

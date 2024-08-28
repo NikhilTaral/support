@@ -59,7 +59,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
               enableColumnDrag: false,
               readOnly: true,
               renderer: (PlutoColumnRendererContext rendererContext) {
-                final value = rendererContext.cell.value ?? '';
+                final value = rendererContext.cell.value ?? "N/A";
                 return MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: CustomToolTip(
@@ -78,7 +78,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
             ),
             PlutoColumn(
               title: S.of(context).classification,
-              field: 'classification',
+              field: 'answeredStatus',
               width: UIHelpers.screenWidth(context) * 0.1,
               type: PlutoColumnType.text(),
               enableFilterMenuItem: false,
@@ -108,7 +108,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
               enableColumnDrag: false,
               readOnly: true,
               renderer: (PlutoColumnRendererContext rendererContext) {
-                final value = rendererContext.cell.value ?? '';
+                final value = rendererContext.cell.value ?? "N/A";
                 return MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: CustomToolTip(
@@ -150,12 +150,12 @@ class AIQueryAnswerWidget extends StatelessWidget {
           rows: aiQuerytableData.items.map((item) {
                 return PlutoRow(
                   cells: {
-                    'id': PlutoCell(value: item.id),
+                    'id': PlutoCell(value: item.id ?? "N/A"),
                     'ticketDescription':
-                        PlutoCell(value: item.ticketDescription),
-                    'classification': PlutoCell(value: item.classification == true ? "Answer" : "Not Answer"),
+                        PlutoCell(value: item.ticketDescription ?? "N/A"),
+                    'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answer" : "Not Answer"),
                     'aiQueryAnswer':
-                        PlutoCell(value: item.aIResponse),
+                        PlutoCell(value: item.aIResponse ?? "N/A"),
                     'actions': PlutoCell(value: 'View'),
                   },
                 );
@@ -246,7 +246,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
   final row = rows[currentIndex];
   final id = row.cells['id']?.value ?? "";
   final description = row.cells['ticketDescription']?.value ?? "";
-  final classification = row.cells['classification']?.value ?? "";
+  final answeredStatus = row.cells['answeredStatus']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
   // final link = row.cells['link']?.value ?? "";
 
@@ -319,7 +319,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                     const Divider(),
                     _buildDetailRow('Ticket Id :', id),
                     _buildDetailRow('Ticket Description :', description),
-                    _buildDetailRow('Classification :', classification),
+                    _buildDetailRow('answeredStatus :', answeredStatus),
                     if (isEditing)
                       _buildEditableRow(
                           'AI Query Answer :', aiQueryAnswerController)
