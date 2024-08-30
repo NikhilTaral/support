@@ -76,14 +76,14 @@ class FilterValidationEvent extends PlutotableEvent {
       this.selectedDate, this.selectedMonth, this.selectedClassification);
 }
 
-class FilterPipelineEvent extends PlutotableEvent {
-  final DateTime selectedDate;
-  final DateTime selectedMonth;
-  final String selectedPipeline;
+// class FilterPipelineEvent extends PlutotableEvent {
+//   final DateTime selectedDate;
+//   final DateTime selectedMonth;
+//   final String selectedPipeline;
 
-  FilterPipelineEvent(
-      this.selectedDate, this.selectedMonth, this.selectedPipeline);
-}
+//   FilterPipelineEvent(
+//       this.selectedDate, this.selectedMonth, this.selectedPipeline);
+// }
 
 class CustomSidebarLoadRowData extends PlutotableEvent {
   final int rowIndex;

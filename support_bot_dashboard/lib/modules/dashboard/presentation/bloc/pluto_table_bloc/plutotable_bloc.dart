@@ -31,7 +31,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     try {
       final repository = serviceLocator<DashboardTableDatausecase>();
       final response =
-          await repository.invoke(event.selectedDate, event.selectedMonth,'11257490');
+          await repository.invoke(event.selectedDate, event.selectedMonth,event.selectedPipeline);
       if (response.isLeft) {
         emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
       } else {

@@ -4,8 +4,8 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardPipelineFilterDropdownWidget extends StatelessWidget {
-  final String selectedValue;
-  final List<String> items;
+  final String? selectedValue;
+  final List<String?> items;
   final ValueChanged<String?> onChanged;
   final String label;
   final double width;
@@ -38,10 +38,10 @@ class DashboardPipelineFilterDropdownWidget extends StatelessWidget {
             child: DropdownButton<String>(
               value: selectedValue,
               onChanged: onChanged,
-              items: items.map<DropdownMenuItem<String>>((String value) {
+              items: items.map<DropdownMenuItem<String>>((String? value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(value ?? ''),
                 );
               }).toList(),
               icon: const Icon(Icons.keyboard_arrow_down_rounded),

@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_pipeline_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_pipeline/dashboard_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
@@ -41,6 +43,7 @@ class DashboardDesktopView extends StatelessWidget {
               FetchTableDataEvent(
                 selectedDate: DateTime.now(),
                 selectedMonth: DateTime(2024, 1),
+                selectedPipeline: '11257490'
               ),
             ),
         ),
@@ -73,6 +76,10 @@ class DashboardDesktopView extends StatelessWidget {
         //           selectedMonth: DateTime(2024 - 01)),
         //     ),
         // ),
+        BlocProvider(
+            create: (context) => serviceLocator<DashboardPipelineBloc>()
+              ..add(FilterPipelineEvent(
+                  DateTime.now(), DateTime.now(), 'Expert Care Level 1')))
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -785,50 +792,67 @@ class DashboardDesktopView extends StatelessWidget {
                           flex: 2,
                           child: Column(
                             children: [
-                              BlocBuilder<PlutotableBloc, PlutotableState>(
+                              BlocBuilder<DashboardPipelineBloc,
+                                  DashboardPipelineState>(
                                 builder: (context, state) {
-                                  DateTime selectedDate = DateTime.now();
-                                  DateTime selectedMonth = DateTime(2024, 01);
-                                  String selectedPipeline = 'ECD';
-                                  if (state is FetchTableDataSuccess) {
-                                    selectedDate = state.selectedDate;
-                                    selectedMonth = state.selectedMonth;
-                                    selectedPipeline = state.selectedPipeline;
-                                  }
-                                  final pipelineItems = [
-                                    'ECD',
-                                    'Southwest Broker',
-                                  ];
-
-                                  // Ensure selectedPipeline is in the list
-                                  if (!pipelineItems
-                                      .contains(selectedPipeline)) {
-                                    selectedPipeline = pipelineItems.first;
-                                  }
-                                  return SizedBox(
-                                    width: UIHelpers.screenWidth(context),
-                                    child:
-                                        DashboardPipelineFilterDropdownWidget(
-                                      selectedValue: selectedPipeline,
-                                      items: pipelineItems,
-                                      onChanged: (String? value) {
-                                        if (value != null) {
-                                          BlocProvider.of<PlutotableBloc>(
-                                                  context,
-                                                  listen: false)
-                                              .add(
-                                            FilterPipelineEvent(selectedDate,
-                                                selectedMonth, value),
-                                          );
-                                        }
-                                      },
-                                      label: S.of(context).pipelineType,
+                                  if (state is DashboardPipelineLoading) {
+                                    return LoadingWidget(
                                       width:
                                           UIHelpers.screenWidth(context) * 0.18,
-                                    ),
-                                  );
+                                      height: UIHelpers.screenHeight(context) *
+                                          0.05,
+                                    );
+                                  } else if (state
+                                      is DashboardPipelineFailure) {
+                                    return Text(state.message);
+                                  } else if (state
+                                      is DashboardPipelineSuccess) {
+                                    Map<String, String> pipelineNameToIdMap = {
+                                      for (var item in state
+                                          .dashboardPipelineAttributeModel.data)
+                                        item.pipelineName: item.pipelineId,
+                                    };
+
+                                    List<String?> dropdownItems =
+                                        pipelineNameToIdMap.keys.toList();
+
+                                    return SizedBox(
+                                      width: UIHelpers.screenWidth(context),
+                                      child:
+                                          DashboardPipelineFilterDropdownWidget(
+                                        selectedValue:
+                                            state.selectedPipelineValue,
+                                        items: dropdownItems,
+                                        onChanged: (String? value) {
+                                          if (value != null) {
+                                            final selectedPipelineId =
+                                                pipelineNameToIdMap[value];
+
+                                            BlocProvider.of<PlutotableBloc>(
+                                                    context)
+                                                .add(
+                                              FetchTableDataEvent(
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth:
+                                                    state.selectedMonth,
+                                                selectedPipeline:
+                                                    selectedPipelineId,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        label: S.of(context).pipelineType,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.18,
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
                                 },
                               ),
+
                               BlocBuilder<DashboardBloc, DashboardState>(
                                 builder: (context, state) {
                                   if (state is DashboardDataLoading) {
@@ -863,51 +887,51 @@ class DashboardDesktopView extends StatelessWidget {
                           flex: 2,
                           child: Column(
                             children: [
-                              BlocBuilder<PlutotableBloc, PlutotableState>(
-                                builder: (context, state) {
-                                  DateTime selectedDate = DateTime.now();
-                                  DateTime selectedMonth = DateTime(2024, 01);
-                                  String selectedPipeline = 'ECD';
-                                  if (state is FetchTableDataSuccess) {
-                                    selectedDate = state.selectedDate;
-                                    selectedMonth = state.selectedMonth;
-                                    selectedPipeline = state.selectedPipeline;
-                                  }
-                                  final pipelineItems = [
-                                    'ECD',
-                                    'Southwest Broker',
-                                  ];
+                              // BlocBuilder<PlutotableBloc, PlutotableState>(
+                              //   builder: (context, state) {
+                              //     DateTime selectedDate = DateTime.now();
+                              //     DateTime selectedMonth = DateTime(2024, 01);
+                              //     String selectedPipeline = 'ECD';
+                              //     if (state is FetchTableDataSuccess) {
+                              //       selectedDate = state.selectedDate;
+                              //       selectedMonth = state.selectedMonth;
+                              //       selectedPipeline = state.selectedPipeline;
+                              //     }
+                              //     final pipelineItems = [
+                              //       'ECD',
+                              //       'Southwest Broker',
+                              //     ];
 
-                                  // Ensure selectedPipeline is in the list
-                                  if (!pipelineItems
-                                      .contains(selectedPipeline)) {
-                                    selectedPipeline = pipelineItems.first;
-                                  }
+                              //     // Ensure selectedPipeline is in the list
+                              //     if (!pipelineItems
+                              //         .contains(selectedPipeline)) {
+                              //       selectedPipeline = pipelineItems.first;
+                              //     }
 
-                                  return SizedBox(
-                                    width: UIHelpers.screenWidth(context),
-                                    child:
-                                        DashboardPipelineFilterDropdownWidget(
-                                      selectedValue: selectedPipeline,
-                                      items: pipelineItems,
-                                      onChanged: (String? value) {
-                                        if (value != null) {
-                                          BlocProvider.of<PlutotableBloc>(
-                                                  context,
-                                                  listen: false)
-                                              .add(
-                                            FilterPipelineEvent(selectedDate,
-                                                selectedMonth, value),
-                                          );
-                                        }
-                                      },
-                                      label: S.of(context).pipelineType,
-                                      width:
-                                          UIHelpers.screenWidth(context) * 0.18,
-                                    ),
-                                  );
-                                },
-                              ),
+                              //     return SizedBox(
+                              //       width: UIHelpers.screenWidth(context),
+                              //       child:
+                              //           DashboardPipelineFilterDropdownWidget(
+                              //         selectedValue: selectedPipeline,
+                              //         items: pipelineItems,
+                              //         onChanged: (String? value) {
+                              //           if (value != null) {
+                              //             // BlocProvider.of<PlutotableBloc>(
+                              //             //         context,
+                              //             //         listen: false)
+                              //             //     .add(
+                              //             //   FilterPipelineEvent(selectedDate,
+                              //             //       selectedMonth, value),
+                              //             // );
+                              //           }
+                              //         },
+                              //         label: S.of(context).pipelineType,
+                              //         width:
+                              //             UIHelpers.screenWidth(context) * 0.18,
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
                               BlocBuilder<AiQueryChartBloc, AiQueryChartState>(
                                 builder: (context, state) {
                                   if (state is AiQueryChartLoading) {

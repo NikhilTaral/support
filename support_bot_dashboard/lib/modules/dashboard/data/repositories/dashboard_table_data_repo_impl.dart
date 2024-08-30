@@ -27,7 +27,7 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
     }
 
     if(pipeline != null){
-      body['pipeline'] = '11257490';
+      body['pipeline'] = pipeline;
     }
 
     final encodedBody = jsonEncode(body);
