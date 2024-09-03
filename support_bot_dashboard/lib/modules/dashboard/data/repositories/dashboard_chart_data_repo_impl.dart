@@ -22,7 +22,7 @@ class DashboardChartDataRepoImpl extends DashboardChartDataRepository {
     }
 
     if(pipeline != null){
-      body['pipeline'] = '11257490';
+      body['pipeline'] = pipeline;
     }
 
     dynamic response;

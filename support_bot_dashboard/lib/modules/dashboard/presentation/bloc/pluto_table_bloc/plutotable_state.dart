@@ -10,10 +10,11 @@ class FetchTableDataSuccess extends PlutotableState {
   final DashboardTableAttributeModel tableData;
   final String selectedClassification;
   final String selectedValidation;
-  final DateTime selectedDate;
+  final DateTime? selectedDate;
   final DateTime selectedMonth;
   final bool noDataAvailable;
   final String selectedPipeline;
+  final String? ticketId;
 
   FetchTableDataSuccess({
     required this.tableData,
@@ -23,6 +24,7 @@ class FetchTableDataSuccess extends PlutotableState {
     required this.selectedValidation,
     required this.noDataAvailable,
     required this.selectedPipeline,
+    this.ticketId
   });
 }
 
@@ -77,7 +79,7 @@ class CustomSidebarLoaded extends PlutotableState {
 }
 
 final class RevertClassificationSuccessState extends PlutotableState {
-   final DateTime selectedDate;
+   final DateTime? selectedDate;
   final DateTime selectedMonth;
   final String selectedClassification;
   RevertClassificationSuccessState(this.selectedDate, this.selectedMonth, this.selectedClassification);
@@ -92,4 +94,10 @@ final class RevertClassificationFailureState extends PlutotableState {
   final String message;
 
   RevertClassificationFailureState({required this.message});
+}
+
+final class SearchFailureState extends PlutotableState{
+  final String message;
+
+  SearchFailureState({required this.message});
 }

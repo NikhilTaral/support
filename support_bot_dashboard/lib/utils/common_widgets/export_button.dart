@@ -25,7 +25,7 @@ class ExportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 25),
+      margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.only(right: 16),
       child: TextButton(
         onPressed: () async {

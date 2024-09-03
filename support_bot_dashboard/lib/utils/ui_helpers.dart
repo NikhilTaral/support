@@ -8,6 +8,7 @@ class UIHelpers {
   static Widget horizontalSpaceSmallRegular = const SizedBox(width: 20.0);
   static Widget horizontalSpaceMedium = const SizedBox(width: 30.0);
   static Widget horizontalSpaceLarge = const SizedBox(width: 35.0);
+   static Widget horizontalSpaceHuge = const SizedBox(width: 150.0);
 
   static Widget verticalSpaceTiny = const SizedBox(height: 5.0);
   static Widget verticalSpaceSmall = const SizedBox(height: 10.0);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
@@ -13,7 +14,7 @@ part 'plutotable_state.dart';
 
 class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
   DashboardTableAttributeModel? initialData;
-   bool isUpdatedToHubspot = false;
+  bool isUpdatedToHubspot = false;
   List<PlutoRow>? rows;
   PlutotableBloc() : super(PlutotableInitial()) {
     on<FetchTableDataEvent>(_onFetchTableDataEvent);
@@ -23,6 +24,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     on<FilterClassificationEvent>(_onFilterClassificationEvent);
     on<FilterValidationEvent>(_onFilterValidationEvent);
     on<RevertClassificationEvent>(_onRevertClassificationEvent);
+    on<SearchTableEvent>(_onSearchTableEvent);
   }
 
   FutureOr<void> _onFetchTableDataEvent(
@@ -30,13 +32,22 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     emit(FetchTableDataLoading());
     try {
       final repository = serviceLocator<DashboardTableDatausecase>();
-      final response =
-          await repository.invoke(event.selectedDate, event.selectedMonth,'11257490');
+      final response = await repository.invoke(
+          event.selectedDate,
+          event.selectedMonth,
+          event.selectedPipeline,
+          event.ticketId,
+          event.selectedClassification,
+          event.selectedClassificationValidation);
       if (response.isLeft) {
-        emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
+        emit(FetchTableDataError(
+            message: "Failed to fetch data",
+            selectedClassification: event.selectedClassification ?? "",
+            selectedValidation: event.selectedClassificationValidation ?? ""));
       } else {
-        final model = response.right;
-
+        //final model = response.right;
+        final model = DashboardPlutotableResponseModel.fromJson(
+            json.decode(response.right));
         if (model.success == true) {
           List<TableItem> items = (model.data?.items as List<Item>).map((item) {
             return TableItem(
@@ -74,7 +85,10 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         }
       }
     } catch (e) {
-      emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification ?? "", selectedValidation: event.selectedClassificationValidation ?? ""));
+      emit(FetchTableDataError(
+          message: "Exception occurred: $e",
+          selectedClassification: event.selectedClassification ?? "",
+          selectedValidation: event.selectedClassificationValidation ?? ""));
     }
   }
 
@@ -82,14 +96,18 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       SelectDateEvent event, Emitter<PlutotableState> emit) {
     emit(UpdateDateState(selectedDate: event.selectedDate));
     add(FetchTableDataEvent(
-        selectedDate: event.selectedDate, selectedMonth: DateTime(2024 - 01)));
+        selectedDate: event.selectedDate,
+        selectedMonth: DateTime(2024 - 01),
+        selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> _onSelectMonthEvent(
       SelectMonthEvent event, Emitter<PlutotableState> emit) {
     emit(UpdateMonthState(selectedMonth: event.selectedMonth));
     add(FetchTableDataEvent(
-        selectedDate: null, selectedMonth: event.selectedMonth));
+        selectedDate: null,
+        selectedMonth: event.selectedMonth,
+        selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> _onUpdateValidationEvent(
@@ -114,24 +132,31 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       emit(FetchTableDataSuccess(
           selectedClassification: "Select",
           tableData: initialData!,
-          selectedDate: event.selectedDate,
+          selectedDate: event.selectedDate ?? null,
           selectedMonth: event.selectedMonth,
           selectedValidation: 'Select',
           noDataAvailable: false,
           selectedPipeline: 'Select'));
     } else {
+      print(event.selectedDate);
       try {
-        final repository =
-            serviceLocator<DashboardFilterClassificationDatausecase>();
+        final repository = serviceLocator<DashboardTableDatausecase>();
         final response = await repository.invoke(
-            event.selectedDate,
-            event.selectedMonth,
-            event.selectedClassification,
-            event.selectedClassificationValidation,'11257490');
+          event.selectedDate,
+          event.selectedMonth,
+          event.pipeline ?? '11257490',
+          event.ticketId,
+          event.selectedClassification,
+          event.selectedClassificationValidation,
+        );
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
+          emit(FetchTableDataError(
+              message: "Failed to fetch data",
+              selectedClassification: event.selectedClassification,
+              selectedValidation: event.selectedClassificationValidation));
         } else {
-          final model = response.right;
+          final model = DashboardPlutotableResponseModel.fromJson(
+            json.decode(response.right));
           if (model.success == true) {
             List<TableItem> items =
                 (model.data?.items as List<Item>).map((item) {
@@ -149,6 +174,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                     item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
               );
             }).toList();
+            
             final tableData = DashboardTableAttributeModel(
               totalRecords: model.data?.totalRecords,
               items: items,
@@ -166,7 +192,10 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           }
         }
       } catch (e) {
-        emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
+        emit(FetchTableDataError(
+            message: "Exception occurred: $e",
+            selectedClassification: event.selectedClassification,
+            selectedValidation: event.selectedClassificationValidation));
       }
     }
   }
@@ -177,14 +206,22 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
 
     if (event.selectedClassificationValidation == 'Select') {
       if (event.selectedClassification != 'Select') {
-        final repository =
-            serviceLocator<DashboardFilterClassificationDatausecase>();
-        final response = await repository.invoke(event.selectedDate,
-            event.selectedMonth, event.selectedClassification, null, '11257490');
+        final repository = serviceLocator<DashboardTableDatausecase>();
+        final response = await repository.invoke(
+            event.selectedDate,
+            event.selectedMonth,
+            event.pipeline ?? '11257490',
+            event.ticketId,
+            event.selectedClassification,
+            null);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
+          emit(FetchTableDataError(
+              message: "Failed to fetch data",
+              selectedClassification: event.selectedClassification,
+              selectedValidation: event.selectedClassificationValidation));
         } else {
-          final model = response.right;
+          final model = DashboardPlutotableResponseModel.fromJson(
+            json.decode(response.right));
           if (model.success == true) {
             List<TableItem> items =
                 (model.data?.items as List<Item>).map((item) {
@@ -234,17 +271,22 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     } else {
       // both classification and validation filters
       try {
-        final repository =
-            serviceLocator<DashboardFilterClassificationDatausecase>();
+        final repository = serviceLocator<DashboardTableDatausecase>();
         final response = await repository.invoke(
             event.selectedDate,
             event.selectedMonth,
+            event.pipeline ?? '11257490',
+            event.ticketId,
             event.selectedClassification,
-            event.selectedClassificationValidation,'11257490');
+            event.selectedClassificationValidation);
         if (response.isLeft) {
-          emit(FetchTableDataError(message: "Failed to fetch data", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
+          emit(FetchTableDataError(
+              message: "Failed to fetch data",
+              selectedClassification: event.selectedClassification,
+              selectedValidation: event.selectedClassificationValidation));
         } else {
-          final model = response.right;
+          final model = DashboardPlutotableResponseModel.fromJson(
+            json.decode(response.right));
 
           if (model.success == true) {
             List<TableItem> items =
@@ -282,25 +324,86 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           }
         }
       } catch (e) {
-        emit(FetchTableDataError(message: "Exception occurred: $e", selectedClassification: event.selectedClassification, selectedValidation: event.selectedClassificationValidation));
+        emit(FetchTableDataError(
+            message: "Exception occurred: $e",
+            selectedClassification: event.selectedClassification,
+            selectedValidation: event.selectedClassificationValidation));
       }
     }
   }
 
-
-  FutureOr<void> _onRevertClassificationEvent(RevertClassificationEvent event, Emitter<PlutotableState> emit) async{
+  FutureOr<void> _onRevertClassificationEvent(
+      RevertClassificationEvent event, Emitter<PlutotableState> emit) async {
     emit(RevertClassificationLoadingState());
     try {
       if (isUpdatedToHubspot == false) {
         final repository = serviceLocator<RevertClassificationUsecase>();
-        await repository.invoke(event.ticketId);
-        print('success');
-        emit(RevertClassificationSuccessState(event.selectedDate,event.selectedMonth, event.selectedClassification));
+        await repository.invoke(event.ticketId ?? '');
+        emit(RevertClassificationSuccessState(event.selectedDate,
+            event.selectedMonth, event.selectedClassification));
       } else {
-        emit(RevertClassificationFailureState(message: 'Not updated to hubspot'));
+        emit(RevertClassificationFailureState(
+            message: 'Not updated to hubspot'));
       }
     } catch (e) {
       emit(RevertClassificationFailureState(message: 'Exception occurred: $e'));
+    }
+  }
+
+  FutureOr<void> _onSearchTableEvent(
+      SearchTableEvent event, Emitter<PlutotableState> emit) async {
+    emit(FetchTableDataLoading());
+    final repository = serviceLocator<DashboardTableDatausecase>();
+    final response = await repository.invoke(
+        event.selectDate,
+        event.selectMonth,
+        event.pipeline ?? '11257490',
+        event.ticketId,
+        event.classification,
+        event.classificationValidation);
+    try {
+      if (response.isLeft) {
+        emit(SearchFailureState(message: 'Failed to load'));
+      } else {
+        final model = dashboardPlutotableResponseModelFromJson(response.right);
+        if (model.success == true) {
+          List<TableItem> items = (model.data?.items as List<Item>).map((item) {
+            return TableItem(
+              id: item.id.s,
+              classification: item.classification.s,
+              hsPipelineStage: item.hsPipelineStage.s,
+              reasoning: item.reasoning.s,
+              createdAt: item.createdAt.s,
+              ticketDescription: item.ticketDescription.s,
+              classificationValidation: item.classificationValidation.s,
+              classificationValidationReason:
+                  item.classificationValidationReason.s,
+              isUpdatedToHubspot:
+                  item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
+            );
+          }).toList();
+
+          final tableData = DashboardTableAttributeModel(
+            totalRecords: model.data?.totalRecords,
+            items: items,
+          );
+
+          initialData = tableData;
+
+          emit(FetchTableDataSuccess(
+              selectedClassification: event.classification ?? "",
+              tableData: tableData,
+              selectedDate: event.selectDate ?? DateTime.now(),
+              selectedMonth: event.selectMonth ?? DateTime(2024, 01),
+              selectedValidation: event.classificationValidation ?? "",
+              noDataAvailable: items.isEmpty,
+              selectedPipeline: event.pipeline ?? ""));
+        } else {
+          emit(FetchTableDataEmpty());
+        }
+      }
+    } catch (e) {
+      emit(SearchFailureState(message: 'Exception: $e'));
     }
   }
 }

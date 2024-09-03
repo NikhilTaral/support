@@ -153,7 +153,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
                     'id': PlutoCell(value: item.id ?? "N/A"),
                     'ticketDescription':
                         PlutoCell(value: item.ticketDescription ?? "N/A"),
-                    'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answer" : "Not Answer"),
+                    'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answered" : "Not Answered"),
                     'aiQueryAnswer':
                         PlutoCell(value: item.aIResponse ?? "N/A"),
                     'actions': PlutoCell(value: 'View'),
@@ -319,7 +319,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                     const Divider(),
                     _buildDetailRow('Ticket Id :', id),
                     _buildDetailRow('Ticket Description :', description),
-                    _buildDetailRow('answeredStatus :', answeredStatus),
+                    _buildDetailRow('Answer Status :', answeredStatus),
                     if (isEditing)
                       _buildEditableRow(
                           'AI Query Answer :', aiQueryAnswerController)

@@ -115,10 +115,10 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
             data: aiQueryAnswerTableData,
             selectedDate: event.selectDate,
             selectedMonth: event.selectMonth, selectedClassification: event.selectedClassification, classification: event.selectedClassification == true
-                                                      ? 'Answer'
+                                                      ? 'Answered'
                                                       : event.selectedClassification ==
                                                               false
-                                                          ? 'Not Answer': 'Select'),);
+                                                          ? 'Not Answered': 'Select'),);
       }
     } catch (e) {
       emit(AiQUeryAnswerFailure(message: 'Exception occured $e'));

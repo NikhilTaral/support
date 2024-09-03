@@ -29,6 +29,11 @@ abstract class UseCaseFiveInput<Input, Input1, Input2, Input3, Input4, Output> {
       Input params, Input1 params1, Input2 params2, Input3 params3, Input4 params4);
 }
 
+abstract class UseCaseSixInput<Input, Input1, Input2, Input3, Input4, Input5, Output> {
+  Future<Either<Failure, Output>> invoke(
+      Input params, Input1 params1, Input2 params2, Input3 params3, Input4 params4, Input5 params5,);
+}
+
 class NoParams extends Equatable {
   @override
   List<Object> get props => [];
