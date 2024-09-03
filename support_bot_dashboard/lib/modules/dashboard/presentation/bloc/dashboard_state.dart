@@ -66,10 +66,12 @@ class DashboardDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? pieChartData;
   final DateTime selectedDate;
   final DateTime selectedMonth;
+  final String? selectedPipeline;
 
   DashboardDataSuccess({
     required this.pieChartData,
     required this.selectedDate,
     required this.selectedMonth,
+    this.selectedPipeline
   });
 }

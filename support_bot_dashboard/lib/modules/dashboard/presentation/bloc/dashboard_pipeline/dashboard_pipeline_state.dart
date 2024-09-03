@@ -7,16 +7,24 @@ class DashboardPipelineInitial extends DashboardPipelineState{}
 class DashboardPipelineLoading extends DashboardPipelineState{}
 
 class DashboardPipelineSuccess extends DashboardPipelineState{
-  final DashboardPipelineAttributeModel dashboardPipelineAttributeModel;
-  final String selectedPipelineValue;
+  final DashboardPipelineAttributeModel? dashboardPipelineAttributeModel;
+  final String? selectedPipelineValue;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
+    final int? index;
+       bool? isDropdownEnabled = true;
 
-  DashboardPipelineSuccess({required this.dashboardPipelineAttributeModel,required this.selectedPipelineValue, required this.selectedDate, required this.selectedMonth});
+  DashboardPipelineSuccess({ this.dashboardPipelineAttributeModel, this.selectedPipelineValue,  this.selectedDate,  this.selectedMonth, this.index,this.isDropdownEnabled, String? pipelineName});
 }
 
 class DashboardPipelineFailure extends DashboardPipelineState{
   final String message;
 
   DashboardPipelineFailure({required this.message});
+}
+
+class UpdatePipeline extends DashboardPipelineState{
+  final String? pipeline;
+
+  UpdatePipeline({required this.pipeline});
 }

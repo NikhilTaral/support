@@ -10,3 +10,13 @@ class FilterPipelineEvent extends DashboardPipelineEvent {
   FilterPipelineEvent(
       this.selectedDate, this.selectedMonth, this.selectedPipeline);
 }
+
+class UpdateSelectedPipelineEvent extends DashboardPipelineEvent {
+  final String? selectedPipelineValue;
+ final  DashboardPipelineAttributeModel? dashboardPipelineAttributeModel;
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+
+  UpdateSelectedPipelineEvent({this.selectedPipelineValue,this.dashboardPipelineAttributeModel,this.selectedDate,this.selectedMonth});
+}
+

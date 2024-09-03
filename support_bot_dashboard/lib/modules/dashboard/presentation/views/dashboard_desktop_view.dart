@@ -23,11 +23,15 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:support_bot_dashboard/config/environment/env_config.dart';
 
 class DashboardDesktopView extends StatelessWidget {
-  const DashboardDesktopView({Key? key}) : super(key: key);
+  DashboardDesktopView({Key? key}) : super(key: key);
+
+  final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +45,9 @@ class DashboardDesktopView extends StatelessWidget {
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
               FetchTableDataEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: DateTime(2024, 1),
-                selectedPipeline: '11257490'
-              ),
+                  selectedDate: DateTime.now(),
+                  selectedMonth: DateTime(2024, 1),
+                  selectedPipeline: '11257490'),
             ),
         ),
         BlocProvider(
@@ -230,8 +233,10 @@ class DashboardDesktopView extends StatelessWidget {
                                           builder: (context, state) {
                                             DateTime selectedDate =
                                                 DateTime.now();
+                                            String? pipeline = '';
                                             if (state is DashboardDataSuccess) {
                                               selectedDate = state.selectedDate;
+                                              pipeline = state.selectedPipeline;
                                             }
                                             return DateSelectionWidget(
                                               selectedDate: selectedDate,
@@ -244,17 +249,9 @@ class DashboardDesktopView extends StatelessWidget {
                                                 BlocProvider.of<PlutotableBloc>(
                                                         context)
                                                     .add(SelectDateEvent(
-                                                        selectedDate: newDate));
-                                                BlocProvider.of<
-                                                            AiQueryAnswerBloc>(
-                                                        context)
-                                                    .add(SelectedDateEvent(
-                                                        selectedDate: newDate));
-                                                BlocProvider.of<
-                                                            AiQueryChartBloc>(
-                                                        context)
-                                                    .add(SelectedChartDateEvent(
-                                                        selectedDate: newDate));
+                                                        selectedDate: newDate,
+                                                        selectedPipeline:
+                                                            pipeline));
                                               },
                                               label: S.of(context).day,
                                               isInteractive: true,
@@ -303,19 +300,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                       .add(SelectMonthEvent(
                                                           selectedMonth:
                                                               value));
-                                                  BlocProvider.of<
-                                                              AiQueryAnswerBloc>(
-                                                          context)
-                                                      .add(SelectedMonthEvent(
-                                                          selectedMonth:
-                                                              value));
-                                                  BlocProvider.of<
-                                                              AiQueryChartBloc>(
-                                                          context)
-                                                      .add(
-                                                          SelectedChartMonthEvent(
-                                                              selectedMonth:
-                                                                  value));
                                                 }
                                               },
                                               label: S.of(context).month,
@@ -370,7 +354,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                   S.of(context).classification,
                                               width: UIHelpers.screenWidth(
                                                       context) *
-                                                  0.14,
+                                                  0.13,
                                             );
                                           },
                                         ),
@@ -421,11 +405,116 @@ class DashboardDesktopView extends StatelessWidget {
                                               label: S.of(context).validation,
                                               width: UIHelpers.screenWidth(
                                                       context) *
-                                                  0.14,
+                                                  0.13,
                                             );
                                           },
                                         ),
                                         const Spacer(),
+                                        BlocBuilder<PlutotableBloc,
+                                            PlutotableState>(
+                                          builder: (context, state) {
+                                            DateTime date = DateTime.now();
+                                            DateTime month =
+                                                DateTime(2024 - 01);
+                                            if (state
+                                                is FetchTableDataSuccess) {
+                                              date = state.selectedDate;
+                                              month = state.selectedMonth;
+                                            }
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 20),
+                                              child:
+                                                  ValueListenableBuilder<bool>(
+                                                valueListenable: _isSearchOpen,
+                                                builder:
+                                                    (context, isOpen, child) {
+                                                  return Row(
+                                                    children: [
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                        height: UIHelpers
+                                                                .screenHeight(
+                                                                    context) *
+                                                            0.05,
+                                                        decoration: isOpen
+                                                            ? BoxDecoration(
+                                                                color:
+                                                                    SupportBotColors
+                                                                        .gray
+                                                                        .shade100,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8),
+                                                                border: Border.all(
+                                                                    color: SupportBotColors
+                                                                        .gray))
+                                                            : null,
+                                                        child: Row(
+                                                          children: [
+                                                            IconButton(
+                                                              icon: Icon(
+                                                                isOpen
+                                                                    ? Icons
+                                                                        .close
+                                                                    : Icons
+                                                                        .search,
+                                                                size: 23,
+                                                              ),
+                                                              onPressed: () {
+                                                                _isSearchOpen
+                                                                        .value =
+                                                                    !_isSearchOpen
+                                                                        .value;
+                                                              },
+                                                            ),
+                                                            if (isOpen)
+                                                              SizedBox(
+                                                                width: UIHelpers
+                                                                        .screenWidth(
+                                                                            context) *
+                                                                    0.12,
+                                                                child:
+                                                                    TextField(
+                                                                  controller:
+                                                                      _searchController,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    hintText:
+                                                                        'Search...',
+                                                                    border:
+                                                                        InputBorder
+                                                                            .none,
+                                                                  ),
+                                                                  onSubmitted:
+                                                                      (value) {
+                                                                    if (value
+                                                                        .isNotEmpty) {
+                                                                      BlocProvider.of<PlutotableBloc>(context).add(SearchTableEvent(
+                                                                          ticketId:
+                                                                              value,
+                                                                          selectDate:
+                                                                              date,
+                                                                          selectMonth:
+                                                                              month));
+                                                                    }
+                                                                  },
+                                                                ),
+                                                              ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
                                         Tooltip(
                                           message: S.of(context).export,
                                           child: const ExportButton(
@@ -452,15 +541,6 @@ class DashboardDesktopView extends StatelessWidget {
                                             return DateSelectionWidget(
                                               selectedDate: selectedDate,
                                               onChanged: (newDate) {
-                                                BlocProvider.of<DashboardBloc>(
-                                                        context)
-                                                    .add(
-                                                        UpdateSelectedDateEvent(
-                                                            newDate));
-                                                BlocProvider.of<PlutotableBloc>(
-                                                        context)
-                                                    .add(SelectDateEvent(
-                                                        selectedDate: newDate));
                                                 BlocProvider.of<
                                                             AiQueryAnswerBloc>(
                                                         context)
@@ -507,18 +587,6 @@ class DashboardDesktopView extends StatelessWidget {
                                               ],
                                               onChanged: (DateTime? value) {
                                                 if (value != null) {
-                                                  BlocProvider.of<
-                                                              DashboardBloc>(
-                                                          context)
-                                                      .add(
-                                                          UpdateSelectedMonthEvent(
-                                                              value));
-                                                  BlocProvider.of<
-                                                              PlutotableBloc>(
-                                                          context)
-                                                      .add(SelectMonthEvent(
-                                                          selectedMonth:
-                                                              value));
                                                   BlocProvider.of<
                                                               AiQueryAnswerBloc>(
                                                           context)
@@ -809,13 +877,13 @@ class DashboardDesktopView extends StatelessWidget {
                                       is DashboardPipelineSuccess) {
                                     Map<String, String> pipelineNameToIdMap = {
                                       for (var item in state
-                                          .dashboardPipelineAttributeModel.data)
+                                          .dashboardPipelineAttributeModel?.data ?? [])
                                         item.pipelineName: item.pipelineId,
                                     };
 
                                     List<String?> dropdownItems =
                                         pipelineNameToIdMap.keys.toList();
-
+                                         
                                     return SizedBox(
                                       width: UIHelpers.screenWidth(context),
                                       child:
@@ -827,7 +895,6 @@ class DashboardDesktopView extends StatelessWidget {
                                           if (value != null) {
                                             final selectedPipelineId =
                                                 pipelineNameToIdMap[value];
-
                                             BlocProvider.of<PlutotableBloc>(
                                                     context)
                                                 .add(
@@ -839,6 +906,15 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedPipeline:
                                                     selectedPipelineId,
                                               ),
+                                            );
+
+                                            BlocProvider.of<
+                                                        DashboardPipelineBloc>(
+                                                    context,listen: false)
+                                                .add(
+                                              UpdateSelectedPipelineEvent(
+
+                                                  selectedPipelineValue: value,),
                                             );
                                           }
                                         },
@@ -852,7 +928,6 @@ class DashboardDesktopView extends StatelessWidget {
                                   }
                                 },
                               ),
-
                               BlocBuilder<DashboardBloc, DashboardState>(
                                 builder: (context, state) {
                                   if (state is DashboardDataLoading) {

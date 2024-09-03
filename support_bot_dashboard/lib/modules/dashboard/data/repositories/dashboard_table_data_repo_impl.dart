@@ -10,7 +10,7 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
   @override
   Future<Either<Failure, dynamic>> getDashboardTableData(
-      {DateTime? selectedDate, DateTime? selectedMonth,  String? pipeline}) async {
+      {DateTime? selectedDate, DateTime? selectedMonth,  String? pipeline, String? ticketId}) async {
     final uri =
         Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
     
@@ -30,6 +30,10 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
       body['pipeline'] = pipeline;
     }
 
+    if(ticketId != null){
+      body['ticketId'] = ticketId;
+    }
+
     final encodedBody = jsonEncode(body);
 
     final response = await http.post(uri, headers: {
@@ -39,18 +43,12 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
     body: encodedBody);
 
     if (response.statusCode == 200) {
-      if (response.body.isNotEmpty) {
         try {
-          final Map<String, dynamic> jsonData = jsonDecode(response.body);
-
-          return Right(DashboardPlutotableResponseModel.fromJson(jsonData));
+          return Right(response.body);
         } catch (e) {
           return Left(
               ServerFailure(message: 'Failed to load dashboard table data'));
         }
-      } else {
-        return Left(ServerFailure(message: 'Empty response body'));
-      }
     } else {
       return Left(
           ServerFailure(message: 'Failed to load dashboard table data'));

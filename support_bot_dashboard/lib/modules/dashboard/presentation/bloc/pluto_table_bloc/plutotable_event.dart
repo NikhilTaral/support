@@ -19,8 +19,9 @@ class FetchTableDataEvent extends PlutotableEvent {
 
 class SelectDateEvent extends PlutotableEvent {
   final DateTime selectedDate;
+  final String? selectedPipeline;
 
-  SelectDateEvent({required this.selectedDate});
+  SelectDateEvent({required this.selectedDate, required this.selectedPipeline});
 }
 
 class SelectMonthEvent extends PlutotableEvent {
@@ -97,4 +98,15 @@ class RevertClassificationEvent extends PlutotableEvent {
    final String selectedClassification;
   String ticketId;
   RevertClassificationEvent({required this.selectedDate,required this.selectedMonth, required this.ticketId, required this.selectedClassification});
+}
+
+class SearchTableEvent extends PlutotableEvent{
+  final DateTime? selectDate;
+  final DateTime? selectMonth;
+  final String? classification;
+  final String? classificationValidation;
+  final String? pipeline;
+  final String? ticketId;
+
+  SearchTableEvent({required this.selectDate, required this.selectMonth, required this.ticketId,  this.pipeline,  this.classification,  this.classificationValidation});
 }

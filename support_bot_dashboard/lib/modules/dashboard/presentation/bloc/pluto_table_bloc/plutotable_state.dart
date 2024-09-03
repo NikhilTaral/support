@@ -93,3 +93,9 @@ final class RevertClassificationFailureState extends PlutotableState {
 
   RevertClassificationFailureState({required this.message});
 }
+
+final class SearchFailureState extends PlutotableState{
+  final String message;
+
+  SearchFailureState({required this.message});
+}
