@@ -10,11 +10,11 @@ class DashboardPipelineSuccess extends DashboardPipelineState{
   final DashboardPipelineAttributeModel? dashboardPipelineAttributeModel;
   final String? selectedPipelineValue;
   final DateTime? selectedDate;
-  final DateTime? selectedMonth;
+  final DateTime selectedMonth;
     final int? index;
        bool? isDropdownEnabled = true;
 
-  DashboardPipelineSuccess({ this.dashboardPipelineAttributeModel, this.selectedPipelineValue,  this.selectedDate,  this.selectedMonth, this.index,this.isDropdownEnabled, String? pipelineName});
+  DashboardPipelineSuccess({ this.dashboardPipelineAttributeModel, this.selectedPipelineValue,required  this.selectedDate, required this.selectedMonth, this.index,this.isDropdownEnabled, String? pipelineName});
 }
 
 class DashboardPipelineFailure extends DashboardPipelineState{

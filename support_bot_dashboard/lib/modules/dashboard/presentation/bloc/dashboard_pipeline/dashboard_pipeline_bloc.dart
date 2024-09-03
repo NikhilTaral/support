@@ -25,10 +25,8 @@ class DashboardPipelineBloc
       emit(DashboardPipelineFailure(message: 'Failed to fetch'));
     } else {
       try {
-        print('print 1');
         final model = DashboardPipelineResponseModel.fromJson(
             json.decode(response.right));
-        print('print 2');
         dashboardPipelineAttributeModel = DashboardPipelineAttributeModel(
             data: model.data
                 .map((p) => PipelineAttribute(
@@ -38,9 +36,8 @@ class DashboardPipelineBloc
             dashboardPipelineAttributeModel: dashboardPipelineAttributeModel,
             selectedPipelineValue: event.selectedPipeline,
             selectedDate: event.selectedDate,
-            selectedMonth: event.selectedMonth));
+            selectedMonth: event.selectedMonth ?? DateTime(2024-01)));
       } catch (e) {
-        print(e);
         emit(DashboardPipelineFailure(message: 'Exception $e'));
       }
     }

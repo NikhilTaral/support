@@ -68,7 +68,7 @@ Future<void> initServiceLocator() async {
       () => DashboardChartDataRepoImpl());
   serviceLocator.registerLazySingleton<DashboardValidationRepository>(
       () => DashboardValidationRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardFilterClassificationDataRepository>(()=> DashboardFIlterClassificationRepoImpl());
+  // serviceLocator.registerLazySingleton<DashboardFilterClassificationDataRepository>(()=> DashboardFIlterClassificationRepoImpl());
   serviceLocator.registerLazySingleton<DashboardAiQueryRepository>(()=> DashboardAiQueryRepoImpl());
   serviceLocator.registerLazySingleton<DashboardAiQueryChartDataRepository>(()=> DashboardAiQueryChartRepoImpl());
   serviceLocator.registerLazySingleton<FilterAiQueryAnswerRepository>(()=> DashboardAiQueryFilterClassificationRepoImpl());
@@ -80,9 +80,9 @@ Future<void> initServiceLocator() async {
       () => DashboardChartdataUsecase());
   serviceLocator.registerLazySingleton<DashboardValidationUsecase>(
       () => DashboardValidationUsecase());
-  serviceLocator.registerLazySingleton<DashboardFilterClassificationDatausecase>(
-      () => DashboardFilterClassificationDatausecase());
-  serviceLocator.registerLazySingleton<DashboardFilterClassificationValidationDatausecase>(()=> DashboardFilterClassificationValidationDatausecase());
+  // serviceLocator.registerLazySingleton<DashboardFilterClassificationDatausecase>(
+  //     () => DashboardFilterClassificationDatausecase());
+  // serviceLocator.registerLazySingleton<DashboardFilterClassificationValidationDatausecase>(()=> DashboardFilterClassificationValidationDatausecase());
   serviceLocator.registerLazySingleton<DashboardAiQueryUsecase>(()=> DashboardAiQueryUsecase());
   serviceLocator.registerLazySingleton<DashboardAiQueryChartUsecase>(()=>DashboardAiQueryChartUsecase());
   serviceLocator.registerLazySingleton<DashboardFilterAiQueryUsecase>(()=>DashboardFilterAiQueryUsecase());

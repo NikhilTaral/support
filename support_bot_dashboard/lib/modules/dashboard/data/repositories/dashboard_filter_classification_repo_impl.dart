@@ -1,72 +1,72 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:either_dart/either.dart';
-import 'package:support_bot_dashboard/config/environment/env_config.dart';
-import 'package:support_bot_dashboard/core/prerequisites/api_prerequisites.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
-import 'package:support_bot_dashboard/utils/service/failure.dart';
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'package:either_dart/either.dart';
+// import 'package:support_bot_dashboard/config/environment/env_config.dart';
+// import 'package:support_bot_dashboard/core/prerequisites/api_prerequisites.dart';
+// import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
+// import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
+// import 'package:support_bot_dashboard/utils/service/failure.dart';
 
-class DashboardFIlterClassificationRepoImpl
-    extends DashboardFilterClassificationDataRepository {
-  @override
-  Future<Either<Failure, dynamic>> getDashboardClassificationData(
-      {DateTime? selectedDate,
-      DateTime? selectedMonth,
-      String? classification,
-      String? classificationValidation,
-       String? pipeline}) async {
-    final uri =
-        Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': "${await getToken()}",
-    };
+// class DashboardFIlterClassificationRepoImpl
+//     extends DashboardFilterClassificationDataRepository {
+//   @override
+//   Future<Either<Failure, dynamic>> getDashboardClassificationData(
+//       {DateTime? selectedDate,
+//       DateTime? selectedMonth,
+//       String? classification,
+//       String? classificationValidation,
+//        String? pipeline}) async {
+//     final uri =
+//         Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
+//     final headers = {
+//       'Content-Type': 'application/json',
+//       'Authorization': "${await getToken()}",
+//     };
 
-    Map<String, dynamic> body = {};
+//     Map<String, dynamic> body = {};
 
-    if (selectedDate != null) {
-      body['day'] = selectedDate.toIso8601String().substring(0, 10);
-    }
+//     if (selectedDate != null) {
+//       body['day'] = selectedDate.toIso8601String().substring(0, 10);
+//     }
 
-    if (selectedMonth != null) {
-      body['month'] =
-          '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
-    }
+//     if (selectedMonth != null) {
+//       body['month'] =
+//           '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
+//     }
 
-    if (classification != null && classification.isNotEmpty) {
-      body['classification'] = classification;
-    }
+//     if (classification != null && classification.isNotEmpty) {
+//       body['classification'] = classification;
+//     }
 
-    if (classificationValidation != null &&
-        classificationValidation.isNotEmpty) {
-      body['classificationValidation'] = classificationValidation;
-    }
+//     if (classificationValidation != null &&
+//         classificationValidation.isNotEmpty) {
+//       body['classificationValidation'] = classificationValidation;
+//     }
 
-    if(pipeline != null){
-      body['pipeline'] = '11257490';
-    }
+//     if(pipeline != null){
+//       body['pipeline'] = '11257490';
+//     }
 
-    final encodedBody = jsonEncode(body);
+//     final encodedBody = jsonEncode(body);
 
-    final response = await http.post(uri, headers: headers, body: encodedBody);
+//     final response = await http.post(uri, headers: headers, body: encodedBody);
 
-    if (response.statusCode == 200) {
-      if (response.body.isNotEmpty) {
-        try {
-          final Map<String, dynamic> jsonData = jsonDecode(response.body);
+//     if (response.statusCode == 200) {
+//       if (response.body.isNotEmpty) {
+//         try {
+//           final Map<String, dynamic> jsonData = jsonDecode(response.body);
 
-          return Right(DashboardPlutotableResponseModel.fromJson(jsonData));
-        } catch (e) {
-          return Left(
-              ServerFailure(message: 'Failed to load dashboard table data'));
-        }
-      } else {
-        return Left(ServerFailure(message: 'Empty response body'));
-      }
-    } else {
-      return Left(
-          ServerFailure(message: 'Failed to load dashboard table data'));
-    }
-  }
-}
+//           return Right(DashboardPlutotableResponseModel.fromJson(jsonData));
+//         } catch (e) {
+//           return Left(
+//               ServerFailure(message: 'Failed to load dashboard table data'));
+//         }
+//       } else {
+//         return Left(ServerFailure(message: 'Empty response body'));
+//       }
+//     } else {
+//       return Left(
+//           ServerFailure(message: 'Failed to load dashboard table data'));
+//     }
+//   }
+// }

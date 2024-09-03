@@ -33,13 +33,16 @@ class DashboardDesktopView extends StatelessWidget {
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
   final TextEditingController _searchController = TextEditingController();
 
+  String? pipeline = '11257490';
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(DateTime.now(), null, null)),
+            ..add(FetchDashboardDataEvent(
+                DateTime.now(), DateTime(2024 - 01), pipeline)),
         ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
@@ -47,7 +50,7 @@ class DashboardDesktopView extends StatelessWidget {
               FetchTableDataEvent(
                   selectedDate: DateTime.now(),
                   selectedMonth: DateTime(2024, 1),
-                  selectedPipeline: '11257490'),
+                  selectedPipeline: pipeline),
             ),
         ),
         BlocProvider(
@@ -82,7 +85,7 @@ class DashboardDesktopView extends StatelessWidget {
         BlocProvider(
             create: (context) => serviceLocator<DashboardPipelineBloc>()
               ..add(FilterPipelineEvent(
-                  DateTime.now(), DateTime.now(), 'Expert Care Level 1')))
+                  DateTime.now(), null, 'Expert Care Level 1')))
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -233,10 +236,11 @@ class DashboardDesktopView extends StatelessWidget {
                                           builder: (context, state) {
                                             DateTime selectedDate =
                                                 DateTime.now();
-                                            String? pipeline = '';
+                                           // String pipeline = '11257490';
                                             if (state is DashboardDataSuccess) {
                                               selectedDate = state.selectedDate;
-                                              pipeline = state.selectedPipeline;
+                                              pipeline =
+                                                  state.selectedPipeline;
                                             }
                                             return DateSelectionWidget(
                                               selectedDate: selectedDate,
@@ -245,7 +249,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                         context)
                                                     .add(
                                                         UpdateSelectedDateEvent(
-                                                            newDate));
+                                                            newDate, pipeline));
                                                 BlocProvider.of<PlutotableBloc>(
                                                         context)
                                                     .add(SelectDateEvent(
@@ -266,12 +270,22 @@ class DashboardDesktopView extends StatelessWidget {
                                           builder: (context, state) {
                                             DateTime selectedMonth =
                                                 DateTime(2024, 1);
+                                            String selectedMonthString =
+                                                "January";
+                                         //   String pipeline = '11257490';
+
                                             if (state is DashboardDataSuccess) {
                                               selectedMonth =
                                                   state.selectedMonth;
+                                              selectedMonthString =
+                                                  _monthToString(
+                                                      selectedMonth.month);
+                                              pipeline =
+                                                  state.selectedPipeline;
                                             }
                                             return CustomMonthDropdown(
-                                              selectedValue: selectedMonth,
+                                              selectedValue:
+                                                  selectedMonthString,
                                               items: const [
                                                 'January',
                                                 'February',
@@ -286,20 +300,25 @@ class DashboardDesktopView extends StatelessWidget {
                                                 'November',
                                                 'December'
                                               ],
-                                              onChanged: (DateTime? value) {
+                                              onChanged: (String? value) {
                                                 if (value != null) {
+                                                  DateTime monthDateTime =
+                                                      _stringToMonth(value);
                                                   BlocProvider.of<
                                                               DashboardBloc>(
                                                           context)
                                                       .add(
                                                           UpdateSelectedMonthEvent(
-                                                              value));
+                                                              monthDateTime,
+                                                              pipeline));
                                                   BlocProvider.of<
                                                               PlutotableBloc>(
                                                           context)
                                                       .add(SelectMonthEvent(
                                                           selectedMonth:
-                                                              value));
+                                                              monthDateTime,
+                                                          selectedPipeline:
+                                                              pipeline));
                                                 }
                                               },
                                               label: S.of(context).month,
@@ -312,19 +331,24 @@ class DashboardDesktopView extends StatelessWidget {
                                         BlocBuilder<PlutotableBloc,
                                             PlutotableState>(
                                           builder: (context, state) {
-                                            DateTime selectedDate =
-                                                DateTime.now();
+                                            DateTime? selectedDate;
                                             DateTime selectedMonth =
                                                 DateTime(2024, 01);
                                             String selectedClassification = '';
+                                           // String? pipeline = '11257490';
+                                            String? ticketId ='';
                                             if (state
                                                 is FetchTableDataSuccess) {
+                                                   print(state.selectedDate);
                                               selectedDate = state.selectedDate;
                                               selectedMonth =
                                                   state.selectedMonth;
                                               selectedClassification =
                                                   state.selectedClassification;
+                                              pipeline = state.selectedPipeline;
+                                              ticketId = state.ticketId;
                                             }
+                                           
                                             final classificationItems = [
                                               'Select',
                                               'Spam/Marketing',
@@ -344,10 +368,10 @@ class DashboardDesktopView extends StatelessWidget {
                                                           listen: false)
                                                       .add(
                                                           FilterClassificationEvent(
-                                                              selectedDate,
+                                                              selectedDate ?? null,
                                                               selectedMonth,
                                                               value,
-                                                              ""));
+                                                              "",pipeline,ticketId));
                                                 }
                                               },
                                               label:
@@ -364,15 +388,17 @@ class DashboardDesktopView extends StatelessWidget {
                                         BlocBuilder<PlutotableBloc,
                                             PlutotableState>(
                                           builder: (context, state) {
-                                            DateTime selectedDate =
+                                            DateTime? selectedDate =
                                                 DateTime.now();
                                             DateTime selectedMonth =
                                                 DateTime(2024, 01);
                                             String selectedClassification = '';
                                             String selectedValidation = '';
+                                            // String? pipeline = '11257490';
+                                            String? ticketId ='';
                                             if (state
                                                 is FetchTableDataSuccess) {
-                                              selectedDate = state.selectedDate;
+                                              selectedDate = state.selectedDate ?? null;
                                               selectedMonth =
                                                   state.selectedMonth;
                                               selectedClassification =
@@ -397,9 +423,9 @@ class DashboardDesktopView extends StatelessWidget {
                                                           listen: false)
                                                       .add(FilterValidationEvent(
                                                           value,
-                                                          selectedDate,
+                                                          selectedDate ?? null,
                                                           selectedMonth,
-                                                          selectedClassification));
+                                                          selectedClassification,pipeline,ticketId));
                                                 }
                                               },
                                               label: S.of(context).validation,
@@ -413,12 +439,11 @@ class DashboardDesktopView extends StatelessWidget {
                                         BlocBuilder<PlutotableBloc,
                                             PlutotableState>(
                                           builder: (context, state) {
-                                            DateTime date = DateTime.now();
-                                            DateTime month =
-                                                DateTime(2024 - 01);
+                                            DateTime? date = DateTime.now();
+                                            DateTime month = DateTime(2024, 01);
                                             if (state
                                                 is FetchTableDataSuccess) {
-                                              date = state.selectedDate;
+                                              date = state.selectedDate ?? null;
                                               month = state.selectedMonth;
                                             }
                                             return Padding(
@@ -452,7 +477,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                                             8),
                                                                 border: Border.all(
                                                                     color: SupportBotColors
-                                                                        .gray))
+                                                                        .gray),
+                                                              )
                                                             : null,
                                                         child: Row(
                                                           children: [
@@ -477,7 +503,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                                 width: UIHelpers
                                                                         .screenWidth(
                                                                             context) *
-                                                                    0.12,
+                                                                    0.1,
                                                                 child:
                                                                     TextField(
                                                                   controller:
@@ -489,18 +515,25 @@ class DashboardDesktopView extends StatelessWidget {
                                                                     border:
                                                                         InputBorder
                                                                             .none,
+                                                                    isDense:
+                                                                        true,
                                                                   ),
                                                                   onSubmitted:
                                                                       (value) {
                                                                     if (value
                                                                         .isNotEmpty) {
-                                                                      BlocProvider.of<PlutotableBloc>(context).add(SearchTableEvent(
+                                                                      BlocProvider.of<PlutotableBloc>(
+                                                                              context)
+                                                                          .add(
+                                                                        SearchTableEvent(
                                                                           ticketId:
                                                                               value,
                                                                           selectDate:
                                                                               date,
                                                                           selectMonth:
-                                                                              month));
+                                                                              month,
+                                                                        ),
+                                                                      );
                                                                     }
                                                                   },
                                                                 ),
@@ -557,55 +590,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             );
                                           },
                                         ),
-                                        const SizedBox(width: 10),
-
-                                        // Month dropdown
-                                        BlocBuilder<DashboardBloc,
-                                            DashboardState>(
-                                          builder: (context, state) {
-                                            DateTime selectedMonth =
-                                                DateTime(2024, 1);
-                                            if (state is DashboardDataSuccess) {
-                                              selectedMonth =
-                                                  state.selectedMonth;
-                                            }
-                                            return CustomMonthDropdown(
-                                              selectedValue: selectedMonth,
-                                              items: const [
-                                                'January',
-                                                'February',
-                                                'March',
-                                                'April',
-                                                'May',
-                                                'June',
-                                                'July',
-                                                'August',
-                                                'September',
-                                                'October',
-                                                'November',
-                                                'December'
-                                              ],
-                                              onChanged: (DateTime? value) {
-                                                if (value != null) {
-                                                  BlocProvider.of<
-                                                              AiQueryAnswerBloc>(
-                                                          context)
-                                                      .add(SelectedMonthEvent(
-                                                          selectedMonth:
-                                                              value));
-                                                  BlocProvider.of<
-                                                              AiQueryChartBloc>(
-                                                          context)
-                                                      .add(
-                                                          SelectedChartMonthEvent(
-                                                              selectedMonth:
-                                                                  value));
-                                                }
-                                              },
-                                              label: S.of(context).month,
-                                            );
-                                          },
-                                        ),
+                                        
                                         UIHelpers.horizontalSpaceSmall,
                                         // Classification dropdown
                                         BlocBuilder<AiQueryAnswerBloc,
@@ -630,10 +615,9 @@ class DashboardDesktopView extends StatelessWidget {
 
                                             final classificationItems = [
                                               'Select',
-                                              'Answer',
-                                              'Not Answer'
+                                              'Answered',
+                                              'Not Answered'
                                             ];
-                                            print(classification);
                                             return CustomFilterDropdown(
                                               selectedValue:
                                                   classification ?? 'Select',
@@ -641,10 +625,10 @@ class DashboardDesktopView extends StatelessWidget {
                                               onChanged: (String? value) {
                                                 if (value != null) {
                                                   bool? isAnswer;
-                                                  if (value == 'Answer') {
+                                                  if (value == 'Answered') {
                                                     isAnswer = true;
                                                   } else if (value ==
-                                                      'Not Answer') {
+                                                      'Not Answered') {
                                                     isAnswer = false;
                                                   } else {
                                                     isAnswer = null;
@@ -783,7 +767,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       }
                                       return TicketClassificationTableWidget(
                                         tableData: state.tableData,
-                                        selectedDate: state.selectedDate,
+                                        selectedDate: state.selectedDate ?? null,
                                         selectedMonth: state.selectedMonth,
                                       );
                                     } else if (state is FetchTableDataError) {
@@ -802,7 +786,6 @@ class DashboardDesktopView extends StatelessWidget {
                                 return BlocConsumer<AiQueryAnswerBloc,
                                         AiQueryAnswerState>(
                                     listener: (context, state) {
-                                  print(state);
                                   if (state is UpdateAiAnswerSuccessState) {
                                     context.read<AiQueryAnswerBloc>().add(
                                         FetchAiQueryAnswerEvent(
@@ -866,30 +849,40 @@ class DashboardDesktopView extends StatelessWidget {
                                   if (state is DashboardPipelineLoading) {
                                     return LoadingWidget(
                                       width:
-                                          UIHelpers.screenWidth(context) * 0.18,
+                                          UIHelpers.screenWidth(context) * 0.19,
                                       height: UIHelpers.screenHeight(context) *
                                           0.05,
+                                      radius: 8,
                                     );
                                   } else if (state
                                       is DashboardPipelineFailure) {
                                     return Text(state.message);
                                   } else if (state
                                       is DashboardPipelineSuccess) {
+                                    DateTime selectedMonth = state
+                                        .selectedMonth; 
+                                    DateTime? selectedDate = state.selectedDate;
+                                    String selectedMonthString = _monthToString(
+                                        selectedMonth
+                                            .month); 
+                                    pipeline = state.selectedPipelineValue;
                                     Map<String, String> pipelineNameToIdMap = {
                                       for (var item in state
-                                          .dashboardPipelineAttributeModel?.data ?? [])
+                                              .dashboardPipelineAttributeModel
+                                              ?.data ??
+                                          [])
                                         item.pipelineName: item.pipelineId,
                                     };
 
                                     List<String?> dropdownItems =
                                         pipelineNameToIdMap.keys.toList();
-                                         
+
                                     return SizedBox(
                                       width: UIHelpers.screenWidth(context),
                                       child:
                                           DashboardPipelineFilterDropdownWidget(
                                         selectedValue:
-                                            state.selectedPipelineValue,
+                                            pipeline,
                                         items: dropdownItems,
                                         onChanged: (String? value) {
                                           if (value != null) {
@@ -901,20 +894,29 @@ class DashboardDesktopView extends StatelessWidget {
                                               FetchTableDataEvent(
                                                 selectedDate:
                                                     state.selectedDate,
-                                                selectedMonth:
-                                                    state.selectedMonth,
+                                                selectedMonth: selectedMonth,
                                                 selectedPipeline:
                                                     selectedPipelineId,
                                               ),
                                             );
 
+                                            BlocProvider.of<DashboardBloc>(
+                                                    context)
+                                                .add(FetchDashboardDataEvent(
+                                                    state.selectedDate,
+                                                    selectedMonth,
+                                                    selectedPipelineId));
+
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(
-                                                    context,listen: false)
+                                                    context,
+                                                    listen: false)
                                                 .add(
                                               UpdateSelectedPipelineEvent(
-
-                                                  selectedPipelineValue: value,),
+                                                selectedDate: selectedDate,
+                                                selectedMonth: selectedMonth,
+                                                selectedPipelineValue: value,
+                                              ),
                                             );
                                           }
                                         },
@@ -1049,5 +1051,44 @@ class DashboardDesktopView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Helper function to convert month index to string
+  String _monthToString(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    return months[month - 1]; // Month is 1-indexed
+  }
+
+// Helper function to convert string month to DateTime
+  DateTime _stringToMonth(String month) {
+    const months = {
+      'January': 1,
+      'February': 2,
+      'March': 3,
+      'April': 4,
+      'May': 5,
+      'June': 6,
+      'July': 7,
+      'August': 8,
+      'September': 9,
+      'October': 10,
+      'November': 11,
+      'December': 12
+    };
+    return DateTime(
+        2024, months[month]!); // Replace 2024 with the year you want
   }
 }

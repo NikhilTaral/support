@@ -18,25 +18,23 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
     emit(DateUpdatedState(event.selectedDate));
-    add(FetchDashboardDataEvent(event.selectedDate, DateTime(2024, 1), null));
+    add(FetchDashboardDataEvent(event.selectedDate, DateTime(2024, 1), event.selectedPipeline));
   }
 
   Future<void> _onUpdateSelectedMonthEvent(
       UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async {
     emit(MonthUpdatedState(event.selectedMonth));
-    print(event.selectedMonth);
-    add(FetchDashboardDataEvent(null, event.selectedMonth, null));
+    print(event.selectedPipeline);
+    add(FetchDashboardDataEvent(null, event.selectedMonth, event.selectedPipeline));
   }
 
   Future<void> _onFetchDashboardData(
       FetchDashboardDataEvent event, Emitter<DashboardState> emit) async {
     emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardChartdataUsecase>();
-
-    // Fetch both count data and pie chart data
     final response =
-        await repository.invoke(event.selectedDate, event.selectedMonth,'11257490');
-
+        await repository.invoke(event.selectedDate, event.selectedMonth,event.selectedPipeline);
+    print(event.selectedMonth);
     if (response.isLeft) {
       emit(DashboardDataError(
         message: "Failed to fetch data",
@@ -55,7 +53,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             spamMarketing: model.data?.spamMarketing ?? 0,
             acknowledgement: model.data?.acknowledgement ?? 0,
           );
-
+          
           emit(DashboardDataSuccess(
             pieChartData: dashboardChartData,
             selectedDate: event.selectedDate ?? DateTime.now(),

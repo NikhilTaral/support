@@ -1,8 +1,6 @@
-import 'package:either_dart/src/either.dart';
+import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/config/environment/env_config.dart';
-import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/core/prerequisites/api_prerequisites.dart';
-import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_pipeline_repository.dart';
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:http/http.dart' as http;
