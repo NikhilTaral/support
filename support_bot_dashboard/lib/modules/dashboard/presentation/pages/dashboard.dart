@@ -4,15 +4,17 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashb
 import 'package:support_bot_dashboard/responsive.dart';
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+   Dashboard({super.key});
+  String pipeline = '11257490';
+  String selectedPipelineId = '11257490';
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Responsive(
         mobile: DashboardMobileView(),
-        tablet: DashboardDesktopView(),
-        desktop: DashboardDesktopView(),
+        tablet: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId,),
+        desktop: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId,),
       ),
     );
   }

@@ -17,11 +17,11 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: UIHelpers.screenWidth(context) / 5.6,
-      height: UIHelpers.screenHeight(context) / 18,
+      width: UIHelpers.screenWidth(context) * 0.2,
+      height: UIHelpers.screenHeight(context) * 0.06,
       child: Container(
         margin: const EdgeInsets.only(left: 20, top: 3),
-        width: MediaQuery.of(context).size.width / 4,
+        width: UIHelpers.screenWidth(context) * 0.4,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(

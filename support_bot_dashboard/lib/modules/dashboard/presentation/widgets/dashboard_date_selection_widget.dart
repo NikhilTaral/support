@@ -4,7 +4,7 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DateSelectionWidget extends StatelessWidget {
-  final DateTime selectedDate;
+  final DateTime? selectedDate;
   final ValueChanged<DateTime> onChanged;
   final String label;
   final bool isInteractive;
@@ -30,14 +30,14 @@ class DateSelectionWidget extends StatelessWidget {
             padding:
                 const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
             margin: const EdgeInsets.only(top: 20, left: 25, right: 1),
-            height: UIHelpers.screenHeight(context) / 18,
-            width: UIHelpers.screenWidth(context) / 7,
+            height: UIHelpers.screenHeight(context) * 0.05,
+            width: UIHelpers.screenWidth(context) * 0.13,
             child: GestureDetector(
               onTap: isInteractive
                   ? () async {
                       final DateTime? picked = await showDatePicker(
                         context: context,
-                        initialDate: selectedDate,
+                        initialDate: selectedDate ?? DateTime.now(),
                         firstDate: DateTime(2000),
                         lastDate: DateTime.now(),
                       );
@@ -51,9 +51,7 @@ class DateSelectionWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      selectedDate != DateTime.now()
-                          ? selectedDate.toIso8601String().substring(0, 10)
-                          : 'Select date',
+                      selectedDate?.toIso8601String().substring(0, 10) ?? 'Select date',
                       style: SupportBotTextstyle.dateText,
                       overflow: TextOverflow.clip,
                     ),

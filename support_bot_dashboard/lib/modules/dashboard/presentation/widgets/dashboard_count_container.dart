@@ -17,7 +17,7 @@ class CountContainer extends StatelessWidget {
     return Flexible(
       child: Container(
         margin: const EdgeInsets.only(left: 20),
-        height: UIHelpers.screenHeight(context) / 6,
+        height: UIHelpers.screenHeight(context) * 0.17,
         decoration: BoxDecoration(
             color: SupportBotColors.bluePrimary.shade400,
             borderRadius: BorderRadius.circular(8)),

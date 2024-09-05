@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/alert_style.dart';
-import 'package:support_bot_dashboard/utils/ui_helpers.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
-class FailureWidget extends StatelessWidget {
+class FailureWidget extends StatefulWidget {
+  final double width, height, radius;
+  final Color color;
+  final BorderRadius? borderRadius;
+  final Color? textColor;
+
   const FailureWidget({
     super.key,
-    required this.onTap,
+    required this.width,
+    required this.height,
+    this.radius = 5,
+    this.borderRadius,
+    required this.color,
+    this.textColor = SupportBotColors.black,
   });
 
-  final VoidCallback onTap;
+  @override
+  State<FailureWidget> createState() => _FailureWidgetState();
+}
 
+class _FailureWidgetState extends State<FailureWidget> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: UIHelpers.screenHeight(context) * 0.48,
-      child: Scaffold(
-        body: InkWell(
-          onTap: onTap,
-          child: AIAlert.style(
-            style: AIAlertStyle.danger,
-            title: "Oops!",
-            message:
-                "There was an error retrieving this resource. Click here to try again.",
-            titleTextStyle: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.radius),
+          color: widget.color),
+      child: Center(
+        child: Text(
+          "OOPS!! Something Went Wrong..",
+          style: TextStyle(color: widget.textColor),
         ),
       ),
     );
