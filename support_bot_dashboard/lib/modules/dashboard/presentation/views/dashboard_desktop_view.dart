@@ -23,12 +23,13 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
-  DashboardDesktopView({Key? key, required this.pipeline}) : super(key: key);
+  DashboardDesktopView({Key? key, required this.pipeline, required this.selectedPipelineId}) : super(key: key);
 
   late String pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
   String selectedClassification = '';
+  late String selectedPipelineId;
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +188,7 @@ class DashboardDesktopView extends StatelessWidget {
                                               selectedDate: state.selectedDate,
                                               selectedMonth:
                                                   state.selectedMonth,
+                                              selectedPipeline: selectedPipelineId
                                             ),
                                           );
                                     } else if (state
@@ -194,8 +196,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         state is UpdateValidationError) {
                                       context.read<PlutotableBloc>().add(
                                             FetchTableDataEvent(
-                                              selectedDate: null,
+                                              selectedDate: DateTime.now(),
                                               selectedMonth: null,
+                                              selectedPipeline: selectedPipelineId
                                             ),
                                           );
                                       Navigator.of(context).pop();
@@ -207,6 +210,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                     state.selectedDate,
                                                 selectedMonth:
                                                     state.selectedMonth,
+                                                selectedPipeline: selectedPipelineId,
                                                 selectedClassification: state
                                                     .selectedClassification),
                                           );
@@ -271,6 +275,7 @@ class DashboardDesktopView extends StatelessWidget {
                                         selectedDate:
                                             state.selectedDate ?? null,
                                         selectedMonth: state.selectedMonth,
+                                        pipeline: pipeline,
                                       );
                                     } else if (state is FetchTableDataError) {
                                       return SizedBox(
@@ -393,8 +398,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         items: dropdownItems,
                                         onChanged: (String? value) {
                                           if (value != null) {
-                                            final selectedPipelineId =
-                                                pipelineNameToIdMap[value];
+                                             selectedPipelineId =
+                                                pipelineNameToIdMap[value] ??"";
                                             BlocProvider.of<PlutotableBloc>(
                                                     context)
                                                 .add(

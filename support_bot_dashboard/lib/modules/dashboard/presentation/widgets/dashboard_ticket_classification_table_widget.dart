@@ -17,11 +17,13 @@ class TicketClassificationTableWidget extends StatelessWidget {
   final DashboardTableAttributeModel tableData;
   final DateTime? selectedMonth;
   final DateTime? selectedDate;
+  String pipeline;
 
-  const TicketClassificationTableWidget(
+   TicketClassificationTableWidget(
       {Key? key,
       required this.tableData,
       required this.selectedMonth,
+      required this.pipeline,
       required this.selectedDate})
       : super(key: key);
 
@@ -136,6 +138,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
             date: selectedDate ?? null,
             month: selectedMonth ?? null,
             row: plutoRenderercontext.row,
+            pipeline: pipeline,
           );
         },
       ),

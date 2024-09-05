@@ -13,13 +13,15 @@ class ValidationReasonRenderer extends StatefulWidget {
   final DateTime? date;
   final DateTime? month;
   final PlutoRow row;
+  String pipeline;
 
-  const ValidationReasonRenderer({
+   ValidationReasonRenderer({
     Key? key,
     required this.rowID,
     required this.plutotableBloc,
     required this.date,
     required this.month,
+    required this.pipeline,
     required this.row,
   }) : super(key: key);
 
@@ -156,6 +158,7 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                               reason: _reason,
                               selectedDate: widget.date,
                               selectedMonth: widget.month,
+                              pipeline: widget.pipeline
                             ));
                       }
                     },
@@ -235,6 +238,7 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                           reason: '',
                           selectedDate: widget.date,
                           selectedMonth: widget.month,
+                          pipeline: widget.pipeline
                         ));
                   }
                 });
