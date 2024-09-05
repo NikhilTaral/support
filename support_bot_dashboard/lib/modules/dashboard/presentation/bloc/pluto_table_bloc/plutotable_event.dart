@@ -65,7 +65,7 @@ class FilterClassificationEvent extends PlutotableEvent {
     final String? ticketId;
   final String selectedClassificationValidation;
   final DateTime? selectedDate;
-  final DateTime selectedMonth;
+  final DateTime? selectedMonth;
 
 
   FilterClassificationEvent(this.selectedDate, this.selectedMonth,
@@ -76,7 +76,7 @@ class FilterValidationEvent extends PlutotableEvent {
   final String selectedClassificationValidation;
   final String selectedClassification;
   final DateTime? selectedDate;
-  final DateTime selectedMonth;
+  final DateTime? selectedMonth;
     final String? pipeline;
     final String? ticketId;
 
@@ -101,7 +101,7 @@ class CustomSidebarLoadRowData extends PlutotableEvent {
 
 class RevertClassificationEvent extends PlutotableEvent {
   final DateTime? selectedDate;
-  final DateTime selectedMonth;
+  final DateTime? selectedMonth;
    final String selectedClassification;
   final String? ticketId;
   RevertClassificationEvent({required this.selectedDate,required this.selectedMonth, required this.ticketId, required this.selectedClassification});

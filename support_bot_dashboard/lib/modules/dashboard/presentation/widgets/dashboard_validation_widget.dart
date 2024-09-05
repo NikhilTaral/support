@@ -11,7 +11,7 @@ class ValidationReasonRenderer extends StatefulWidget {
   final String rowID;
   final PlutotableBloc plutotableBloc;
   final DateTime? date;
-  final DateTime month;
+  final DateTime? month;
   final PlutoRow row;
 
   const ValidationReasonRenderer({

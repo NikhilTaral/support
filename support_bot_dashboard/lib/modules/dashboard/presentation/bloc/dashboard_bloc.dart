@@ -17,14 +17,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
-    emit(DateUpdatedState(event.selectedDate));
+    emit(DateUpdatedState(event.selectedDate,event.selectedPipeline));
     add(FetchDashboardDataEvent(event.selectedDate, DateTime(2024, 1), event.selectedPipeline));
   }
 
   Future<void> _onUpdateSelectedMonthEvent(
       UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async {
-    emit(MonthUpdatedState(event.selectedMonth));
-    print(event.selectedPipeline);
+    emit(MonthUpdatedState(event.selectedMonth,event.selectedPipeline));
     add(FetchDashboardDataEvent(null, event.selectedMonth, event.selectedPipeline));
   }
 
@@ -34,7 +33,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final repository = serviceLocator<DashboardChartdataUsecase>();
     final response =
         await repository.invoke(event.selectedDate, event.selectedMonth,event.selectedPipeline);
-    print(event.selectedMonth);
     if (response.isLeft) {
       emit(DashboardDataError(
         message: "Failed to fetch data",

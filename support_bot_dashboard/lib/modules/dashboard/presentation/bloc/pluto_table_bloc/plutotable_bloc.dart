@@ -75,8 +75,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           emit(FetchTableDataSuccess(
               selectedClassification: event.selectedClassification ?? "",
               tableData: tableData,
-              selectedDate: event.selectedDate ?? DateTime.now(),
-              selectedMonth: event.selectedMonth ?? DateTime(2024, 01),
+              selectedDate: event.selectedDate ?? null,
+              selectedMonth: event.selectedMonth ?? null,
               selectedValidation: event.selectedClassificationValidation ?? "",
               noDataAvailable: items.isEmpty,
               selectedPipeline: event.selectedPipeline ?? ""));
@@ -94,16 +94,16 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
 
   FutureOr<void> _onSelectDateEvent(
       SelectDateEvent event, Emitter<PlutotableState> emit) {
-    emit(UpdateDateState(selectedDate: event.selectedDate));
+    emit(UpdateDateState(selectedDate: event.selectedDate,selectedPipeline: event.selectedPipeline));
     add(FetchTableDataEvent(
         selectedDate: event.selectedDate,
-        selectedMonth: DateTime(2024 - 01),
+        selectedMonth:null,
         selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> _onSelectMonthEvent(
       SelectMonthEvent event, Emitter<PlutotableState> emit) {
-    emit(UpdateMonthState(selectedMonth: event.selectedMonth));
+    emit(UpdateMonthState(selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline));
     add(FetchTableDataEvent(
         selectedDate: null,
         selectedMonth: event.selectedMonth,
@@ -117,8 +117,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       final repository = serviceLocator<DashboardValidationUsecase>();
       await repository.invoke(event.id, event.validation, event.reason);
       emit(UpdateValidationSuccess(
-          selectedDate: event.selectedDate ?? DateTime.now(),
-          selectedMonth: event.selectedMonth ?? DateTime(2024 - 01)));
+          selectedDate: event.selectedDate ?? null,
+          selectedMonth: event.selectedMonth ?? null));
     } catch (e) {
       emit(UpdateValidationError(errorMessage: 'Exception occurred: $e'));
     }
@@ -133,12 +133,11 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           selectedClassification: "Select",
           tableData: initialData!,
           selectedDate: event.selectedDate ?? null,
-          selectedMonth: event.selectedMonth,
+          selectedMonth: event.selectedMonth ?? null,
           selectedValidation: 'Select',
           noDataAvailable: false,
-          selectedPipeline: 'Select'));
+          selectedPipeline: event.pipeline));
     } else {
-      print(event.selectedDate);
       try {
         final repository = serviceLocator<DashboardTableDatausecase>();
         final response = await repository.invoke(
@@ -186,7 +185,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 selectedMonth: event.selectedMonth,
                 selectedValidation: 'Select',
                 noDataAvailable: items.isEmpty,
-                selectedPipeline: 'Select'));
+                selectedPipeline: event.pipeline));
           } else {
             emit(FetchTableDataEmpty());
           }
@@ -252,7 +251,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 selectedMonth: event.selectedMonth,
                 selectedValidation: 'Select',
                 noDataAvailable: items.isEmpty,
-                selectedPipeline: 'Select'));
+                selectedPipeline: event.pipeline));
           } else {
             emit(FetchTableDataEmpty());
           }
@@ -266,7 +265,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             selectedMonth: event.selectedMonth,
             selectedValidation: 'Select',
             noDataAvailable: initialData!.items.isEmpty,
-            selectedPipeline: 'Select'));
+            selectedPipeline: event.pipeline));
       }
     } else {
       // both classification and validation filters
@@ -318,7 +317,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 selectedMonth: event.selectedMonth,
                 selectedValidation: event.selectedClassificationValidation,
                 noDataAvailable: items.isEmpty,
-                selectedPipeline: 'Select'));
+                selectedPipeline: event.pipeline));
           } else {
             emit(FetchTableDataEmpty());
           }
@@ -393,8 +392,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           emit(FetchTableDataSuccess(
               selectedClassification: event.classification ?? "",
               tableData: tableData,
-              selectedDate: event.selectDate ?? DateTime.now(),
-              selectedMonth: event.selectMonth ?? DateTime(2024, 01),
+              selectedDate: event.selectDate ?? null,
+              selectedMonth: event.selectMonth ?? null,
               selectedValidation: event.classificationValidation ?? "",
               noDataAvailable: items.isEmpty,
               selectedPipeline: event.pipeline ?? ""));

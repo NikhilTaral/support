@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_pipeline_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
@@ -13,27 +12,21 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container_data.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_date_selection_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pie_chart_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pipeline_filter_dropdown_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ticket_classification_table_widget.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdown.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
-import 'package:support_bot_dashboard/config/environment/env_config.dart';
 
 class DashboardDesktopView extends StatelessWidget {
   DashboardDesktopView({Key? key}) : super(key: key);
 
-  final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
-  final TextEditingController _searchController = TextEditingController();
-
   String? pipeline = '11257490';
+  DateTime? selectedDate;
+  DateTime? selectedMonth;
+  String selectedClassification = '';
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +34,14 @@ class DashboardDesktopView extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(
-                DateTime.now(), DateTime(2024 - 01), pipeline)),
+            ..add(FetchDashboardDataEvent(DateTime.now(), null, pipeline)),
         ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
               FetchTableDataEvent(
                   selectedDate: DateTime.now(),
-                  selectedMonth: DateTime(2024, 1),
+                  selectedMonth: null,
                   selectedPipeline: pipeline),
             ),
         ),
@@ -60,28 +52,16 @@ class DashboardDesktopView extends StatelessWidget {
           create: (context) => serviceLocator<AiQueryAnswerBloc>()
             ..add(
               FetchAiQueryAnswerEvent(
-                  selectedDate: DateTime.now(),
-                  selectedMonth: DateTime(2024, 1)),
+                  selectedDate: DateTime.now(), selectedMonth: null),
             ),
         ),
         BlocProvider(
           create: (context) => serviceLocator<AiQueryChartBloc>()
             ..add(
               FetchAiQueryChartData(
-                  selectedDate: DateTime.now(),
-                  selectedMonth: DateTime(2024 - 01)),
+                  selectedDate: DateTime.now(), selectedMonth: null),
             ),
         ),
-        // BlocProvider(
-        //   create: (context) => serviceLocator<UpdateAiAnswerBloc>()
-        //     ..add(
-        //       UpdateAiAnswerInitialEvent(
-        //           ticketId: "",
-        //           newAnswer: "",
-        //           selectedDate: DateTime.now(),
-        //           selectedMonth: DateTime(2024 - 01)),
-        //     ),
-        // ),
         BlocProvider(
             create: (context) => serviceLocator<DashboardPipelineBloc>()
               ..add(FilterPipelineEvent(
@@ -180,496 +160,11 @@ class DashboardDesktopView extends StatelessWidget {
                             },
                           ),
                           UIHelpers.verticalSpaceRegular,
-                          BlocBuilder<CustombuttonBloc, CustombuttonState>(
-                            builder: (context, state) {
-                              String selectedButtonText = '';
-                              if (state is ButtonSelectedState) {
-                                selectedButtonText = state.selectedButtonText;
-                              }
-                              if (state is CustomButtonInitial &&
-                                  state.selectedButtonText ==
-                                      'Ticket Classification') {
-                                selectedButtonText = state.selectedButtonText;
-                              }
-
-                              return Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      if (EnvConfig.ENV != 'dev' ||
-                                          EnvConfig.ENV != 'qa')
-                                        CustomButton(
-                                          text: S
-                                              .of(context)
-                                              .ticketClassification,
-                                          isSelected: selectedButtonText ==
-                                              'Ticket Classification',
-                                          onPressed: () {
-                                            BlocProvider.of<CustombuttonBloc>(
-                                                    context)
-                                                .add(SelectButtonEvent(
-                                                    'Ticket Classification'));
-                                          },
-                                        ),
-                                      if (EnvConfig.ENV != 'prod')
-                                        CustomButton(
-                                          text: S.of(context).aiQueryAnswer,
-                                          isSelected: selectedButtonText ==
-                                              'AI Query Answer',
-                                          onPressed: () {
-                                            BlocProvider.of<CustombuttonBloc>(
-                                                    context)
-                                                .add(SelectButtonEvent(
-                                                    'AI Query Answer'));
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                  // for Ticket Classification
-                                  if (selectedButtonText ==
-                                      'Ticket Classification')
-                                    Row(
-                                      children: [
-                                        // Date dropdown
-                                        BlocBuilder<DashboardBloc,
-                                            DashboardState>(
-                                          builder: (context, state) {
-                                            DateTime selectedDate =
-                                                DateTime.now();
-                                           // String pipeline = '11257490';
-                                            if (state is DashboardDataSuccess) {
-                                              selectedDate = state.selectedDate;
-                                              pipeline =
-                                                  state.selectedPipeline;
-                                            }
-                                            return DateSelectionWidget(
-                                              selectedDate: selectedDate,
-                                              onChanged: (newDate) {
-                                                BlocProvider.of<DashboardBloc>(
-                                                        context)
-                                                    .add(
-                                                        UpdateSelectedDateEvent(
-                                                            newDate, pipeline));
-                                                BlocProvider.of<PlutotableBloc>(
-                                                        context)
-                                                    .add(SelectDateEvent(
-                                                        selectedDate: newDate,
-                                                        selectedPipeline:
-                                                            pipeline));
-                                              },
-                                              label: S.of(context).day,
-                                              isInteractive: true,
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(width: 10),
-
-                                        // Month dropdown
-                                        BlocBuilder<DashboardBloc,
-                                            DashboardState>(
-                                          builder: (context, state) {
-                                            DateTime selectedMonth =
-                                                DateTime(2024, 1);
-                                            String selectedMonthString =
-                                                "January";
-                                         //   String pipeline = '11257490';
-
-                                            if (state is DashboardDataSuccess) {
-                                              selectedMonth =
-                                                  state.selectedMonth;
-                                              selectedMonthString =
-                                                  _monthToString(
-                                                      selectedMonth.month);
-                                              pipeline =
-                                                  state.selectedPipeline;
-                                            }
-                                            return CustomMonthDropdown(
-                                              selectedValue:
-                                                  selectedMonthString,
-                                              items: const [
-                                                'January',
-                                                'February',
-                                                'March',
-                                                'April',
-                                                'May',
-                                                'June',
-                                                'July',
-                                                'August',
-                                                'September',
-                                                'October',
-                                                'November',
-                                                'December'
-                                              ],
-                                              onChanged: (String? value) {
-                                                if (value != null) {
-                                                  DateTime monthDateTime =
-                                                      _stringToMonth(value);
-                                                  BlocProvider.of<
-                                                              DashboardBloc>(
-                                                          context)
-                                                      .add(
-                                                          UpdateSelectedMonthEvent(
-                                                              monthDateTime,
-                                                              pipeline));
-                                                  BlocProvider.of<
-                                                              PlutotableBloc>(
-                                                          context)
-                                                      .add(SelectMonthEvent(
-                                                          selectedMonth:
-                                                              monthDateTime,
-                                                          selectedPipeline:
-                                                              pipeline));
-                                                }
-                                              },
-                                              label: S.of(context).month,
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(width: 10),
-
-                                        // Classification dropdown
-                                        BlocBuilder<PlutotableBloc,
-                                            PlutotableState>(
-                                          builder: (context, state) {
-                                            DateTime? selectedDate;
-                                            DateTime selectedMonth =
-                                                DateTime(2024, 01);
-                                            String selectedClassification = '';
-                                           // String? pipeline = '11257490';
-                                            String? ticketId ='';
-                                            if (state
-                                                is FetchTableDataSuccess) {
-                                                   print(state.selectedDate);
-                                              selectedDate = state.selectedDate;
-                                              selectedMonth =
-                                                  state.selectedMonth;
-                                              selectedClassification =
-                                                  state.selectedClassification;
-                                              pipeline = state.selectedPipeline;
-                                              ticketId = state.ticketId;
-                                            }
-                                           
-                                            final classificationItems = [
-                                              'Select',
-                                              'Spam/Marketing',
-                                              'No Action Required',
-                                              'Genuine Query',
-                                              'Acknowledgement Required'
-                                            ];
-                                            return CustomFilterDropdown(
-                                              selectedValue:
-                                                  selectedClassification,
-                                              items: classificationItems,
-                                              onChanged: (String? value) {
-                                                if (value != null) {
-                                                  BlocProvider.of<
-                                                              PlutotableBloc>(
-                                                          context,
-                                                          listen: false)
-                                                      .add(
-                                                          FilterClassificationEvent(
-                                                              selectedDate ?? null,
-                                                              selectedMonth,
-                                                              value,
-                                                              "",pipeline,ticketId));
-                                                }
-                                              },
-                                              label:
-                                                  S.of(context).classification,
-                                              width: UIHelpers.screenWidth(
-                                                      context) *
-                                                  0.13,
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(width: 10),
-
-                                        // Validation dropdown
-                                        BlocBuilder<PlutotableBloc,
-                                            PlutotableState>(
-                                          builder: (context, state) {
-                                            DateTime? selectedDate =
-                                                DateTime.now();
-                                            DateTime selectedMonth =
-                                                DateTime(2024, 01);
-                                            String selectedClassification = '';
-                                            String selectedValidation = '';
-                                            // String? pipeline = '11257490';
-                                            String? ticketId ='';
-                                            if (state
-                                                is FetchTableDataSuccess) {
-                                              selectedDate = state.selectedDate ?? null;
-                                              selectedMonth =
-                                                  state.selectedMonth;
-                                              selectedClassification =
-                                                  state.selectedClassification;
-                                              selectedValidation =
-                                                  state.selectedValidation ??
-                                                      '';
-                                            }
-                                            final validationItems = [
-                                              'Select',
-                                              'correct',
-                                              'incorrect'
-                                            ];
-                                            return CustomFilterDropdown(
-                                              selectedValue: selectedValidation,
-                                              items: validationItems,
-                                              onChanged: (String? value) {
-                                                if (value != null) {
-                                                  BlocProvider.of<
-                                                              PlutotableBloc>(
-                                                          context,
-                                                          listen: false)
-                                                      .add(FilterValidationEvent(
-                                                          value,
-                                                          selectedDate ?? null,
-                                                          selectedMonth,
-                                                          selectedClassification,pipeline,ticketId));
-                                                }
-                                              },
-                                              label: S.of(context).validation,
-                                              width: UIHelpers.screenWidth(
-                                                      context) *
-                                                  0.13,
-                                            );
-                                          },
-                                        ),
-                                        const Spacer(),
-                                        BlocBuilder<PlutotableBloc,
-                                            PlutotableState>(
-                                          builder: (context, state) {
-                                            DateTime? date = DateTime.now();
-                                            DateTime month = DateTime(2024, 01);
-                                            if (state
-                                                is FetchTableDataSuccess) {
-                                              date = state.selectedDate ?? null;
-                                              month = state.selectedMonth;
-                                            }
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 20),
-                                              child:
-                                                  ValueListenableBuilder<bool>(
-                                                valueListenable: _isSearchOpen,
-                                                builder:
-                                                    (context, isOpen, child) {
-                                                  return Row(
-                                                    children: [
-                                                      AnimatedContainer(
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    300),
-                                                        height: UIHelpers
-                                                                .screenHeight(
-                                                                    context) *
-                                                            0.05,
-                                                        decoration: isOpen
-                                                            ? BoxDecoration(
-                                                                color:
-                                                                    SupportBotColors
-                                                                        .gray
-                                                                        .shade100,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8),
-                                                                border: Border.all(
-                                                                    color: SupportBotColors
-                                                                        .gray),
-                                                              )
-                                                            : null,
-                                                        child: Row(
-                                                          children: [
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                isOpen
-                                                                    ? Icons
-                                                                        .close
-                                                                    : Icons
-                                                                        .search,
-                                                                size: 23,
-                                                              ),
-                                                              onPressed: () {
-                                                                _isSearchOpen
-                                                                        .value =
-                                                                    !_isSearchOpen
-                                                                        .value;
-                                                              },
-                                                            ),
-                                                            if (isOpen)
-                                                              SizedBox(
-                                                                width: UIHelpers
-                                                                        .screenWidth(
-                                                                            context) *
-                                                                    0.1,
-                                                                child:
-                                                                    TextField(
-                                                                  controller:
-                                                                      _searchController,
-                                                                  decoration:
-                                                                      const InputDecoration(
-                                                                    hintText:
-                                                                        'Search...',
-                                                                    border:
-                                                                        InputBorder
-                                                                            .none,
-                                                                    isDense:
-                                                                        true,
-                                                                  ),
-                                                                  onSubmitted:
-                                                                      (value) {
-                                                                    if (value
-                                                                        .isNotEmpty) {
-                                                                      BlocProvider.of<PlutotableBloc>(
-                                                                              context)
-                                                                          .add(
-                                                                        SearchTableEvent(
-                                                                          ticketId:
-                                                                              value,
-                                                                          selectDate:
-                                                                              date,
-                                                                          selectMonth:
-                                                                              month,
-                                                                        ),
-                                                                      );
-                                                                    }
-                                                                  },
-                                                                ),
-                                                              ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        Tooltip(
-                                          message: S.of(context).export,
-                                          child: const ExportButton(
-                                              icon: 'assets/icons/Export.svg',
-                                              selectedButtonText:
-                                                  "Ticket Classification"),
-                                        ),
-                                      ],
-                                    ),
-
-                                  // for AI Query Answer
-                                  if (selectedButtonText == 'AI Query Answer')
-                                    Row(
-                                      children: [
-                                        // Date dropdown
-                                        BlocBuilder<DashboardBloc,
-                                            DashboardState>(
-                                          builder: (context, state) {
-                                            DateTime selectedDate =
-                                                DateTime.now();
-                                            if (state is DashboardDataSuccess) {
-                                              selectedDate = state.selectedDate;
-                                            }
-                                            return DateSelectionWidget(
-                                              selectedDate: selectedDate,
-                                              onChanged: (newDate) {
-                                                BlocProvider.of<
-                                                            AiQueryAnswerBloc>(
-                                                        context)
-                                                    .add(SelectedDateEvent(
-                                                        selectedDate: newDate));
-                                                BlocProvider.of<
-                                                            AiQueryChartBloc>(
-                                                        context)
-                                                    .add(SelectedChartDateEvent(
-                                                        selectedDate: newDate));
-                                              },
-                                              label: S.of(context).day,
-                                              isInteractive: true,
-                                            );
-                                          },
-                                        ),
-                                        
-                                        UIHelpers.horizontalSpaceSmall,
-                                        // Classification dropdown
-                                        BlocBuilder<AiQueryAnswerBloc,
-                                            AiQueryAnswerState>(
-                                          builder: (context, state) {
-                                            DateTime selectedDate =
-                                                DateTime.now();
-                                            DateTime selectedMonth =
-                                                DateTime(2024, 01);
-                                            bool? selectedClassification = null;
-                                            String? classification = 'Select';
-
-                                            if (state is AiQueryAnswerSuccess) {
-                                              selectedDate = state.selectedDate;
-                                              selectedMonth =
-                                                  state.selectedMonth;
-                                              selectedClassification =
-                                                  state.selectedClassification;
-                                              classification =
-                                                  state.classification;
-                                            }
-
-                                            final classificationItems = [
-                                              'Select',
-                                              'Answered',
-                                              'Not Answered'
-                                            ];
-                                            return CustomFilterDropdown(
-                                              selectedValue:
-                                                  classification ?? 'Select',
-                                              items: classificationItems,
-                                              onChanged: (String? value) {
-                                                if (value != null) {
-                                                  bool? isAnswer;
-                                                  if (value == 'Answered') {
-                                                    isAnswer = true;
-                                                  } else if (value ==
-                                                      'Not Answered') {
-                                                    isAnswer = false;
-                                                  } else {
-                                                    isAnswer = null;
-                                                  }
-                                                  BlocProvider.of<
-                                                              AiQueryAnswerBloc>(
-                                                          context,
-                                                          listen: false)
-                                                      .add(
-                                                    FilterAiAnsweClassificationEvent(
-                                                      selectedClassification:
-                                                          isAnswer,
-                                                      selectDate: selectedDate,
-                                                      selectMonth:
-                                                          selectedMonth,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              label:
-                                                  S.of(context).classification,
-                                              width: UIHelpers.screenWidth(
-                                                      context) *
-                                                  0.14,
-                                            );
-                                          },
-                                        ),
-                                        const Spacer(),
-                                        Tooltip(
-                                          message: S.of(context).export,
-                                          child: const ExportButton(
-                                            icon: 'assets/icons/Export.svg',
-                                            selectedButtonText:
-                                                "AI Query Answer",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                ],
-                              );
-                            },
+                          DashboardFilterWidget(
+                            selectedClassification: selectedClassification,
+                            pipeline: pipeline,
+                            selectedDate: selectedDate,
+                            selectedMonth: selectedMonth,
                           ),
                           BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
@@ -693,8 +188,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         state is UpdateValidationError) {
                                       context.read<PlutotableBloc>().add(
                                             FetchTableDataEvent(
-                                              selectedDate: DateTime.now(),
-                                              selectedMonth: DateTime(2024, 1),
+                                              selectedDate: null,
+                                              selectedMonth: null,
                                             ),
                                           );
                                       Navigator.of(context).pop();
@@ -767,7 +262,8 @@ class DashboardDesktopView extends StatelessWidget {
                                       }
                                       return TicketClassificationTableWidget(
                                         tableData: state.tableData,
-                                        selectedDate: state.selectedDate ?? null,
+                                        selectedDate:
+                                            state.selectedDate ?? null,
                                         selectedMonth: state.selectedMonth,
                                       );
                                     } else if (state is FetchTableDataError) {
@@ -859,12 +355,11 @@ class DashboardDesktopView extends StatelessWidget {
                                     return Text(state.message);
                                   } else if (state
                                       is DashboardPipelineSuccess) {
-                                    DateTime selectedMonth = state
-                                        .selectedMonth; 
+                                    DateTime selectedMonth =
+                                        state.selectedMonth;
                                     DateTime? selectedDate = state.selectedDate;
-                                    String selectedMonthString = _monthToString(
-                                        selectedMonth
-                                            .month); 
+                                    String selectedMonthString =
+                                        _monthToString(selectedMonth.month);
                                     pipeline = state.selectedPipelineValue;
                                     Map<String, String> pipelineNameToIdMap = {
                                       for (var item in state
@@ -881,8 +376,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       width: UIHelpers.screenWidth(context),
                                       child:
                                           DashboardPipelineFilterDropdownWidget(
-                                        selectedValue:
-                                            pipeline,
+                                        selectedValue: pipeline,
                                         items: dropdownItems,
                                         onChanged: (String? value) {
                                           if (value != null) {
@@ -964,51 +458,6 @@ class DashboardDesktopView extends StatelessWidget {
                           flex: 2,
                           child: Column(
                             children: [
-                              // BlocBuilder<PlutotableBloc, PlutotableState>(
-                              //   builder: (context, state) {
-                              //     DateTime selectedDate = DateTime.now();
-                              //     DateTime selectedMonth = DateTime(2024, 01);
-                              //     String selectedPipeline = 'ECD';
-                              //     if (state is FetchTableDataSuccess) {
-                              //       selectedDate = state.selectedDate;
-                              //       selectedMonth = state.selectedMonth;
-                              //       selectedPipeline = state.selectedPipeline;
-                              //     }
-                              //     final pipelineItems = [
-                              //       'ECD',
-                              //       'Southwest Broker',
-                              //     ];
-
-                              //     // Ensure selectedPipeline is in the list
-                              //     if (!pipelineItems
-                              //         .contains(selectedPipeline)) {
-                              //       selectedPipeline = pipelineItems.first;
-                              //     }
-
-                              //     return SizedBox(
-                              //       width: UIHelpers.screenWidth(context),
-                              //       child:
-                              //           DashboardPipelineFilterDropdownWidget(
-                              //         selectedValue: selectedPipeline,
-                              //         items: pipelineItems,
-                              //         onChanged: (String? value) {
-                              //           if (value != null) {
-                              //             // BlocProvider.of<PlutotableBloc>(
-                              //             //         context,
-                              //             //         listen: false)
-                              //             //     .add(
-                              //             //   FilterPipelineEvent(selectedDate,
-                              //             //       selectedMonth, value),
-                              //             // );
-                              //           }
-                              //         },
-                              //         label: S.of(context).pipelineType,
-                              //         width:
-                              //             UIHelpers.screenWidth(context) * 0.18,
-                              //       ),
-                              //     );
-                              //   },
-                              // ),
                               BlocBuilder<AiQueryChartBloc, AiQueryChartState>(
                                 builder: (context, state) {
                                   if (state is AiQueryChartLoading) {
@@ -1053,7 +502,6 @@ class DashboardDesktopView extends StatelessWidget {
     );
   }
 
-  // Helper function to convert month index to string
   String _monthToString(int month) {
     const months = [
       'January',
@@ -1069,10 +517,9 @@ class DashboardDesktopView extends StatelessWidget {
       'November',
       'December'
     ];
-    return months[month - 1]; // Month is 1-indexed
+    return months[month - 1];
   }
 
-// Helper function to convert string month to DateTime
   DateTime _stringToMonth(String month) {
     const months = {
       'January': 1,
@@ -1088,7 +535,6 @@ class DashboardDesktopView extends StatelessWidget {
       'November': 11,
       'December': 12
     };
-    return DateTime(
-        2024, months[month]!); // Replace 2024 with the year you want
+    return DateTime(2024, months[month]!);
   }
 }
