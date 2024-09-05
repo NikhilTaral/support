@@ -8,13 +8,14 @@ class CustomFilterDropdown extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final String label;
+  final double width;
 
   const CustomFilterDropdown({
     Key? key,
     required this.selectedValue,
     required this.items,
     required this.onChanged,
-    required this.label,
+    required this.label, required this.width,
   }) : super(key: key);
 
   @override
@@ -29,8 +30,8 @@ class CustomFilterDropdown extends StatelessWidget {
           padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
           margin:
               const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
-          height: UIHelpers.screenHeight(context) * 0.055,
-          width: UIHelpers.screenWidth(context) * 0.15,
+          height: UIHelpers.screenHeight(context) * 0.05,
+          width: width,
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: selectedValue.isNotEmpty && items.contains(selectedValue)

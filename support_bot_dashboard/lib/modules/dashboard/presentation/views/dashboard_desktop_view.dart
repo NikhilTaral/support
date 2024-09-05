@@ -1,375 +1,219 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_pipeline/dashboard_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/count_container.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/date_selection_widget.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pie_chart_widget.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/pluto_table_widget.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_button.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdown.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ai_query_answer_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container_data.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_filter_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pie_chart_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pipeline_filter_dropdown_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ticket_classification_table_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
-  const DashboardDesktopView({Key? key}) : super(key: key);
+  DashboardDesktopView({Key? key, required this.pipeline, required this.selectedPipelineId}) : super(key: key);
+
+  late String pipeline;
+  DateTime? selectedDate;
+  DateTime? selectedMonth;
+  String selectedClassification = '';
+  late String selectedPipelineId;
 
   @override
   Widget build(BuildContext context) {
+    print('pipeline $pipeline');
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(DateTime.now(), null, null)),
+            ..add(FetchDashboardDataEvent(
+                selectedDate: DateTime.now(),
+                selectedMonth: null,
+                selectedPipeline: pipeline)),
         ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
               FetchTableDataEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: DateTime(2024, 1),
-              ),
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline),
             ),
         ),
         BlocProvider(
           create: (context) => serviceLocator<CustombuttonBloc>(),
         ),
+        BlocProvider(
+          create: (context) => serviceLocator<AiQueryAnswerBloc>()
+            ..add(
+              FetchAiQueryAnswerEvent(
+                  selectedDate: DateTime.now(), selectedMonth: null),
+            ),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator<AiQueryChartBloc>()
+            ..add(
+              FetchAiQueryChartData(
+                  selectedDate: DateTime.now(), selectedMonth: null),
+            ),
+        ),
+        BlocProvider(
+            create: (context) => serviceLocator<DashboardPipelineBloc>()
+              ..add(FilterPipelineEvent(
+                  DateTime.now(), null, 'Expert Care Level 1')))
       ],
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            NavBar(
-              showPopArrow: false,
-              navigateTo: () {},
-              text: "",
-            ),
-            Flexible(
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 7,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: SizedBox(
-                            child: BlocBuilder<DashboardBloc, DashboardState>(
-                              builder: (context, state) {
-                                if (state is DashboardDataLoading) {
-                                  return Center(
-                                      child: LoadingWidget(
-                                    width: UIHelpers.screenWidth(context) * 0.75,
-                                    height: UIHelpers.screenHeight(context) * 0.2,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              NavBar(
+                showPopArrow: false,
+                navigateTo: () {},
+                text: "",
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15, bottom: 10),
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 8,
+                      child: Column(
+                        children: [
+                          BlocBuilder<DashboardBloc, DashboardState>(
+                            builder: (context, state) {
+                              if (state is DashboardDataLoading) {
+                                return Center(
+                                  child: LoadingWidget(
+                                    width:
+                                        UIHelpers.screenWidth(context) * 0.78,
+                                    height:
+                                        UIHelpers.screenHeight(context) * 0.2,
                                     radius: 8,
-                                  ));
-                                } else if (state is DashboardDataSuccess) {
-                                  num totalCount = (state
-                                              .pieChartData?.spamMarketing ??
-                                          0) +
-                                      (state.pieChartData?.noActionRequired ?? 0) +
-                                      (state.pieChartData?.genuineQuery ?? 0) +
-                                      (state.pieChartData?.acknowledgement ?? 0);
-                                  return Row(
-                                    children: [
-                                      CountContainer(
-                                        text: 'Spam',
-                                        icon: 'assets/icons/Spam.svg',
-                                        count: state.pieChartData?.spamMarketing
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'No Action Required',
-                                        icon: 'assets/icons/NotSpam.svg',
-                                        count: state.pieChartData?.noActionRequired
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Genuine Query',
-                                        icon: 'assets/icons/genuine.svg',
-                                        count: state.pieChartData?.genuineQuery
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Acknowledgement Required',
-                                        icon:
-                                            'assets/icons/acknowledgement.svg',
-                                        count: state.pieChartData?.acknowledgement
-                                                .toString() ??
-                                            '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Total',
-                                        icon: 'assets/icons/TotalTicket.svg',
-                                        count: totalCount.toString(),
-                                      ),
-                                    ],
-                                  );
-                                } else if (state is DashboardDataError) {
-                                  return const Center(child: EmptyWidget());
-                                } else {
-                                  return const Row(
-                                    children: [
-                                      CountContainer(
-                                        text: 'Spam',
-                                        icon: 'assets/icons/Spam.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'No Action Required',
-                                        icon: 'assets/icons/NotSpam.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Genuine Query',
-                                        icon: 'assets/icons/genuine.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Acknowledgement Required',
-                                        icon:
-                                            'assets/icons/acknowledgement.svg',
-                                        count: '0',
-                                      ),
-                                      CountContainer(
-                                        text: 'Total',
-                                        icon: 'assets/icons/TotalTicket.svg',
-                                        count: '0',
-                                      ),
-                                    ],
-                                  );
-                                }
-                              },
-                            ),
+                                  ),
+                                );
+                              } else if (state is DashboardDataSuccess) {
+                                num totalCount = (state
+                                            .pieChartData?.spamMarketing ??
+                                        0) +
+                                    (state.pieChartData?.noActionRequired ??
+                                        0) +
+                                    (state.pieChartData?.genuineQuery ?? 0) +
+                                    (state.pieChartData?.acknowledgement ?? 0);
+
+                                final List<CountContainerData> countContainers =
+                                    getCountContainerData(context,
+                                        state: state, totalCount: totalCount);
+
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: List.generate(
+                                      countContainers.length, (index) {
+                                    final data = countContainers[index];
+                                    return CountContainer(
+                                      text: data.text,
+                                      icon: data.iconPath,
+                                      count: data.count,
+                                    );
+                                  }),
+                                );
+                              } else if (state is DashboardDataError) {
+                                final List<CountContainerData> countContainers =
+                                    getCountContainerData(context);
+
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: List.generate(
+                                      countContainers.length, (index) {
+                                    final data = countContainers[index];
+                                    return CountContainer(
+                                      text: data.text,
+                                      icon: data.iconPath,
+                                      count: data.count,
+                                    );
+                                  }),
+                                );
+                              } else {
+                                final List<CountContainerData> countContainers =
+                                    getCountContainerData(context);
+
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: List.generate(
+                                      countContainers.length, (index) {
+                                    final data = countContainers[index];
+                                    return CountContainer(
+                                      text: data.text,
+                                      icon: data.iconPath,
+                                      count: data.count,
+                                    );
+                                  }),
+                                );
+                              }
+                            },
                           ),
-                        ),
-                        BlocBuilder<CustombuttonBloc, CustombuttonState>(
-                          builder: (context, state) {
-                            String selectedButtonText = '';
-                            if (state is ButtonSelectedState) {
-                              selectedButtonText = state.selectedButtonText;
-                            }
-
-                            if (state is CustomButtonInitial &&
-                                state.selectedButtonText ==
-                                    'Ticket Classification') {
-                              selectedButtonText = state.selectedButtonText;
-                            }
-
-                            return Row(
-                              children: [
-                                CustomButton(
-                                  text: 'Ticket Classification',
-                                  isSelected: selectedButtonText ==
-                                      'Ticket Classification',
-                                  onPressed: () {
-                                    BlocProvider.of<CustombuttonBloc>(context)
-                                        .add(SelectButtonEvent(
-                                            'Ticket Classification'));
-                                  },
-                                ),
-                                CustomButton(
-                                  text: 'AI Query Answer',
-                                  isSelected:
-                                      selectedButtonText == 'AI Query Answer',
-                                  onPressed: () {
-                                    BlocProvider.of<CustombuttonBloc>(context)
-                                        .add(SelectButtonEvent(
-                                            'AI Query Answer'));
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              child: Row(
-                                children: [
-                                  BlocBuilder<DashboardBloc, DashboardState>(
-                                    builder: (context, state) {
-                                      DateTime selectedDate = DateTime.now();
-                                      if (state is DashboardDataSuccess) {
-                                        selectedDate = state.selectedDate;
-                                      } else if (state is DashboardDataError) {
-                                        selectedDate = state.selectedDate;
-                                      }
-                                      return DateSelectionWidget(
-                                        selectedDate: selectedDate,
-                                        onChanged: (newDate) {
-                                          BlocProvider.of<DashboardBloc>(
-                                                  context)
-                                              .add(UpdateSelectedDateEvent(
-                                                  newDate));
-                                          BlocProvider.of<PlutotableBloc>(
-                                                  context)
-                                              .add(SelectDateEvent(
-                                                  selectedDate: newDate));
-                                        },
-                                        label: 'Day',
-                                        isInteractive: true,
-                                      );
-                                    },
-                                  ),
-                                  UIHelpers.horizontalSpaceSmall,
-                                  BlocBuilder<DashboardBloc, DashboardState>(
-                                    builder: (context, state) {
-                                      DateTime selectMonth = DateTime(2024, 1);
-                                      if (state is DashboardDataSuccess) {
-                                        selectMonth = state.selectedMonth;
-                                      } else if (state is DashboardDataError) {
-                                        selectMonth = state.selectedMonth;
-                                      }
-                                      return CustomMonthDropdown(
-                                        selectedValue: selectMonth,
-                                        items: const [
-                                          'January',
-                                          'February',
-                                          'March',
-                                          'April',
-                                          'May',
-                                          'June',
-                                          'July',
-                                          'August',
-                                          'September',
-                                          'October',
-                                          'November',
-                                          'December'
-                                        ],
-                                        onChanged: (DateTime? value) {
-                                          if (value != null) {
-                                            BlocProvider.of<DashboardBloc>(
-                                                    context)
-                                                .add(UpdateSelectedMonthEvent(
-                                                    value));
-                                            BlocProvider.of<PlutotableBloc>(
-                                                    context)
-                                                .add(SelectMonthEvent(
-                                                    selectedMonth: value));
-                                          }
-                                        },
-                                        label: 'Month',
-                                      );
-                                    },
-                                  ),
-                                  BlocBuilder<PlutotableBloc, PlutotableState>(
-                                    builder: (context, state) {
-                                      if (state is FetchTableDataSuccess) {
-                                        DateTime selectedDate =
-                                            state.selectedDate;
-                                        DateTime selectedMonth =
-                                            state.selectedMonth;
-
-                                        return CustomFilterDropdown(
-                                          selectedValue:
-                                              state.selectedClassification,
-                                          items: const [
-                                            'Select',
-                                            'Spam/Marketing',
-                                            'No Action Required',
-                                            'Genuine Query',
-                                            'Acknowledgement Required'
-                                          ],
-                                          onChanged: (String? value) {
-                                            if (value != null) {
-                                              BlocProvider.of<PlutotableBloc>(
-                                                      context,
-                                                      listen: false)
-                                                  .add(
-                                                FilterClassificationEvent(
-                                                  state.tableData.items,
-                                                  selectedDate,
-                                                  selectedMonth,
-                                                  value,
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          label: 'Classification',
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    },
-                                  ),
-                                  BlocBuilder<PlutotableBloc, PlutotableState>(
-                                    builder: (context, state) {
-                                      if (state is FetchTableDataSuccess) {
-                                        return CustomFilterDropdown(
-                                            selectedValue:
-                                                state.selectedValidation,
-                                            items: const [
-                                              'Select',
-                                              'correct',
-                                              'incorrect',
-                                            ],
-                                            onChanged: (String? value) {
-                                              if (value != null) {
-                                                BlocProvider.of<PlutotableBloc>(
-                                                        context,
-                                                        listen: false)
-                                                    .add(FilterValidationEvent(
-                                                        value,
-                                                        state.tableData.items,
-                                                        state.selectedDate,
-                                                        state.selectedMonth,
-                                                        state
-                                                            .selectedClassification));
-                                              }
-                                            },
-                                            label: 'Validation');
-                                      } else {
-                                        return Container();
-                                      }
-                                    },
-                                  )
-                                ],
-                              ),
-                            ),
-                            const Tooltip(
-                                message: 'Download CSV File',
-                                child: ExportButton(
-                                    icon: 'assets/icons/Export.svg')),
-                          ],
-                        ),
-                        BlocBuilder<CustombuttonBloc, CustombuttonState>(
-                          builder: (context, state) {
-                            if (state is ButtonSelectedState &&
-                                state.selectedButtonText ==
-                                    'Ticket Classification') {
-                              return Flexible(
-                                flex: 8,
-                                child: BlocConsumer<PlutotableBloc,
+                          UIHelpers.verticalSpaceRegular,
+                          DashboardFilterWidget(
+                            selectedClassification: selectedClassification,
+                            pipeline: pipeline,
+                            selectedDate: selectedDate,
+                            selectedMonth: selectedMonth,
+                          ),
+                          BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                            builder: (context, state) {
+                              if (state is CustomButtonInitial ||
+                                  (state is ButtonSelectedState &&
+                                      state.selectedButtonText ==
+                                          'Ticket Classification')) {
+                                return BlocConsumer<PlutotableBloc,
                                     PlutotableState>(
                                   listener: (context, state) {
                                     if (state is UpdateValidationSuccess) {
                                       context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
+                                            FetchTableDataEvent(
                                               selectedDate: state.selectedDate,
                                               selectedMonth:
-                                                  state.selectedMonth));
+                                                  state.selectedMonth,
+                                              selectedPipeline: selectedPipelineId
+                                            ),
+                                          );
                                     } else if (state
                                             is UpdateValidationSuccess ||
                                         state is UpdateValidationError) {
                                       context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
+                                            FetchTableDataEvent(
                                               selectedDate: DateTime.now(),
-                                              selectedMonth:
-                                                  DateTime(2024 - 01)));
+                                              selectedMonth: null,
+                                              selectedPipeline: selectedPipelineId
+                                            ),
+                                          );
                                       Navigator.of(context).pop();
+                                    } else if (state
+                                        is RevertClassificationSuccessState) {
+                                      context.read<PlutotableBloc>().add(
+                                            FetchTableDataEvent(
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth:
+                                                    state.selectedMonth,
+                                                selectedPipeline: selectedPipelineId,
+                                                selectedClassification: state
+                                                    .selectedClassification),
+                                          );
                                     }
                                   },
                                   builder: (context, state) {
@@ -378,69 +222,24 @@ class DashboardDesktopView extends StatelessWidget {
                                         child: LoadingWidget(
                                           height:
                                               UIHelpers.screenHeight(context) *
-                                                  0.4,
+                                                  0.43,
                                           width:
                                               UIHelpers.screenWidth(context) *
-                                                  0.65,
+                                                  0.78,
                                           radius: 8,
                                         ),
                                       );
                                     }
-                                    if (state is FetchTableDataLoading) {
-                                      return LoadingWidget(
-                                        height:
-                                            UIHelpers.screenHeight(context) *
-                                                0.5,
-                                        width: UIHelpers.screenWidth(context) *
-                                            0.9,
-                                        radius: 8,
-                                      );
-                                    } else if (state is FetchTableDataSuccess) {
-                                      return PlutoTableWidget(
-                                          tableData: state.tableData,
-                                          selectedDate: state.selectedDate,
-                                          selectedMonth: state.selectedMonth);
-                                    } else if (state is FetchTableDataError) {
-                                      return const Center(child: EmptyWidget());
-                                    } else {
-                                      return Container();
-                                    }
-                                  },
-                                ),
-                              );
-                            } else if (state is CustomButtonInitial) {
-                              return Flexible(
-                                flex: 8,
-                                child: BlocConsumer<PlutotableBloc,
-                                    PlutotableState>(
-                                  listener: (context, state) {
-                                    if (state is UpdateValidationSuccess) {
-                                      context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
-                                              selectedDate: state.selectedDate,
-                                              selectedMonth:
-                                                  state.selectedMonth));
-                                    } else if (state
-                                            is UpdateValidationSuccess ||
-                                        state is UpdateValidationError) {
-                                      context.read<PlutotableBloc>().add(
-                                          FetchTableDataEvent(
-                                              selectedDate: DateTime.now(),
-                                              selectedMonth:
-                                                  DateTime(2024 - 01)));
-                                      Navigator.of(context).pop();
-                                    }
-                                  },
-                                  builder: (context, state) {
-                                    if (state is UpdateValidationLoading) {
+                                    if (state
+                                        is RevertClassificationLoadingState) {
                                       return Center(
                                         child: LoadingWidget(
                                           height:
                                               UIHelpers.screenHeight(context) *
-                                                  0.4,
+                                                  0.43,
                                           width:
                                               UIHelpers.screenWidth(context) *
-                                                  0.65,
+                                                  0.78,
                                           radius: 8,
                                         ),
                                       );
@@ -450,81 +249,316 @@ class DashboardDesktopView extends StatelessWidget {
                                           child: LoadingWidget(
                                         height:
                                             UIHelpers.screenHeight(context) *
-                                                0.4,
+                                                0.43,
                                         width: UIHelpers.screenWidth(context) *
-                                            0.75,
+                                            0.78,
                                         radius: 8,
                                       ));
+                                    } else if (state is FetchTableDataEmpty) {
+                                      return SizedBox(
+                                          height:
+                                              UIHelpers.screenHeight(context) *
+                                                  0.5,
+                                          child: const Center(
+                                              child: EmptyWidget()));
                                     } else if (state is FetchTableDataSuccess) {
                                       if (state.noDataAvailable) {
-                                        return Center(
-                                          child: Text('No Data Available',
-                                              style: SupportBotTextstyle
-                                                  .subheadingH6
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      decoration:
-                                                          TextDecoration.none)),
-                                        );
+                                        return SizedBox(
+                                            height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.5,
+                                            child: const Center(
+                                                child: EmptyWidget()));
                                       }
-                                      return PlutoTableWidget(
+                                      return TicketClassificationTableWidget(
                                         tableData: state.tableData,
-                                        selectedDate: state.selectedDate,
+                                        selectedDate:
+                                            state.selectedDate ?? null,
                                         selectedMonth: state.selectedMonth,
+                                        pipeline: pipeline,
                                       );
                                     } else if (state is FetchTableDataError) {
-                                      return const Center(child: EmptyWidget());
+                                      return SizedBox(
+                                          height:
+                                              UIHelpers.screenHeight(context) *
+                                                  0.5,
+                                          child: const Center(
+                                              child: EmptyWidget()));
                                     } else {
                                       return Container();
                                     }
                                   },
-                                ),
-                              );
-                            } else {
-                              return SizedBox(
-                                height: UIHelpers.screenHeight(context) * 0.5,
-                                child: Center(
-                                  child: Text('No Data Available',
-                                      style: SupportBotTextstyle.subheadingH6
-                                          .copyWith(
-                                              fontWeight: FontWeight.w300,
-                                              decoration: TextDecoration.none)),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ],
+                                );
+                              } else {
+                                return BlocConsumer<AiQueryAnswerBloc,
+                                        AiQueryAnswerState>(
+                                    listener: (context, state) {
+                                  if (state is UpdateAiAnswerSuccessState) {
+                                    context.read<AiQueryAnswerBloc>().add(
+                                        FetchAiQueryAnswerEvent(
+                                            selectedDate: state.selectedDate,
+                                            selectedMonth:
+                                                state.selectedMonth));
+                                  }
+                                }, builder: (context, state) {
+                                  if (state is AiQueryAnswerLoading) {
+                                    return Center(
+                                        child: LoadingWidget(
+                                      height: UIHelpers.screenHeight(context) *
+                                          0.43,
+                                      width:
+                                          UIHelpers.screenWidth(context) * 0.78,
+                                      radius: 8,
+                                    ));
+                                  } else if (state is AiQueryAnswerEmpty) {
+                                    return SizedBox(
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.5,
+                                        child:
+                                            const Center(child: EmptyWidget()));
+                                  } else if (state is AiQueryAnswerSuccess) {
+                                    return AIQueryAnswerWidget(
+                                      aiQuerytableData: state.data,
+                                      selectedDate: state.selectedDate,
+                                      selectedMonth: state.selectedMonth,
+                                    );
+                                  } else if (state is AiQUeryAnswerFailure) {
+                                    return SizedBox(
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.5,
+                                        child:
+                                            const Center(child: EmptyWidget()));
+                                  } else {
+                                    return Container();
+                                  }
+                                });
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: BlocBuilder<DashboardBloc, DashboardState>(
-                      builder: (context, state) {
-                        if (state is DashboardDataLoading) {
-                          return Center(
-                              child: LoadingWidget(
-                            width: UIHelpers.screenWidth(context) * 0.2,
-                            height: UIHelpers.screenHeight(context) * 0.85,
-                            radius: 8,
-                          ));
-                        } else if (state is DashboardDataSuccess) {
-                          return PieChartWidget(data: state.pieChartData);
-                        } else if (state is DashboardDataError) {
-                          return const Center(child: EmptyWidget());
-                        } else {
-                          return Container();
-                        }
-                      },
-                    ),
-                  ),
-                ],
+                    BlocBuilder<CustombuttonBloc, CustombuttonState>(
+                        builder: (context, state) {
+                      if (state is CustomButtonInitial ||
+                          (state is ButtonSelectedState &&
+                              state.selectedButtonText ==
+                                  'Ticket Classification')) {
+                        return Flexible(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              BlocBuilder<DashboardPipelineBloc,
+                                  DashboardPipelineState>(
+                                builder: (context, state) {
+                                  if (state is DashboardPipelineLoading) {
+                                    return LoadingWidget(
+                                      width:
+                                          UIHelpers.screenWidth(context) * 0.19,
+                                      height: UIHelpers.screenHeight(context) *
+                                          0.05,
+                                      radius: 8,
+                                    );
+                                  } else if (state
+                                      is DashboardPipelineFailure) {
+                                    return FailureWidget(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.05,
+                                        color: SupportBotColors.gray);
+                                  } else if (state
+                                      is DashboardPipelineSuccess) {
+                                    DateTime selectedMonth =
+                                        state.selectedMonth;
+                                    DateTime? selectedDate = state.selectedDate;
+                                    // String selectedMonthString =
+                                    //     _monthToString(selectedMonth.month);
+                                    pipeline =
+                                        state.selectedPipelineValue ?? "";
+                                    Map<String, String> pipelineNameToIdMap = {
+                                      for (var item in state
+                                              .dashboardPipelineAttributeModel
+                                              ?.data ??
+                                          [])
+                                        item.pipelineName: item.pipelineId,
+                                    };
+
+                                    List<String?> dropdownItems =
+                                        pipelineNameToIdMap.keys.toList();
+
+                                    return SizedBox(
+                                      width: UIHelpers.screenWidth(context),
+                                      child:
+                                          DashboardPipelineFilterDropdownWidget(
+                                        selectedValue: pipeline,
+                                        items: dropdownItems,
+                                        onChanged: (String? value) {
+                                          if (value != null) {
+                                             selectedPipelineId =
+                                                pipelineNameToIdMap[value] ??"";
+                                            BlocProvider.of<PlutotableBloc>(
+                                                    context)
+                                                .add(
+                                              FetchTableDataEvent(
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth: selectedMonth,
+                                                selectedPipeline:
+                                                    selectedPipelineId,
+                                              ),
+                                            );
+
+                                            BlocProvider.of<DashboardBloc>(
+                                                    context)
+                                                .add(FetchDashboardDataEvent(
+                                                    selectedDate:
+                                                        state.selectedDate,
+                                                    selectedMonth:
+                                                        selectedMonth,
+                                                    selectedPipeline:
+                                                        selectedPipelineId ??
+                                                            ""));
+
+                                            BlocProvider.of<
+                                                        DashboardPipelineBloc>(
+                                                    context,
+                                                    listen: false)
+                                                .add(
+                                              UpdateSelectedPipelineEvent(
+                                                selectedDate: selectedDate,
+                                                selectedMonth: selectedMonth,
+                                                selectedPipelineValue: value,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        label: S.of(context).pipelineType,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.18,
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                              BlocBuilder<DashboardBloc, DashboardState>(
+                                builder: (context, state) {
+                                  if (state is DashboardDataLoading) {
+                                    return LoadingWidget(
+                                      width:
+                                          UIHelpers.screenWidth(context) * 0.19,
+                                      height: UIHelpers.screenHeight(context) *
+                                          0.75,
+                                      radius: 8,
+                                    );
+                                  } else if (state is DashboardDataSuccess) {
+                                    return PieChartWidget(
+                                        data: state.pieChartData,
+                                        isAIQuery: false);
+                                  } else if (state is DashboardDataError) {
+                                    return FailureWidget(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        color: SupportBotColors.gray);
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Flexible(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              BlocBuilder<AiQueryChartBloc, AiQueryChartState>(
+                                builder: (context, state) {
+                                  if (state is AiQueryChartLoading) {
+                                    return Center(
+                                      child: LoadingWidget(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        radius: 8,
+                                      ),
+                                    );
+                                  } else if (state is AiQueryChartSuccess) {
+                                    return PieChartWidget(
+                                        data: state.pieChartData,
+                                        isAIQuery: true);
+                                  } else if (state is AiQueryChartFailure) {
+                                    return FailureWidget(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        color: SupportBotColors.gray);
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    })
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  String _monthToString(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    return months[month - 1];
+  }
+
+  DateTime _stringToMonth(String month) {
+    const months = {
+      'January': 1,
+      'February': 2,
+      'March': 3,
+      'April': 4,
+      'May': 5,
+      'June': 6,
+      'July': 7,
+      'August': 8,
+      'September': 9,
+      'October': 10,
+      'November': 11,
+      'December': 12
+    };
+    return DateTime(2024, months[month]!);
   }
 }

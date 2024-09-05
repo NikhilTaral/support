@@ -61,6 +61,8 @@ dependencies:
   url_strategy: ^0.2.0
   path_provider: ^2.1.3
   shimmer:
+  flutter_localization: ^0.2.1
+  intl_utils: ^2.8.7
 
 dev_dependencies:
   flutter_test:
@@ -78,7 +80,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -89,6 +91,7 @@ flutter:
      - assets/json/dashboard_data.json
      - assets/icons/
      - assets/images/
+     - assets/images/login/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

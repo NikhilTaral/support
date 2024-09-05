@@ -6,5 +6,5 @@ String? accessToken;
 
 dynamic getToken() async {
   accessToken = await _storage.getString(key: SecureStorageKey.accessToken);
-  return accessToken;
+  return "Bearer $accessToken";
 }

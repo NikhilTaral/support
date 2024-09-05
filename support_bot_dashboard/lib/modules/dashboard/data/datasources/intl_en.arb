@@ -1,0 +1,130 @@
+{
+  "title": "Support Bot",
+  "@title": {
+    "description": "Support Bot"
+  },
+   "ticketClassification": "Ticket Classification",
+  "@ticketClassification": {
+    "description": "Ticket Classification"
+  },
+  "aiQueryAnswer": "AI Query Answer",
+  "@aiQueryAnswer": {
+    "description": "AI Query Answer"
+  },
+  "spam": "Spam/Marketing",
+  "@spam": {
+    "description": "Spam/Marketing"
+  },
+  "noActionRequired": "No Action Required",
+  "@noActionRequired": {
+    "description": "No Action Required"
+  },
+  "genuineQuery": "Genuine Query",
+  "@genuineQuery": {
+    "description": "Genuine Query"
+  },
+  "acknowledgementRequired": "Acknowledgement Required",
+  "@acknowledgementRequired": {
+    "description": "Acknowledgement Required"
+  },
+  "total": "Total",
+  "@total": {
+    "description": "Total"
+  },
+  "day": "Day",
+  "@day": {
+    "description": "Day"
+  },
+  "month": "Month",
+  "@month": {
+    "description": "Month"
+  },
+  "classification": "Classification",
+  "@classification": {
+    "description": "Classification"
+  },
+  "validation": "Validation",
+  "@validation": {
+    "description": "Validation"
+  },
+  "export": "Export CSV File",
+  "@export": {
+    "description": "Export CSV File"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save"
+  },
+  "revert": "Revert",
+  "@revert": {
+    "description": "Revert"
+  },
+  "view": "View",
+  "@view": {
+    "description": "View"
+  },
+  "emailValidations": "Email Validation Details",
+  "@emailValidations": {
+    "description": "Email Validation Details"
+  },
+  "comments": "Please enter your comments",
+  "@comments": {
+    "description": "Please enter your comments"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel"
+  },
+  "id": "ID",
+  "@id": {
+    "description": "ID"
+  },
+  "ticketDescription": "Ticket Description",
+  "@ticketDescription": {
+    "description": "Ticket Description"
+  },
+  "reasoning": "Reasoning",
+  "@reasoning": {
+    "description": "Reasoning"
+  },
+  "validationReason": "Validation Reason",
+  "@validationReason": {
+    "description": "Validation Reason"
+  },
+  "actions": "Actions",
+  "@actions": {
+    "description": "Actions"
+  },
+  "status": "Status",
+  "@status": {
+    "description": "Status"
+  },
+  "revertSuccess": "Ticket stage reverted successfully",
+  "@revertSuccess": {
+    "description": "Ticket stage reverted successfully"
+  },
+  "noRevert": "No changes to revert.",
+  "@noRevert": {
+    "description": "No changes to revert."
+  },
+  "revertClassifcation": "This classification does not support revert feature",
+  "@revertClassifcation": {
+    "description": "This classification does not support revert feature"
+  },
+  "changeClassifcation": "Change Classification",
+  "@changeClassifcation": {
+    "description": "Change Classification"
+  },
+  "statusUpdated": "Update Status",
+  "@statusUpdated": {
+    "description": "Update Status"
+  },
+  "ok": "Ok",
+  "@ok": {
+    "description": "Ok"
+  },
+  "link": "Link",
+  "@link": {
+    "description": "Link"
+  }
+}
