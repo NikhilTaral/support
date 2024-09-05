@@ -5,42 +5,54 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 
 class ExportButton extends StatelessWidget {
   final String icon;
   final double iconSize;
+  final String selectedButtonText;
 
   const ExportButton({
     Key? key,
     required this.icon,
     this.iconSize = 25.0,
+    required this.selectedButtonText,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 25),
-      padding: const EdgeInsets.only(right: 16), 
+      margin: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(right: 16),
       child: TextButton(
         onPressed: () async {
-          final state = BlocProvider.of<PlutotableBloc>(context).state;
-          if (state is FetchTableDataSuccess) {
-            _exportTableDataToCsv(context, state.tableData);
-             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Report Downloaded'),
-                duration: Duration(seconds: 3),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('No table data available to export'),
-                duration: Duration(seconds: 3),
-              ),
-            );
+          if (selectedButtonText == 'Ticket Classification') {
+            final state = BlocProvider.of<PlutotableBloc>(context).state;
+            if (state is FetchTableDataSuccess) {
+              _exportTicketClassificationToCsv(context, state.tableData);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('No table data available to export'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
+            }
+          } else if (selectedButtonText == 'AI Query Answer') {
+            final state = BlocProvider.of<AiQueryAnswerBloc>(context).state;
+            if (state is AiQueryAnswerSuccess) {
+              _exportAiQueryDataToCsv(context, state.data);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('No AI query data available to export'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
+            }
           }
         },
         child: SvgPicture.asset(
@@ -52,21 +64,59 @@ class ExportButton extends StatelessWidget {
     );
   }
 
-  void _exportTableDataToCsv(BuildContext context, DashboardTableAttributeModel tableData) {
+  void _exportTicketClassificationToCsv(
+      BuildContext context, DashboardTableAttributeModel tableData) {
     List<List<dynamic>> rows = [];
 
-    rows.add(['ID', 'Classification', 'Pipeline Stage', 'Reasoning', 'Created At']);
+    rows.add([
+      'ID',
+      'Ticket Description',
+      'Classification',
+      'Reasoning',
+      'Validation',
+      'Validation Reason',
+      'Status',
+      'Created At'
+    ]);
 
     for (var item in tableData.items) {
       rows.add([
         item.id,
+        item.ticketDescription,
         item.classification,
-        item.hsPipelineStage,
         item.reasoning,
-        item.createdAt,
+        item.classificationValidation,
+        item.classificationValidationReason
       ]);
     }
 
+    _downloadCsv(rows, 'ticket_classification_data.csv');
+  }
+
+  void _exportAiQueryDataToCsv(
+      BuildContext context, DashboardAiQueryAttributeModel aiQueryData) {
+    List<List<dynamic>> rows = [];
+
+    rows.add([
+      'ID',
+      'Ticket Description',
+      'Classification',
+      'AI Query Answer',
+    ]);
+
+    for (var item in aiQueryData.items) {
+      rows.add([
+        item.id,
+        item.ticketDescription,
+        item.aIResponse,
+        item.answeredStatus,
+      ]);
+    }
+
+    _downloadCsv(rows, 'ai_query_data.csv');
+  }
+
+  void _downloadCsv(List<List<dynamic>> rows, String filename) {
     String csv = const ListToCsvConverter().convert(rows);
 
     List<int> csvBytes = utf8.encode(csv);
@@ -76,7 +126,9 @@ class ExportButton extends StatelessWidget {
 
     final url = html.Url.createObjectUrlFromBlob(blob);
 
-    html.AnchorElement(href: url)..setAttribute('download', 'table_data.csv')..click(); 
+    html.AnchorElement(href: url)
+      ..setAttribute('download', filename)
+      ..click();
 
     html.Url.revokeObjectUrl(url);
   }

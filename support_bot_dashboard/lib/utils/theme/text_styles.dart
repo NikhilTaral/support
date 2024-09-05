@@ -69,6 +69,27 @@ class SupportBotTextstyle {
     color: SupportBotColors.gray
   );
 
+  //sidebar title
+   static const TextStyle sidebarTitle = TextStyle(
+    fontSize: 20,
+    fontFamily: _fontFamily,
+    fontWeight: FontWeight.bold
+  );
+
+  //sidebar subtitle
+   static const TextStyle sidebarSubtitle = TextStyle(
+    fontSize: 16,
+    fontFamily: _fontFamily,
+    fontWeight: FontWeight.w700
+  );
+
+  //sidebar label
+   static const TextStyle siebarLabel = TextStyle(
+    fontSize: 16,
+    fontFamily: _fontFamily,
+    fontWeight: FontWeight.w400
+  );
+
 // Font size 48
   static final TextStyle headingH1 = TextStyle(
     color: _fontColor,

@@ -14,6 +14,41 @@ class ApiProvider {
   final _authService = serviceLocator<AuthService>();
   final _apiBaseUrl = EnvConfig.EXP_API_URL;
 
+
+  Future<dynamic> getData({
+    required String url,
+    Map<String, dynamic>? body,
+  }) async {
+    var headers = <String, String>{};
+    headers["Content-Type"] = "application/json";
+    final token = await serviceLocator<AuthService>().getAccessToken();
+    headers["Authorization"] = "Bearer $token";
+
+    try {
+      dynamic responseJson;
+
+        final response = await http.post(
+          Uri.parse("$_apiBaseUrl/$url"),
+          headers: headers,
+          body: json.encode(body),
+        );
+
+        if (response.statusCode != 200) return null;
+        responseJson = _response(response);
+      
+
+      if (responseJson == null) return null;
+
+      return responseJson;
+    } on TimeoutException catch (_) {
+      Log.error("ApiProvider get failed with timeout");
+      return null;
+    } catch (e) {
+      Log.error("ApiProvider get failed with error $e");
+      return null;
+    }
+  }
+
   Future<Uint8List?> fetchUserImage(String photoUrl) async {
     final apiBaseUrl = serviceLocator<ApiProvider>().getApiBaseUrl();
     final headers = <String, String>{};
@@ -46,6 +81,16 @@ class ApiProvider {
     }
   }
 
+    Future<String?> getUserUuid() async {
+    final profile = await _authService.getUserProfile();
+    return profile?.agentUuid;
+  }
+
+   Future<String?> getUserEmail() async {
+    final profile = await _authService.getUserProfile();
+    return profile?.email;
+  }
+
   String getApiBaseUrl() {
     return _apiBaseUrl;
   }
@@ -59,8 +104,6 @@ class ApiProvider {
   }) async {
     var headers = <String, String>{};
     headers["Content-Type"] = "multipart/form-data";
-    // headers["Authorization"] =
-    //     "Bearer ${await serviceLocator<SharedPreferencesService>().authToken}";
 
     try {
       dynamic responseJson;
@@ -98,10 +141,6 @@ class ApiProvider {
           response.statusCode == 402 ||
           response.statusCode == 403 ||
           response.statusCode == 404) {
-        // serviceLocator<AppRouter>().pushAndPopUntil(
-        //   const LoginRoute(),
-        //   predicate: (route) => route.data == null,
-        // );
       } else {
         return null;
       }
@@ -122,8 +161,6 @@ class ApiProvider {
   }) async {
     var headers = <String, String>{};
     headers["Content-Type"] = "application/json";
-    // headers["Authorization"] =
-    //     "Bearer ${serviceLocator<SharedPreferencesService>().authToken}";
 
     try {
       dynamic responseJson;
@@ -142,7 +179,6 @@ class ApiProvider {
           response.statusCode == 402 ||
           response.statusCode == 403 ||
           response.statusCode == 404) {
-        // serviceLocator<SharedPreferencesService>().isLogged = false;
       } else {
         return null;
       }
@@ -155,46 +191,46 @@ class ApiProvider {
     }
   }
 
-  Future<dynamic> getData({
-    required String subUrl,
-    BuildContext? context,
-    Map<String, dynamic>? body,
-  }) async {
-    var headers = <String, String>{};
-    headers["Content-Type"] = "application/json";
-    // headers["Authorization"] =
-    //     "Bearer ${serviceLocator<SharedPreferencesService>().authToken}";
+  // Future<dynamic> getData({
+  //   required String subUrl,
+  //   BuildContext? context,
+  //   Map<String, dynamic>? body,
+  // }) async {
+  //   var headers = <String, String>{};
+  //   headers["Content-Type"] = "application/json";
+  //   // headers["Authorization"] =
+  //   //     "Bearer ${serviceLocator<SharedPreferencesService>().authToken}";
 
-    try {
-      dynamic responseJson;
+  //   try {
+  //     dynamic responseJson;
 
-      final response = await http.post(
-        Uri.parse("$_apiBaseUrl$subUrl"),
-        headers: headers,
-        body: json.encode(body),
-      );
+  //     final response = await http.post(
+  //       Uri.parse("$_apiBaseUrl$subUrl"),
+  //       headers: headers,
+  //       body: json.encode(body),
+  //     );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        responseJson = _response(response);
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       responseJson = _response(response);
 
-        if (responseJson == null) return null;
-        return responseJson;
-      } else if (response.statusCode == 401 ||
-          response.statusCode == 402 ||
-          response.statusCode == 403 ||
-          response.statusCode == 404) {
-        // serviceLocator<SharedPreferencesService>().isLogged = false;
-      } else {
-        return null;
-      }
-    } on TimeoutException catch (_) {
-      Log.error("ApiProvider get  failed with timeout");
-      return null;
-    } catch (e) {
-      Log.error("ApiProvider get failed with error $e");
-      return null;
-    }
-  }
+  //       if (responseJson == null) return null;
+  //       return responseJson;
+  //     } else if (response.statusCode == 401 ||
+  //         response.statusCode == 402 ||
+  //         response.statusCode == 403 ||
+  //         response.statusCode == 404) {
+  //       // serviceLocator<SharedPreferencesService>().isLogged = false;
+  //     } else {
+  //       return null;
+  //     }
+  //   } on TimeoutException catch (_) {
+  //     Log.error("ApiProvider get  failed with timeout");
+  //     return null;
+  //   } catch (e) {
+  //     Log.error("ApiProvider get failed with error $e");
+  //     return null;
+  //   }
+  // }
 
   Future<dynamic> putData({
     BuildContext? context,
@@ -204,8 +240,6 @@ class ApiProvider {
   }) async {
     var headers = <String, String>{};
     headers["Content-Type"] = "application/json";
-    // headers["Authorization"] =
-    //     "Bearer ${serviceLocator<SharedPreferencesService>().authToken}";
 
     try {
       dynamic responseJson;
@@ -225,7 +259,6 @@ class ApiProvider {
           response.statusCode == 402 ||
           response.statusCode == 403 ||
           response.statusCode == 404) {
-        // serviceLocator<SharedPreferencesService>().isLogged = false;
       } else {
         return null;
       }
@@ -237,6 +270,9 @@ class ApiProvider {
       return null;
     }
   }
+
+ 
+
 
   dynamic _response(http.Response response) {
     switch (response.statusCode) {
