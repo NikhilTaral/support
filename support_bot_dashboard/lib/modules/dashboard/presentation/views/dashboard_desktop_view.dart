@@ -370,8 +370,8 @@ class DashboardDesktopView extends StatelessWidget {
                                     DateTime selectedMonth =
                                         state.selectedMonth;
                                     DateTime? selectedDate = state.selectedDate;
-                                    String selectedMonthString =
-                                        _monthToString(selectedMonth.month);
+                                    // String selectedMonthString =
+                                    //     _monthToString(selectedMonth.month);
                                     pipeline =
                                         state.selectedPipelineValue ?? "";
                                     Map<String, String> pipelineNameToIdMap = {
