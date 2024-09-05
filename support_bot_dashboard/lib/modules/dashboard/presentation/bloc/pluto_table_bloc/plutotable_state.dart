@@ -13,7 +13,7 @@ class FetchTableDataSuccess extends PlutotableState {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final bool noDataAvailable;
-  final String? selectedPipeline;
+  final String selectedPipeline;
   final String? ticketId;
 
   FetchTableDataSuccess({

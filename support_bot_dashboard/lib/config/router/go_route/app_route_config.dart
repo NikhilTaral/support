@@ -19,7 +19,7 @@ class MyAppRoutes {
           name: MyAppRouteName.main,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: Dashboard());
+            return  MaterialPage(child: Dashboard());
           },
         ),
         GoRoute(
@@ -35,7 +35,7 @@ class MyAppRoutes {
           pageBuilder: (context, state) {
             final queryParams = state.queryParams;
             final code = queryParams['code'];
-            return const MaterialPage(child: Dashboard());
+            return  MaterialPage(child: Dashboard());
           },
         ),
       ]);

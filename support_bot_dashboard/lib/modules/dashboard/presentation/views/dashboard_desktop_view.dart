@@ -23,9 +23,9 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
-  DashboardDesktopView({Key? key}) : super(key: key);
+  DashboardDesktopView({Key? key, required this.pipeline}) : super(key: key);
 
-  String? pipeline = '11257490';
+  late String pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
   String selectedClassification = '';
@@ -37,7 +37,7 @@ class DashboardDesktopView extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(DateTime.now(), null, pipeline)),
+            ..add(FetchDashboardDataEvent(selectedDate:  DateTime.now(), selectedMonth: null, selectedPipeline: pipeline)),
         ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
@@ -270,12 +270,12 @@ class DashboardDesktopView extends StatelessWidget {
                                         selectedMonth: state.selectedMonth,
                                       );
                                     } else if (state is FetchTableDataError) {
-                                      return FailureWidget(
-                                          width: UIHelpers.screenWidth(context)*0.78,
-                                          height:
-                                              UIHelpers.screenHeight(context) *
-                                                  0.43,
-                                          color: SupportBotColors.gray);
+                                      return SizedBox(
+                                            height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.5,
+                                            child: const Center(
+                                                child: EmptyWidget()));
                                     } else {
                                       return Container();
                                     }
@@ -369,7 +369,7 @@ class DashboardDesktopView extends StatelessWidget {
                                     DateTime? selectedDate = state.selectedDate;
                                     String selectedMonthString =
                                         _monthToString(selectedMonth.month);
-                                    pipeline = state.selectedPipelineValue;
+                                    pipeline = state.selectedPipelineValue??"";
                                     Map<String, String> pipelineNameToIdMap = {
                                       for (var item in state
                                               .dashboardPipelineAttributeModel
@@ -406,9 +406,11 @@ class DashboardDesktopView extends StatelessWidget {
                                             BlocProvider.of<DashboardBloc>(
                                                     context)
                                                 .add(FetchDashboardDataEvent(
+                                                  selectedDate: 
                                                     state.selectedDate,
+                                                    selectedMonth: 
                                                     selectedMonth,
-                                                    selectedPipelineId));
+                                                    selectedPipeline: selectedPipelineId??""));
 
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(

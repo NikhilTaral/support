@@ -251,7 +251,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 selectedMonth: event.selectedMonth,
                 selectedValidation: 'Select',
                 noDataAvailable: items.isEmpty,
-                selectedPipeline: event.pipeline));
+                selectedPipeline: event.pipeline??""));
           } else {
             emit(FetchTableDataEmpty());
           }
@@ -265,7 +265,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             selectedMonth: event.selectedMonth,
             selectedValidation: 'Select',
             noDataAvailable: initialData!.items.isEmpty,
-            selectedPipeline: event.pipeline));
+            selectedPipeline: event.pipeline??""));
       }
     } else {
       // both classification and validation filters
@@ -317,7 +317,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 selectedMonth: event.selectedMonth,
                 selectedValidation: event.selectedClassificationValidation,
                 noDataAvailable: items.isEmpty,
-                selectedPipeline: event.pipeline));
+                selectedPipeline: event.pipeline??""));
           } else {
             emit(FetchTableDataEmpty());
           }
