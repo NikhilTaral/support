@@ -23,7 +23,7 @@ class DashboardFilterWidget extends StatelessWidget {
   String selectedClassification;
   DashboardFilterWidget(
       {super.key,
-     required this.pipeline,
+      required this.pipeline,
       required this.selectedClassification,
       this.selectedDate,
       this.selectedMonth});
@@ -261,6 +261,21 @@ class DashboardFilterWidget extends StatelessWidget {
                                           size: 23,
                                         ),
                                         onPressed: () {
+                                          if (isOpen) {
+                                            BlocProvider.of<PlutotableBloc>(
+                                                    context)
+                                                .add(FetchTableDataEvent(
+                                                    selectedDate: selectedDate,
+                                                    selectedMonth:
+                                                        selectedMonth,
+                                                    selectedClassification:
+                                                        selectedClassification,
+                                                    selectedPipeline:
+                                                        pipeline));
+
+                                            _searchController.clear();
+                                          }
+
                                           _isSearchOpen.value =
                                               !_isSearchOpen.value;
                                         },
@@ -283,10 +298,11 @@ class DashboardFilterWidget extends StatelessWidget {
                                                         context)
                                                     .add(
                                                   SearchTableEvent(
-                                                    ticketId: value,
-                                                    selectDate: selectedDate,
-                                                    selectMonth: selectedMonth,
-                                                  ),
+                                                      ticketId: value,
+                                                      selectDate: selectedDate,
+                                                      selectMonth:
+                                                          selectedMonth,
+                                                      pipeline: pipeline),
                                                 );
                                               }
                                             },

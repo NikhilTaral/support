@@ -37,7 +37,10 @@ class DashboardDesktopView extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(selectedDate:  DateTime.now(), selectedMonth: null, selectedPipeline: pipeline)),
+            ..add(FetchDashboardDataEvent(
+                selectedDate: DateTime.now(),
+                selectedMonth: null,
+                selectedPipeline: pipeline)),
         ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
@@ -271,11 +274,11 @@ class DashboardDesktopView extends StatelessWidget {
                                       );
                                     } else if (state is FetchTableDataError) {
                                       return SizedBox(
-                                            height: UIHelpers.screenHeight(
-                                                    context) *
-                                                0.5,
-                                            child: const Center(
-                                                child: EmptyWidget()));
+                                          height:
+                                              UIHelpers.screenHeight(context) *
+                                                  0.5,
+                                          child: const Center(
+                                              child: EmptyWidget()));
                                     } else {
                                       return Container();
                                     }
@@ -316,12 +319,12 @@ class DashboardDesktopView extends StatelessWidget {
                                       selectedMonth: state.selectedMonth,
                                     );
                                   } else if (state is AiQUeryAnswerFailure) {
-                                    return FailureWidget(
-                                        width: UIHelpers.screenWidth(context) *0.78,
+                                    return SizedBox(
                                         height:
                                             UIHelpers.screenHeight(context) *
-                                                0.43,
-                                        color: SupportBotColors.gray);
+                                                0.5,
+                                        child:
+                                            const Center(child: EmptyWidget()));
                                   } else {
                                     return Container();
                                   }
@@ -369,7 +372,8 @@ class DashboardDesktopView extends StatelessWidget {
                                     DateTime? selectedDate = state.selectedDate;
                                     String selectedMonthString =
                                         _monthToString(selectedMonth.month);
-                                    pipeline = state.selectedPipelineValue??"";
+                                    pipeline =
+                                        state.selectedPipelineValue ?? "";
                                     Map<String, String> pipelineNameToIdMap = {
                                       for (var item in state
                                               .dashboardPipelineAttributeModel
@@ -406,11 +410,13 @@ class DashboardDesktopView extends StatelessWidget {
                                             BlocProvider.of<DashboardBloc>(
                                                     context)
                                                 .add(FetchDashboardDataEvent(
-                                                  selectedDate: 
-                                                    state.selectedDate,
-                                                    selectedMonth: 
-                                                    selectedMonth,
-                                                    selectedPipeline: selectedPipelineId??""));
+                                                    selectedDate:
+                                                        state.selectedDate,
+                                                    selectedMonth:
+                                                        selectedMonth,
+                                                    selectedPipeline:
+                                                        selectedPipelineId ??
+                                                            ""));
 
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(
@@ -451,7 +457,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
-                                        width: UIHelpers.screenWidth(context) *0.19,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
                                         height:
                                             UIHelpers.screenHeight(context) *
                                                 0.75,
@@ -488,7 +495,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         isAIQuery: true);
                                   } else if (state is AiQueryChartFailure) {
                                     return FailureWidget(
-                                        width: UIHelpers.screenWidth(context) *0.19,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
                                         height:
                                             UIHelpers.screenHeight(context) *
                                                 0.75,
