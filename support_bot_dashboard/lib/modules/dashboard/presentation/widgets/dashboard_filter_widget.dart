@@ -156,7 +156,10 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedClassification = state.selectedClassification;
                         pipeline = state.selectedPipeline;
                         ticketId = state.ticketId;
+                      } else if(state is FetchTableDataError){
+                        selectedClassification = state.selectedClassification;
                       }
+
                       print(pipeline);
                       final classificationItems = [
                         'Select',
