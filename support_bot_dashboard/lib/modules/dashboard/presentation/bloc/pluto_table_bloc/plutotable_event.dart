@@ -38,11 +38,13 @@ class UpdateValidationEvent extends PlutotableEvent {
   final String reason;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
+   final String pipeline;
 
   UpdateValidationEvent(
       {this.selectedDate,
       this.selectedMonth,
       required this.id,
+      required this.pipeline,
       required this.validation,
       required this.reason});
 }
