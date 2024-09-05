@@ -6,14 +6,15 @@ import 'package:support_bot_dashboard/responsive.dart';
 class Dashboard extends StatelessWidget {
    Dashboard({super.key});
   String pipeline = '11257490';
+  String selectedPipelineId = '11257490';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Responsive(
         mobile: DashboardMobileView(),
-        tablet: DashboardDesktopView(pipeline: pipeline,),
-        desktop: DashboardDesktopView(pipeline: pipeline,),
+        tablet: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId,),
+        desktop: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId,),
       ),
     );
   }
