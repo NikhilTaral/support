@@ -34,14 +34,16 @@ class PieChartError extends DashboardState {
 
 class DateUpdatedState extends DashboardState {
   final DateTime selectedDate;
+   final String? selectedPipeline;
 
-  DateUpdatedState(this.selectedDate);
+  DateUpdatedState(this.selectedDate,this.selectedPipeline);
 }
 
 class MonthUpdatedState extends DashboardState{
   final DateTime month;
+   final String? selectedPipeline;
 
-  MonthUpdatedState(this.month);
+  MonthUpdatedState(this.month,this.selectedPipeline);
 }
 
 class FetchCountDataLoading extends DashboardState{}

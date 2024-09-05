@@ -15,7 +15,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationTableWidget extends StatelessWidget {
   final DashboardTableAttributeModel tableData;
-  final DateTime selectedMonth;
+  final DateTime? selectedMonth;
   final DateTime? selectedDate;
 
   const TicketClassificationTableWidget(
@@ -134,7 +134,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
             rowID: plutoRenderercontext.row.cells['id']?.value ?? "N/A",
             plutotableBloc: context.read<PlutotableBloc>(),
             date: selectedDate ?? null,
-            month: selectedMonth,
+            month: selectedMonth ?? null,
             row: plutoRenderercontext.row,
           );
         },
@@ -225,7 +225,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
 Widget actionsRenderer(
   PlutoColumnRendererContext rendererContext,
   DateTime? selectedDate,
-  DateTime selectedMonth,
+  DateTime? selectedMonth,
 ) {
   final id =
       rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";

@@ -42,8 +42,8 @@ final class UpdateAiAnswerSuccessState extends AiQueryAnswerState {
  // final DashboardAiQueryAttributeModel data;
   final String? ticketId;
   final String? newAnswer;
-  final DateTime selectedDate;
-  final DateTime selectedMonth;
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
 
   UpdateAiAnswerSuccessState(
       {
