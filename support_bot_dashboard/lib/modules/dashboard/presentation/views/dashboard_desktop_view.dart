@@ -17,7 +17,9 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/das
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pipeline_filter_dropdown_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ticket_classification_table_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
@@ -267,12 +269,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         selectedMonth: state.selectedMonth,
                                       );
                                     } else if (state is FetchTableDataError) {
-                                      return SizedBox(
-                                          height:
-                                              UIHelpers.screenHeight(context) *
-                                                  0.5,
-                                          child: const Center(
-                                              child: EmptyWidget()));
+                                      return FailureWidget(width: UIHelpers.screenWidth(context), height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.5, color: SupportBotColors.gray);
                                     } else {
                                       return Container();
                                     }
@@ -313,12 +312,9 @@ class DashboardDesktopView extends StatelessWidget {
                                       selectedMonth: state.selectedMonth,
                                     );
                                   } else if (state is AiQUeryAnswerFailure) {
-                                    return SizedBox(
-                                        height:
-                                            UIHelpers.screenHeight(context) *
-                                                0.5,
-                                        child:
-                                            const Center(child: EmptyWidget()));
+                                    return FailureWidget(width: UIHelpers.screenWidth(context), height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.5, color: SupportBotColors.gray);
                                   } else {
                                     return Container();
                                   }
@@ -352,7 +348,9 @@ class DashboardDesktopView extends StatelessWidget {
                                     );
                                   } else if (state
                                       is DashboardPipelineFailure) {
-                                    return Text(state.message);
+                                    return FailureWidget(width: UIHelpers.screenWidth(context) * 0.19, height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.05, color: SupportBotColors.gray);
                                   } else if (state
                                       is DashboardPipelineSuccess) {
                                     DateTime selectedMonth =
@@ -439,12 +437,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
-                                    return SizedBox(
-                                        height:
-                                            UIHelpers.screenHeight(context) *
-                                                0.75,
-                                        child:
-                                            const Center(child: EmptyWidget()));
+                                    return FailureWidget(width: UIHelpers.screenWidth(context), height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.75, color: SupportBotColors.gray);
                                   } else {
                                     return Container();
                                   }
@@ -476,12 +471,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         isAIQuery: true);
                                   } else if (state is AiQueryChartFailure) {
-                                    return SizedBox(
-                                        height:
-                                            UIHelpers.screenHeight(context) *
-                                                0.75,
-                                        child:
-                                            const Center(child: EmptyWidget()));
+                                    return FailureWidget(width: UIHelpers.screenWidth(context), height: UIHelpers.screenHeight(
+                                                    context) *
+                                                0.75, color: SupportBotColors.gray);
                                   } else {
                                     return Container();
                                   }
