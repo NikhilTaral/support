@@ -3,12 +3,77 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-class CustomMonthDropdown extends StatelessWidget {
-  final DateTime selectedValue;
-  final List<String> items;
-  final ValueChanged<DateTime?> onChanged;
-  final String label;
+// class CustomMonthDropdown extends StatelessWidget {
+//   final DateTime selectedValue;
+//   final List<String> items;
+//   final ValueChanged<DateTime?> onChanged;
+//   final String label;
   
+//   const CustomMonthDropdown({
+//     Key? key,
+//     required this.selectedValue,
+//     required this.items,
+//     required this.onChanged,
+//     required this.label,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       children: [
+//          Container(
+//       decoration: BoxDecoration(
+//         border: Border.all(color: SupportBotColors.gray),
+//         borderRadius: BorderRadius.circular(5.0),
+//       ),
+//       padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
+//       margin: const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
+//       height: UIHelpers.screenHeight(context) * 0.05,
+//       width: UIHelpers.screenWidth(context) * 0.13,
+//       child: DropdownButtonHideUnderline(
+//         child: DropdownButton<DateTime>(
+//           value: selectedValue,
+//           onChanged: onChanged,
+//           items: items.map((String value) {
+//             DateTime dateTimeValue = DateTime(2024, items.indexOf(value) + 1); 
+//             return DropdownMenuItem<DateTime>(
+//               value: dateTimeValue,
+//               child: Text(value),
+//             );
+//           }).toList(),
+//           icon: const Icon(Icons.keyboard_arrow_down_rounded),
+//           iconSize: 30,
+//           isExpanded: true,
+//           focusColor: SupportBotColors.white,
+//           dropdownColor: SupportBotColors.white,
+//           autofocus: false,
+//         ),
+//       ),
+//     ),
+//     Positioned(
+//           left: 25,
+//           top: 20,
+//           child: Container(
+//             padding: const EdgeInsets.symmetric(horizontal: 5),
+//             color: SupportBotColors.white,
+//             child: Text(
+//               label,
+//               style: SupportBotTextstyle.dropdownLabel
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
+
+
+class CustomMonthDropdown extends StatelessWidget {
+  final String selectedValue; // Change to String
+  final List<String> items;
+  final ValueChanged<String?> onChanged; // Change to String
+  final String label;
+
   const CustomMonthDropdown({
     Key? key,
     required this.selectedValue,
@@ -21,45 +86,41 @@ class CustomMonthDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-         Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: SupportBotColors.gray),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
-      margin: const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
-      height: UIHelpers.screenHeight(context) * 0.05,
-      width: UIHelpers.screenWidth(context) * 0.14,
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<DateTime>(
-          value: selectedValue,
-          onChanged: onChanged,
-          items: items.map((String value) {
-            DateTime dateTimeValue = DateTime(2024, items.indexOf(value) + 1); 
-            return DropdownMenuItem<DateTime>(
-              value: dateTimeValue,
-              child: Text(value),
-            );
-          }).toList(),
-          icon: const Icon(Icons.keyboard_arrow_down_rounded),
-          iconSize: 30,
-          isExpanded: true,
-          focusColor: SupportBotColors.white,
-          dropdownColor: SupportBotColors.white,
-          autofocus: false,
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: SupportBotColors.gray),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
+          margin: const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
+          height: UIHelpers.screenHeight(context) * 0.05,
+          width: UIHelpers.screenWidth(context) * 0.13,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>( // Change to String
+              value: selectedValue,
+              onChanged: onChanged,
+              items: items.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              icon: const Icon(Icons.keyboard_arrow_down_rounded),
+              iconSize: 30,
+              isExpanded: true,
+              focusColor: SupportBotColors.white,
+              dropdownColor: SupportBotColors.white,
+              autofocus: false,
+            ),
+          ),
         ),
-      ),
-    ),
-    Positioned(
+        Positioned(
           left: 25,
           top: 20,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             color: SupportBotColors.white,
-            child: Text(
-              label,
-              style: SupportBotTextstyle.dropdownLabel
-            ),
+            child: Text(label, style: SupportBotTextstyle.dropdownLabel),
           ),
         ),
       ],

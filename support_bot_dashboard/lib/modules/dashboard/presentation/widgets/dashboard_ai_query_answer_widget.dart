@@ -11,8 +11,8 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AIQueryAnswerWidget extends StatelessWidget {
   final DashboardAiQueryAttributeModel aiQuerytableData;
-  final DateTime selectedMonth;
-  final DateTime selectedDate;
+  final DateTime? selectedMonth;
+  final DateTime? selectedDate;
   const AIQueryAnswerWidget(
       {super.key,
       required this.aiQuerytableData,
@@ -153,7 +153,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
                     'id': PlutoCell(value: item.id ?? "N/A"),
                     'ticketDescription':
                         PlutoCell(value: item.ticketDescription ?? "N/A"),
-                    'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answer" : "Not Answer"),
+                    'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answered" : "Not Answered"),
                     'aiQueryAnswer':
                         PlutoCell(value: item.aIResponse ?? "N/A"),
                     'actions': PlutoCell(value: 'View'),
@@ -186,7 +186,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
 }
 
 Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
-    {required DateTime selectedDate, required DateTime selectedMonth}) {
+    {required DateTime? selectedDate, required DateTime? selectedMonth}) {
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
   return Row(
@@ -239,7 +239,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
 }
 
 void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
-    DateTime selectedDate, DateTime selectedMonth) async {
+    DateTime? selectedDate, DateTime? selectedMonth) async {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
   final blocContext = context;
@@ -319,7 +319,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                     const Divider(),
                     _buildDetailRow('Ticket Id :', id),
                     _buildDetailRow('Ticket Description :', description),
-                    _buildDetailRow('answeredStatus :', answeredStatus),
+                    _buildDetailRow('Answer Status :', answeredStatus),
                     if (isEditing)
                       _buildEditableRow(
                           'AI Query Answer :', aiQueryAnswerController)
@@ -361,7 +361,6 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                   ElevatedButton.icon(
                     onPressed: () {
                       if (isEditing) {
-                        print("object");
 
                         BlocProvider.of<AiQueryAnswerBloc>(context).add(
                           UpdateAiAnswerInitialEvent(

@@ -15,8 +15,8 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationTableWidget extends StatelessWidget {
   final DashboardTableAttributeModel tableData;
-  final DateTime selectedMonth;
-  final DateTime selectedDate;
+  final DateTime? selectedMonth;
+  final DateTime? selectedDate;
 
   const TicketClassificationTableWidget(
       {Key? key,
@@ -133,8 +133,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
           return ValidationReasonRenderer(
             rowID: plutoRenderercontext.row.cells['id']?.value ?? "N/A",
             plutotableBloc: context.read<PlutotableBloc>(),
-            date: selectedDate,
-            month: selectedMonth,
+            date: selectedDate ?? null,
+            month: selectedMonth ?? null,
             row: plutoRenderercontext.row,
           );
         },
@@ -179,7 +179,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
         textAlign: PlutoColumnTextAlign.center,
         renderer: (context) => actionsRenderer(
           context,
-          selectedDate,
+          selectedDate ?? null,
           selectedMonth,
         ),
       ),
@@ -224,8 +224,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
 
 Widget actionsRenderer(
   PlutoColumnRendererContext rendererContext,
-  DateTime selectedDate,
-  DateTime selectedMonth,
+  DateTime? selectedDate,
+  DateTime? selectedMonth,
 ) {
   final id =
       rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
@@ -281,7 +281,7 @@ Widget actionsRenderer(
                             context.read<PlutotableBloc>().add(
                                   RevertClassificationEvent(
                                       ticketId: id,
-                                      selectedDate: selectedDate,
+                                      selectedDate: selectedDate ?? null,
                                       selectedMonth: selectedMonth,
                                       selectedClassification: classification),
                                 );

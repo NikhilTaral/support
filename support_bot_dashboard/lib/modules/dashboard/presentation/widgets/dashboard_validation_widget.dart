@@ -10,8 +10,8 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 class ValidationReasonRenderer extends StatefulWidget {
   final String rowID;
   final PlutotableBloc plutotableBloc;
-  final DateTime date;
-  final DateTime month;
+  final DateTime? date;
+  final DateTime? month;
   final PlutoRow row;
 
   const ValidationReasonRenderer({

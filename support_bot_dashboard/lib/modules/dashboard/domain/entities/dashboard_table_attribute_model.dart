@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class DashboardTableAttributeModel extends Equatable {
-  final num totalRecords;
+  final num? totalRecords;
   final List<TableItem> items;
 
   DashboardTableAttributeModel({

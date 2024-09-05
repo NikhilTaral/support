@@ -4,15 +4,15 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardPipelineFilterDropdownWidget extends StatelessWidget {
-  final String selectedValue;
-  final List<String> items;
+   String? selectedValue;
+  final List<String?> items;
   final ValueChanged<String?> onChanged;
   final String label;
   final double width;
 
-  const DashboardPipelineFilterDropdownWidget({
+   DashboardPipelineFilterDropdownWidget({
     super.key,
-    required this.selectedValue,
+     this.selectedValue,
     required this.items,
     required this.onChanged,
     required this.label,
@@ -30,18 +30,17 @@ class DashboardPipelineFilterDropdownWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(5.0),
           ),
           padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
-          margin:
-              const EdgeInsets.only(top: 15, bottom: 10, left: 15, right: 1),
+          margin: const EdgeInsets.only(top: 15, bottom: 10, left: 15, right: 1),
           height: UIHelpers.screenHeight(context) * 0.05,
           width: width,
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
-              value: selectedValue,
+              value: items.contains(selectedValue) ? selectedValue : null, 
               onChanged: onChanged,
-              items: items.map<DropdownMenuItem<String>>((String value) {
+              items: items.map<DropdownMenuItem<String>>((String? value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(value ?? ''),
                 );
               }).toList(),
               icon: const Icon(Icons.keyboard_arrow_down_rounded),
