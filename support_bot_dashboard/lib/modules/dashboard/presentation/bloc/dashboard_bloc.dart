@@ -18,13 +18,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
     emit(DateUpdatedState(event.selectedDate,event.selectedPipeline));
-    add(FetchDashboardDataEvent(event.selectedDate, DateTime(2024, 1), event.selectedPipeline));
+    add(FetchDashboardDataEvent(selectedPipeline: event.selectedPipeline));
   }
 
   Future<void> _onUpdateSelectedMonthEvent(
       UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async {
     emit(MonthUpdatedState(event.selectedMonth,event.selectedPipeline));
-    add(FetchDashboardDataEvent(null, event.selectedMonth, event.selectedPipeline));
+    add(FetchDashboardDataEvent(selectedDate:null,selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline??""));
   }
 
   Future<void> _onFetchDashboardData(
@@ -53,9 +53,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           );
           
           emit(DashboardDataSuccess(
+            
             pieChartData: dashboardChartData,
             selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 1), selectedPipeline: event.selectedPipeline,
           ));
         } else {
           emit(DashboardDataError(

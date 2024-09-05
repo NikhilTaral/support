@@ -17,13 +17,13 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardFilterWidget extends StatelessWidget {
-  String? pipeline;
+  String pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
   String selectedClassification;
   DashboardFilterWidget(
       {super.key,
-      this.pipeline,
+     required this.pipeline,
       required this.selectedClassification,
       this.selectedDate,
       this.selectedMonth});
