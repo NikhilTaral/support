@@ -59,14 +59,14 @@ class DashboardDesktopView extends StatelessWidget {
           create: (context) => serviceLocator<AiQueryAnswerBloc>()
             ..add(
               FetchAiQueryAnswerEvent(
-                  selectedDate: DateTime.now(), selectedMonth: null),
+                  selectedDate: DateTime.now(), selectedMonth: null,selectedPipeline: selectedPipelineId),
             ),
         ),
         BlocProvider(
           create: (context) => serviceLocator<AiQueryChartBloc>()
             ..add(
               FetchAiQueryChartData(
-                  selectedDate: DateTime.now(), selectedMonth: null),
+                  selectedDate: DateTime.now(), selectedMonth: null,selectedPipeline: selectedPipelineId),
             ),
         ),
         BlocProvider(
@@ -297,6 +297,7 @@ class DashboardDesktopView extends StatelessWidget {
                                     context.read<AiQueryAnswerBloc>().add(
                                         FetchAiQueryAnswerEvent(
                                             selectedDate: state.selectedDate,
+                                            selectedPipeline: selectedPipelineId,
                                             selectedMonth:
                                                 state.selectedMonth));
                                   }
@@ -319,6 +320,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             const Center(child: EmptyWidget()));
                                   } else if (state is AiQueryAnswerSuccess) {
                                     return AIQueryAnswerWidget(
+                                      pipeline: selectedPipelineId,
                                       aiQuerytableData: state.data,
                                       selectedDate: state.selectedDate,
                                       selectedMonth: state.selectedMonth,
@@ -422,6 +424,29 @@ class DashboardDesktopView extends StatelessWidget {
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+                                            
+                                             BlocProvider.of<AiQueryAnswerBloc>(
+                                                    context)
+                                                .add(
+                                              FetchAiQueryAnswerEvent(
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth: selectedMonth,
+                                                selectedPipeline:
+                                                    selectedPipelineId,
+                                              ),
+                                            );
+
+                                            BlocProvider.of<AiQueryChartBloc>(
+                                                    context)
+                                                .add(FetchAiQueryChartData(
+                                                    selectedDate:
+                                                        state.selectedDate,
+                                                    selectedMonth:
+                                                        selectedMonth,
+                                                    selectedPipeline:
+                                                        selectedPipelineId ??
+                                                            ""));
 
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(
@@ -481,6 +506,125 @@ class DashboardDesktopView extends StatelessWidget {
                           flex: 2,
                           child: Column(
                             children: [
+                              BlocBuilder<DashboardPipelineBloc,
+                                  DashboardPipelineState>(
+                                builder: (context, state) {
+                                  if (state is DashboardPipelineLoading) {
+                                    return LoadingWidget(
+                                      width:
+                                          UIHelpers.screenWidth(context) * 0.19,
+                                      height: UIHelpers.screenHeight(context) *
+                                          0.05,
+                                      radius: 8,
+                                    );
+                                  } else if (state
+                                      is DashboardPipelineFailure) {
+                                    return FailureWidget(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.05,
+                                        color: SupportBotColors.gray);
+                                  } else if (state
+                                      is DashboardPipelineSuccess) {
+                                    DateTime selectedMonth =
+                                        state.selectedMonth;
+                                    DateTime? selectedDate = state.selectedDate;
+                                    // String selectedMonthString =
+                                    //     _monthToString(selectedMonth.month);
+                                    pipeline =
+                                        state.selectedPipelineValue ?? "";
+                                    Map<String, String> pipelineNameToIdMap = {
+                                      for (var item in state
+                                              .dashboardPipelineAttributeModel
+                                              ?.data ??
+                                          [])
+                                        item.pipelineName: item.pipelineId,
+                                    };
+
+                                    List<String?> dropdownItems =
+                                        pipelineNameToIdMap.keys.toList();
+
+                                    return SizedBox(
+                                      width: UIHelpers.screenWidth(context),
+                                      child:
+                                          DashboardPipelineFilterDropdownWidget(
+                                        selectedValue: pipeline,
+                                        items: dropdownItems,
+                                        onChanged: (String? value) {
+                                          if (value != null) {
+                                             selectedPipelineId =
+                                                pipelineNameToIdMap[value] ??"";
+                                            BlocProvider.of<AiQueryAnswerBloc>(
+                                                    context)
+                                                .add(
+                                              FetchAiQueryAnswerEvent(
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth: selectedMonth,
+                                                selectedPipeline:
+                                                    selectedPipelineId,
+                                              ),
+                                            );
+
+                                            BlocProvider.of<AiQueryChartBloc>(
+                                                    context)
+                                                .add(FetchAiQueryChartData(
+                                                    selectedDate:
+                                                        state.selectedDate,
+                                                    selectedMonth:
+                                                        selectedMonth,
+                                                    selectedPipeline:
+                                                        selectedPipelineId ??
+                                                            ""));
+
+                                              BlocProvider.of<PlutotableBloc>(
+                                                    context)
+                                                .add(
+                                              FetchTableDataEvent(
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth: selectedMonth,
+                                                selectedPipeline:
+                                                    selectedPipelineId,
+                                              ),
+                                            );
+
+                                            BlocProvider.of<DashboardBloc>(
+                                                    context)
+                                                .add(FetchDashboardDataEvent(
+                                                    selectedDate:
+                                                        state.selectedDate,
+                                                    selectedMonth:
+                                                        selectedMonth,
+                                                    selectedPipeline:
+                                                        selectedPipelineId ??
+                                                            ""));
+
+                                            BlocProvider.of<
+                                                        DashboardPipelineBloc>(
+                                                    context,
+                                                    listen: false)
+                                                .add(
+                                              UpdateSelectedPipelineEvent(
+                                                selectedDate: selectedDate,
+                                                selectedMonth: selectedMonth,
+                                                selectedPipelineValue: value,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        label: S.of(context).pipelineType,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.18,
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
                               BlocBuilder<AiQueryChartBloc, AiQueryChartState>(
                                 builder: (context, state) {
                                   if (state is AiQueryChartLoading) {

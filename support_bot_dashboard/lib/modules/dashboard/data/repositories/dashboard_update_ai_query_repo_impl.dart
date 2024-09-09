@@ -8,7 +8,7 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 class UpdateAiAnswerRepoImpl extends UpdateAiAnswerRepository {
   @override
-  Future<Either<Failure, dynamic>> updateAiAnswer(String? ticketId, String? newAnswer) async {
+  Future<Either<Failure, dynamic>> updateAiAnswer(String? ticketId, String? newAnswer, String? selectedPipeline) async {
     final uri = Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/updateAIAnswer');
     final headers = {
       'Content-Type': 'application/json',
@@ -17,6 +17,7 @@ class UpdateAiAnswerRepoImpl extends UpdateAiAnswerRepository {
     final body = jsonEncode({
       'ticketId': ticketId,
       'newAnswer': newAnswer,
+      'pipeline': selectedPipeline
     });
     final response = await http.post(uri, headers: headers, body: body);
     if (response.statusCode == 200) {

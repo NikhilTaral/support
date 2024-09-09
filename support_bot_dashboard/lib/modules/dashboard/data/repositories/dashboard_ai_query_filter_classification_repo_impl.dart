@@ -30,7 +30,7 @@ class DashboardAiQueryFilterClassificationRepoImpl
     }
 
     if (pipeline != null) {
-      body['pipeline'] = '11257490';
+      body['pipeline'] = pipeline;
     }
 
     dynamic response;

@@ -345,9 +345,9 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
                           BlocProvider.of<AiQueryAnswerBloc>(context)
-                              .add(SelectedDateEvent(selectedDate: newDate));
+                              .add(SelectedDateEvent(selectedDate: newDate,selectedPipeline: pipeline));
                           BlocProvider.of<AiQueryChartBloc>(context).add(
-                              SelectedChartDateEvent(selectedDate: newDate));
+                              SelectedChartDateEvent(selectedDate: newDate,selectedPipeline: pipeline));
                         },
                         label: S.of(context).day,
                         isInteractive: true,
@@ -359,13 +359,13 @@ class DashboardFilterWidget extends StatelessWidget {
                   // Classification dropdown
                   BlocBuilder<AiQueryAnswerBloc, AiQueryAnswerState>(
                     builder: (context, state) {
-                      bool? selectedClassification = null;
+                      bool? selectedAIClassification;
                       String? classification = 'Select';
 
                       if (state is AiQueryAnswerSuccess) {
                         selectedDate = state.selectedDate;
                         selectedMonth = state.selectedMonth;
-                        selectedClassification = state.selectedClassification;
+                        selectedAIClassification = state.selectedClassification;
                         classification = state.classification;
                       }
 
@@ -394,6 +394,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                 selectedClassification: isAnswer,
                                 selectDate: selectedDate,
                                 selectMonth: selectedMonth,
+                                selectedPipeline: pipeline
                               ),
                             );
                           }
