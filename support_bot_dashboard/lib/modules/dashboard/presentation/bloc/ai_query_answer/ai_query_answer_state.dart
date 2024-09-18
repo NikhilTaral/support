@@ -19,8 +19,9 @@ class AiQueryAnswerSuccess extends AiQueryAnswerState{
 
 class AiQUeryAnswerFailure extends AiQueryAnswerState{
   final String message;
+    final String? selectedClassification;
 
-  AiQUeryAnswerFailure({required this.message});
+  AiQUeryAnswerFailure({required this.message,this.selectedClassification});
 }
 
 class AiQueryAnswerEmpty extends AiQueryAnswerState{}
