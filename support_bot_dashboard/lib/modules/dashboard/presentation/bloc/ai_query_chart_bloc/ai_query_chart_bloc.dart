@@ -21,7 +21,7 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
     try {
       final repository = serviceLocator<DashboardAiQueryChartUsecase>();
       final response = await repository.invoke(
-          event.selectedDate, event.selectedMonth, "11257490");
+          event.selectedDate, event.selectedMonth, event.selectedPipeline);
       if (response.isLeft) {
         emit(AiQueryChartFailure(message: 'Failed to fetch chart data'));
       } else {
@@ -35,6 +35,7 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
           emit(AiQueryChartSuccess(
               pieChartData: dashboardAiQueryChartData,
               selectedDate: event.selectedDate,
+              selectedPipeline: event.selectedPipeline,
               selectedMonth: event.selectedMonth));
         }
       }
@@ -45,15 +46,15 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
 
   FutureOr<void> _onSelectedChartDateEvent(
       SelectedChartDateEvent event, Emitter<AiQueryChartState> emit) {
-    emit(UpdateSelectedChartDateState(selectedDate: event.selectedDate));
+    emit(UpdateSelectedChartDateState(selectedDate: event.selectedDate,selectedPipeline: event.selectedPipeline));
     add(FetchAiQueryChartData(
-        selectedDate: event.selectedDate, selectedMonth: DateTime(2024 - 01)));
+        selectedDate: event.selectedDate, selectedMonth: DateTime(2024 - 01),selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> _onSelectedChartMonthEvent(
       SelectedChartMonthEvent event, Emitter<AiQueryChartState> emit) {
-    emit(UpdateSelectedChartMonthState(selectedMonth: event.selectedMonth));
+    emit(UpdateSelectedChartMonthState(selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline));
     add(FetchAiQueryChartData(
-        selectedDate: DateTime.now(), selectedMonth: event.selectedMonth));
+        selectedDate: DateTime.now(), selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline));
   }
 }
