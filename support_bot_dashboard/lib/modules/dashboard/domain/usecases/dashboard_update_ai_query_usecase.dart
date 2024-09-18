@@ -4,10 +4,10 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class UpdateAiAnswerUsecase implements UseCaseTwoInput<String,String, dynamic> {
+class UpdateAiAnswerUsecase implements UseCaseThreeInput<String,String,String, dynamic> {
   @override
-  Future<Either<Failure, dynamic>> invoke(String? ticketId, String? newAnswer) async {
+  Future<Either<Failure, dynamic>> invoke(String? ticketId, String? newAnswer, String? selectedPipeline) async {
     return await serviceLocator.get<UpdateAiAnswerRepository>()
-        .updateAiAnswer(ticketId, newAnswer);
+        .updateAiAnswer(ticketId, newAnswer,selectedPipeline);
   }
 }
