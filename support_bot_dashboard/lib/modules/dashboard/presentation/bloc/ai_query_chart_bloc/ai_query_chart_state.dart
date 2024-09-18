@@ -8,10 +8,11 @@ class AiQueryChartLoading extends AiQueryChartState{}
 
 class AiQueryChartSuccess extends AiQueryChartState{
   final DashboardAiQueryChartAttributeModel? pieChartData;
+  final String? selectedPipeline;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
 
-  AiQueryChartSuccess({required this.pieChartData, required this.selectedDate, required this.selectedMonth});
+  AiQueryChartSuccess({required this.pieChartData, required this.selectedDate, required this.selectedMonth,this.selectedPipeline});
 }
 
 class AiQueryChartEmpty extends AiQueryChartState{}
@@ -24,12 +25,14 @@ class AiQueryChartFailure extends AiQueryChartState{
 
 class UpdateSelectedChartDateState extends AiQueryChartState {
   final DateTime? selectedDate;
+  final String? selectedPipeline;
 
-  UpdateSelectedChartDateState({required this.selectedDate});
+  UpdateSelectedChartDateState({required this.selectedDate,this.selectedPipeline});
 }
 
 class UpdateSelectedChartMonthState extends AiQueryChartState {
   final DateTime? selectedMonth;
+  final String? selectedPipeline;
 
-  UpdateSelectedChartMonthState({required this.selectedMonth});
+  UpdateSelectedChartMonthState({required this.selectedMonth,this.selectedPipeline});
 }

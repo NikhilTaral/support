@@ -13,9 +13,11 @@ class AIQueryAnswerWidget extends StatelessWidget {
   final DashboardAiQueryAttributeModel aiQuerytableData;
   final DateTime? selectedMonth;
   final DateTime? selectedDate;
-  const AIQueryAnswerWidget(
+  String? pipeline;
+  AIQueryAnswerWidget(
       {super.key,
       required this.aiQuerytableData,
+      this.pipeline,
       required this.selectedMonth,
       required this.selectedDate});
 
@@ -144,6 +146,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
                 rendererContext,
                 selectedDate: selectedDate,
                 selectedMonth: selectedMonth,
+                pipeline: pipeline
               ),
             ),
           ],
@@ -186,7 +189,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
 }
 
 Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
-    {required DateTime? selectedDate, required DateTime? selectedMonth}) {
+    {required DateTime? selectedDate, required DateTime? selectedMonth, required String? pipeline}) {
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
   return Row(
@@ -206,7 +209,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
                 child: InkWell(
                   onTap: () {
                     _showDetails(context, rows, currentIndex, selectedDate,
-                        selectedMonth);
+                        selectedMonth,pipeline);
                   },
                   child: Row(
                     children: [
@@ -217,19 +220,19 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
                   ),
                 ),
               ),
-              PopupMenuItem<String>(
-                value: S.of(context).changeClassifcation,
-                child: InkWell(
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      const Icon(Icons.loop_rounded),
-                      UIHelpers.horizontalSpaceTiny,
-                      Text(S.of(context).changeClassifcation),
-                    ],
-                  ),
-                ),
-              ),
+              // PopupMenuItem<String>(
+              //   value: S.of(context).changeClassifcation,
+              //   child: InkWell(
+              //     onTap: () {},
+              //     child: Row(
+              //       children: [
+              //         const Icon(Icons.loop_rounded),
+              //         UIHelpers.horizontalSpaceTiny,
+              //         Text(S.of(context).changeClassifcation),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -239,7 +242,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
 }
 
 void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
-    DateTime? selectedDate, DateTime? selectedMonth) async {
+    DateTime? selectedDate, DateTime? selectedMonth, String? pipeline) async {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
   final blocContext = context;
@@ -276,7 +279,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                           Navigator.pop(context);
                           if (isPreviousEnabled) {
                             _showDetails(blocContext, rows, currentIndex - 1,
-                                selectedDate, selectedMonth);
+                                selectedDate, selectedMonth,pipeline);
                           }
                         }
                       : null,
@@ -298,7 +301,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                             Navigator.pop(context);
                             if (isNextEnabled) {
                               _showDetails(context, rows, currentIndex + 1,
-                                  selectedDate, selectedMonth);
+                                  selectedDate, selectedMonth,pipeline);
                             }
                           }
                         : null,
@@ -366,6 +369,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                           UpdateAiAnswerInitialEvent(
                             ticketId: id,
                             newAnswer: aiQueryAnswerController.text,
+                            selectedPipeline: pipeline,
                             selectedDate: selectedDate,
                             selectedMonth: selectedMonth,
                           ),

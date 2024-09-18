@@ -22,7 +22,7 @@ class DashboardAiQueryChartRepoImpl
           '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
     }
     if (pipeline != null) {
-      body['pipeline'] = '11257490';
+      body['pipeline'] = pipeline;
     }
 
     dynamic response;
