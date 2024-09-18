@@ -25,7 +25,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     try {
       final repository = serviceLocator<DashboardAiQueryUsecase>();
       final response = await repository.invoke(
-          event.selectedDate, event.selectedMonth, "11257490");
+          event.selectedDate, event.selectedMonth, event.selectedPipeline);
       if (response.isLeft) {
         emit(AiQUeryAnswerFailure(message: 'Failed to fetch data'));
       } else {
@@ -48,6 +48,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
 
         emit(AiQueryAnswerSuccess(
             data: aiQueryAnswerTableData,
+            selectedPipeline: event.selectedPipeline,
             selectedDate: event.selectedDate ?? DateTime.now(),
             selectedMonth: event.selectedMonth ?? DateTime(2024 - 01),
             selectedClassification: null,
@@ -60,27 +61,28 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
 
   FutureOr<void> _onSelectedDateEvent(
       SelectedDateEvent event, Emitter<AiQueryAnswerState> emit) {
-    emit(UpdateSelectedDateState(selectedDate: event.selectedDate));
+    emit(UpdateSelectedDateState(selectedDate: event.selectedDate,selectedPipeline: event.selectedPipeline));
     add(FetchAiQueryAnswerEvent(
-        selectedDate: event.selectedDate, selectedMonth: null));
+        selectedDate: event.selectedDate, selectedMonth: null, selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> _onSelectedMonthEvent(
       SelectedMonthEvent event, Emitter<AiQueryAnswerState> emit) {
-    emit(UpdateSelectedMonthState(selectedMonth: event.selectedMonth));
+    emit(UpdateSelectedMonthState(selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline));
     add(FetchAiQueryAnswerEvent(
-        selectedDate: null, selectedMonth: event.selectedMonth));
+        selectedDate: null, selectedMonth: event.selectedMonth, selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> UpdateAiAnswers(UpdateAiAnswerInitialEvent event,
       Emitter<AiQueryAnswerState> emit) async {
     emit(UpdateAiAnswerLoadingState());
     final repository = serviceLocator<UpdateAiAnswerUsecase>();
-    final response = await repository.invoke(event.ticketId, event.newAnswer);
+    final response = await repository.invoke(event.ticketId, event.newAnswer,event.selectedPipeline);
     emit(UpdateAiAnswerSuccessState(
         // data: aiQueryAnswerTableData,
         selectedDate: event.selectedDate,
         selectedMonth: event.selectedMonth,
+        selectedPipeline: event.selectedPipeline,
         ticketId: event.ticketId,
         newAnswer: event.newAnswer));
   }
@@ -92,7 +94,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     try {
       final repository = serviceLocator<DashboardFilterAiQueryUsecase>();
       final response = await repository.invoke(event.selectDate,
-          event.selectMonth, event.selectedClassification, "11257490");
+          event.selectMonth, event.selectedClassification, event.selectedPipeline);
       if (response.isLeft) {
         emit(AiQUeryAnswerFailure(message: "Failed to fetch data"));
       } else {
@@ -119,6 +121,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               selectedDate: event.selectDate ?? DateTime.now(),
               selectedMonth: event.selectMonth ?? DateTime(2024 - 01),
               selectedClassification: event.selectedClassification,
+              selectedPipeline: event.selectedPipeline,
               classification: event.selectedClassification == true
                   ? 'Answered'
                   : event.selectedClassification == false
