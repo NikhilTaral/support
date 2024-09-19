@@ -30,13 +30,17 @@ class DashboardPipelineBloc
         dashboardPipelineAttributeModel = DashboardPipelineAttributeModel(
             data: model.data
                 .map((p) => PipelineAttribute(
-                    pipelineId: p.pipelineId, pipelineName: p.pipelineName))
+                    pipelineId: p.pipelineId,
+                    pipelineName: p.pipelineName,
+                    aiAnswerPerm: p.aiAnswerPerm,
+                    hubspotUpdateEnv: p.hubspotUpdateEnv,
+                    hubspotUpdatepPerm: p.hubspotUpdatepPerm))
                 .toList());
         emit(DashboardPipelineSuccess(
             dashboardPipelineAttributeModel: dashboardPipelineAttributeModel,
             selectedPipelineValue: event.selectedPipeline,
             selectedDate: event.selectedDate,
-            selectedMonth: event.selectedMonth ?? DateTime(2024-01)));
+            selectedMonth: event.selectedMonth ?? DateTime(2024 - 01)));
       } catch (e) {
         emit(DashboardPipelineFailure(message: 'Exception $e'));
       }
