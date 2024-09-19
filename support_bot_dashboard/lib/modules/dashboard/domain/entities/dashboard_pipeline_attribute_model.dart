@@ -7,11 +7,16 @@ class DashboardPipelineAttributeModel {
 }
 
 class PipelineAttribute {
-  final String pipelineId;
-  final String pipelineName;
+  final String? pipelineId;
+  final String? pipelineName;
+  final bool? hubspotUpdatepPerm;
+  final bool? aiAnswerPerm;
+  final String? hubspotUpdateEnv;
 
-  PipelineAttribute({
-    required this.pipelineId,
-    required this.pipelineName,
-  });
+  PipelineAttribute(
+      { this.pipelineId,
+       this.pipelineName,
+      this.aiAnswerPerm,
+      this.hubspotUpdateEnv,
+      this.hubspotUpdatepPerm});
 }
