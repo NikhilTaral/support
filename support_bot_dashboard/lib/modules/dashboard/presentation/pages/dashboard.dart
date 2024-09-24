@@ -7,14 +7,15 @@ class Dashboard extends StatelessWidget {
    Dashboard({super.key});
   String pipeline = '11257490';
   String selectedPipelineId = '11257490';
+  bool isAIAnswer = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Responsive(
         mobile: DashboardMobileView(),
-        tablet: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId,),
-        desktop: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId,),
+        tablet: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId,isAIAnswer: isAIAnswer),
+        desktop: DashboardDesktopView(pipeline: pipeline,selectedPipelineId: selectedPipelineId, isAIAnswer: isAIAnswer),
       ),
     );
   }

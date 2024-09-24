@@ -96,7 +96,11 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
       final response = await repository.invoke(event.selectDate,
           event.selectMonth, event.selectedClassification, event.selectedPipeline);
       if (response.isLeft) {
-        emit(AiQUeryAnswerFailure(message: "Failed to fetch data"));
+        emit(AiQUeryAnswerFailure(message: "Failed to fetch data",selectedClassification: event.selectedClassification == true
+                  ? 'Answered'
+                  : event.selectedClassification == false
+                      ? 'Not Answered'
+                      : 'Select'));
       } else {
         final model = DashboardAiQueryResponseModel.fromJson(response.right);
         List<AiQueryAnswerTableItem> items =
@@ -130,7 +134,11 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         );
       }
     } catch (e) {
-      emit(AiQUeryAnswerFailure(message: 'Exception occured $e'));
+      emit(AiQUeryAnswerFailure(message: 'Exception occured $e',selectedClassification: event.selectedClassification == true
+                  ? 'Answered'
+                  : event.selectedClassification == false
+                      ? 'Not Answered'
+                      : 'Select'));
     }
   }
 }

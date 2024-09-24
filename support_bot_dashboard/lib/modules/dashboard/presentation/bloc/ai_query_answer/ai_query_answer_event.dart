@@ -6,8 +6,9 @@ class FetchAiQueryAnswerEvent extends AiQueryAnswerEvent{
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String? selectedPipeline;
+  final bool? isAIAnswer;
 
-  FetchAiQueryAnswerEvent({this.selectedDate, this.selectedMonth,this.selectedPipeline});
+  FetchAiQueryAnswerEvent({this.selectedDate, this.selectedMonth,this.selectedPipeline,this.isAIAnswer});
 }
 class SelectedDateEvent extends AiQueryAnswerEvent {
   final DateTime selectedDate;
