@@ -49,24 +49,22 @@ class DashboardFilterWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                if (EnvConfig.ENV != 'dev' || EnvConfig.ENV != 'qa')
-                  CustomButton(
-                    text: S.of(context).ticketClassification,
-                    isSelected: selectedButtonText == 'Ticket Classification',
-                    onPressed: () {
-                      BlocProvider.of<CustombuttonBloc>(context)
-                          .add(SelectButtonEvent('Ticket Classification'));
-                    },
-                  ),
-                if (EnvConfig.ENV != 'prod')
-                  CustomButton(
-                    text: S.of(context).aiQueryAnswer,
-                    isSelected: selectedButtonText == 'AI Query Answer',
-                    onPressed: () {
-                      BlocProvider.of<CustombuttonBloc>(context)
-                          .add(SelectButtonEvent('AI Query Answer'));
-                    },
-                  ),
+                CustomButton(
+                  text: S.of(context).ticketClassification,
+                  isSelected: selectedButtonText == 'Ticket Classification',
+                  onPressed: () {
+                    BlocProvider.of<CustombuttonBloc>(context)
+                        .add(SelectButtonEvent('Ticket Classification'));
+                  },
+                ),
+                CustomButton(
+                  text: S.of(context).aiQueryAnswer,
+                  isSelected: selectedButtonText == 'AI Query Answer',
+                  onPressed: () {
+                    BlocProvider.of<CustombuttonBloc>(context)
+                        .add(SelectButtonEvent('AI Query Answer'));
+                  },
+                ),
               ],
             ),
             // for Ticket Classification
@@ -156,7 +154,7 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedClassification = state.selectedClassification;
                         pipeline = state.selectedPipeline;
                         ticketId = state.ticketId;
-                      } else if(state is FetchTableDataError){
+                      } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
                       }
 
@@ -345,10 +343,14 @@ class DashboardFilterWidget extends StatelessWidget {
                       return DateSelectionWidget(
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
-                          BlocProvider.of<AiQueryAnswerBloc>(context)
-                              .add(SelectedDateEvent(selectedDate: newDate,selectedPipeline: pipeline));
+                          BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                              SelectedDateEvent(
+                                  selectedDate: newDate,
+                                  selectedPipeline: pipeline));
                           BlocProvider.of<AiQueryChartBloc>(context).add(
-                              SelectedChartDateEvent(selectedDate: newDate,selectedPipeline: pipeline));
+                              SelectedChartDateEvent(
+                                  selectedDate: newDate,
+                                  selectedPipeline: pipeline));
                         },
                         label: S.of(context).day,
                         isInteractive: true,
@@ -393,11 +395,10 @@ class DashboardFilterWidget extends StatelessWidget {
                                     listen: false)
                                 .add(
                               FilterAiAnsweClassificationEvent(
-                                selectedClassification: isAnswer,
-                                selectDate: selectedDate,
-                                selectMonth: selectedMonth,
-                                selectedPipeline: pipeline
-                              ),
+                                  selectedClassification: isAnswer,
+                                  selectDate: selectedDate,
+                                  selectMonth: selectedMonth,
+                                  selectedPipeline: pipeline),
                             );
                           }
                         },
