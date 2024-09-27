@@ -37,7 +37,7 @@ pipeline
     stage('Docker push') {
       steps {
         script {
-          sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
+          sh("aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${ECR}")
           ECRURL = "http://${ECR}"
           echo ECRURL
           // Push the Docker image to ECR
@@ -69,7 +69,7 @@ pipeline
             ]]) {
             script
             {
-              docker.image('public.ecr.aws/l2j8b6z4/docker-terragrunt:jenkins-3')
+              docker.image('204048894727.dkr.ecr.us-east-1.amazonaws.com/exp/jenkins-terraform')
                 .inside("-u 0 -v $WORKSPACE:/data -v /var/lib/jenkins/.ssh:/data/.ssh -e BITBUCKET_USER=exp-jenkins -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}")
                 {
                   sh """
@@ -103,7 +103,7 @@ pipeline
             ]]) {
             script
             {
-              docker.image('public.ecr.aws/l2j8b6z4/docker-terragrunt:jenkins-3')
+              docker.image('204048894727.dkr.ecr.us-east-1.amazonaws.com/exp/jenkins-terraform')
                 .inside("-u 0 -v $WORKSPACE:/data -v /var/lib/jenkins/.ssh:/data/.ssh -e BITBUCKET_USER=exp-jenkins -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}")
                 {
                   sh """
@@ -137,7 +137,7 @@ pipeline
             ]]) {
             script
             {
-              docker.image('public.ecr.aws/l2j8b6z4/docker-terragrunt:jenkins-3')
+              docker.image('204048894727.dkr.ecr.us-east-1.amazonaws.com/exp/jenkins-terraform')
                 .inside("-u 0 -v $WORKSPACE:/data -v /var/lib/jenkins/.ssh:/data/.ssh -e BITBUCKET_USER=exp-jenkins -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}")
                 {
                   sh """
