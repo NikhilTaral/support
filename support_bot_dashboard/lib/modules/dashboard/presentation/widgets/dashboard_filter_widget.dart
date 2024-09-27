@@ -206,7 +206,7 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedValidation = state.selectedValidation;
                       }
                       final validationItems = [
-                        'Select',
+                        'Not Updated',
                         'All',
                         'correct',
                         'incorrect'
@@ -410,6 +410,7 @@ class DashboardFilterWidget extends StatelessWidget {
                         },
                         label: S.of(context).classification,
                         width: UIHelpers.screenWidth(context) * 0.14,
+                        height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },
                   ),

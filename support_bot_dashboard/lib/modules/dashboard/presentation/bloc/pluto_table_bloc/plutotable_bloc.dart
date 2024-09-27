@@ -206,7 +206,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     String? validationFilter;
     if (event.selectedClassificationValidation == 'All') {
       validationFilter = null;
-    } else if (event.selectedClassificationValidation == 'Select') {
+    } else if (event.selectedClassificationValidation == 'Not Updated') {
       validationFilter = "";
     } else {
       validationFilter = event.selectedClassificationValidation;
@@ -271,7 +271,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           tableData: initialData!,
           selectedDate: event.selectedDate,
           selectedMonth: event.selectedMonth,
-          selectedValidation: 'Select',
+          selectedValidation: 'Not Updated',
           noDataAvailable: initialData!.items.isEmpty,
           selectedPipeline: event.pipeline ?? ""));
     }
