@@ -208,18 +208,23 @@ class DashboardFilterWidget extends StatelessWidget {
                       final validationItems = [
                         'Not Updated',
                         'All',
-                        'correct',
-                        'incorrect'
+                        'Correct',
+                        'Incorrect'
                       ];
                       return CustomFilterDropdown(
-                        selectedValue: selectedValidation,
+                        selectedValue: selectedValidation == 'correct'
+                            ? 'Correct'
+                            : selectedValidation == 'incorrect'
+                                ? 'Incorrect'
+                                : selectedValidation,
                         items: validationItems,
                         onChanged: (String? value) {
                           if (value != null) {
+                            String lowercaseValue = value.toLowerCase();
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
                                 .add(FilterValidationEvent(
-                                    value,
+                                    lowercaseValue,
                                     selectedDate ?? null,
                                     selectedMonth,
                                     selectedClassification,
