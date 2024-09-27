@@ -49,24 +49,22 @@ class DashboardFilterWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                if (EnvConfig.ENV != 'dev' || EnvConfig.ENV != 'qa')
-                  CustomButton(
-                    text: S.of(context).ticketClassification,
-                    isSelected: selectedButtonText == 'Ticket Classification',
-                    onPressed: () {
-                      BlocProvider.of<CustombuttonBloc>(context)
-                          .add(SelectButtonEvent('Ticket Classification'));
-                    },
-                  ),
-                if (EnvConfig.ENV != 'prod')
-                  CustomButton(
-                    text: S.of(context).aiQueryAnswer,
-                    isSelected: selectedButtonText == 'AI Query Answer',
-                    onPressed: () {
-                      BlocProvider.of<CustombuttonBloc>(context)
-                          .add(SelectButtonEvent('AI Query Answer'));
-                    },
-                  ),
+                CustomButton(
+                  text: S.of(context).ticketClassification,
+                  isSelected: selectedButtonText == 'Ticket Classification',
+                  onPressed: () {
+                    BlocProvider.of<CustombuttonBloc>(context)
+                        .add(SelectButtonEvent('Ticket Classification'));
+                  },
+                ),
+                CustomButton(
+                  text: S.of(context).aiQueryAnswer,
+                  isSelected: selectedButtonText == 'AI Query Answer',
+                  onPressed: () {
+                    BlocProvider.of<CustombuttonBloc>(context)
+                        .add(SelectButtonEvent('AI Query Answer'));
+                  },
+                ),
               ],
             ),
             // for Ticket Classification
@@ -156,7 +154,7 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedClassification = state.selectedClassification;
                         pipeline = state.selectedPipeline;
                         ticketId = state.ticketId;
-                      } else if(state is FetchTableDataError){
+                      } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
                       }
 
@@ -185,7 +183,8 @@ class DashboardFilterWidget extends StatelessWidget {
                           }
                         },
                         label: S.of(context).classification,
-                        width: UIHelpers.screenWidth(context) * 0.13,
+                        width: UIHelpers.screenWidth(context) * 0.15,
+                        height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },
                   ),
@@ -202,9 +201,13 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedMonth = state.selectedMonth;
                         selectedClassification = state.selectedClassification;
                         selectedValidation = state.selectedValidation ?? '';
+                      } else if (state is FetchTableDataError) {
+                        selectedClassification = state.selectedClassification;
+                        selectedValidation = state.selectedValidation;
                       }
                       final validationItems = [
-                        'Select',
+                        'Not Updated',
+                        'All',
                         'correct',
                         'incorrect'
                       ];
@@ -225,7 +228,8 @@ class DashboardFilterWidget extends StatelessWidget {
                           }
                         },
                         label: S.of(context).validation,
-                        width: UIHelpers.screenWidth(context) * 0.13,
+                        width: UIHelpers.screenWidth(context) * 0.14,
+                        height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },
                   ),
@@ -345,10 +349,14 @@ class DashboardFilterWidget extends StatelessWidget {
                       return DateSelectionWidget(
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
-                          BlocProvider.of<AiQueryAnswerBloc>(context)
-                              .add(SelectedDateEvent(selectedDate: newDate,selectedPipeline: pipeline));
+                          BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                              SelectedDateEvent(
+                                  selectedDate: newDate,
+                                  selectedPipeline: pipeline));
                           BlocProvider.of<AiQueryChartBloc>(context).add(
-                              SelectedChartDateEvent(selectedDate: newDate,selectedPipeline: pipeline));
+                              SelectedChartDateEvent(
+                                  selectedDate: newDate,
+                                  selectedPipeline: pipeline));
                         },
                         label: S.of(context).day,
                         isInteractive: true,
@@ -393,16 +401,16 @@ class DashboardFilterWidget extends StatelessWidget {
                                     listen: false)
                                 .add(
                               FilterAiAnsweClassificationEvent(
-                                selectedClassification: isAnswer,
-                                selectDate: selectedDate,
-                                selectMonth: selectedMonth,
-                                selectedPipeline: pipeline
-                              ),
+                                  selectedClassification: isAnswer,
+                                  selectDate: selectedDate,
+                                  selectMonth: selectedMonth,
+                                  selectedPipeline: pipeline),
                             );
                           }
                         },
                         label: S.of(context).classification,
                         width: UIHelpers.screenWidth(context) * 0.14,
+                        height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },
                   ),
