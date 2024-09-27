@@ -216,7 +216,11 @@ class DashboardFilterWidget extends StatelessWidget {
                             ? 'Correct'
                             : selectedValidation == 'incorrect'
                                 ? 'Incorrect'
-                                : selectedValidation,
+                                : selectedValidation == 'all'
+                                    ? 'All'
+                                    : selectedValidation == 'not updated'
+                                        ? 'Not Updated'
+                                        : selectedValidation,
                         items: validationItems,
                         onChanged: (String? value) {
                           if (value != null) {
