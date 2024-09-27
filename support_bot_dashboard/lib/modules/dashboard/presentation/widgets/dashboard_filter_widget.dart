@@ -183,7 +183,8 @@ class DashboardFilterWidget extends StatelessWidget {
                           }
                         },
                         label: S.of(context).classification,
-                        width: UIHelpers.screenWidth(context) * 0.13,
+                        width: UIHelpers.screenWidth(context) * 0.15,
+                        height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },
                   ),
@@ -200,9 +201,13 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedMonth = state.selectedMonth;
                         selectedClassification = state.selectedClassification;
                         selectedValidation = state.selectedValidation ?? '';
+                      } else if (state is FetchTableDataError) {
+                        selectedClassification = state.selectedClassification;
+                        selectedValidation = state.selectedValidation;
                       }
                       final validationItems = [
                         'Select',
+                        'All',
                         'correct',
                         'incorrect'
                       ];
@@ -223,7 +228,8 @@ class DashboardFilterWidget extends StatelessWidget {
                           }
                         },
                         label: S.of(context).validation,
-                        width: UIHelpers.screenWidth(context) * 0.13,
+                        width: UIHelpers.screenWidth(context) * 0.14,
+                        height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },
                   ),
