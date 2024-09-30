@@ -429,7 +429,7 @@ Widget _buildDetailRow(String title, String value) {
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         ),
         const SizedBox(height: 8),
-        Text(
+        SelectableText(
           value,
           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
         ),
