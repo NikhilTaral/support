@@ -119,7 +119,7 @@ class CustomFilterDropdown extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
                     child: Text(
-                      selectedValue.isNotEmpty ? selectedValue : label,
+                      selectedValue.isNotEmpty ? selectedValue : "Select",
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
                       // style: selectedValue.isNotEmpty

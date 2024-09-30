@@ -206,20 +206,29 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedValidation = state.selectedValidation;
                       }
                       final validationItems = [
-                        'Select',
+                        'Not Updated',
                         'All',
-                        'correct',
-                        'incorrect'
+                        'Correct',
+                        'Incorrect'
                       ];
                       return CustomFilterDropdown(
-                        selectedValue: selectedValidation,
+                        selectedValue: selectedValidation == 'correct'
+                            ? 'Correct'
+                            : selectedValidation == 'incorrect'
+                                ? 'Incorrect'
+                                : selectedValidation == 'all'
+                                    ? 'All'
+                                    : selectedValidation == 'not updated'
+                                        ? 'Not Updated'
+                                        : selectedValidation,
                         items: validationItems,
                         onChanged: (String? value) {
                           if (value != null) {
+                            String lowercaseValue = value.toLowerCase();
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
                                 .add(FilterValidationEvent(
-                                    value,
+                                    lowercaseValue,
                                     selectedDate ?? null,
                                     selectedMonth,
                                     selectedClassification,
@@ -410,6 +419,7 @@ class DashboardFilterWidget extends StatelessWidget {
                         },
                         label: S.of(context).classification,
                         width: UIHelpers.screenWidth(context) * 0.14,
+                        height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },
                   ),

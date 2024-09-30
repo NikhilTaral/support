@@ -23,15 +23,18 @@ class DashboardPlutotableResponseModel {
     required this.message,
   });
 
-  factory DashboardPlutotableResponseModel.fromJson(
-          Map<String, dynamic> json) =>
-      DashboardPlutotableResponseModel(
-        data: Data.fromJson(json["data"]),
-        success: json["success"],
-        failCode: json["failCode"],
-        params: Params.fromJson(json["params"]),
-        message: json["message"],
-      );
+  factory DashboardPlutotableResponseModel.fromJson(Map<String, dynamic> json) {
+  return DashboardPlutotableResponseModel(
+    data: json["data"] is List 
+        ? Data(totalRecords: 0, items: [], lastEvaluatedKey: '') 
+        : Data.fromJson(json["data"]),
+    success: json["success"],
+    failCode: json["failCode"],
+    params: Params.fromJson(json["params"]),
+    message: json["message"],
+  );
+}
+
 
   Map<String, dynamic> toJson() => {
         "data": data.toJson(),
@@ -53,9 +56,11 @@ class Data {
     required this.lastEvaluatedKey,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        totalRecords: json["totalRecords"],
-        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
+   factory Data.fromJson(Map<String, dynamic> json) => Data(
+        totalRecords: json["totalRecords"] ?? 0,
+        items: json["items"] != null 
+            ? List<Item>.from(json["items"].map((x) => Item.fromJson(x))) 
+            : [],
         lastEvaluatedKey: json["lastEvaluatedKey"] ?? "",
       );
 

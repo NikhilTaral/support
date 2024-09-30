@@ -204,9 +204,9 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     emit(FetchTableDataLoading());
 
     String? validationFilter;
-    if (event.selectedClassificationValidation == 'All') {
+    if (event.selectedClassificationValidation == 'all') {
       validationFilter = null;
-    } else if (event.selectedClassificationValidation == 'Select') {
+    } else if (event.selectedClassificationValidation == 'not updated') {
       validationFilter = "";
     } else {
       validationFilter = event.selectedClassificationValidation;
@@ -251,7 +251,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
             totalRecords: model.data?.totalRecords,
             items: items,
           );
-
+  
           emit(FetchTableDataSuccess(
               selectedClassification: event.selectedClassification,
               tableData: tableData,
@@ -271,7 +271,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           tableData: initialData!,
           selectedDate: event.selectedDate,
           selectedMonth: event.selectedMonth,
-          selectedValidation: 'Select',
+          selectedValidation: 'not updated',
           noDataAvailable: initialData!.items.isEmpty,
           selectedPipeline: event.pipeline ?? ""));
     }
