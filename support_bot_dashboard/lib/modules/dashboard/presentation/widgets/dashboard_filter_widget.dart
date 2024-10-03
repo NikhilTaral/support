@@ -16,24 +16,33 @@ import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
+
+enum FilterChangeType { date, month, classification, validation }
+
+
 class DashboardFilterWidget extends StatelessWidget {
   String pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
-  String selectedClassification;
+  String? selectedClassification;
+  String selectedClassificationValidation;
+ final Function(FilterChangeType changeType, dynamic newValue) onFilterChanged;
+  
   DashboardFilterWidget(
       {super.key,
       required this.pipeline,
       required this.selectedClassification,
-      this.selectedDate,
-      this.selectedMonth});
+      required this.selectedDate  ,
+      required this.selectedClassificationValidation,
+      this.selectedMonth,
+      required this.onFilterChanged
+      });
 
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
   final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    print(pipeline);
     return BlocBuilder<CustombuttonBloc, CustombuttonState>(
       builder: (context, state) {
         String selectedButtonText = '';
@@ -82,31 +91,32 @@ class DashboardFilterWidget extends StatelessWidget {
                       return DateSelectionWidget(
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
+                           
                           BlocProvider.of<DashboardBloc>(context)
                               .add(UpdateSelectedDateEvent(newDate, pipeline));
                           BlocProvider.of<PlutotableBloc>(context).add(
                               SelectDateEvent(
                                   selectedDate: newDate,
                                   selectedPipeline: pipeline));
+                            onFilterChanged(FilterChangeType.date, newDate);
                         },
                         label: S.of(context).day,
                         isInteractive: true,
                       );
                     },
                   ),
-                  const SizedBox(width: 10),
+                  UIHelpers.horizontalSpaceSmall,
 
                   // Month dropdown
                   BlocBuilder<DashboardBloc, DashboardState>(
                     builder: (context, state) {
-                      DateTime? selectedMonth;
                       String selectedMonthString = "January";
                       //   String pipeline = '11257490';
 
                       if (state is DashboardDataSuccess) {
                         selectedMonth = state.selectedMonth;
                         selectedMonthString =
-                            _monthToString(selectedMonth.month);
+                            _monthToString(selectedMonth!.month);
                         pipeline = state.selectedPipeline;
                       }
                       return CustomMonthDropdown(
@@ -135,13 +145,15 @@ class DashboardFilterWidget extends StatelessWidget {
                                 SelectMonthEvent(
                                     selectedMonth: monthDateTime,
                                     selectedPipeline: pipeline));
+
+                            onFilterChanged(FilterChangeType.month, value);
                           }
                         },
                         label: S.of(context).month,
                       );
                     },
                   ),
-                  const SizedBox(width: 10),
+                 UIHelpers.horizontalSpaceSmall,
 
                   // Classification dropdown
                   BlocBuilder<PlutotableBloc, PlutotableState>(
@@ -167,7 +179,7 @@ class DashboardFilterWidget extends StatelessWidget {
                         'Acknowledgement Required'
                       ];
                       return CustomFilterDropdown(
-                        selectedValue: selectedClassification,
+                        selectedValue: selectedClassification ?? "",
                         items: classificationItems,
                         onChanged: (String? value) {
                           if (value != null) {
@@ -179,7 +191,10 @@ class DashboardFilterWidget extends StatelessWidget {
                                     value,
                                     "",
                                     pipeline,
-                                    ticketId));
+                                    ticketId,
+                                    1,
+                                    10));
+                          onFilterChanged(FilterChangeType.classification, value);
                           }
                         },
                         label: S.of(context).classification,
@@ -188,22 +203,22 @@ class DashboardFilterWidget extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(width: 10),
+                  UIHelpers.horizontalSpaceSmall,
 
                   // Validation dropdown
                   BlocBuilder<PlutotableBloc, PlutotableState>(
                     builder: (context, state) {
-                      String selectedValidation = '';
+                      // String selectedValidation = '';
                       // String? pipeline = '11257490';
                       String? ticketId = '';
                       if (state is FetchTableDataSuccess) {
                         selectedDate = state.selectedDate ?? null;
                         selectedMonth = state.selectedMonth;
                         selectedClassification = state.selectedClassification;
-                        selectedValidation = state.selectedValidation ?? '';
+                        selectedClassificationValidation = state.selectedValidation ?? '';
                       } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
-                        selectedValidation = state.selectedValidation;
+                        selectedClassificationValidation = state.selectedValidation;
                       }
                       final validationItems = [
                         'Not Updated',
@@ -212,15 +227,15 @@ class DashboardFilterWidget extends StatelessWidget {
                         'Incorrect'
                       ];
                       return CustomFilterDropdown(
-                        selectedValue: selectedValidation == 'correct'
+                        selectedValue: selectedClassificationValidation == 'correct'
                             ? 'Correct'
-                            : selectedValidation == 'incorrect'
+                            : selectedClassificationValidation == 'incorrect'
                                 ? 'Incorrect'
-                                : selectedValidation == 'all'
+                                : selectedClassificationValidation == 'all'
                                     ? 'All'
-                                    : selectedValidation == 'not updated'
+                                    : selectedClassificationValidation == 'not updated'
                                         ? 'Not Updated'
-                                        : selectedValidation,
+                                        : selectedClassificationValidation,
                         items: validationItems,
                         onChanged: (String? value) {
                           if (value != null) {
@@ -231,9 +246,12 @@ class DashboardFilterWidget extends StatelessWidget {
                                     lowercaseValue,
                                     selectedDate ?? null,
                                     selectedMonth,
-                                    selectedClassification,
+                                    selectedClassification ?? "",
                                     pipeline,
-                                    ticketId));
+                                    ticketId,
+                                    1,
+                                    10));
+                           onFilterChanged(FilterChangeType.validation, value);
                           }
                         },
                         label: S.of(context).validation,
@@ -246,7 +264,7 @@ class DashboardFilterWidget extends StatelessWidget {
                   BlocBuilder<PlutotableBloc, PlutotableState>(
                     builder: (context, state) {
                       if (state is FetchTableDataSuccess) {
-                        selectedDate = state.selectedDate ?? null;
+                       selectedDate = state.selectedDate;
                         selectedMonth = state.selectedMonth;
                       }
                       return Padding(
@@ -366,6 +384,7 @@ class DashboardFilterWidget extends StatelessWidget {
                               SelectedChartDateEvent(
                                   selectedDate: newDate,
                                   selectedPipeline: pipeline));
+                          onFilterChanged(FilterChangeType.date, newDate);
                         },
                         label: S.of(context).day,
                         isInteractive: true,
@@ -415,6 +434,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                   selectMonth: selectedMonth,
                                   selectedPipeline: pipeline),
                             );
+                            onFilterChanged(FilterChangeType.month, isAnswer);
                           }
                         },
                         label: S.of(context).classification,
