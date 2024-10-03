@@ -33,13 +33,13 @@ class DashboardDesktopView extends StatelessWidget {
   late String pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
-  String selectedClassification = '';
+  String? selectedClassification = '';
+  String selectedClassificationValidation = '';
   late String selectedPipelineId;
   late bool isAIAnswer;
 
   @override
   Widget build(BuildContext context) {
-    print('pipeline $pipeline');
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -55,7 +55,9 @@ class DashboardDesktopView extends StatelessWidget {
               FetchTableDataEvent(
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
-                  selectedPipeline: pipeline),
+                  selectedPipeline: pipeline,
+                  page: 1,
+                  pageSize: 10),
             ),
         ),
         BlocProvider(
@@ -181,7 +183,29 @@ class DashboardDesktopView extends StatelessWidget {
                             selectedClassification: selectedClassification,
                             pipeline: pipeline,
                             selectedDate: selectedDate,
-                            selectedMonth: selectedMonth,
+                            selectedClassificationValidation:
+                                selectedClassificationValidation,
+                            onFilterChanged: (FilterChangeType changeType,
+                                dynamic newValue) {
+                              switch (changeType) {
+                                case FilterChangeType.date:
+                                  selectedDate = newValue;
+
+                                  break;
+                                case FilterChangeType.month:
+                                  selectedMonth = newValue;
+
+                                  break;
+                                case FilterChangeType.classification:
+                                  selectedClassification = newValue;
+
+                                  break;
+                                case FilterChangeType.validation:
+                                  selectedClassificationValidation = newValue;
+
+                                  break;
+                              }
+                            },
                           ),
                           BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
@@ -200,7 +224,11 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedMonth:
                                                     state.selectedMonth,
                                                 selectedPipeline:
-                                                    selectedPipelineId),
+                                                    selectedPipelineId,
+                                                selectedClassification:
+                                                    selectedClassification,
+                                                selectedClassificationValidation:
+                                                    selectedClassificationValidation.toLowerCase()),
                                           );
                                     } else if (state
                                             is UpdateValidationSuccess ||
@@ -210,7 +238,11 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedDate: DateTime.now(),
                                                 selectedMonth: null,
                                                 selectedPipeline:
-                                                    selectedPipelineId),
+                                                    selectedPipelineId,
+                                                selectedClassification:
+                                                    selectedClassification,
+                                                selectedClassificationValidation:
+                                                    selectedClassificationValidation.toLowerCase()),
                                           );
                                       Navigator.of(context).pop();
                                     } else if (state
@@ -288,6 +320,8 @@ class DashboardDesktopView extends StatelessWidget {
                                             state.selectedDate ?? null,
                                         selectedMonth: state.selectedMonth,
                                         pipeline: pipeline,
+                                        pipelineId: selectedPipelineId,
+                                       
                                       );
                                     } else if (state is FetchTableDataError) {
                                       return SizedBox(
@@ -400,9 +434,6 @@ class DashboardDesktopView extends StatelessWidget {
                                         color: SupportBotColors.gray);
                                   } else if (state
                                       is DashboardPipelineSuccess) {
-                                    DateTime selectedMonth =
-                                        state.selectedMonth;
-                                    DateTime? selectedDate = state.selectedDate;
                                     pipeline =
                                         state.selectedPipelineValue ?? "";
                                     Map<String, dynamic>
@@ -416,6 +447,7 @@ class DashboardDesktopView extends StatelessWidget {
                                           'aiAnswerPerm': item.aiAnswerPerm,
                                         },
                                     };
+
                                     List<String?> dropdownItems =
                                         pipelineNameToAttributesMap.keys
                                             .toList();
@@ -442,8 +474,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(
                                               FetchTableDataEvent(
-                                                selectedDate:
-                                                    state.selectedDate,
+                                                selectedDate: selectedDate,
                                                 selectedMonth: selectedMonth,
                                                 selectedPipeline:
                                                     selectedPipelineId,
@@ -453,8 +484,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             BlocProvider.of<DashboardBloc>(
                                                     context)
                                                 .add(FetchDashboardDataEvent(
-                                                    selectedDate:
-                                                        state.selectedDate,
+                                                    selectedDate: selectedDate,
                                                     selectedMonth:
                                                         selectedMonth,
                                                     selectedPipeline:
@@ -464,18 +494,16 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
-                                                selectedDate:
-                                                    state.selectedDate,
+                                                selectedDate: selectedDate,
                                                 selectedMonth: selectedMonth,
                                                 selectedPipeline:
                                                     selectedPipelineId,
                                               ),
                                             );
-                                            BlocProvider.of<
-                                                    AiQueryChartBloc>(context)
+                                            BlocProvider.of<AiQueryChartBloc>(
+                                                    context)
                                                 .add(FetchAiQueryChartData(
-                                                    selectedDate:
-                                                        state.selectedDate,
+                                                    selectedDate: selectedDate,
                                                     selectedMonth:
                                                         selectedMonth,
                                                     selectedPipeline:
@@ -562,9 +590,9 @@ class DashboardDesktopView extends StatelessWidget {
                                         color: SupportBotColors.gray);
                                   } else if (state
                                       is DashboardPipelineSuccess) {
-                                    DateTime selectedMonth =
-                                        state.selectedMonth;
-                                    DateTime? selectedDate = state.selectedDate;
+                                    // DateTime selectedMonth =
+                                    //     state.selectedMonth;
+                                    // DateTime? selectedDate = state.selectedDate;
                                     pipeline =
                                         state.selectedPipelineValue ?? "";
                                     Map<String, dynamic>
@@ -603,18 +631,16 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
-                                                selectedDate:
-                                                    state.selectedDate,
+                                                selectedDate: selectedDate,
                                                 selectedMonth: selectedMonth,
                                                 selectedPipeline:
                                                     selectedPipelineId,
                                               ),
                                             );
-                                            BlocProvider.of<
-                                                    AiQueryChartBloc>(context)
+                                            BlocProvider.of<AiQueryChartBloc>(
+                                                    context)
                                                 .add(FetchAiQueryChartData(
-                                                    selectedDate:
-                                                        state.selectedDate,
+                                                    selectedDate: selectedDate,
                                                     selectedMonth:
                                                         selectedMonth,
                                                     selectedPipeline:
@@ -625,8 +651,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(
                                               FetchTableDataEvent(
-                                                selectedDate:
-                                                    state.selectedDate,
+                                                selectedDate: selectedDate,
                                                 selectedMonth: selectedMonth,
                                                 selectedPipeline:
                                                     selectedPipelineId,
@@ -636,8 +661,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             BlocProvider.of<DashboardBloc>(
                                                     context)
                                                 .add(FetchDashboardDataEvent(
-                                                    selectedDate:
-                                                        state.selectedDate,
+                                                    selectedDate: selectedDate,
                                                     selectedMonth:
                                                         selectedMonth,
                                                     selectedPipeline:
