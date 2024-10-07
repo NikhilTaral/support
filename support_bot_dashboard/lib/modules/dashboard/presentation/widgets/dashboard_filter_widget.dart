@@ -191,9 +191,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                     value,
                                     "",
                                     pipeline,
-                                    ticketId,
-                                    1,
-                                    10));
+                                    ticketId));
                           onFilterChanged(FilterChangeType.classification, value);
                           }
                         },
@@ -248,9 +246,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                     selectedMonth,
                                     selectedClassification ?? "",
                                     pipeline,
-                                    ticketId,
-                                    1,
-                                    10));
+                                    ticketId,));
                            onFilterChanged(FilterChangeType.validation, value);
                           }
                         },

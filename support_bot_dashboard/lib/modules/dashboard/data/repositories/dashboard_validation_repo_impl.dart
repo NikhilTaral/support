@@ -10,7 +10,7 @@ class DashboardValidationRepoImpl extends DashboardValidationRepository {
   
    @override
   Future<Either<Failure, dynamic>> updateClassificationValidation(
-      {String? id, String? validation, String? reason}) async {
+      {String? id, String? validation, String? reason, String? pipeline}) async {
     final uri = Uri.parse(
         '${EnvConfig.EXP_API_URL}/dashboard/updateClassificationValidation');
     final headers = {
@@ -21,6 +21,7 @@ class DashboardValidationRepoImpl extends DashboardValidationRepository {
       'id': id,
       'validation': validation,
       'reason': reason,
+      'pipeline': pipeline
     });
     final response = await http.post(uri, headers: headers, body: body);
     if (response.statusCode == 200) {
