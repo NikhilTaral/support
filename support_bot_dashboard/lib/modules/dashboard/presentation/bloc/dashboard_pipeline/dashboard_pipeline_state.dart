@@ -10,7 +10,7 @@ class DashboardPipelineSuccess extends DashboardPipelineState{
   final DashboardPipelineAttributeModel? dashboardPipelineAttributeModel;
   final String? selectedPipelineValue;
   final DateTime? selectedDate;
-  final DateTime selectedMonth;
+  final DateTime? selectedMonth;
     final int? index;
        bool? isDropdownEnabled = true;
 
