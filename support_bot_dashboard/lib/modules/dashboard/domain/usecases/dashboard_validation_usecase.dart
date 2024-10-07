@@ -4,11 +4,11 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class DashboardValidationUsecase implements UseCaseThreeInput<String , String, String , dynamic>{
+class DashboardValidationUsecase implements UseCaseFourInput<String , String, String , String, dynamic>{
   @override
   Future<Either<Failure, dynamic>> invoke(
-       id,  validation,  reason) async {
+       id,  validation,  reason, pipeline) async {
     return await serviceLocator<DashboardValidationRepository>()
-        .updateClassificationValidation(id: id, validation: validation, reason: reason);
+        .updateClassificationValidation(id: id, validation: validation, reason: reason, pipeline: pipeline);
   }
 }

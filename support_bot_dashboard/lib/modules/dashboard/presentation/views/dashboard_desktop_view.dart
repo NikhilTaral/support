@@ -55,9 +55,7 @@ class DashboardDesktopView extends StatelessWidget {
               FetchTableDataEvent(
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
-                  selectedPipeline: pipeline,
-                  page: 1,
-                  pageSize: 10),
+                  selectedPipeline: pipeline,),
             ),
         ),
         BlocProvider(
