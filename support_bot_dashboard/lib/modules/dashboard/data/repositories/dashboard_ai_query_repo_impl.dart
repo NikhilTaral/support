@@ -9,7 +9,10 @@ class DashboardAiQueryRepoImpl extends DashboardAiQueryRepository {
   Future<Either<Failure, dynamic>> getAiQueryTableData(
       {DateTime? selectedDate,
       DateTime? selectedMonth,
-      String? pipeline}) async {
+      String? pipeline,
+      num? page,
+      num? pageSize,
+        bool? selectedClassification,}) async {
     final ApiProvider _apiProvider = serviceLocator<ApiProvider>();
 
     Map<String, dynamic> body = {};
@@ -25,6 +28,18 @@ class DashboardAiQueryRepoImpl extends DashboardAiQueryRepository {
 
     if (pipeline != null) {
       body['pipeline'] = pipeline;
+    }
+
+    if (page != null) {
+      body['page'] = page;
+    }
+
+    if (pageSize != null) {
+      body['pageSize'] = pageSize;
+    }
+
+     if (selectedClassification != null) {
+      body['answeredStatus'] = selectedClassification;
     }
 
     dynamic response;

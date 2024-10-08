@@ -16,9 +16,7 @@ import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-
-enum FilterChangeType { date, month, classification, validation }
-
+enum FilterChangeType { date, month, classification, validation, AIclassification }
 
 class DashboardFilterWidget extends StatelessWidget {
   String pipeline;
@@ -26,21 +24,22 @@ class DashboardFilterWidget extends StatelessWidget {
   DateTime? selectedMonth;
   String? selectedClassification;
   String selectedClassificationValidation;
- final Function(FilterChangeType changeType, dynamic newValue) onFilterChanged;
-    final ValueNotifier<int> currentPage;
+  final Function(FilterChangeType changeType, dynamic newValue) onFilterChanged;
+  final ValueNotifier<int> currentPage;
   final ValueNotifier<int> pageSize;
-  
+  bool? isAnswer;
+
   DashboardFilterWidget(
       {super.key,
       required this.pipeline,
       required this.selectedClassification,
-      required this.selectedDate  ,
+      required this.selectedDate,
       required this.selectedClassificationValidation,
       this.selectedMonth,
       required this.onFilterChanged,
+      required this.isAnswer,
       required this.currentPage,
-      required this.pageSize
-      });
+      required this.pageSize});
 
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
   final TextEditingController _searchController = TextEditingController();
@@ -95,14 +94,17 @@ class DashboardFilterWidget extends StatelessWidget {
                       return DateSelectionWidget(
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
-                           
+                          currentPage.value = 1;
+                          pageSize.value = 10;
                           BlocProvider.of<DashboardBloc>(context)
                               .add(UpdateSelectedDateEvent(newDate, pipeline));
                           BlocProvider.of<PlutotableBloc>(context).add(
                               SelectDateEvent(
                                   selectedDate: newDate,
-                                  selectedPipeline: pipeline));
-                            onFilterChanged(FilterChangeType.date, newDate);
+                                  selectedPipeline: pipeline,
+                                  page: currentPage.value,
+                                  pageSize: pageSize.value));
+                          onFilterChanged(FilterChangeType.date, newDate);
                         },
                         label: S.of(context).day,
                         isInteractive: true,
@@ -141,6 +143,8 @@ class DashboardFilterWidget extends StatelessWidget {
                         ],
                         onChanged: (String? value) {
                           if (value != null) {
+                            currentPage.value = 1;
+                            pageSize.value = 10;
                             DateTime monthDateTime = _stringToMonth(value);
                             BlocProvider.of<DashboardBloc>(context).add(
                                 UpdateSelectedMonthEvent(
@@ -148,7 +152,9 @@ class DashboardFilterWidget extends StatelessWidget {
                             BlocProvider.of<PlutotableBloc>(context).add(
                                 SelectMonthEvent(
                                     selectedMonth: monthDateTime,
-                                    selectedPipeline: pipeline));
+                                    selectedPipeline: pipeline,
+                                    page: currentPage.value,
+                                    pageSize: pageSize.value));
 
                             onFilterChanged(FilterChangeType.month, value);
                           }
@@ -157,7 +163,7 @@ class DashboardFilterWidget extends StatelessWidget {
                       );
                     },
                   ),
-                 UIHelpers.horizontalSpaceSmall,
+                  UIHelpers.horizontalSpaceSmall,
 
                   // Classification dropdown
                   BlocBuilder<PlutotableBloc, PlutotableState>(
@@ -197,8 +203,11 @@ class DashboardFilterWidget extends StatelessWidget {
                                     value,
                                     "",
                                     pipeline,
-                                    ticketId,currentPage.value,pageSize.value));
-                          onFilterChanged(FilterChangeType.classification, value);
+                                    ticketId,
+                                    currentPage.value,
+                                    pageSize.value));
+                            onFilterChanged(
+                                FilterChangeType.classification, value);
                           }
                         },
                         label: S.of(context).classification,
@@ -219,10 +228,12 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedDate = state.selectedDate ?? null;
                         selectedMonth = state.selectedMonth;
                         selectedClassification = state.selectedClassification;
-                        selectedClassificationValidation = state.selectedValidation ?? '';
+                        selectedClassificationValidation =
+                            state.selectedValidation ?? '';
                       } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
-                        selectedClassificationValidation = state.selectedValidation;
+                        selectedClassificationValidation =
+                            state.selectedValidation;
                       }
                       final validationItems = [
                         'Not Updated',
@@ -231,13 +242,15 @@ class DashboardFilterWidget extends StatelessWidget {
                         'Incorrect'
                       ];
                       return CustomFilterDropdown(
-                        selectedValue: selectedClassificationValidation == 'correct'
+                        selectedValue: selectedClassificationValidation ==
+                                'correct'
                             ? 'Correct'
                             : selectedClassificationValidation == 'incorrect'
                                 ? 'Incorrect'
                                 : selectedClassificationValidation == 'all'
                                     ? 'All'
-                                    : selectedClassificationValidation == 'not updated'
+                                    : selectedClassificationValidation ==
+                                            'not updated'
                                         ? 'Not Updated'
                                         : selectedClassificationValidation,
                         items: validationItems,
@@ -254,8 +267,10 @@ class DashboardFilterWidget extends StatelessWidget {
                                     selectedMonth,
                                     selectedClassification ?? "",
                                     pipeline,
-                                    ticketId,currentPage.value,pageSize.value));
-                           onFilterChanged(FilterChangeType.validation, value);
+                                    ticketId,
+                                    currentPage.value,
+                                    pageSize.value));
+                            onFilterChanged(FilterChangeType.validation, value);
                           }
                         },
                         label: S.of(context).validation,
@@ -268,7 +283,7 @@ class DashboardFilterWidget extends StatelessWidget {
                   BlocBuilder<PlutotableBloc, PlutotableState>(
                     builder: (context, state) {
                       if (state is FetchTableDataSuccess) {
-                       selectedDate = state.selectedDate;
+                        selectedDate = state.selectedDate;
                         selectedMonth = state.selectedMonth;
                       }
                       return Padding(
@@ -380,14 +395,18 @@ class DashboardFilterWidget extends StatelessWidget {
                       return DateSelectionWidget(
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
+                          currentPage.value = 1;
+                            pageSize.value = 10;
                           BlocProvider.of<AiQueryAnswerBloc>(context).add(
                               SelectedDateEvent(
                                   selectedDate: newDate,
-                                  selectedPipeline: pipeline));
+                                  selectedPipeline: pipeline,page: currentPage.value,pageSize: pageSize.value));
                           BlocProvider.of<AiQueryChartBloc>(context).add(
                               SelectedChartDateEvent(
                                   selectedDate: newDate,
                                   selectedPipeline: pipeline));
+                            BlocProvider.of<DashboardBloc>(context)
+                              .add(UpdateSelectedDateEvent(newDate, pipeline));
                           onFilterChanged(FilterChangeType.date, newDate);
                         },
                         label: S.of(context).day,
@@ -421,7 +440,7 @@ class DashboardFilterWidget extends StatelessWidget {
                         items: classificationItems,
                         onChanged: (String? value) {
                           if (value != null) {
-                            bool? isAnswer;
+                            isAnswer;
                             if (value == 'Answered') {
                               isAnswer = true;
                             } else if (value == 'Not Answered') {
@@ -429,16 +448,18 @@ class DashboardFilterWidget extends StatelessWidget {
                             } else {
                               isAnswer = null;
                             }
+                               currentPage.value = 1;
+                            pageSize.value = 10;
                             BlocProvider.of<AiQueryAnswerBloc>(context,
                                     listen: false)
                                 .add(
-                              FilterAiAnsweClassificationEvent(
+                              FetchAiQueryAnswerEvent(
                                   selectedClassification: isAnswer,
-                                  selectDate: selectedDate,
-                                  selectMonth: selectedMonth,
-                                  selectedPipeline: pipeline),
+                                  selectedDate: selectedDate,
+                                  selectedMonth: selectedMonth,
+                                  selectedPipeline: pipeline,page: currentPage.value,pageSize: pageSize.value),
                             );
-                            onFilterChanged(FilterChangeType.month, isAnswer);
+                            onFilterChanged(FilterChangeType.AIclassification, isAnswer);
                           }
                         },
                         label: S.of(context).classification,

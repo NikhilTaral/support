@@ -2,13 +2,19 @@ import 'package:equatable/equatable.dart';
 
 class DashboardAiQueryAttributeModel extends Equatable {
   final List<AiQueryAnswerTableItem> items;
+  final num? totalRecords;
+     final num? pageSize;
+   final num? currentPage;
 
   const DashboardAiQueryAttributeModel({
     required this.items,
+     required this.pageSize,
+    required this.currentPage,
+    required this.totalRecords,
   });
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items, totalRecords,currentPage,pageSize];
 }
 
 class AiQueryAnswerTableItem extends Equatable {

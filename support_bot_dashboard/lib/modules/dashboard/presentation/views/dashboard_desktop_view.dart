@@ -31,12 +31,13 @@ class DashboardDesktopView extends StatelessWidget {
       : super(key: key);
 
   late String pipeline;
-  DateTime? selectedDate;
-  DateTime? selectedMonth;
+  DateTime? selectedDate = DateTime.now();
+  DateTime? selectedMonth = DateTime(2024 - 01);
   String? selectedClassification = '';
   String? selectedClassificationValidation;
   late String selectedPipelineId;
   late bool isAIAnswer;
+  bool? isAnswer;
   final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
   final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
 
@@ -55,9 +56,10 @@ class DashboardDesktopView extends StatelessWidget {
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
               FetchTableDataEvent(
-                  selectedDate: DateTime.now(),
-                  selectedMonth: null,
-                  selectedPipeline: pipeline,),
+                selectedDate: DateTime.now(),
+                selectedMonth: null,
+                selectedPipeline: pipeline,
+              ),
             ),
         ),
         BlocProvider(
@@ -69,7 +71,8 @@ class DashboardDesktopView extends StatelessWidget {
               FetchAiQueryAnswerEvent(
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
-                  selectedPipeline: selectedPipelineId),
+                  selectedPipeline: selectedPipelineId,
+                  selectedClassification: null),
             ),
         ),
         BlocProvider(
@@ -185,6 +188,7 @@ class DashboardDesktopView extends StatelessWidget {
                             selectedDate: selectedDate,
                             selectedClassificationValidation:
                                 selectedClassificationValidation ?? "",
+                            isAnswer: isAnswer,
                             onFilterChanged: (FilterChangeType changeType,
                                 dynamic newValue) {
                               switch (changeType) {
@@ -203,10 +207,13 @@ class DashboardDesktopView extends StatelessWidget {
                                 case FilterChangeType.validation:
                                   selectedClassificationValidation = newValue;
 
+                                case FilterChangeType.AIclassification:
+                                  isAnswer = newValue;
+
                                   break;
                               }
-                              
-                            }, currentPage: currentPage,
+                            },
+                            currentPage: currentPage,
                             pageSize: pageSize,
                           ),
                           BlocBuilder<CustombuttonBloc, CustombuttonState>(
@@ -230,7 +237,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedClassification:
                                                     selectedClassification,
                                                 selectedClassificationValidation:
-                                                    selectedClassificationValidation?.toLowerCase()),
+                                                    selectedClassificationValidation
+                                                        ?.toLowerCase()),
                                           );
                                     } else if (state
                                             is UpdateValidationSuccess ||
@@ -244,7 +252,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedClassification:
                                                     selectedClassification,
                                                 selectedClassificationValidation:
-                                                    selectedClassificationValidation?.toLowerCase()),
+                                                    selectedClassificationValidation
+                                                        ?.toLowerCase()),
                                           );
                                       Navigator.of(context).pop();
                                     } else if (state
@@ -325,8 +334,10 @@ class DashboardDesktopView extends StatelessWidget {
                                         pipelineId: selectedPipelineId,
                                         currentPage: currentPage,
                                         pageSize: pageSize,
-                                          selectedClassification: selectedClassification,
-                                          selectedClassificationValidation: selectedClassificationValidation,
+                                        selectedClassification:
+                                            selectedClassification,
+                                        selectedClassificationValidation:
+                                            selectedClassificationValidation,
                                       );
                                     } else if (state is FetchTableDataError) {
                                       return SizedBox(
@@ -350,19 +361,22 @@ class DashboardDesktopView extends StatelessWidget {
                                             selectedDate: state.selectedDate,
                                             selectedPipeline:
                                                 selectedPipelineId,
-                                            selectedMonth:
-                                                state.selectedMonth));
+                                            selectedMonth: state.selectedMonth,
+                                            selectedClassification: isAnswer));
                                   }
                                 }, builder: (context, state) {
                                   if (state is AiQueryAnswerLoading) {
-                                    return Center(
-                                        child: LoadingWidget(
-                                      height: UIHelpers.screenHeight(context) *
-                                          0.43,
-                                      width:
-                                          UIHelpers.screenWidth(context) * 0.78,
-                                      radius: 8,
-                                    ));
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: LoadingWidget(
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.43,
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.78,
+                                        radius: 8,
+                                      ),
+                                    );
                                   } else if (state is AiQueryAnswerEmpty) {
                                     return SizedBox(
                                         height:
@@ -377,6 +391,10 @@ class DashboardDesktopView extends StatelessWidget {
                                         aiQuerytableData: state.data,
                                         selectedDate: state.selectedDate,
                                         selectedMonth: state.selectedMonth,
+                                        currentPage: currentPage,
+                                        pageSize: pageSize,
+                                        pipelineId: selectedPipelineId,
+                                        isAnswer: isAnswer,
                                       );
                                     }
                                     return SizedBox(
@@ -499,11 +517,12 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
-                                                selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
-                                                selectedPipeline:
-                                                    selectedPipelineId,
-                                              ),
+                                                  selectedDate: selectedDate,
+                                                  selectedMonth: selectedMonth,
+                                                  selectedPipeline:
+                                                      selectedPipelineId,
+                                                  selectedClassification:
+                                                      isAnswer),
                                             );
                                             BlocProvider.of<AiQueryChartBloc>(
                                                     context)
@@ -636,11 +655,12 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
-                                                selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
-                                                selectedPipeline:
-                                                    selectedPipelineId,
-                                              ),
+                                                  selectedDate: selectedDate,
+                                                  selectedMonth: selectedMonth,
+                                                  selectedPipeline:
+                                                      selectedPipelineId,
+                                                  selectedClassification:
+                                                      isAnswer),
                                             );
                                             BlocProvider.of<AiQueryChartBloc>(
                                                     context)
