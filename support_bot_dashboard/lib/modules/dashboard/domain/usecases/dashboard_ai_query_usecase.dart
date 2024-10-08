@@ -4,19 +4,19 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class DashboardAiQueryUsecase implements UseCaseThreeInput {
+class DashboardAiQueryUsecase implements UseCaseSixInput {
   @override
-  Future<Either<Failure, dynamic>> invoke(date, month, pipeline) async {
+  Future<Either<Failure, dynamic>> invoke(
+      date, month, pipeline, page, pageSize,selectedClassification) async {
     return await serviceLocator<DashboardAiQueryRepository>()
         .getAiQueryTableData(
-            selectedDate: date, selectedMonth: month, pipeline: pipeline);
+            selectedDate: date,
+            selectedMonth: month,
+            pipeline: pipeline,
+            page: page,
+            pageSize: pageSize,
+            selectedClassification: selectedClassification
+            );
   }
 }
 
-class DashboardFilterAiQueryUsecase implements UseCaseFourInput{
-   @override
-  Future<Either<Failure, dynamic>> invoke(
-      date, month, selectedClassification, pipeline) async {
-    return await serviceLocator<FilterAiQueryAnswerRepository>().getFilterAiQueryData(selecedDate: date,selectedMonth: month,selectedClassification: selectedClassification, pipeline: pipeline);
-  }
-}

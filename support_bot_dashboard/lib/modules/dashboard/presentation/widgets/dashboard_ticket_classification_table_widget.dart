@@ -205,7 +205,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
           TicketClassificationGridKey.id:
               PlutoCell(value: item.id?.isEmpty ?? true ? 'N/A' : item.id),
           TicketClassificationGridKey.classification: PlutoCell(
-              value: item.classification?.isEmpty ?? true
+              value: item.classification.isEmpty ?? true
                   ? 'N/A'
                   : item.classification),
           TicketClassificationGridKey.reasoning: PlutoCell(

@@ -4,6 +4,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -14,176 +15,306 @@ class AIQueryAnswerWidget extends StatelessWidget {
   final DateTime? selectedMonth;
   final DateTime? selectedDate;
   String? pipeline;
+  String? pipelineId;
+     final ValueNotifier<int> currentPage;
+  final ValueNotifier<int> pageSize;
+  bool? isAnswer;
   AIQueryAnswerWidget(
       {super.key,
       required this.aiQuerytableData,
       this.pipeline,
       required this.selectedMonth,
-      required this.selectedDate});
+      required this.selectedDate,
+       required this.currentPage,
+    required this.pageSize,
+    required this.isAnswer,
+    required this.pipelineId
+      });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SizedBox(
-        height: UIHelpers.screenHeight(context) * 0.44,
-        child: PlutoGrid(
-          columns: [
-            PlutoColumn(
-              title: S.of(context).id,
-              field: 'id',
-              width: UIHelpers.screenWidth(context) * 0.1,
-              type: PlutoColumnType.text(),
-              enableFilterMenuItem: false,
-              enableHideColumnMenuItem: false,
-              textAlign: PlutoColumnTextAlign.start,
-              titlePadding: const EdgeInsets.all(8),
-              backgroundColor: SupportBotColors.blueSecondary.shade100,
-              enableContextMenu: false,
-              enableDropToResize: false,
-              enableEditingMode: false,
-              enableColumnDrag: false,
-              readOnly: true,
-            ),
-            PlutoColumn(
-              title: S.of(context).ticketDescription,
-              field: 'ticketDescription',
-              width: UIHelpers.screenWidth(context) * 0.25,
-              type: PlutoColumnType.text(),
-              enableFilterMenuItem: false,
-              enableHideColumnMenuItem: false,
-              textAlign: PlutoColumnTextAlign.start,
-              titlePadding: const EdgeInsets.all(8),
-              backgroundColor: SupportBotColors.blueSecondary.shade100,
-              enableContextMenu: false,
-              enableDropToResize: false,
-              enableEditingMode: false,
-              enableColumnDrag: false,
-              readOnly: true,
-              renderer: (PlutoColumnRendererContext rendererContext) {
-                final value = rendererContext.cell.value ?? "N/A";
-                return MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: CustomToolTip(
-                    message: value.toString(),
-                    width: 400,
-                    toolTipDirection: CustomToolTip.toolTipRight,
-                    isMobile: false,
-                    child: Text(
-                      value.toString(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                );
-              },
-            ),
-            PlutoColumn(
-              title: S.of(context).classification,
-              field: 'answeredStatus',
-              width: UIHelpers.screenWidth(context) * 0.1,
-              type: PlutoColumnType.text(),
-              enableFilterMenuItem: false,
-              enableHideColumnMenuItem: false,
-              textAlign: PlutoColumnTextAlign.start,
-              titlePadding: const EdgeInsets.all(8),
-              backgroundColor: SupportBotColors.blueSecondary.shade100,
-              enableContextMenu: false,
-              enableDropToResize: false,
-              enableEditingMode: false,
-              enableColumnDrag: false,
-              readOnly: true,
-            ),
-            PlutoColumn(
-              title: S.of(context).aiQueryAnswer,
-              field: 'aiQueryAnswer',
-              width: UIHelpers.screenWidth(context) * 0.25,
-              type: PlutoColumnType.text(),
-              enableFilterMenuItem: false,
-              enableHideColumnMenuItem: false,
-              textAlign: PlutoColumnTextAlign.start,
-              titlePadding: const EdgeInsets.all(8),
-              backgroundColor: SupportBotColors.blueSecondary.shade100,
-              enableContextMenu: false,
-              enableDropToResize: false,
-              enableEditingMode: false,
-              enableColumnDrag: false,
-              readOnly: true,
-              renderer: (PlutoColumnRendererContext rendererContext) {
-                final value = rendererContext.cell.value ?? "N/A";
-                return MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: CustomToolTip(
-                    message: value.toString(),
-                    width: 400,
-                    toolTipDirection: CustomToolTip.toolTipRight,
-                    isMobile: false,
-                    child: Text(
-                      value.toString(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                );
-              },
-            ),
-            PlutoColumn(
-              title: S.of(context).actions,
-              field: 'actions',
-              type: PlutoColumnType.text(),
-              width: UIHelpers.screenWidth(context) * 0.07,
-              enableFilterMenuItem: false,
-              enableHideColumnMenuItem: false,
-              textAlign: PlutoColumnTextAlign.center,
-              titlePadding: const EdgeInsets.all(8),
-              backgroundColor: SupportBotColors.blueSecondary.shade100,
-              enableContextMenu: false,
-              enableDropToResize: false,
-              enableEditingMode: false,
-              enableColumnDrag: false,
-              readOnly: true,
-              renderer: (rendererContext) => actionsRenderer(
-                rendererContext,
-                selectedDate: selectedDate,
-                selectedMonth: selectedMonth,
-                pipeline: pipeline
-              ),
-            ),
-          ],
-          rows: aiQuerytableData.items.map((item) {
-                return PlutoRow(
-                  cells: {
-                    'id': PlutoCell(value: item.id ?? "N/A"),
-                    'ticketDescription':
-                        PlutoCell(value: item.ticketDescription ?? "N/A"),
-                    'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answered" : "Not Answered"),
-                    'aiQueryAnswer':
-                        PlutoCell(value: item.aIResponse ?? "N/A"),
-                    'actions': PlutoCell(value: 'View'),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            height: UIHelpers.screenHeight(context) * 0.44,
+            child: PlutoGrid(
+              columns: [
+                PlutoColumn(
+                  title: S.of(context).id,
+                  field: 'id',
+                  width: UIHelpers.screenWidth(context) * 0.1,
+                  type: PlutoColumnType.text(),
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.start,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                ),
+                PlutoColumn(
+                  title: S.of(context).ticketDescription,
+                  field: 'ticketDescription',
+                  width: UIHelpers.screenWidth(context) * 0.25,
+                  type: PlutoColumnType.text(),
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.start,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                  renderer: (PlutoColumnRendererContext rendererContext) {
+                    final value = rendererContext.cell.value ?? "N/A";
+                    return MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: CustomToolTip(
+                        message: value.toString(),
+                        width: 400,
+                        toolTipDirection: CustomToolTip.toolTipRight,
+                        isMobile: false,
+                        child: Text(
+                          value.toString(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
                   },
-                );
-              }).toList(),
-          configuration: PlutoGridConfiguration(
-            style: PlutoGridStyleConfig(
-              enableColumnBorderHorizontal: false,
-              enableColumnBorderVertical: true,
-              enableCellBorderVertical: true,
-              enableCellBorderHorizontal: true,
-              gridBorderRadius: BorderRadius.circular(8),
-              gridPopupBorderRadius: BorderRadius.circular(8),
-              rowHeight: 50,
-              columnHeight: 50,
-              gridBorderColor: Colors.transparent,
-              columnTextStyle: SupportBotTextstyle.columnHeading,
-              cellTextStyle: SupportBotTextstyle.cellHeading,
-              enableGridBorderShadow: true,
-            ),
-            columnSize: const PlutoGridColumnSizeConfig(
-              autoSizeMode: PlutoAutoSizeMode.scale,
+                ),
+                PlutoColumn(
+                  title: S.of(context).classification,
+                  field: 'answeredStatus',
+                  width: UIHelpers.screenWidth(context) * 0.1,
+                  type: PlutoColumnType.text(),
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.start,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                ),
+                PlutoColumn(
+                  title: S.of(context).aiQueryAnswer,
+                  field: 'aiQueryAnswer',
+                  width: UIHelpers.screenWidth(context) * 0.25,
+                  type: PlutoColumnType.text(),
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.start,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                  renderer: (PlutoColumnRendererContext rendererContext) {
+                    final value = rendererContext.cell.value ?? "N/A";
+                    return MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: CustomToolTip(
+                        message: value.toString(),
+                        width: 400,
+                        toolTipDirection: CustomToolTip.toolTipRight,
+                        isMobile: false,
+                        child: Text(
+                          value.toString(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                PlutoColumn(
+                  title: S.of(context).actions,
+                  field: 'actions',
+                  type: PlutoColumnType.text(),
+                  width: UIHelpers.screenWidth(context) * 0.07,
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.center,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                  renderer: (rendererContext) => actionsRenderer(
+                    rendererContext,
+                    selectedDate: selectedDate,
+                    selectedMonth: selectedMonth,
+                    pipeline: pipeline
+                  ),
+                ),
+              ],
+              rows: aiQuerytableData.items.map((item) {
+                    return PlutoRow(
+                      cells: {
+                        'id': PlutoCell(value: item.id ?? "N/A"),
+                        'ticketDescription':
+                            PlutoCell(value: item.ticketDescription ?? "N/A"),
+                        'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answered" : "Not Answered"),
+                        'aiQueryAnswer':
+                            PlutoCell(value: item.aIResponse ?? "N/A"),
+                        'actions': PlutoCell(value: 'View'),
+                      },
+                    );
+                  }).toList(),
+              configuration: PlutoGridConfiguration(
+                style: PlutoGridStyleConfig(
+                  enableColumnBorderHorizontal: false,
+                  enableColumnBorderVertical: true,
+                  enableCellBorderVertical: true,
+                  enableCellBorderHorizontal: true,
+                  gridBorderRadius: BorderRadius.circular(8),
+                  gridPopupBorderRadius: BorderRadius.circular(8),
+                  rowHeight: 50,
+                  columnHeight: 50,
+                  gridBorderColor: Colors.transparent,
+                  columnTextStyle: SupportBotTextstyle.columnHeading,
+                  cellTextStyle: SupportBotTextstyle.cellHeading,
+                  enableGridBorderShadow: true,
+                ),
+                columnSize: const PlutoGridColumnSizeConfig(
+                  autoSizeMode: PlutoAutoSizeMode.scale,
+                ),
+              ),
             ),
           ),
         ),
-      ),
+         Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+           children: [
+             Row(
+                        children: [
+                          const Text(
+                            "Items per page:   ",
+                            style: TextStyle(
+                                color: SupportBotColors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          ValueListenableBuilder<int>(
+                            valueListenable: pageSize,
+                            builder: (context, value, child) {
+                              return CustomPaginationDropdown(
+                                selectedValue: value,
+                                items: const [10, 25, 50,100,500,1000],
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    pageSize.value = value;
+                                    currentPage.value = 1;
+                                   
+                                    BlocProvider.of<AiQueryAnswerBloc>(
+                                            context)
+                                        .add(
+                                      FetchAiQueryAnswerEvent(
+                                       selectedDate: selectedDate,
+                                       selectedMonth: selectedMonth,
+                                       selectedPipeline: pipelineId,
+                                        page: currentPage.value,
+                                        pageSize: pageSize.value,
+                                        selectedClassification: isAnswer
+                                      ),
+                                    );
+                                  }
+                                },
+                                width: 80,
+                                height: 40,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      UIHelpers.horizontalSpaceRegular,
+             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "${(currentPage.value - 1) * pageSize.value + 1} - "
+                                "${(currentPage.value * pageSize.value > (aiQuerytableData.totalRecords ?? 0)) ? aiQuerytableData.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                                "${aiQuerytableData.totalRecords ?? 0}",
+                                style: TextStyle(
+                                  color: SupportBotColors.bluePrimary.shade500,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: currentPage.value > 1
+                                    ? () {
+                                        currentPage.value--;
+                                       
+                                        BlocProvider.of<AiQueryAnswerBloc>(
+                                                context)
+                                            .add(
+                                          FetchAiQueryAnswerEvent(
+                                           selectedDate: selectedDate,
+                                           selectedMonth: selectedMonth,
+                                           selectedPipeline: pipelineId,
+                                            page: currentPage.value,
+                                            pageSize: pageSize.value,
+                                            selectedClassification: isAnswer
+                                          ),
+                                        );
+                                      }
+                                    : null,
+                                icon:
+                                    const Icon(Icons.arrow_back_ios_new, size: 15),
+                              ),
+                              ValueListenableBuilder<int>(
+                                valueListenable: currentPage,
+                                builder: (context, page, _) {
+                                  return Text(
+                                    'Page $page',
+                                    style: const TextStyle(
+                                        color: SupportBotColors.black,
+                                        fontWeight: FontWeight.w500),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                onPressed: (currentPage.value * pageSize.value) <
+                                        (aiQuerytableData.totalRecords ??
+                                            0)
+                                    ? () {
+                                        currentPage.value++;
+                                       
+                                         BlocProvider.of<AiQueryAnswerBloc>(
+                                                context)
+                                            .add(
+                                          FetchAiQueryAnswerEvent(
+                                           selectedDate: selectedDate,
+                                           selectedMonth: selectedMonth,
+                                           selectedPipeline: pipelineId,
+                                            page: currentPage.value,
+                                            pageSize: pageSize.value,
+                                            selectedClassification: isAnswer
+                                          ),
+                                        );
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.arrow_forward_ios, size: 15),
+                              ),
+                            ],
+                          ),
+           ],
+         ),
+      ],
     );
   }
 }

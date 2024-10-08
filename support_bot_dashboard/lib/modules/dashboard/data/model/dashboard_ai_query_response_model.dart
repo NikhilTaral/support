@@ -36,11 +36,15 @@ class DashboardAiQueryResponseModel {
 class Data {
   final int? totalRecords;
   final List<Items>? items;
+  final num? pageSize;
+  final num? currentPage;
   final LastEvaluatedKey? lastEvaluatedKey;
 
   Data({
     this.totalRecords,
     this.items,
+     required this.pageSize,
+    required this.currentPage,
     this.lastEvaluatedKey,
   });
 
@@ -52,12 +56,16 @@ class Data {
         lastEvaluatedKey: json["lastEvaluatedKey"] == null
             ? null
             : LastEvaluatedKey.fromJson(json["lastEvaluatedKey"]),
+             pageSize: json["pageSize"],
+        currentPage: json["currentPage"],
       );
 
   Map<String, dynamic> toJson() => {
         'totalRecords': totalRecords,
         'items': items?.map((e) => e.toJson()).toList(),
         "lastEvaluatedKey": lastEvaluatedKey?.toJson(),
+         "pageSize": pageSize,
+        "currentPage": currentPage,
       };
 }
 

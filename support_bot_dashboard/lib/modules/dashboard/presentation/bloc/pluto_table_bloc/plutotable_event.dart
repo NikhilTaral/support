@@ -26,15 +26,19 @@ class FetchTableDataEvent extends PlutotableEvent {
 class SelectDateEvent extends PlutotableEvent {
   final DateTime selectedDate;
   final String? selectedPipeline;
+    final num? page;
+  final num? pageSize;
 
-  SelectDateEvent({required this.selectedDate, required this.selectedPipeline});
+  SelectDateEvent({required this.selectedDate, required this.selectedPipeline,required this.page, required this.pageSize});
 }
 
 class SelectMonthEvent extends PlutotableEvent {
   final DateTime selectedMonth;
   final String? selectedPipeline;
+    final num? page;
+  final num? pageSize;
 
-  SelectMonthEvent({required this.selectedMonth, this.selectedPipeline});
+  SelectMonthEvent({required this.selectedMonth, this.selectedPipeline, required this.page, required this.pageSize});
 }
 
 class UpdateValidationEvent extends PlutotableEvent {

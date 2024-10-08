@@ -3,9 +3,12 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 abstract class DashboardAiQueryRepository {
   Future<Either<Failure, dynamic>> getAiQueryTableData(
-      {DateTime? selectedDate, DateTime? selectedMonth, String? pipeline});
+      {DateTime? selectedDate,
+      DateTime? selectedMonth,
+      String? pipeline,
+      num? page,
+      num? pageSize,
+        bool? selectedClassification,
+      });
 }
 
-abstract class FilterAiQueryAnswerRepository {
-  Future<Either<Failure, dynamic>> getFilterAiQueryData({DateTime? selecedDate, DateTime? selectedMonth, bool? selectedClassification, String? pipeline});
-}

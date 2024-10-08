@@ -7,21 +7,28 @@ class FetchAiQueryAnswerEvent extends AiQueryAnswerEvent{
   final DateTime? selectedMonth;
   final String? selectedPipeline;
   final bool? isAIAnswer;
+   final num? page;
+  final num? pageSize;
+  final bool? selectedClassification;
 
-  FetchAiQueryAnswerEvent({this.selectedDate, this.selectedMonth,this.selectedPipeline,this.isAIAnswer});
+  FetchAiQueryAnswerEvent({this.selectedDate, this.selectedMonth,this.selectedPipeline,this.isAIAnswer, required this.selectedClassification,this.page,  this.pageSize});
 }
 class SelectedDateEvent extends AiQueryAnswerEvent {
   final DateTime selectedDate;
   final String? selectedPipeline;
+   final num? page;
+  final num? pageSize;
 
-  SelectedDateEvent({required this.selectedDate,this.selectedPipeline});
+  SelectedDateEvent({required this.selectedDate,this.selectedPipeline, required this.pageSize,required this.page});
 }
 
 class SelectedMonthEvent extends AiQueryAnswerEvent {
   final DateTime selectedMonth;
   final String? selectedPipeline;
+   final num? page;
+  final num? pageSize;
 
-  SelectedMonthEvent({required this.selectedMonth, this.selectedPipeline});
+  SelectedMonthEvent({required this.selectedMonth, this.selectedPipeline, required this.page, required this.pageSize});
 }
 class UpdateAiAnswerInitialEvent extends AiQueryAnswerEvent {
   final String? ticketId;
@@ -35,12 +42,4 @@ class UpdateAiAnswerInitialEvent extends AiQueryAnswerEvent {
       this.selectedPipeline,
       required this.selectedDate,
       required this.selectedMonth});
-}
-class FilterAiAnsweClassificationEvent extends AiQueryAnswerEvent{
-  final bool? selectedClassification;
-  final String? selectedPipeline;
-  final DateTime? selectDate;
-  final DateTime? selectMonth;
-
-  FilterAiAnsweClassificationEvent({required this.selectedClassification, required this.selectDate, required this.selectMonth, this.selectedPipeline});
 }

@@ -102,7 +102,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     add(FetchTableDataEvent(
         selectedDate: event.selectedDate,
         selectedMonth: null,
-        selectedPipeline: event.selectedPipeline));
+        selectedPipeline: event.selectedPipeline,page: event.page,pageSize: event.pageSize));
   }
 
   FutureOr<void> _onSelectMonthEvent(
@@ -113,7 +113,10 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     add(FetchTableDataEvent(
         selectedDate: null,
         selectedMonth: event.selectedMonth,
-        selectedPipeline: event.selectedPipeline));
+        selectedPipeline: event.selectedPipeline,
+        page: event.page,
+        pageSize: event.pageSize
+        ));
   }
 
   FutureOr<void> _onUpdateValidationEvent(
