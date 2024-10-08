@@ -30,6 +30,14 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       FetchTableDataEvent event, Emitter<PlutotableState> emit) async {
     emit(FetchTableDataLoading());
     try {
+        String? validationFilter;
+    if (event.selectedClassificationValidation == 'all') {
+      validationFilter = null;
+    } else if (event.selectedClassificationValidation == 'not updated') {
+      validationFilter = "";
+    } else {
+      validationFilter = event.selectedClassificationValidation;
+    }
       final repository = serviceLocator<DashboardTableDatausecase>();
       final response = await repository.invoke(
           event.selectedDate,
@@ -37,7 +45,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           event.selectedPipeline,
           event.ticketId,
           event.selectedClassification,
-          event.selectedClassificationValidation,
+          validationFilter,
           event.page,
           event.pageSize);
       if (response.isLeft) {

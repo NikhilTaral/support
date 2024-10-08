@@ -267,6 +267,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                        selectedPipeline: pipelineId,
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
+                                            selectedClassification: selectedClassification,
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
                                       ),
                                     );
                                   }
@@ -294,7 +296,6 @@ class TicketClassificationTableWidget extends StatelessWidget {
                           IconButton(
                             onPressed: currentPage.value > 1
                                 ? () {
-                                  print('fghjhgfdcsx $selectedClassification');
                                     currentPage.value--;
                                     BlocProvider.of<PlutotableBloc>(
                                             context)
@@ -306,7 +307,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
                                         selectedClassification: selectedClassification,
-                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation : null
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
                                       ),
                                     );
                                   }
@@ -330,7 +331,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                     (tableData.totalRecords ??
                                         0)
                                 ? () {
-                                  print('fghjhgfdcsx $selectedClassification');
+                                  print('fghjhgfdcsx $selectedClassificationValidation');
                                     currentPage.value++;
                                     BlocProvider.of<PlutotableBloc>(
                                             context)
@@ -342,7 +343,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
                                         selectedClassification: selectedClassification,
-                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation : null
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
                                       ),
                                     );
                                   }
