@@ -46,6 +46,14 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
     if (classificationValidation != null) {
       body['classificationValidation'] = classificationValidation;
     }
+
+      if (page != null) {
+      body['page'] = page;
+    }
+
+    if (pageSize != null) {
+      body['pageSize'] = pageSize;
+    }
     
     final encodedBody = jsonEncode(body);
 

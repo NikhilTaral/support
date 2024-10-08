@@ -5,7 +5,6 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_filter_classification_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
@@ -38,7 +37,9 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           event.selectedPipeline,
           event.ticketId,
           event.selectedClassification,
-          event.selectedClassificationValidation);
+          event.selectedClassificationValidation,
+          event.page,
+          event.pageSize);
       if (response.isLeft) {
         emit(FetchTableDataError(
             message: "Failed to fetch data",
@@ -66,9 +67,10 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           }).toList();
 
           final tableData = DashboardTableAttributeModel(
-            totalRecords: model.data?.totalRecords,
-            items: items,
-          );
+              totalRecords: model.data?.totalRecords,
+              items: items,
+              pageSize: model.data.pageSize,
+              currentPage: model.data.currentPage);
 
           initialData = tableData;
 
@@ -94,16 +96,20 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
 
   FutureOr<void> _onSelectDateEvent(
       SelectDateEvent event, Emitter<PlutotableState> emit) {
-    emit(UpdateDateState(selectedDate: event.selectedDate,selectedPipeline: event.selectedPipeline));
+    emit(UpdateDateState(
+        selectedDate: event.selectedDate,
+        selectedPipeline: event.selectedPipeline));
     add(FetchTableDataEvent(
         selectedDate: event.selectedDate,
-        selectedMonth:null,
+        selectedMonth: null,
         selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> _onSelectMonthEvent(
       SelectMonthEvent event, Emitter<PlutotableState> emit) {
-    emit(UpdateMonthState(selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline));
+    emit(UpdateMonthState(
+        selectedMonth: event.selectedMonth,
+        selectedPipeline: event.selectedPipeline));
     add(FetchTableDataEvent(
         selectedDate: null,
         selectedMonth: event.selectedMonth,
@@ -118,7 +124,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       await repository.invoke(event.id, event.validation, event.reason,event.pipeline);
       emit(UpdateValidationSuccess(
           selectedDate: event.selectedDate ?? null,
-          selectedMonth: event.selectedMonth ?? null));
+          selectedMonth: event.selectedMonth ?? null,
+          ));
     } catch (e) {
       emit(UpdateValidationError(errorMessage: 'Exception occurred: $e'));
     }
@@ -141,13 +148,14 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       try {
         final repository = serviceLocator<DashboardTableDatausecase>();
         final response = await repository.invoke(
-          event.selectedDate,
-          event.selectedMonth,
-          event.pipeline ?? '11257490',
-          event.ticketId,
-          event.selectedClassification,
-          event.selectedClassificationValidation,
-        );
+            event.selectedDate,
+            event.selectedMonth,
+            event.pipeline ?? '11257490',
+            event.ticketId,
+            event.selectedClassification,
+            event.selectedClassificationValidation,
+            event.page,
+            event.pageSize);
         if (response.isLeft) {
           emit(FetchTableDataError(
               message: "Failed to fetch data",
@@ -155,7 +163,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               selectedValidation: event.selectedClassificationValidation));
         } else {
           final model = DashboardPlutotableResponseModel.fromJson(
-            json.decode(response.right));
+              json.decode(response.right));
           if (model.success == true) {
             List<TableItem> items =
                 (model.data?.items as List<Item>).map((item) {
@@ -173,11 +181,12 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                     item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
               );
             }).toList();
-            
+
             final tableData = DashboardTableAttributeModel(
-              totalRecords: model.data?.totalRecords,
-              items: items,
-            );
+                totalRecords: model.data?.totalRecords,
+                items: items,
+                pageSize: model.data.pageSize,
+                currentPage: model.data.currentPage);
             emit(FetchTableDataSuccess(
                 selectedClassification: event.selectedClassification,
                 tableData: tableData,
@@ -220,7 +229,9 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           event.pipeline ?? '11257490',
           event.ticketId,
           event.selectedClassification,
-          validationFilter);
+          validationFilter,
+          event.page,
+          event.pageSize);
 
       if (response.isLeft) {
         emit(FetchTableDataError(
@@ -248,10 +259,11 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           }).toList();
 
           final tableData = DashboardTableAttributeModel(
-            totalRecords: model.data?.totalRecords,
-            items: items,
-          );
-  
+              totalRecords: model.data?.totalRecords,
+              items: items,
+              pageSize: model.data.pageSize,
+              currentPage: model.data.currentPage);
+
           emit(FetchTableDataSuccess(
               selectedClassification: event.selectedClassification,
               tableData: tableData,
@@ -305,7 +317,9 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         event.pipeline ?? '11257490',
         event.ticketId,
         event.classification,
-        event.classificationValidation);
+        event.classificationValidation,
+        event.page,
+        event.pageSize);
     try {
       if (response.isLeft) {
         emit(SearchFailureState(message: 'Failed to load'));
@@ -329,9 +343,10 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
           }).toList();
 
           final tableData = DashboardTableAttributeModel(
-            totalRecords: model.data?.totalRecords,
-            items: items,
-          );
+              totalRecords: model.data?.totalRecords,
+              items: items,
+              pageSize: model.data.pageSize,
+              currentPage: model.data.currentPage);
 
           initialData = tableData;
 
