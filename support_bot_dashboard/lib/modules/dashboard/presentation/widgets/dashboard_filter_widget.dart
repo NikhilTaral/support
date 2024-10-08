@@ -27,6 +27,8 @@ class DashboardFilterWidget extends StatelessWidget {
   String? selectedClassification;
   String selectedClassificationValidation;
  final Function(FilterChangeType changeType, dynamic newValue) onFilterChanged;
+    final ValueNotifier<int> currentPage;
+  final ValueNotifier<int> pageSize;
   
   DashboardFilterWidget(
       {super.key,
@@ -35,7 +37,9 @@ class DashboardFilterWidget extends StatelessWidget {
       required this.selectedDate  ,
       required this.selectedClassificationValidation,
       this.selectedMonth,
-      required this.onFilterChanged
+      required this.onFilterChanged,
+      required this.currentPage,
+      required this.pageSize
       });
 
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
@@ -183,6 +187,8 @@ class DashboardFilterWidget extends StatelessWidget {
                         items: classificationItems,
                         onChanged: (String? value) {
                           if (value != null) {
+                            currentPage.value = 1;
+                            pageSize.value = 10;
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
                                 .add(FilterClassificationEvent(
@@ -191,7 +197,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                     value,
                                     "",
                                     pipeline,
-                                    ticketId));
+                                    ticketId,currentPage.value,pageSize.value));
                           onFilterChanged(FilterChangeType.classification, value);
                           }
                         },
@@ -237,6 +243,8 @@ class DashboardFilterWidget extends StatelessWidget {
                         items: validationItems,
                         onChanged: (String? value) {
                           if (value != null) {
+                            currentPage.value = 1;
+                            pageSize.value = 10;
                             String lowercaseValue = value.toLowerCase();
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
@@ -246,7 +254,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                     selectedMonth,
                                     selectedClassification ?? "",
                                     pipeline,
-                                    ticketId,));
+                                    ticketId,currentPage.value,pageSize.value));
                            onFilterChanged(FilterChangeType.validation, value);
                           }
                         },

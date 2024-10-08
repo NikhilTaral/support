@@ -3,14 +3,18 @@ import 'package:equatable/equatable.dart';
 class DashboardTableAttributeModel extends Equatable {
   final num? totalRecords;
   final List<TableItem> items;
+   final num? pageSize;
+   final num? currentPage;
 
   DashboardTableAttributeModel({
     required this.totalRecords,
     required this.items,
+    required this.pageSize,
+    required this.currentPage
   });
 
   @override
-  List<Object?> get props => [totalRecords, items];
+  List<Object?> get props => [totalRecords, items,pageSize,currentPage];
 }
 
 class TableItem extends Equatable {

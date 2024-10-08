@@ -34,9 +34,11 @@ class DashboardDesktopView extends StatelessWidget {
   DateTime? selectedDate;
   DateTime? selectedMonth;
   String? selectedClassification = '';
-  String selectedClassificationValidation = '';
+  String? selectedClassificationValidation;
   late String selectedPipelineId;
   late bool isAIAnswer;
+  final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
+  final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +184,7 @@ class DashboardDesktopView extends StatelessWidget {
                             pipeline: pipeline,
                             selectedDate: selectedDate,
                             selectedClassificationValidation:
-                                selectedClassificationValidation,
+                                selectedClassificationValidation ?? "",
                             onFilterChanged: (FilterChangeType changeType,
                                 dynamic newValue) {
                               switch (changeType) {
@@ -203,7 +205,9 @@ class DashboardDesktopView extends StatelessWidget {
 
                                   break;
                               }
-                            },
+                              
+                            }, currentPage: currentPage,
+                            pageSize: pageSize,
                           ),
                           BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
@@ -226,7 +230,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedClassification:
                                                     selectedClassification,
                                                 selectedClassificationValidation:
-                                                    selectedClassificationValidation.toLowerCase()),
+                                                    selectedClassificationValidation?.toLowerCase()),
                                           );
                                     } else if (state
                                             is UpdateValidationSuccess ||
@@ -240,7 +244,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedClassification:
                                                     selectedClassification,
                                                 selectedClassificationValidation:
-                                                    selectedClassificationValidation.toLowerCase()),
+                                                    selectedClassificationValidation?.toLowerCase()),
                                           );
                                       Navigator.of(context).pop();
                                     } else if (state
@@ -319,7 +323,10 @@ class DashboardDesktopView extends StatelessWidget {
                                         selectedMonth: state.selectedMonth,
                                         pipeline: pipeline,
                                         pipelineId: selectedPipelineId,
-                                       
+                                        currentPage: currentPage,
+                                        pageSize: pageSize,
+                                          selectedClassification: selectedClassification,
+                                          selectedClassificationValidation: selectedClassificationValidation,
                                       );
                                     } else if (state is FetchTableDataError) {
                                       return SizedBox(

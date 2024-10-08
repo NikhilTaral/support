@@ -9,13 +9,18 @@ class FetchTableDataEvent extends PlutotableEvent {
   final String? selectedClassificationValidation;
   final String? selectedPipeline;
   final String? ticketId;
+  final num? page;
+  final num? pageSize;
 
   FetchTableDataEvent(
       {this.selectedClassification,
       this.selectedClassificationValidation,
       this.selectedDate,
       this.selectedMonth,
-      this.selectedPipeline, this.ticketId});
+      this.selectedPipeline,
+      this.ticketId,
+      this.page,
+      this.pageSize});
 }
 
 class SelectDateEvent extends PlutotableEvent {
@@ -27,7 +32,7 @@ class SelectDateEvent extends PlutotableEvent {
 
 class SelectMonthEvent extends PlutotableEvent {
   final DateTime selectedMonth;
-   final String? selectedPipeline;
+  final String? selectedPipeline;
 
   SelectMonthEvent({required this.selectedMonth, this.selectedPipeline});
 }
@@ -38,7 +43,7 @@ class UpdateValidationEvent extends PlutotableEvent {
   final String reason;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
-   final String pipeline;
+  final String pipeline;
 
   UpdateValidationEvent(
       {this.selectedDate,
@@ -63,15 +68,23 @@ class SelectPipelineEvent extends PlutotableEvent {
 
 class FilterClassificationEvent extends PlutotableEvent {
   final String selectedClassification;
-    final String pipeline;
-    final String? ticketId;
+  final String pipeline;
+  final String? ticketId;
   final String selectedClassificationValidation;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
+  final num? page;
+  final num? pageSize;
 
-
-  FilterClassificationEvent(this.selectedDate, this.selectedMonth,
-      this.selectedClassification, this.selectedClassificationValidation,this.pipeline, this.ticketId);
+  FilterClassificationEvent(
+      this.selectedDate,
+      this.selectedMonth,
+      this.selectedClassification,
+      this.selectedClassificationValidation,
+      this.pipeline,
+      this.ticketId,
+      this.page,
+      this.pageSize);
 }
 
 class FilterValidationEvent extends PlutotableEvent {
@@ -79,11 +92,20 @@ class FilterValidationEvent extends PlutotableEvent {
   final String selectedClassification;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
-    final String? pipeline;
-    final String? ticketId;
+  final String? pipeline;
+  final String? ticketId;
+  final num? page;
+  final num? pageSize;
 
-  FilterValidationEvent(this.selectedClassificationValidation,
-      this.selectedDate, this.selectedMonth, this.selectedClassification, this.pipeline, this.ticketId);
+  FilterValidationEvent(
+      this.selectedClassificationValidation,
+      this.selectedDate,
+      this.selectedMonth,
+      this.selectedClassification,
+      this.pipeline,
+      this.ticketId,
+      this.page,
+      this.pageSize);
 }
 
 // class FilterPipelineEvent extends PlutotableEvent {
@@ -104,18 +126,32 @@ class CustomSidebarLoadRowData extends PlutotableEvent {
 class RevertClassificationEvent extends PlutotableEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
-   final String selectedClassification;
+  final String selectedClassification;
   final String? ticketId;
-  RevertClassificationEvent({required this.selectedDate,required this.selectedMonth, required this.ticketId, required this.selectedClassification});
+  RevertClassificationEvent(
+      {required this.selectedDate,
+      required this.selectedMonth,
+      required this.ticketId,
+      required this.selectedClassification});
 }
 
-class SearchTableEvent extends PlutotableEvent{
+class SearchTableEvent extends PlutotableEvent {
   final DateTime? selectDate;
   final DateTime? selectMonth;
   final String? classification;
   final String? classificationValidation;
   final String? pipeline;
   final String? ticketId;
+  final num? page;
+  final num? pageSize;
 
-  SearchTableEvent({required this.selectDate, required this.selectMonth, required this.ticketId,  this.pipeline,  this.classification,  this.classificationValidation});
+  SearchTableEvent(
+      {required this.selectDate,
+      required this.selectMonth,
+      required this.ticketId,
+      this.pipeline,
+      this.classification,
+      this.classificationValidation,
+      this.page,
+      this.pageSize});
 }

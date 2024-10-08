@@ -15,7 +15,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     on<FetchAiQueryAnswerEvent>(_onAiQueryAnswerEvent);
     on<SelectedDateEvent>(_onSelectedDateEvent);
     on<SelectedMonthEvent>(_onSelectedMonthEvent);
-    on<UpdateAiAnswerInitialEvent>(UpdateAiAnswers);
+    on<UpdateAiAnswerInitialEvent>(_onUpdateAiAnswers);
     on<FilterAiAnsweClassificationEvent>(_onFilterAiAnsweClassificationEvent);
   }
 
@@ -73,7 +73,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         selectedDate: null, selectedMonth: event.selectedMonth, selectedPipeline: event.selectedPipeline));
   }
 
-  FutureOr<void> UpdateAiAnswers(UpdateAiAnswerInitialEvent event,
+  FutureOr<void> _onUpdateAiAnswers(UpdateAiAnswerInitialEvent event,
       Emitter<AiQueryAnswerState> emit) async {
     emit(UpdateAiAnswerLoadingState());
     final repository = serviceLocator<UpdateAiAnswerUsecase>();
