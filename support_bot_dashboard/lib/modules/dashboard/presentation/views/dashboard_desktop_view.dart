@@ -120,7 +120,8 @@ class DashboardDesktopView extends StatelessWidget {
                                     (state.pieChartData?.noActionRequired ??
                                         0) +
                                     (state.pieChartData?.genuineQuery ?? 0) +
-                                    (state.pieChartData?.acknowledgement ?? 0);
+                                    (state.pieChartData?.acknowledgement ?? 0) +
+                                    (state.pieChartData?.notClassified ?? 0);
 
                                 final List<CountContainerData> countContainers =
                                     getCountContainerData(context,
@@ -224,9 +225,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedPipeline:
                                                     selectedPipelineId,
                                                 selectedClassification:
-                                                    selectedClassification,
-                                                selectedClassificationValidation:
-                                                    selectedClassificationValidation.toLowerCase()),
+                                                    selectedClassification,),
                                           );
                                     } else if (state
                                             is UpdateValidationSuccess ||
@@ -238,9 +237,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedPipeline:
                                                     selectedPipelineId,
                                                 selectedClassification:
-                                                    selectedClassification,
-                                                selectedClassificationValidation:
-                                                    selectedClassificationValidation.toLowerCase()),
+                                                    selectedClassification,),
                                           );
                                       Navigator.of(context).pop();
                                     } else if (state

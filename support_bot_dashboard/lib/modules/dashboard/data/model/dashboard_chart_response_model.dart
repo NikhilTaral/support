@@ -44,24 +44,30 @@ class Data {
   final num? noActionRequired;
   final num? spamMarketing;
   final num? acknowledgement;
+  final num? notClassified;
 
   Data(
       {this.genuineQuery,
       this.noActionRequired,
       this.spamMarketing,
-      this.acknowledgement});
+      this.acknowledgement,
+      this.notClassified
+      });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
       genuineQuery: json["Genuine Query"],
       noActionRequired: json["No Action Required"],
       spamMarketing: json["Spam/Marketing"],
-      acknowledgement: json['Acknowledgement Required']);
+      acknowledgement: json['Acknowledgement Required'],
+      notClassified: json['Not Classified']
+      );
 
   Map<String, dynamic> toJson() => {
         "Genuine Query": genuineQuery,
         "No Action Required": noActionRequired,
         "Spam/Marketing": spamMarketing,
-        "Acknowledgement Required": acknowledgement
+        "Acknowledgement Required": acknowledgement,
+        "Not Classified": notClassified
       };
 }
 
