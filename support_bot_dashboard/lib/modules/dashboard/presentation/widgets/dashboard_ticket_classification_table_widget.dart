@@ -307,7 +307,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
                                         selectedClassification: selectedClassification,
-                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : null
                                       ),
                                     );
                                   }
@@ -343,7 +343,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
                                         selectedClassification: selectedClassification,
-                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : null
                                       ),
                                     );
                                   }
