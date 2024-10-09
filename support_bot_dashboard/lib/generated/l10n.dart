@@ -170,6 +170,16 @@ class S {
     );
   }
 
+  //answer edited
+   String get isAnswerEdited {
+    return Intl.message(
+      'isAnswerEdited',
+      name: 'isAnswerEdited',
+      desc: 'isAnswerEdited',
+      args: [],
+    );
+  }
+
   /// `Validation`
   String get validation {
     return Intl.message(

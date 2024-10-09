@@ -16,7 +16,7 @@ class AIQueryAnswerWidget extends StatelessWidget {
   final DateTime? selectedDate;
   String? pipeline;
   String? pipelineId;
-     final ValueNotifier<int> currentPage;
+  final ValueNotifier<int> currentPage;
   final ValueNotifier<int> pageSize;
   bool? isAnswer;
   AIQueryAnswerWidget(
@@ -25,11 +25,10 @@ class AIQueryAnswerWidget extends StatelessWidget {
       this.pipeline,
       required this.selectedMonth,
       required this.selectedDate,
-       required this.currentPage,
-    required this.pageSize,
-    required this.isAnswer,
-    required this.pipelineId
-      });
+      required this.currentPage,
+      required this.pageSize,
+      required this.isAnswer,
+      required this.pipelineId});
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +139,22 @@ class AIQueryAnswerWidget extends StatelessWidget {
                   },
                 ),
                 PlutoColumn(
+                  title: S.of(context).isAnswerEdited,
+                  field: 'isAnswerEdited',
+                  width: UIHelpers.screenWidth(context) * 0.1,
+                  type: PlutoColumnType.text(),
+                  enableFilterMenuItem: false,
+                  enableHideColumnMenuItem: false,
+                  textAlign: PlutoColumnTextAlign.start,
+                  titlePadding: const EdgeInsets.all(8),
+                  backgroundColor: SupportBotColors.blueSecondary.shade100,
+                  enableContextMenu: false,
+                  enableDropToResize: false,
+                  enableEditingMode: false,
+                  enableColumnDrag: false,
+                  readOnly: true,
+                ),
+                PlutoColumn(
                   title: S.of(context).actions,
                   field: 'actions',
                   type: PlutoColumnType.text(),
@@ -155,26 +170,29 @@ class AIQueryAnswerWidget extends StatelessWidget {
                   enableColumnDrag: false,
                   readOnly: true,
                   renderer: (rendererContext) => actionsRenderer(
-                    rendererContext,
-                    selectedDate: selectedDate,
-                    selectedMonth: selectedMonth,
-                    pipeline: pipeline
-                  ),
+                      rendererContext,
+                      selectedDate: selectedDate,
+                      selectedMonth: selectedMonth,
+                      pipeline: pipeline),
                 ),
               ],
               rows: aiQuerytableData.items.map((item) {
-                    return PlutoRow(
-                      cells: {
-                        'id': PlutoCell(value: item.id ?? "N/A"),
-                        'ticketDescription':
-                            PlutoCell(value: item.ticketDescription ?? "N/A"),
-                        'answeredStatus': PlutoCell(value: item.answeredStatus == true ? "Answered" : "Not Answered"),
-                        'aiQueryAnswer':
-                            PlutoCell(value: item.aIResponse ?? "N/A"),
-                        'actions': PlutoCell(value: 'View'),
-                      },
-                    );
-                  }).toList(),
+                return PlutoRow(
+                  cells: {
+                    'id': PlutoCell(value: item.id ?? "N/A"),
+                    'ticketDescription':
+                        PlutoCell(value: item.ticketDescription ?? "N/A"),
+                    'answeredStatus': PlutoCell(
+                        value: item.answeredStatus == true
+                            ? "Answered"
+                            : "Not Answered"),
+                    'isAnswerEdited': PlutoCell(
+                        value: item.isAnswerEdited == true ? "True" : "False"),
+                    'aiQueryAnswer': PlutoCell(value: item.aIResponse ?? "N/A"),
+                    'actions': PlutoCell(value: 'View'),
+                  },
+                );
+              }).toList(),
               configuration: PlutoGridConfiguration(
                 style: PlutoGridStyleConfig(
                   enableColumnBorderHorizontal: false,
@@ -197,130 +215,121 @@ class AIQueryAnswerWidget extends StatelessWidget {
             ),
           ),
         ),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.end,
-           children: [
-             Row(
-                        children: [
-                          const Text(
-                            "Items per page:   ",
-                            style: TextStyle(
-                                color: SupportBotColors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          ValueListenableBuilder<int>(
-                            valueListenable: pageSize,
-                            builder: (context, value, child) {
-                              return CustomPaginationDropdown(
-                                selectedValue: value,
-                                items: const [10, 25, 50,100,500,1000],
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    pageSize.value = value;
-                                    currentPage.value = 1;
-                                   
-                                    BlocProvider.of<AiQueryAnswerBloc>(
-                                            context)
-                                        .add(
-                                      FetchAiQueryAnswerEvent(
-                                       selectedDate: selectedDate,
-                                       selectedMonth: selectedMonth,
-                                       selectedPipeline: pipelineId,
-                                        page: currentPage.value,
-                                        pageSize: pageSize.value,
-                                        selectedClassification: isAnswer
-                                      ),
-                                    );
-                                  }
-                                },
-                                width: 80,
-                                height: 40,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      UIHelpers.horizontalSpaceRegular,
-             Row(
+          children: [
+            Row(
+              children: [
+                const Text(
+                  "Items per page:   ",
+                  style: TextStyle(
+                      color: SupportBotColors.black,
+                      fontWeight: FontWeight.w500),
+                ),
+                ValueListenableBuilder<int>(
+                  valueListenable: pageSize,
+                  builder: (context, value, child) {
+                    return CustomPaginationDropdown(
+                      selectedValue: value,
+                      items: const [10, 25, 50, 100, 500, 1000],
+                      onChanged: (value) {
+                        if (value != null) {
+                          pageSize.value = value;
+                          currentPage.value = 1;
+
+                          BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                            FetchAiQueryAnswerEvent(
+                                selectedDate: selectedDate,
+                                selectedMonth: selectedMonth,
+                                selectedPipeline: pipelineId,
+                                page: currentPage.value,
+                                pageSize: pageSize.value,
+                                selectedClassification: isAnswer),
+                          );
+                        }
+                      },
+                      width: 80,
+                      height: 40,
+                    );
+                  },
+                ),
+              ],
+            ),
+            UIHelpers.horizontalSpaceRegular,
+            Row(
               mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                "${(currentPage.value - 1) * pageSize.value + 1} - "
-                                "${(currentPage.value * pageSize.value > (aiQuerytableData.totalRecords ?? 0)) ? aiQuerytableData.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
-                                "${aiQuerytableData.totalRecords ?? 0}",
-                                style: TextStyle(
-                                  color: SupportBotColors.bluePrimary.shade500,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: currentPage.value > 1
-                                    ? () {
-                                        currentPage.value--;
-                                       
-                                        BlocProvider.of<AiQueryAnswerBloc>(
-                                                context)
-                                            .add(
-                                          FetchAiQueryAnswerEvent(
-                                           selectedDate: selectedDate,
-                                           selectedMonth: selectedMonth,
-                                           selectedPipeline: pipelineId,
-                                            page: currentPage.value,
-                                            pageSize: pageSize.value,
-                                            selectedClassification: isAnswer
-                                          ),
-                                        );
-                                      }
-                                    : null,
-                                icon:
-                                    const Icon(Icons.arrow_back_ios_new, size: 15),
-                              ),
-                              ValueListenableBuilder<int>(
-                                valueListenable: currentPage,
-                                builder: (context, page, _) {
-                                  return Text(
-                                    'Page $page',
-                                    style: const TextStyle(
-                                        color: SupportBotColors.black,
-                                        fontWeight: FontWeight.w500),
-                                  );
-                                },
-                              ),
-                              IconButton(
-                                onPressed: (currentPage.value * pageSize.value) <
-                                        (aiQuerytableData.totalRecords ??
-                                            0)
-                                    ? () {
-                                        currentPage.value++;
-                                       
-                                         BlocProvider.of<AiQueryAnswerBloc>(
-                                                context)
-                                            .add(
-                                          FetchAiQueryAnswerEvent(
-                                           selectedDate: selectedDate,
-                                           selectedMonth: selectedMonth,
-                                           selectedPipeline: pipelineId,
-                                            page: currentPage.value,
-                                            pageSize: pageSize.value,
-                                            selectedClassification: isAnswer
-                                          ),
-                                        );
-                                      }
-                                    : null,
-                                icon: const Icon(Icons.arrow_forward_ios, size: 15),
-                              ),
-                            ],
-                          ),
-           ],
-         ),
+              children: [
+                Text(
+                  "${(currentPage.value - 1) * pageSize.value + 1} - "
+                  "${(currentPage.value * pageSize.value > (aiQuerytableData.totalRecords ?? 0)) ? aiQuerytableData.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                  "${aiQuerytableData.totalRecords ?? 0}",
+                  style: TextStyle(
+                    color: SupportBotColors.bluePrimary.shade500,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  onPressed: currentPage.value > 1
+                      ? () {
+                          currentPage.value--;
+
+                          BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                            FetchAiQueryAnswerEvent(
+                                selectedDate: selectedDate,
+                                selectedMonth: selectedMonth,
+                                selectedPipeline: pipelineId,
+                                page: currentPage.value,
+                                pageSize: pageSize.value,
+                                selectedClassification: isAnswer),
+                          );
+                        }
+                      : null,
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 15),
+                ),
+                ValueListenableBuilder<int>(
+                  valueListenable: currentPage,
+                  builder: (context, page, _) {
+                    return Text(
+                      'Page $page',
+                      style: const TextStyle(
+                          color: SupportBotColors.black,
+                          fontWeight: FontWeight.w500),
+                    );
+                  },
+                ),
+                IconButton(
+                  onPressed: (currentPage.value * pageSize.value) <
+                          (aiQuerytableData.totalRecords ?? 0)
+                      ? () {
+                          currentPage.value++;
+
+                          BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                            FetchAiQueryAnswerEvent(
+                                selectedDate: selectedDate,
+                                selectedMonth: selectedMonth,
+                                selectedPipeline: pipelineId,
+                                page: currentPage.value,
+                                pageSize: pageSize.value,
+                                selectedClassification: isAnswer),
+                          );
+                        }
+                      : null,
+                  icon: const Icon(Icons.arrow_forward_ios, size: 15),
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     );
   }
 }
 
 Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
-    {required DateTime? selectedDate, required DateTime? selectedMonth, required String? pipeline}) {
+    {required DateTime? selectedDate,
+    required DateTime? selectedMonth,
+    required String? pipeline}) {
   final rows = rendererContext.stateManager.refRows.toList();
   final currentIndex = rows.indexOf(rendererContext.row);
   return Row(
@@ -340,7 +349,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
                 child: InkWell(
                   onTap: () {
                     _showDetails(context, rows, currentIndex, selectedDate,
-                        selectedMonth,pipeline);
+                        selectedMonth, pipeline);
                   },
                   child: Row(
                     children: [
@@ -410,7 +419,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                           Navigator.pop(context);
                           if (isPreviousEnabled) {
                             _showDetails(blocContext, rows, currentIndex - 1,
-                                selectedDate, selectedMonth,pipeline);
+                                selectedDate, selectedMonth, pipeline);
                           }
                         }
                       : null,
@@ -432,7 +441,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                             Navigator.pop(context);
                             if (isNextEnabled) {
                               _showDetails(context, rows, currentIndex + 1,
-                                  selectedDate, selectedMonth,pipeline);
+                                  selectedDate, selectedMonth, pipeline);
                             }
                           }
                         : null,
@@ -495,7 +504,6 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                   ElevatedButton.icon(
                     onPressed: () {
                       if (isEditing) {
-
                         BlocProvider.of<AiQueryAnswerBloc>(context).add(
                           UpdateAiAnswerInitialEvent(
                             ticketId: id,
