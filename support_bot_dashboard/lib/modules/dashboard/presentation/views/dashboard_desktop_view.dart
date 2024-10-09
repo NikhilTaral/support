@@ -492,6 +492,9 @@ class DashboardDesktopView extends StatelessWidget {
                                             isAIAnswer =
                                                 selectedPipelineAttributes[
                                                     'aiAnswerPerm'];
+                                            
+                                            currentPage.value =1;
+                                            pageSize.value =10;
 
                                             BlocProvider.of<PlutotableBloc>(
                                                     context)
@@ -501,6 +504,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedMonth: selectedMonth,
                                                 selectedPipeline:
                                                     selectedPipelineId,
+                                                page: currentPage.value,
+                                                pageSize: pageSize.value
                                               ),
                                             );
 
@@ -522,7 +527,10 @@ class DashboardDesktopView extends StatelessWidget {
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   selectedClassification:
-                                                      isAnswer),
+                                                      isAnswer,
+                                                       page: currentPage.value,
+                                                pageSize: pageSize.value
+                                                      ),
                                             );
                                             BlocProvider.of<AiQueryChartBloc>(
                                                     context)
@@ -650,6 +658,9 @@ class DashboardDesktopView extends StatelessWidget {
                                             isAIAnswer =
                                                 selectedPipelineAttributes[
                                                     'aiAnswerPerm'];
+
+                                            currentPage.value = 1;
+                                            pageSize.value =10;
 
                                             BlocProvider.of<AiQueryAnswerBloc>(
                                                     context)
