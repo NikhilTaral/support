@@ -37,13 +37,13 @@ class AIQueryAnswerWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16),
           child: SizedBox(
-            height: UIHelpers.screenHeight(context) * 0.44,
+            height: UIHelpers.screenHeight(context) * 0.4,
             child: PlutoGrid(
               columns: [
                 PlutoColumn(
                   title: S.of(context).id,
                   field: 'id',
-                  width: UIHelpers.screenWidth(context) * 0.1,
+                  width: UIHelpers.screenWidth(context) * 0.13,
                   type: PlutoColumnType.text(),
                   enableFilterMenuItem: false,
                   enableHideColumnMenuItem: false,
@@ -55,7 +55,38 @@ class AIQueryAnswerWidget extends StatelessWidget {
                   enableEditingMode: false,
                   enableColumnDrag: false,
                   readOnly: true,
+                  renderer: (rendererContext) {
+                    final value = rendererContext.cell.value;
+
+                    if (value is Map<String, Object>) {
+                      final id = value['id']?.toString() ?? 'N/A';
+                      final isAnswerEdited =
+                          value['isAnswerEdited']?.toString() ?? 'N/A';
+
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(id),
+                          UIHelpers.horizontalSpaceSmall,
+                          if (isAnswerEdited == 'Edited')
+                            Container(
+                                width: UIHelpers.screenWidth(context) * 0.04,
+                                height: UIHelpers.screenHeight(context)*0.03,
+                                decoration: BoxDecoration(
+                                    color:
+                                        SupportBotColors.bluePrimary.shade500,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Center(
+                                  child: Text(isAnswerEdited,
+                                      style: const TextStyle(color: SupportBotColors.white)),
+                                )),
+                        ],
+                      );
+                    }
+                    return Text(value?.toString() ?? 'N/A');
+                  },
                 ),
+
                 PlutoColumn(
                   title: S.of(context).ticketDescription,
                   field: 'ticketDescription',
@@ -139,22 +170,6 @@ class AIQueryAnswerWidget extends StatelessWidget {
                   },
                 ),
                 PlutoColumn(
-                  title: S.of(context).isAnswerEdited,
-                  field: 'isAnswerEdited',
-                  width: UIHelpers.screenWidth(context) * 0.1,
-                  type: PlutoColumnType.text(),
-                  enableFilterMenuItem: false,
-                  enableHideColumnMenuItem: false,
-                  textAlign: PlutoColumnTextAlign.start,
-                  titlePadding: const EdgeInsets.all(8),
-                  backgroundColor: SupportBotColors.blueSecondary.shade100,
-                  enableContextMenu: false,
-                  enableDropToResize: false,
-                  enableEditingMode: false,
-                  enableColumnDrag: false,
-                  readOnly: true,
-                ),
-                PlutoColumn(
                   title: S.of(context).actions,
                   field: 'actions',
                   type: PlutoColumnType.text(),
@@ -179,15 +194,17 @@ class AIQueryAnswerWidget extends StatelessWidget {
               rows: aiQuerytableData.items.map((item) {
                 return PlutoRow(
                   cells: {
-                    'id': PlutoCell(value: item.id ?? "N/A"),
+                    'id': PlutoCell(value: {
+                      'id': item.id ?? "N/A",
+                      'isAnswerEdited':
+                          item.isAnswerEdited == true ? "Edited" : "Not Edited",
+                    }),
                     'ticketDescription':
                         PlutoCell(value: item.ticketDescription ?? "N/A"),
                     'answeredStatus': PlutoCell(
                         value: item.answeredStatus == true
                             ? "Answered"
                             : "Not Answered"),
-                    'isAnswerEdited': PlutoCell(
-                        value: item.isAnswerEdited == true ? "True" : "False"),
                     'aiQueryAnswer': PlutoCell(value: item.aIResponse ?? "N/A"),
                     'actions': PlutoCell(value: 'View'),
                   },
