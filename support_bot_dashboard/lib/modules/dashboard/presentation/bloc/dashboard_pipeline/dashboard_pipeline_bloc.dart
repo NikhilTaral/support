@@ -40,7 +40,7 @@ class DashboardPipelineBloc
             dashboardPipelineAttributeModel: dashboardPipelineAttributeModel,
             selectedPipelineValue: event.selectedPipeline,
             selectedDate: event.selectedDate,
-            selectedMonth: event.selectedMonth ?? DateTime(2024 - 01)));
+            selectedMonth: event.selectedMonth));
       } catch (e) {
         emit(DashboardPipelineFailure(message: 'Exception $e'));
       }

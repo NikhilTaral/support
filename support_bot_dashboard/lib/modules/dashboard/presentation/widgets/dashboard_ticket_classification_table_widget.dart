@@ -5,6 +5,7 @@ import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ticket_classification_gridkey.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_validation_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_sidebar.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.dart';
@@ -16,17 +17,25 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 class TicketClassificationTableWidget extends StatelessWidget {
   final DashboardTableAttributeModel tableData;
   final DateTime? selectedMonth;
-  final DateTime? selectedDate;
+  final DateTime? selectedDate; 
   String pipeline;
-  String? pipelineId;
+  String pipelineId;
+  String? selectedClassification;
+  String? selectedClassificationValidation;
 
-   TicketClassificationTableWidget(
+   final ValueNotifier<int> currentPage;
+  final ValueNotifier<int> pageSize;
+
+  TicketClassificationTableWidget(
       {Key? key,
       required this.tableData,
       required this.selectedMonth,
       required this.pipeline,
-      required this.pipelineId,
-      required this.selectedDate})
+       required this.currentPage,
+    required this.pageSize,
+    required this.selectedClassification,
+    required this.selectedClassificationValidation,
+      required this.selectedDate,required this.pipelineId})
       : super(key: key);
 
   PlutoColumn buildPlutoColumn({
@@ -196,7 +205,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
           TicketClassificationGridKey.id:
               PlutoCell(value: item.id?.isEmpty ?? true ? 'N/A' : item.id),
           TicketClassificationGridKey.classification: PlutoCell(
-              value: item.classification?.isEmpty ?? true
+              value: item.classification.isEmpty ?? true
                   ? 'N/A'
                   : item.classification),
           TicketClassificationGridKey.reasoning: PlutoCell(
@@ -223,7 +232,131 @@ class TicketClassificationTableWidget extends StatelessWidget {
       );
     }).toList();
 
-    return PlutoTableWidget(columns: columns, rows: rows);
+    return Column(
+      children: [
+        PlutoTableWidget(columns: columns, rows: rows),
+       Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            "Items per page:   ",
+                            style: TextStyle(
+                                color: SupportBotColors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          ValueListenableBuilder<int>(
+                            valueListenable: pageSize,
+                            builder: (context, value, child) {
+                              return CustomPaginationDropdown(
+                                selectedValue: value,
+                                items: const [10, 25, 50,100,500,1000],
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    pageSize.value = value;
+                                    currentPage.value = 1;
+                                   BlocProvider.of<PlutotableBloc>(
+                                            context)
+                                        .add(
+                                      FetchTableDataEvent(
+                                       selectedDate: selectedDate,
+                                       selectedMonth: selectedMonth,
+                                       selectedPipeline: pipelineId,
+                                        page: currentPage.value,
+                                        pageSize: pageSize.value,
+                                            selectedClassification: selectedClassification,
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                      ),
+                                    );
+                                  }
+                                },
+                                width: 80,
+                                height: 40,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      UIHelpers.horizontalSpaceRegular,
+                      Row(
+                        children: [
+                          Text(
+                            "${(currentPage.value - 1) * pageSize.value + 1} - "
+                            "${(currentPage.value * pageSize.value > (tableData.totalRecords ?? 0)) ? tableData.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                            "${tableData.totalRecords ?? 0}",
+                            style: TextStyle(
+                              color: SupportBotColors.bluePrimary.shade500,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: currentPage.value > 1
+                                ? () {
+                                    currentPage.value--;
+                                    BlocProvider.of<PlutotableBloc>(
+                                            context)
+                                        .add(
+                                      FetchTableDataEvent(
+                                       selectedDate: selectedDate,
+                                       selectedMonth: selectedMonth,
+                                       selectedPipeline: pipelineId,
+                                        page: currentPage.value,
+                                        pageSize: pageSize.value,
+                                        selectedClassification: selectedClassification,
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                      ),
+                                    );
+                                  }
+                                : null,
+                            icon:
+                                const Icon(Icons.arrow_back_ios_new, size: 15),
+                          ),
+                          ValueListenableBuilder<int>(
+                            valueListenable: currentPage,
+                            builder: (context, page, _) {
+                              return Text(
+                                'Page $page',
+                                style: const TextStyle(
+                                    color: SupportBotColors.black,
+                                    fontWeight: FontWeight.w500),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            onPressed: (currentPage.value * pageSize.value) <
+                                    (tableData.totalRecords ??
+                                        0)
+                                ? () {
+                                  print('fghjhgfdcsx $selectedClassificationValidation');
+                                    currentPage.value++;
+                                    BlocProvider.of<PlutotableBloc>(
+                                            context)
+                                        .add(
+                                      FetchTableDataEvent(
+                                        selectedDate: selectedDate,
+                                       selectedMonth: selectedMonth,
+                                       selectedPipeline: pipelineId,
+                                        page: currentPage.value,
+                                        pageSize: pageSize.value,
+                                        selectedClassification: selectedClassification,
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                      ),
+                                    );
+                                  }
+                                : null,
+                            icon: const Icon(Icons.arrow_forward_ios, size: 15),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+      ],
+    );
   }
 }
 
