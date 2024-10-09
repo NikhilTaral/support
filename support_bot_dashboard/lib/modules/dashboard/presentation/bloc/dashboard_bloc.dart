@@ -50,6 +50,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             noActionRequired: model.data?.noActionRequired ?? 0,
             spamMarketing: model.data?.spamMarketing ?? 0,
             acknowledgement: model.data?.acknowledgement ?? 0,
+            notClassified: model.data?.notClassified ?? 0
           );
           
           emit(DashboardDataSuccess(

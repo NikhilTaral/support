@@ -125,7 +125,8 @@ class DashboardDesktopView extends StatelessWidget {
                                     (state.pieChartData?.noActionRequired ??
                                         0) +
                                     (state.pieChartData?.genuineQuery ?? 0) +
-                                    (state.pieChartData?.acknowledgement ?? 0);
+                                    (state.pieChartData?.acknowledgement ?? 0) +
+                                    (state.pieChartData?.notClassified ?? 0);
 
                                 final List<CountContainerData> countContainers =
                                     getCountContainerData(context,
