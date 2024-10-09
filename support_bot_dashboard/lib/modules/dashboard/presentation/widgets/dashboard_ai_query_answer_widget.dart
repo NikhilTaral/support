@@ -184,11 +184,14 @@ class AIQueryAnswerWidget extends StatelessWidget {
                   enableEditingMode: false,
                   enableColumnDrag: false,
                   readOnly: true,
-                  renderer: (rendererContext) => actionsRenderer(
-                      rendererContext,
-                      selectedDate: selectedDate,
-                      selectedMonth: selectedMonth,
-                      pipeline: pipeline),
+                    renderer: (rendererContext) {
+    // Ensure value is a string and pass it to your renderer
+    final value = rendererContext.cell.value.toString(); // Force conversion to String
+    return actionsRenderer(rendererContext,
+        selectedDate: selectedDate,
+        selectedMonth: selectedMonth,
+        pipeline: pipeline);
+  },
                 ),
               ],
               rows: aiQuerytableData.items.map((item) {
@@ -404,7 +407,9 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
   bool isPreviousEnabled = currentIndex > 0;
   final blocContext = context;
   final row = rows[currentIndex];
-  final id = row.cells['id']?.value ?? "";
+  final idMap = row.cells['id']?.value;
+final id = idMap != null && idMap is Map<String, dynamic> ? idMap['id']?.toString() ?? 'N/A' : 'N/A';
+final isAnswerEdited = idMap != null && idMap is Map<String, dynamic> ? idMap['isAnswerEdited']?.toString() ?? 'Not Edited' : 'Not Edited';
   final description = row.cells['ticketDescription']?.value ?? "";
   final answeredStatus = row.cells['answeredStatus']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
