@@ -59,6 +59,8 @@ class DashboardDesktopView extends StatelessWidget {
                 selectedDate: DateTime.now(),
                 selectedMonth: null,
                 selectedPipeline: pipeline,
+                page: currentPage.value,
+                pageSize: pageSize.value
               ),
             ),
         ),
@@ -72,7 +74,7 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
                   selectedPipeline: selectedPipelineId,
-                  selectedClassification: null),
+                  selectedClassification: null,page: currentPage.value,pageSize: pageSize.value),
             ),
         ),
         BlocProvider(
