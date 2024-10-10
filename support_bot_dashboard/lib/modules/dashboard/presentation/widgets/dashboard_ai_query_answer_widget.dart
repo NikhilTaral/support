@@ -71,14 +71,15 @@ class AIQueryAnswerWidget extends StatelessWidget {
                           if (isAnswerEdited == 'Edited')
                             Container(
                                 width: UIHelpers.screenWidth(context) * 0.04,
-                                height: UIHelpers.screenHeight(context)*0.03,
+                                height: UIHelpers.screenHeight(context) * 0.03,
                                 decoration: BoxDecoration(
                                     color:
                                         SupportBotColors.bluePrimary.shade500,
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Center(
                                   child: Text(isAnswerEdited,
-                                      style: const TextStyle(color: SupportBotColors.white)),
+                                      style: const TextStyle(
+                                          color: SupportBotColors.white)),
                                 )),
                         ],
                       );
@@ -86,7 +87,6 @@ class AIQueryAnswerWidget extends StatelessWidget {
                     return Text(value?.toString() ?? 'N/A');
                   },
                 ),
-
                 PlutoColumn(
                   title: S.of(context).ticketDescription,
                   field: 'ticketDescription',
@@ -184,11 +184,12 @@ class AIQueryAnswerWidget extends StatelessWidget {
                   enableEditingMode: false,
                   enableColumnDrag: false,
                   readOnly: true,
-                  renderer: (rendererContext) => actionsRenderer(
-                      rendererContext,
-                      selectedDate: selectedDate,
-                      selectedMonth: selectedMonth,
-                      pipeline: pipeline),
+                  renderer: (rendererContext) {
+                    return actionsRenderer(rendererContext,
+                        selectedDate: selectedDate,
+                        selectedMonth: selectedMonth,
+                        pipeline: pipeline);
+                  },
                 ),
               ],
               rows: aiQuerytableData.items.map((item) {
@@ -404,7 +405,13 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
   bool isPreviousEnabled = currentIndex > 0;
   final blocContext = context;
   final row = rows[currentIndex];
-  final id = row.cells['id']?.value ?? "";
+  final idMap = row.cells['id']?.value;
+  final id = idMap != null && idMap is Map<String, dynamic>
+      ? idMap['id']?.toString() ?? 'N/A'
+      : 'N/A';
+  final isAnswerEdited = idMap != null && idMap is Map<String, dynamic>
+      ? idMap['isAnswerEdited']?.toString() ?? 'Not Edited'
+      : 'Not Edited';
   final description = row.cells['ticketDescription']?.value ?? "";
   final answeredStatus = row.cells['answeredStatus']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";

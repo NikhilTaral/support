@@ -74,7 +74,7 @@ class FilterClassificationEvent extends PlutotableEvent {
   final String selectedClassification;
   final String pipeline;
   final String? ticketId;
-  final String selectedClassificationValidation;
+  final String? selectedClassificationValidation;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final num? page;
