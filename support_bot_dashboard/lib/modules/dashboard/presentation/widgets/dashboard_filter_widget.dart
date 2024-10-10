@@ -27,6 +27,8 @@ class DashboardFilterWidget extends StatelessWidget {
   final Function(FilterChangeType changeType, dynamic newValue) onFilterChanged;
   final ValueNotifier<int> currentPage;
   final ValueNotifier<int> pageSize;
+   final ValueNotifier<int> AIcurrentPage;
+  final ValueNotifier<int> AIpageSize;
   bool? isAnswer;
 
   DashboardFilterWidget(
@@ -39,7 +41,10 @@ class DashboardFilterWidget extends StatelessWidget {
       required this.onFilterChanged,
       required this.isAnswer,
       required this.currentPage,
-      required this.pageSize});
+      required this.pageSize,
+      required this.AIcurrentPage,
+      required this.AIpageSize
+      });
 
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
   final TextEditingController _searchController = TextEditingController();
@@ -182,7 +187,7 @@ class DashboardFilterWidget extends StatelessWidget {
 
                       print(pipeline);
                       final classificationItems = [
-                        'Select',
+                        'All',
                         'Spam/Marketing',
                         'No Action Required',
                         'Genuine Query',
@@ -201,7 +206,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                     selectedDate ?? null,
                                     selectedMonth,
                                     value,
-                                    "",
+                                    null,
                                     pipeline,
                                     ticketId,
                                     currentPage.value,
@@ -233,7 +238,7 @@ class DashboardFilterWidget extends StatelessWidget {
                       } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
                         selectedClassificationValidation =
-                            state.selectedValidation;
+                            state.selectedValidation ?? "";
                       }
                       final validationItems = [
                         'Not Updated',
@@ -395,12 +400,12 @@ class DashboardFilterWidget extends StatelessWidget {
                       return DateSelectionWidget(
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
-                          currentPage.value = 1;
-                            pageSize.value = 10;
+                          AIcurrentPage.value = 1;
+                            AIpageSize.value = 10;
                           BlocProvider.of<AiQueryAnswerBloc>(context).add(
                               SelectedDateEvent(
                                   selectedDate: newDate,
-                                  selectedPipeline: pipeline,page: currentPage.value,pageSize: pageSize.value));
+                                  selectedPipeline: pipeline,page: AIcurrentPage.value,pageSize: AIpageSize.value));
                           BlocProvider.of<AiQueryChartBloc>(context).add(
                               SelectedChartDateEvent(
                                   selectedDate: newDate,
@@ -448,8 +453,8 @@ class DashboardFilterWidget extends StatelessWidget {
                             } else {
                               isAnswer = null;
                             }
-                               currentPage.value = 1;
-                            pageSize.value = 10;
+                               AIcurrentPage.value = 1;
+                            AIpageSize.value = 10;
                             BlocProvider.of<AiQueryAnswerBloc>(context,
                                     listen: false)
                                 .add(
@@ -457,13 +462,13 @@ class DashboardFilterWidget extends StatelessWidget {
                                   selectedClassification: isAnswer,
                                   selectedDate: selectedDate,
                                   selectedMonth: selectedMonth,
-                                  selectedPipeline: pipeline,page: currentPage.value,pageSize: pageSize.value),
+                                  selectedPipeline: pipeline,page: AIcurrentPage.value,pageSize: AIpageSize.value),
                             );
                             onFilterChanged(FilterChangeType.AIclassification, isAnswer);
                           }
                         },
                         label: S.of(context).classification,
-                        width: UIHelpers.screenWidth(context) * 0.14,
+                        width: UIHelpers.screenWidth(context) * 0.15,
                         height: UIHelpers.screenHeight(context) * 0.05,
                       );
                     },

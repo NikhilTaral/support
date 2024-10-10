@@ -40,6 +40,8 @@ class DashboardDesktopView extends StatelessWidget {
   bool? isAnswer;
   final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
   final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
+   final ValueNotifier<int> AIcurrentPage = ValueNotifier<int>(1);
+  final ValueNotifier<int> AIpageSize = ValueNotifier<int>(10);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +76,7 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
                   selectedPipeline: selectedPipelineId,
-                  selectedClassification: null,page: currentPage.value,pageSize: pageSize.value),
+                  selectedClassification: null,page: AIcurrentPage.value,pageSize: AIpageSize.value),
             ),
         ),
         BlocProvider(
@@ -217,6 +219,8 @@ class DashboardDesktopView extends StatelessWidget {
                             },
                             currentPage: currentPage,
                             pageSize: pageSize,
+                            AIcurrentPage: AIcurrentPage,
+                            AIpageSize: AIpageSize,
                           ),
                           BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
@@ -393,8 +397,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         aiQuerytableData: state.data,
                                         selectedDate: state.selectedDate,
                                         selectedMonth: state.selectedMonth,
-                                        currentPage: currentPage,
-                                        pageSize: pageSize,
+                                        currentPage: AIcurrentPage,
+                                        pageSize: AIpageSize,
                                         pipelineId: selectedPipelineId,
                                         isAnswer: isAnswer,
                                       );
@@ -497,6 +501,8 @@ class DashboardDesktopView extends StatelessWidget {
                                             
                                             currentPage.value =1;
                                             pageSize.value =10;
+                                                AIcurrentPage.value = 1;
+                                            AIpageSize.value =10;
 
                                             BlocProvider.of<PlutotableBloc>(
                                                     context)
@@ -530,8 +536,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                       selectedPipelineId,
                                                   selectedClassification:
                                                       isAnswer,
-                                                       page: currentPage.value,
-                                                pageSize: pageSize.value
+                                                       page: AIcurrentPage.value,
+                                                pageSize: AIpageSize.value
                                                       ),
                                             );
                                             BlocProvider.of<AiQueryChartBloc>(
@@ -661,8 +667,10 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedPipelineAttributes[
                                                     'aiAnswerPerm'];
 
-                                            currentPage.value = 1;
+                                            currentPage.value =1;
                                             pageSize.value =10;
+                                            AIcurrentPage.value = 1;
+                                            AIpageSize.value =10;
 
                                             BlocProvider.of<AiQueryAnswerBloc>(
                                                     context)
@@ -673,7 +681,10 @@ class DashboardDesktopView extends StatelessWidget {
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   selectedClassification:
-                                                      isAnswer),
+                                                      isAnswer,
+                                                  page: AIcurrentPage.value,
+                                                  pageSize: AIpageSize.value
+                                                      ),
                                             );
                                             BlocProvider.of<AiQueryChartBloc>(
                                                     context)
@@ -693,6 +704,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedMonth: selectedMonth,
                                                 selectedPipeline:
                                                     selectedPipelineId,
+                                                page: currentPage.value,
+                                                pageSize: pageSize.value
                                               ),
                                             );
 
