@@ -267,8 +267,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                        selectedPipeline: pipelineId,
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
-                                            selectedClassification: selectedClassification,
-                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                            selectedClassification: selectedClassification == "Select" ? null: selectedClassification,
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : null
                                       ),
                                     );
                                   }
@@ -306,8 +306,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                        selectedPipeline: pipelineId,
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
-                                        selectedClassification: selectedClassification,
-                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                        selectedClassification: selectedClassification == "Select" ? null: selectedClassification,
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : null
                                       ),
                                     );
                                   }
@@ -342,8 +342,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                        selectedPipeline: pipelineId,
                                         page: currentPage.value,
                                         pageSize: pageSize.value,
-                                        selectedClassification: selectedClassification,
-                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : ''
+                                        selectedClassification: selectedClassification == "Select" ? null: selectedClassification,
+                                        selectedClassificationValidation: selectedClassificationValidation != null ? selectedClassificationValidation?.toLowerCase() : null
                                       ),
                                     );
                                   }
