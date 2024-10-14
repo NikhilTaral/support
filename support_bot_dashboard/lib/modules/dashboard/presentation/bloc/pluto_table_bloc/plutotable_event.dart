@@ -139,6 +139,18 @@ class RevertClassificationEvent extends PlutotableEvent {
       required this.selectedClassification});
 }
 
+class UnRevertClassificationEvent extends PlutotableEvent {
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+  final String selectedClassification;
+  final String? ticketId;
+  UnRevertClassificationEvent(
+      {required this.selectedDate,
+      required this.selectedMonth,
+      required this.ticketId,
+      required this.selectedClassification});
+}
+
 class SearchTableEvent extends PlutotableEvent {
   final DateTime? selectDate;
   final DateTime? selectMonth;

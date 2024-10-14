@@ -160,6 +160,7 @@ class SupportBotIcons {
   static const IconData doneAll = Icons.done_all_rounded;
   static const IconData done = Icons.check_rounded;
   static const IconData share = Icons.share_outlined;
+  static const IconData update = Icons.update;
 }
 
 class FontAwesomeIcons {

@@ -40,7 +40,7 @@ class DashboardDesktopView extends StatelessWidget {
   bool? isAnswer;
   final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
   final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
-   final ValueNotifier<int> AIcurrentPage = ValueNotifier<int>(1);
+  final ValueNotifier<int> AIcurrentPage = ValueNotifier<int>(1);
   final ValueNotifier<int> AIpageSize = ValueNotifier<int>(10);
 
   @override
@@ -58,12 +58,11 @@ class DashboardDesktopView extends StatelessWidget {
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
               FetchTableDataEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: null,
-                selectedPipeline: pipeline,
-                page: currentPage.value,
-                pageSize: pageSize.value
-              ),
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline,
+                  page: currentPage.value,
+                  pageSize: pageSize.value),
             ),
         ),
         BlocProvider(
@@ -76,7 +75,9 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
                   selectedPipeline: selectedPipelineId,
-                  selectedClassification: null,page: AIcurrentPage.value,pageSize: AIpageSize.value),
+                  selectedClassification: null,
+                  page: AIcurrentPage.value,
+                  pageSize: AIpageSize.value),
             ),
         ),
         BlocProvider(
@@ -276,6 +277,19 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedClassification: state
                                                     .selectedClassification),
                                           );
+                                    } else if (state
+                                        is UnRevertClassificationSuccessState) {
+                                      context.read<PlutotableBloc>().add(
+                                            FetchTableDataEvent(
+                                                selectedDate:
+                                                    state.selectedDate,
+                                                selectedMonth:
+                                                    state.selectedMonth,
+                                                selectedPipeline:
+                                                    selectedPipelineId,
+                                                selectedClassification: state
+                                                    .selectedClassification),
+                                          );
                                     }
                                   },
                                   builder: (context, state) {
@@ -294,6 +308,20 @@ class DashboardDesktopView extends StatelessWidget {
                                     }
                                     if (state
                                         is RevertClassificationLoadingState) {
+                                      return Center(
+                                        child: LoadingWidget(
+                                          height:
+                                              UIHelpers.screenHeight(context) *
+                                                  0.43,
+                                          width:
+                                              UIHelpers.screenWidth(context) *
+                                                  0.78,
+                                          radius: 8,
+                                        ),
+                                      );
+                                    }
+                                    if (state
+                                        is UnRevertClassificationLoadingState) {
                                       return Center(
                                         child: LoadingWidget(
                                           height:
@@ -499,23 +527,22 @@ class DashboardDesktopView extends StatelessWidget {
                                             isAIAnswer =
                                                 selectedPipelineAttributes[
                                                     'aiAnswerPerm'];
-                                            
-                                            currentPage.value =1;
-                                            pageSize.value =10;
-                                                AIcurrentPage.value = 1;
-                                            AIpageSize.value =10;
+
+                                            currentPage.value = 1;
+                                            pageSize.value = 10;
+                                            AIcurrentPage.value = 1;
+                                            AIpageSize.value = 10;
 
                                             BlocProvider.of<PlutotableBloc>(
                                                     context)
                                                 .add(
                                               FetchTableDataEvent(
-                                                selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
-                                                selectedPipeline:
-                                                    selectedPipelineId,
-                                                page: currentPage.value,
-                                                pageSize: pageSize.value
-                                              ),
+                                                  selectedDate: selectedDate,
+                                                  selectedMonth: selectedMonth,
+                                                  selectedPipeline:
+                                                      selectedPipelineId,
+                                                  page: currentPage.value,
+                                                  pageSize: pageSize.value),
                                             );
 
                                             BlocProvider.of<DashboardBloc>(
@@ -537,9 +564,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                       selectedPipelineId,
                                                   selectedClassification:
                                                       isAnswer,
-                                                       page: AIcurrentPage.value,
-                                                pageSize: AIpageSize.value
-                                                      ),
+                                                  page: AIcurrentPage.value,
+                                                  pageSize: AIpageSize.value),
                                             );
                                             BlocProvider.of<AiQueryChartBloc>(
                                                     context)
@@ -668,10 +694,10 @@ class DashboardDesktopView extends StatelessWidget {
                                                 selectedPipelineAttributes[
                                                     'aiAnswerPerm'];
 
-                                            currentPage.value =1;
-                                            pageSize.value =10;
+                                            currentPage.value = 1;
+                                            pageSize.value = 10;
                                             AIcurrentPage.value = 1;
-                                            AIpageSize.value =10;
+                                            AIpageSize.value = 10;
 
                                             BlocProvider.of<AiQueryAnswerBloc>(
                                                     context)
@@ -684,8 +710,7 @@ class DashboardDesktopView extends StatelessWidget {
                                                   selectedClassification:
                                                       isAnswer,
                                                   page: AIcurrentPage.value,
-                                                  pageSize: AIpageSize.value
-                                                      ),
+                                                  pageSize: AIpageSize.value),
                                             );
                                             BlocProvider.of<AiQueryChartBloc>(
                                                     context)
@@ -701,13 +726,12 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(
                                               FetchTableDataEvent(
-                                                selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
-                                                selectedPipeline:
-                                                    selectedPipelineId,
-                                                page: currentPage.value,
-                                                pageSize: pageSize.value
-                                              ),
+                                                  selectedDate: selectedDate,
+                                                  selectedMonth: selectedMonth,
+                                                  selectedPipeline:
+                                                      selectedPipelineId,
+                                                  page: currentPage.value,
+                                                  pageSize: pageSize.value),
                                             );
 
                                             BlocProvider.of<DashboardBloc>(

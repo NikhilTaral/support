@@ -105,6 +105,24 @@ final class RevertClassificationFailureState extends PlutotableState {
   RevertClassificationFailureState({required this.message});
 }
 
+final class UnRevertClassificationSuccessState extends PlutotableState {
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+  final String selectedClassification;
+  UnRevertClassificationSuccessState(
+      this.selectedDate, this.selectedMonth, this.selectedClassification);
+}
+
+final class UnRevertClassificationLoadingState extends PlutotableState {}
+
+final class UnRevertClassificationEmptyState extends PlutotableState {}
+
+final class UnRevertClassificationFailureState extends PlutotableState {
+  final String message;
+
+  UnRevertClassificationFailureState({required this.message});
+}
+
 final class SearchFailureState extends PlutotableState {
   final String message;
 

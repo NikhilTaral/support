@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/unrevert_classification_usecase.dart';
 part 'plutotable_event.dart';
 part 'plutotable_state.dart';
 
@@ -23,6 +24,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     on<FilterClassificationEvent>(_onFilterClassificationEvent);
     on<FilterValidationEvent>(_onFilterValidationEvent);
     on<RevertClassificationEvent>(_onRevertClassificationEvent);
+    on<UnRevertClassificationEvent>(_onUnRevertClassificationEvent);
     on<SearchTableEvent>(_onSearchTableEvent);
   }
 
@@ -192,7 +194,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 pageSize: model.data.pageSize,
                 currentPage: model.data.currentPage);
             emit(FetchTableDataSuccess(
-              selectedClassification: null,
+                selectedClassification: null,
                 tableData: tableData,
                 selectedDate: event.selectedDate,
                 selectedMonth: event.selectedMonth,
@@ -369,6 +371,25 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       }
     } catch (e) {
       emit(RevertClassificationFailureState(message: 'Exception occurred: $e'));
+    }
+  }
+
+  FutureOr<void> _onUnRevertClassificationEvent(
+      UnRevertClassificationEvent event, Emitter<PlutotableState> emit) async {
+    emit(UnRevertClassificationLoadingState());
+    try {
+      if (isUpdatedToHubspot == false) {
+        final repository = serviceLocator<UnRevertClassificationUsecase>();
+        await repository.invoke(
+            event.ticketId ?? '', event.selectedClassification ?? '');
+        emit(UnRevertClassificationSuccessState(event.selectedDate,
+            event.selectedMonth, event.selectedClassification));
+      } else {
+        emit(UnRevertClassificationFailureState(message: 'Not Reverted'));
+      }
+    } catch (e) {
+      emit(UnRevertClassificationFailureState(
+          message: 'Exception occurred: $e'));
     }
   }
 
