@@ -171,7 +171,7 @@ class S {
   }
 
   //answer edited
-   String get isAnswerEdited {
+  String get isAnswerEdited {
     return Intl.message(
       'isAnswerEdited',
       name: 'isAnswerEdited',
@@ -280,6 +280,16 @@ class S {
     );
   }
 
+  /// `Unrevert`
+  String get updateTicket {
+    return Intl.message(
+      'Update',
+      name: 'updateTicket',
+      desc: 'updateTicket',
+      args: [],
+    );
+  }
+
   /// `view`
   String get view {
     return Intl.message(
@@ -346,6 +356,16 @@ class S {
       'No changes to revert.',
       name: 'noRevert',
       desc: 'No changes to revert.',
+      args: [],
+    );
+  }
+
+    /// `UpdateSuccess`
+  String get UpdateSuccess {
+    return Intl.message(
+      'Ticket Stage Updated Successfully',
+      name: 'UpdateSuccess',
+      desc: 'Ticket Stage Updated successfully',
       args: [],
     );
   }

@@ -11,6 +11,7 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_sidebar.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
@@ -410,7 +411,7 @@ Widget actionsRenderer(
                       ),
                     ),
                   ),
-                  if (classification == 'Spam/Marketing')
+                  if ((classification == 'Spam/Marketing' || classification == 'No Action Required') && isUpdatedToHubspot == true)
                     PopupMenuItem<String>(
                       value: S.of(context).revert,
                       child: InkWell(
@@ -439,6 +440,36 @@ Widget actionsRenderer(
                         ),
                       ),
                     ),
+                    if ((classification == 'Spam/Marketing' || classification == 'No Action Required') && isUpdatedToHubspot == false)
+                    PopupMenuItem<String>(
+                      value: S.of(context).updateTicket,
+                      child: InkWell(
+                        onTap: () {
+                          if (!isUpdatedToHubspot) {
+                            context.read<PlutotableBloc>().add(
+                                  UnRevertClassificationEvent(
+                                      ticketId: id,
+                                      selectedDate: selectedDate ?? null,
+                                      selectedMonth: selectedMonth,
+                                      selectedClassification: classification),
+                                );
+                            _showUpdatedToHubspotPopup(
+                                context, S.of(context).UpdateSuccess);
+                          } else {
+                            _showUpdatedToHubspotPopup(
+                                context, S.of(context).noRevert);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(SupportBotIcons.update),
+                            UIHelpers.horizontalSpaceTiny,
+                            Text(S.of(context).updateTicket),
+                          ],
+                        ),
+                      ),
+                    ),
+                
                 ],
               ),
             ),
