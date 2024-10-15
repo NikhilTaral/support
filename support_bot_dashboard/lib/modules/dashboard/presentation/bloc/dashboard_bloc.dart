@@ -18,7 +18,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
     emit(DateUpdatedState(event.selectedDate,event.selectedPipeline));
-    add(FetchDashboardDataEvent(selectedDate: event.selectedDate, selectedMonth: null, selectedPipeline: event.selectedPipeline));
+    add(FetchDashboardDataEvent(selectedDate: event.selectedDate, selectedMonth: null, selectedPipeline: event.selectedPipeline,));
   }
 
   Future<void> _onUpdateSelectedMonthEvent(
@@ -50,6 +50,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             noActionRequired: model.data?.noActionRequired ?? 0,
             spamMarketing: model.data?.spamMarketing ?? 0,
             acknowledgement: model.data?.acknowledgement ?? 0,
+            notClassified: model.data?.notClassified ?? 0
           );
           
           emit(DashboardDataSuccess(

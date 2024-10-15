@@ -9,10 +9,16 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
   @override
   Future<Either<Failure, dynamic>> getDashboardTableData(
-      {DateTime? selectedDate, DateTime? selectedMonth,  String? pipeline, String? ticketId, String? classification, String? classificationValidation}) async {
+      {DateTime? selectedDate,
+      DateTime? selectedMonth,
+      String? pipeline,
+      String? ticketId,
+      String? classification,
+      String? classificationValidation,
+      num? page,
+      num? pageSize}) async {
     final uri =
         Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/getRecordsDynamoDB');
-    
 
     Map<String, dynamic> body = {};
 
@@ -25,38 +31,46 @@ class DashboardTableDataRepoImpl extends DashboardTableDataRepository {
           '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
     }
 
-    if(pipeline != null){
+    if (pipeline != null) {
       body['pipeline'] = pipeline;
     }
 
-    if(ticketId != null){
+    if (ticketId != null) {
       body['ticketId'] = ticketId;
     }
 
-     if (classification != null && classification.isNotEmpty) {
+    if (classification != null && classification.isNotEmpty) {
       body['classification'] = classification;
     }
 
-    if (classificationValidation != null &&
-        classificationValidation.isNotEmpty) {
+    if (classificationValidation != null) {
       body['classificationValidation'] = classificationValidation;
     }
 
+      if (page != null) {
+      body['page'] = page;
+    }
+
+    if (pageSize != null) {
+      body['pageSize'] = pageSize;
+    }
+    
     final encodedBody = jsonEncode(body);
 
-    final response = await http.post(uri, headers: {
-      'Content-Type': 'application/json',
-      'Authorization': await getToken(),
-    }, 
-    body: encodedBody);
+    final response = await http.post(uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': await getToken(),
+        },
+        body: encodedBody);
 
     if (response.statusCode == 200) {
-        try {
-          return Right(response.body);
-        } catch (e) {
-          return Left(
-              ServerFailure(message: 'Failed to load dashboard table data'));
-        }
+      try {
+        return Right(response.body);
+      } catch (e) {
+        return Left(
+            ServerFailure(message: 'Failed to load dashboard table data'));
+      }
     } else {
       return Left(
           ServerFailure(message: 'Failed to load dashboard table data'));

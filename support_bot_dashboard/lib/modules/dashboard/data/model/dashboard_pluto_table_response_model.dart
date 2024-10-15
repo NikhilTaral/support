@@ -23,15 +23,18 @@ class DashboardPlutotableResponseModel {
     required this.message,
   });
 
-  factory DashboardPlutotableResponseModel.fromJson(
-          Map<String, dynamic> json) =>
-      DashboardPlutotableResponseModel(
-        data: Data.fromJson(json["data"]),
-        success: json["success"],
-        failCode: json["failCode"],
-        params: Params.fromJson(json["params"]),
-        message: json["message"],
-      );
+  factory DashboardPlutotableResponseModel.fromJson(Map<String, dynamic> json) {
+  return DashboardPlutotableResponseModel(
+    data: json["data"] is List 
+        ? Data(totalRecords: 0, items: [], lastEvaluatedKey: LastEvaluatedKey(),pageSize: 10,currentPage: 1) 
+        : Data.fromJson(json["data"]),
+    success: json["success"],
+    failCode: json["failCode"],
+    params: Params.fromJson(json["params"]),
+    message: json["message"],
+  );
+}
+
 
   Map<String, dynamic> toJson() => {
         "data": data.toJson(),
@@ -45,23 +48,33 @@ class DashboardPlutotableResponseModel {
 class Data {
   final num totalRecords;
   final List<Item> items;
-  final String lastEvaluatedKey;
+  final num? pageSize;
+  final num? currentPage;
+  final LastEvaluatedKey? lastEvaluatedKey;
 
   Data({
     required this.totalRecords,
     required this.items,
+    required this.pageSize,
+    required this.currentPage,
     required this.lastEvaluatedKey,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        totalRecords: json["totalRecords"],
-        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
-        lastEvaluatedKey: json["lastEvaluatedKey"] ?? "",
+   factory Data.fromJson(Map<String, dynamic> json) => Data(
+        totalRecords: json["totalRecords"] ?? 0,
+        items: json["items"] != null 
+            ? List<Item>.from(json["items"].map((x) => Item.fromJson(x))) 
+            : [],
+          pageSize: json["pageSize"],
+        currentPage: json["currentPage"],
+        lastEvaluatedKey: json["lastEvaluatedKey"] == null ? null : LastEvaluatedKey.fromJson(json["lastEvaluatedKey"]),
       );
 
   Map<String, dynamic> toJson() => {
         "totalRecords": totalRecords,
         "items": List<dynamic>.from(items.map((x) => x.toJson())),
+        "pageSize": pageSize,
+        "currentPage": currentPage,
         "lastEvaluatedKey": lastEvaluatedKey,
       };
 }
@@ -131,8 +144,32 @@ class Item {
         "ticketDescription": createdAt.toJson(),
         "classificationValidation": createdAt.toJson(),
         "classificationValidationReason": createdAt.toJson(),
-          "isUpdatedToHubspot": isUpdatedToHubspot?.toJson(),
+        "isUpdatedToHubspot": isUpdatedToHubspot?.toJson(),
       };
+}
+
+class LastEvaluatedKey {
+    final CreatedAt? id;
+    final CreatedAt? dType;
+    final CreatedAt? createdAt;
+
+    LastEvaluatedKey({
+        this.id,
+        this.dType,
+        this.createdAt,
+    });
+
+    factory LastEvaluatedKey.fromJson(Map<String, dynamic> json) => LastEvaluatedKey(
+        id: json["id"] == null ? null : CreatedAt.fromJson(json["id"]),
+        dType: json["dType"] == null ? null : CreatedAt.fromJson(json["dType"]),
+        createdAt: json["CreatedAt"] == null ? null : CreatedAt.fromJson(json["CreatedAt"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id?.toJson(),
+        "dType": dType?.toJson(),
+        "CreatedAt": createdAt?.toJson(),
+    };
 }
 
 class CreatedAt {

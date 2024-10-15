@@ -24,7 +24,8 @@ class SupportBotColors {
       300: Color(0xFF858791),
       400: Color(0xFF3D3F50),
       500: Color(0xFF0C0F24),
-      600: Colors.black12
+      600: Colors.black12,
+        700: Color(0xFF153A83),
     },
   );
 

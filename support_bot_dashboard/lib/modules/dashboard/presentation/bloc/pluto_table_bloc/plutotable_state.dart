@@ -8,48 +8,55 @@ class FetchTableDataLoading extends PlutotableState {}
 
 class FetchTableDataSuccess extends PlutotableState {
   final DashboardTableAttributeModel tableData;
-  final String selectedClassification;
-  final String selectedValidation;
+  final String? selectedClassification;
+  final String? selectedValidation;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final bool noDataAvailable;
   final String selectedPipeline;
   final String? ticketId;
 
-  FetchTableDataSuccess({
-    required this.tableData,
-    required this.selectedDate,
-    required this.selectedMonth,
-    required this.selectedClassification,
-    required this.selectedValidation,
-    required this.noDataAvailable,
-    required this.selectedPipeline,
-    this.ticketId
-  });
+  FetchTableDataSuccess(
+      {required this.tableData,
+      required this.selectedDate,
+      required this.selectedMonth,
+      required this.selectedClassification,
+      required this.selectedValidation,
+      required this.noDataAvailable,
+      required this.selectedPipeline,
+      this.ticketId});
 }
 
 class FetchTableDataError extends PlutotableState {
   final String selectedClassification;
-  final String selectedValidation;
+  final String? selectedValidation;
   final String message;
 
-  FetchTableDataError({required this.selectedClassification,required this.selectedValidation, required this.message});
+  FetchTableDataError(
+      {required this.selectedClassification,
+      required this.selectedValidation,
+      required this.message});
 }
 
-class FetchTableDataEmpty extends PlutotableState {}
+class FetchTableDataEmpty extends PlutotableState {
+  final String? selectedClassification;
+  final String? selectedValidation;
+
+  FetchTableDataEmpty({this.selectedClassification, this.selectedValidation});
+}
 
 class UpdateDateState extends PlutotableState {
   final DateTime selectedDate;
-   final String? selectedPipeline;
+  final String? selectedPipeline;
 
-  UpdateDateState({required this.selectedDate,this.selectedPipeline});
+  UpdateDateState({required this.selectedDate, this.selectedPipeline});
 }
 
 class UpdateMonthState extends PlutotableState {
   final DateTime selectedMonth;
-   final String? selectedPipeline;
+  final String? selectedPipeline;
 
-  UpdateMonthState({required this.selectedMonth,this.selectedPipeline});
+  UpdateMonthState({required this.selectedMonth, this.selectedPipeline});
 }
 
 class UpdateValidationLoading extends PlutotableState {}
@@ -81,14 +88,14 @@ class CustomSidebarLoaded extends PlutotableState {
 }
 
 final class RevertClassificationSuccessState extends PlutotableState {
-   final DateTime? selectedDate;
+  final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String selectedClassification;
-  RevertClassificationSuccessState(this.selectedDate, this.selectedMonth, this.selectedClassification);
+  RevertClassificationSuccessState(
+      this.selectedDate, this.selectedMonth, this.selectedClassification);
 }
 
-final class RevertClassificationLoadingState
-    extends PlutotableState {}
+final class RevertClassificationLoadingState extends PlutotableState {}
 
 final class RevertClassificationEmptyState extends PlutotableState {}
 
@@ -98,7 +105,25 @@ final class RevertClassificationFailureState extends PlutotableState {
   RevertClassificationFailureState({required this.message});
 }
 
-final class SearchFailureState extends PlutotableState{
+final class UnRevertClassificationSuccessState extends PlutotableState {
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+  final String selectedClassification;
+  UnRevertClassificationSuccessState(
+      this.selectedDate, this.selectedMonth, this.selectedClassification);
+}
+
+final class UnRevertClassificationLoadingState extends PlutotableState {}
+
+final class UnRevertClassificationEmptyState extends PlutotableState {}
+
+final class UnRevertClassificationFailureState extends PlutotableState {
+  final String message;
+
+  UnRevertClassificationFailureState({required this.message});
+}
+
+final class SearchFailureState extends PlutotableState {
   final String message;
 
   SearchFailureState({required this.message});
