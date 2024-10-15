@@ -14,9 +14,16 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_filter_dropdow
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-enum FilterChangeType { date, month, classification, validation, AIclassification }
+enum FilterChangeType {
+  date,
+  month,
+  classification,
+  validation,
+  AIclassification
+}
 
 class DashboardFilterWidget extends StatelessWidget {
   String pipeline;
@@ -27,7 +34,7 @@ class DashboardFilterWidget extends StatelessWidget {
   final Function(FilterChangeType changeType, dynamic newValue) onFilterChanged;
   final ValueNotifier<int> currentPage;
   final ValueNotifier<int> pageSize;
-   final ValueNotifier<int> AIcurrentPage;
+  final ValueNotifier<int> AIcurrentPage;
   final ValueNotifier<int> AIpageSize;
   bool? isAnswer;
 
@@ -43,8 +50,7 @@ class DashboardFilterWidget extends StatelessWidget {
       required this.currentPage,
       required this.pageSize,
       required this.AIcurrentPage,
-      required this.AIpageSize
-      });
+      required this.AIpageSize});
 
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
   final TextEditingController _searchController = TextEditingController();
@@ -297,58 +303,67 @@ class DashboardFilterWidget extends StatelessWidget {
                           valueListenable: _isSearchOpen,
                           builder: (context, isOpen, child) {
                             return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 AnimatedContainer(
                                   duration: const Duration(milliseconds: 300),
                                   height:
                                       UIHelpers.screenHeight(context) * 0.05,
+                                      // width: UIHelpers.screenWidth(context) * 0.15,
                                   decoration: isOpen
                                       ? BoxDecoration(
-                                          color: SupportBotColors.gray.shade100,
+                                          color: Colors.white,
                                           borderRadius:
-                                              BorderRadius.circular(8),
+                                              BorderRadius.circular(5),
                                           border: Border.all(
                                               color: SupportBotColors.gray),
                                         )
                                       : null,
                                   child: Row(
                                     children: [
-                                      IconButton(
-                                        icon: Icon(
-                                          isOpen ? Icons.close : Icons.search,
-                                          size: 23,
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        child: IconButton(
+                                          icon: Icon(
+                                            isOpen ? Icons.close : Icons.search,
+                                            size: 20,
+                                          ),
+                                          onPressed: () {
+                                            if (isOpen) {
+                                              BlocProvider.of<PlutotableBloc>(
+                                                      context)
+                                                  .add(FetchTableDataEvent(
+                                                      selectedDate:
+                                                          selectedDate,
+                                                      selectedMonth:
+                                                          selectedMonth,
+                                                      selectedClassification:
+                                                          selectedClassification,
+                                                      selectedPipeline:
+                                                          pipeline));
+
+                                              _searchController.clear();
+                                            }
+
+                                            _isSearchOpen.value =
+                                                !_isSearchOpen.value;
+                                          },
                                         ),
-                                        onPressed: () {
-                                          if (isOpen) {
-                                            BlocProvider.of<PlutotableBloc>(
-                                                    context)
-                                                .add(FetchTableDataEvent(
-                                                    selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
-                                                    selectedClassification:
-                                                        selectedClassification,
-                                                    selectedPipeline:
-                                                        pipeline));
-
-                                            _searchController.clear();
-                                          }
-
-                                          _isSearchOpen.value =
-                                              !_isSearchOpen.value;
-                                        },
                                       ),
                                       if (isOpen)
                                         SizedBox(
                                           width:
                                               UIHelpers.screenWidth(context) *
-                                                  0.1,
+                                                  0.115,
                                           child: TextField(
                                             controller: _searchController,
-                                            decoration: const InputDecoration(
+                                            decoration: InputDecoration(
                                               hintText: 'Search...',
+                                              hintStyle: SupportBotTextstyle.medium.copyWith(color: SupportBotColors.gray.shade600),
                                               border: InputBorder.none,
                                               isDense: true,
+                                              contentPadding: EdgeInsets.only(bottom: -2),
                                             ),
                                             onSubmitted: (value) {
                                               if (value.isNotEmpty) {
@@ -401,16 +416,18 @@ class DashboardFilterWidget extends StatelessWidget {
                         selectedDate: selectedDate,
                         onChanged: (newDate) {
                           AIcurrentPage.value = 1;
-                            AIpageSize.value = 10;
+                          AIpageSize.value = 10;
                           BlocProvider.of<AiQueryAnswerBloc>(context).add(
                               SelectedDateEvent(
                                   selectedDate: newDate,
-                                  selectedPipeline: pipeline,page: AIcurrentPage.value,pageSize: AIpageSize.value));
+                                  selectedPipeline: pipeline,
+                                  page: AIcurrentPage.value,
+                                  pageSize: AIpageSize.value));
                           BlocProvider.of<AiQueryChartBloc>(context).add(
                               SelectedChartDateEvent(
                                   selectedDate: newDate,
                                   selectedPipeline: pipeline));
-                            BlocProvider.of<DashboardBloc>(context)
+                          BlocProvider.of<DashboardBloc>(context)
                               .add(UpdateSelectedDateEvent(newDate, pipeline));
                           onFilterChanged(FilterChangeType.date, newDate);
                         },
@@ -453,7 +470,7 @@ class DashboardFilterWidget extends StatelessWidget {
                             } else {
                               isAnswer = null;
                             }
-                               AIcurrentPage.value = 1;
+                            AIcurrentPage.value = 1;
                             AIpageSize.value = 10;
                             BlocProvider.of<AiQueryAnswerBloc>(context,
                                     listen: false)
@@ -462,9 +479,12 @@ class DashboardFilterWidget extends StatelessWidget {
                                   selectedClassification: isAnswer,
                                   selectedDate: selectedDate,
                                   selectedMonth: selectedMonth,
-                                  selectedPipeline: pipeline,page: AIcurrentPage.value,pageSize: AIpageSize.value),
+                                  selectedPipeline: pipeline,
+                                  page: AIcurrentPage.value,
+                                  pageSize: AIpageSize.value),
                             );
-                            onFilterChanged(FilterChangeType.AIclassification, isAnswer);
+                            onFilterChanged(
+                                FilterChangeType.AIclassification, isAnswer);
                           }
                         },
                         label: S.of(context).classification,
