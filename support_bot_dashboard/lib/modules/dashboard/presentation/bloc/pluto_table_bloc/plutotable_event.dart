@@ -48,6 +48,7 @@ class UpdateValidationEvent extends PlutotableEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String pipeline;
+  final String? classification;
 
   UpdateValidationEvent(
       {this.selectedDate,
@@ -55,7 +56,9 @@ class UpdateValidationEvent extends PlutotableEvent {
       required this.id,
       required this.pipeline,
       required this.validation,
-      required this.reason});
+      required this.reason,
+      this.classification
+      });
 }
 
 class SelectClassificationEvent extends PlutotableEvent {
