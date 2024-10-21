@@ -72,7 +72,7 @@ class SelectPipelineEvent extends PlutotableEvent {
 
 class FilterClassificationEvent extends PlutotableEvent {
   final String selectedClassification;
-  final String pipeline;
+  final String? pipeline;
   final String? ticketId;
   final String? selectedClassificationValidation;
   final DateTime? selectedDate;

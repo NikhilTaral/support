@@ -332,7 +332,6 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                     (tableData.totalRecords ??
                                         0)
                                 ? () {
-                                  print('fghjhgfdcsx $selectedClassificationValidation');
                                     currentPage.value++;
                                     BlocProvider.of<PlutotableBloc>(
                                             context)

@@ -52,6 +52,10 @@ class DashboardDesktopView extends StatelessWidget {
             ..add(FetchDashboardDataEvent(
                 selectedDate: DateTime.now(),
                 selectedMonth: null,
+                selectedPipeline: pipeline))
+            ..add(GetValidationCountEvent(
+                selectedDate: DateTime.now(),
+                selectedMonth: null,
                 selectedPipeline: pipeline)),
         ),
         BlocProvider(
@@ -612,6 +616,8 @@ class DashboardDesktopView extends StatelessWidget {
                                     );
                                   } else if (state is DashboardDataSuccess) {
                                     return PieChartWidget(
+                                        validationCount: state
+                                            .getValidationCountAttributeModel,
                                         data: state.pieChartData,
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
