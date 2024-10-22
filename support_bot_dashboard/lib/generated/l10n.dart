@@ -313,9 +313,9 @@ class S {
   /// `emailValidations`
   String get emailValidations {
     return Intl.message(
-      'Email Validation Details',
+      'Validation Details',
       name: 'emailValidations',
-      desc: 'Email Validation Details',
+      desc: 'Validation Details',
       args: [],
     );
   }

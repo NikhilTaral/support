@@ -48,6 +48,7 @@ class UpdateValidationEvent extends PlutotableEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String pipeline;
+  final String? classification;
 
   UpdateValidationEvent(
       {this.selectedDate,
@@ -55,6 +56,7 @@ class UpdateValidationEvent extends PlutotableEvent {
       required this.id,
       required this.pipeline,
       required this.validation,
+      this.classification,
       required this.reason});
 }
 
@@ -72,7 +74,7 @@ class SelectPipelineEvent extends PlutotableEvent {
 
 class FilterClassificationEvent extends PlutotableEvent {
   final String selectedClassification;
-  final String pipeline;
+  final String? pipeline;
   final String? ticketId;
   final String? selectedClassificationValidation;
   final DateTime? selectedDate;
@@ -170,4 +172,13 @@ class SearchTableEvent extends PlutotableEvent {
       this.classificationValidation,
       this.page,
       this.pageSize});
+}
+
+class GetValidationDetailsEvent extends PlutotableEvent{
+  final String? ticketId;
+  final DateTime? selectDate;
+  final DateTime? selectMonth;
+  final String? pipeline;
+
+  GetValidationDetailsEvent({required this.ticketId, this.selectDate, this.selectMonth, this.pipeline});
 }

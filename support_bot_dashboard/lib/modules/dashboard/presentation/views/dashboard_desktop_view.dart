@@ -226,6 +226,7 @@ class DashboardDesktopView extends StatelessWidget {
                           ),
                           BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
+                            
                               if (state is CustomButtonInitial ||
                                   (state is ButtonSelectedState &&
                                       state.selectedButtonText ==
@@ -352,7 +353,7 @@ class DashboardDesktopView extends StatelessWidget {
                                           child: const Center(
                                               child: EmptyWidget()));
                                     } else if (state is FetchTableDataSuccess) {
-                                      if (state.noDataAvailable) {
+                                      if (state.noDataAvailable == true) {
                                         return SizedBox(
                                             height: UIHelpers.screenHeight(
                                                     context) *
@@ -363,7 +364,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       return TicketClassificationTableWidget(
                                         tableData: state.tableData,
                                         selectedDate:
-                                            state.selectedDate ?? null,
+                                            state.selectedDate ?? selectedDate,
                                         selectedMonth: state.selectedMonth,
                                         pipeline: pipeline,
                                         pipelineId: selectedPipelineId,

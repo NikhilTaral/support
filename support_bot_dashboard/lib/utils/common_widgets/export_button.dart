@@ -32,7 +32,7 @@ class ExportButton extends StatelessWidget {
           if (selectedButtonText == 'Ticket Classification') {
             final state = BlocProvider.of<PlutotableBloc>(context).state;
             if (state is FetchTableDataSuccess) {
-              _exportTicketClassificationToCsv(context, state.tableData);
+              _exportTicketClassificationToCsv(context, state.tableData!);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

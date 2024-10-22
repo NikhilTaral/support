@@ -68,7 +68,7 @@ class DashboardDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? pieChartData;
   final DateTime selectedDate;
   final DateTime selectedMonth;
-  final String selectedPipeline;
+  final String? selectedPipeline;
 
   DashboardDataSuccess({
     required this.pieChartData,

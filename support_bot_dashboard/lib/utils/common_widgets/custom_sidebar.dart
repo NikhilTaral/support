@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ticket_classification_gridkey.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
@@ -9,6 +11,7 @@ class CustomSidebar extends StatelessWidget {
   final VoidCallback onNext;
   final bool isNextEnabled;
   final bool isPreviousEnabled;
+  final DashboardTableAttributeModel? tableData;
 
   const CustomSidebar(
       {Key? key,
@@ -16,17 +19,21 @@ class CustomSidebar extends StatelessWidget {
       required this.onNext,
       required this.isNextEnabled,
       required this.onPrevious,
-      required this.isPreviousEnabled})
+      required this.isPreviousEnabled,
+      this.tableData})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final id = rowData.cells['id']?.value ?? 'N/A';
-    final description = rowData.cells['ticketDescription']?.value ?? 'N/A';
-    final reasoning = rowData.cells['reasoning']?.value ?? 'N/A';
-    final validation = rowData.cells['validation']?.value ?? 'N/A';
-    final validationReason = rowData.cells['validation_reason']?.value ?? 'N/A';
-    final status = rowData.cells['status']?.value ?? 'N/A';
+
+       final id = rowData.cells[TicketClassificationGridKey.id]?.value ?? 'N/A';
+    final description = rowData.cells[TicketClassificationGridKey.ticketDescription]?.value ?? 'N/A';
+    final reasoning = rowData.cells[TicketClassificationGridKey.reasoning]?.value ?? 'N/A';
+    final validation = rowData.cells[TicketClassificationGridKey.validation]?.value ?? 'N/A';
+    final validationReason = rowData.cells[TicketClassificationGridKey.validationReason]?.value ?? 'N/A';
+    final status = rowData.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value == true ? "Updated" : "Not Updated";
+    final validatedClassification = rowData.cells['validatedClassification']?.value ?? 'N/A';
+    final classificationValidatedBy = rowData.cells['classificationValidatedBy']?.value ?? 'N/A';
 
     return Scaffold(
       appBar: AppBar(
@@ -63,14 +70,19 @@ class CustomSidebar extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildRow('ID:', id),
-                  _buildRow('Description:', description),
-                  _buildRow('Reasoning:', reasoning),
+                  _buildRow('ID:', id ?? ""),
+                  _buildRow('Description:', description ?? ""),
+                  _buildRow('Reasoning:', reasoning ?? ""),
                   _buildRow(
                       'Validation:', validation.isEmpty ? 'N/A' : validation),
                   _buildRow('Validation Reason:',
                       validationReason.isEmpty ? 'N/A' : validationReason),
-                  _buildRow('Status:', status),
+                  _buildRow(
+                      'Status:', status == true ? "Updated" : "Not Updated"),
+                  _buildRow('Validated Classification',
+                      validatedClassification ?? "N/A"),
+                  _buildRow('Classification ValidatedBy',
+                      classificationValidatedBy ?? "N/A")
                 ],
               ),
             ),
