@@ -100,6 +100,17 @@ class S {
     );
   }
 
+  /// `User Validation`
+  String get userValidation {
+    return Intl.message(
+      'User Validation',
+      name: 'userValidation',
+      desc: 'User Validation',
+      args: [],
+    );
+  }
+  
+
   /// `Spam`
   String get spam {
     return Intl.message(

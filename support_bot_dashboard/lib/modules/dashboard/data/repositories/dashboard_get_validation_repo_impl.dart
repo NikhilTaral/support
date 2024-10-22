@@ -1,7 +1,7 @@
 import 'package:either_dart/src/either.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 class DashboardGetValidationRepoImpl extends GetValidationCountRepository{

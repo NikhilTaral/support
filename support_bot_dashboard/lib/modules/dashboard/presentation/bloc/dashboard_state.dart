@@ -37,6 +37,7 @@ class DashboardDataError extends DashboardState{
 class DashboardDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? pieChartData;
     final ValidationCountAttributeModel? getValidationCountAttributeModel;
+    final GetValidationByCountAttributeModel? getValidationByCountAttributeModel;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String? selectedPipeline;
@@ -46,6 +47,7 @@ class DashboardDataSuccess extends DashboardState {
     required this.selectedDate,
     required this.selectedMonth,
     required this.selectedPipeline,
-    required this.getValidationCountAttributeModel
+    required this.getValidationCountAttributeModel,
+    required this.getValidationByCountAttributeModel
   });
 }

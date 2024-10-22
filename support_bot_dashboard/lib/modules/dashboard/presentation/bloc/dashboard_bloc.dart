@@ -4,9 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_get_validation_count_response_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/get_validation_by_count_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_count_usecase.dart';
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
@@ -17,10 +20,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<UpdateSelectedDateEvent>(_onUpdateSelectedDateEvent);
     on<FetchDashboardDataEvent>(_onFetchDashboardData);
     on<GetValidationCountEvent>(_onGetValidationCount);
+    on<GetValidationByCountEvent>(_onGetValidationByCountEvent);
   }
 
   ValidationCountAttributeModel? getValidationCountAttribute;
   DashboardChartAttributeModel? dashboardChartData;
+  GetValidationByCountAttributeModel? getValidationByCountAttribute;
 
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
@@ -66,12 +71,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               acknowledgement: model.data?.acknowledgement ?? 0,
               notClassified: model.data?.notClassified ?? 0);
           emit(DashboardDataSuccess(
-            getValidationCountAttributeModel: getValidationCountAttribute,
-            pieChartData: dashboardChartData,
-            selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
-            selectedPipeline: event.selectedPipeline,
-          ));
+              getValidationCountAttributeModel: getValidationCountAttribute,
+              pieChartData: dashboardChartData,
+              selectedDate: event.selectedDate ?? DateTime.now(),
+              selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+              selectedPipeline: event.selectedPipeline,
+              getValidationByCountAttributeModel:
+                  getValidationByCountAttribute));
         } else {
           emit(DashboardDataError(
             message: model.message ?? 'Unknown error',
@@ -112,7 +118,50 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             selectedDate: event.selectedDate,
             selectedMonth: event.selectedMonth,
             selectedPipeline: event.selectedPipeline,
-            getValidationCountAttributeModel: getValidationCountAttribute));
+            getValidationCountAttributeModel: getValidationCountAttribute,
+            getValidationByCountAttributeModel: getValidationByCountAttribute));
+      } catch (e) {
+        emit(DashboardDataError(
+            selectedDate: event.selectedDate ?? DateTime.now(),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+            message: 'Exception: $e'));
+      }
+    }
+  }
+
+  FutureOr<void> _onGetValidationByCountEvent(
+      GetValidationByCountEvent event, Emitter<DashboardState> emit) async {
+    emit(DashboardDataLoading());
+    final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
+    final response = await repository.invoke(
+        event.selectedDate, event.selectedMonth, event.selectedPipeline);
+    if (response.isLeft) {
+      emit(DashboardDataError(
+          selectedDate: event.selectedDate ?? DateTime.now(),
+          selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+          message: 'Failed to load data'));
+    } else {
+      try {
+        final model =
+            GetValidationByCountResponseModel.fromJson(response.right);
+        getValidationByCountAttribute = GetValidationByCountAttributeModel(
+            data: ValidationByCountData(
+                agent1: model.data?.agent1,
+                agent2: model.data?.agent2,
+                agent3: model.data?.agent3));
+        
+        if (getValidationByCountAttribute?.data != null) {
+          emit(DashboardDataSuccess(
+              pieChartData: dashboardChartData,
+              selectedDate: event.selectedDate,
+              selectedMonth: event.selectedMonth,
+              selectedPipeline: event.selectedPipeline,
+              getValidationCountAttributeModel: getValidationCountAttribute,
+              getValidationByCountAttributeModel:
+                  getValidationByCountAttribute));
+        } else {
+          emit(DashboardDataEmpty());
+        }
       } catch (e) {
         emit(DashboardDataError(
             selectedDate: event.selectedDate ?? DateTime.now(),

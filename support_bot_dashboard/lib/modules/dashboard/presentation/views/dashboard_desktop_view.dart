@@ -48,16 +48,19 @@ class DashboardDesktopView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: null,
-                selectedPipeline: pipeline))
-            ..add(GetValidationCountEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: null,
-                selectedPipeline: pipeline)),
-        ),
+            create: (context) => serviceLocator<DashboardBloc>()
+              ..add(FetchDashboardDataEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetValidationCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetValidationByCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
@@ -619,6 +622,8 @@ class DashboardDesktopView extends StatelessWidget {
                                         validationCount: state
                                             .getValidationCountAttributeModel,
                                         data: state.pieChartData,
+                                        validationByCount: state
+                                            .getValidationByCountAttributeModel,
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
@@ -628,6 +633,14 @@ class DashboardDesktopView extends StatelessWidget {
                                             UIHelpers.screenHeight(context) *
                                                 0.75,
                                         color: SupportBotColors.gray);
+                                  } else if (state is DashboardDataEmpty) {
+                                    return SizedBox(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        child: const EmptyWidget());
                                   } else {
                                     return Container();
                                   }
