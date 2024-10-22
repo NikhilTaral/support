@@ -90,7 +90,7 @@ class S {
     );
   }
 
-    /// `Validation Status`
+  /// `Validation Status`
   String get validationStatus {
     return Intl.message(
       'Validation Status',
@@ -109,7 +109,6 @@ class S {
       args: [],
     );
   }
-  
 
   /// `Spam`
   String get spam {
@@ -192,7 +191,6 @@ class S {
   }
 
   //answer edited
-  String get isAnswerEdited {
   String get isAnswerEdited {
     return Intl.message(
       'isAnswerEdited',
@@ -382,7 +380,7 @@ class S {
     );
   }
 
-    /// `UpdateSuccess`
+  /// `UpdateSuccess`
   String get UpdateSuccess {
     return Intl.message(
       'Do you want to mark this ticket as No Contact Needed/Spam in HubSpot?',
