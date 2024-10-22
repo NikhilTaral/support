@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:support_bot_dashboard/config/environment/env_config.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
@@ -26,7 +24,7 @@ enum FilterChangeType {
 }
 
 class DashboardFilterWidget extends StatelessWidget {
-  String pipeline;
+  String? pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
   String? selectedClassification;
@@ -133,7 +131,7 @@ class DashboardFilterWidget extends StatelessWidget {
                       if (state is DashboardDataSuccess) {
                         selectedMonth = state.selectedMonth;
                         selectedMonthString =
-                            _monthToString(selectedMonth!.month);
+                            _monthToString(selectedMonth?.month ?? DateTime.now().month);
                         pipeline = state.selectedPipeline;
                       }
                       return CustomMonthDropdown(
@@ -190,8 +188,6 @@ class DashboardFilterWidget extends StatelessWidget {
                       } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
                       }
-
-                      print(pipeline);
                       final classificationItems = [
                         'All',
                         'Spam/Marketing',

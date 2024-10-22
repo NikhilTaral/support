@@ -136,7 +136,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     try {
       final repository = serviceLocator<DashboardValidationUsecase>();
       await repository.invoke(
-          event.id, event.validation, event.reason, event.pipeline);
+          event.id, event.validation, event.reason, event.pipeline, event.classification ?? "");
       emit(UpdateValidationSuccess(
         selectedDate: event.selectedDate ?? null,
         selectedMonth: event.selectedMonth ?? null,

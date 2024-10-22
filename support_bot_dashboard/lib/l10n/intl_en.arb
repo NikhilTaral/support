@@ -138,5 +138,13 @@
   "isAnswerEdited": "isAnswerEdited",
   "@isAnswerEdited":{
     "description": "isAnswerEdited"
+  },
+  "validationStatus": "Validation Status",
+  "@validationStatus":{
+    "description": "Validation Status"
+  },
+  "userValidation": "User Validation",
+  "@userValidation":{
+    "description": "User Validation"
   }
 }
