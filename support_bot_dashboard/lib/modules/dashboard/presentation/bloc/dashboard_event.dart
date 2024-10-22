@@ -46,3 +46,5 @@ class GetValidationByCountEvent extends DashboardEvent {
       required this.selectedMonth,
       required this.selectedPipeline});
 }
+
+class GetUserSettingsEvent extends DashboardEvent {}

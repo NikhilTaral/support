@@ -5,6 +5,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_user_settings_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -14,6 +15,7 @@ class PieChartWidget extends StatefulWidget {
   final Object? data;
   final ValidationCountAttributeModel? validationCount;
   final GetValidationByCountAttributeModel? validationByCount;
+  final GetUserSettingsAttributeModel? userSettingsData;
   final bool isAIQuery;
 
   const PieChartWidget(
@@ -21,6 +23,7 @@ class PieChartWidget extends StatefulWidget {
       this.data,
       this.isAIQuery = false,
       this.validationCount,
+      this.userSettingsData,
       this.validationByCount});
 
   @override
@@ -48,6 +51,8 @@ class PieChartWidgetState extends State<PieChartWidget> {
         .where((data) => data.value != null && data.value! > 0)
         .toList();
 
+    print(widget.userSettingsData?.data?.accessRole);
+
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
       child: Container(
@@ -66,6 +71,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                if(widget.userSettingsData?.data?.accessRole != 'operations user')
                 IconButton(
                   onPressed: currentChartIndex > 0
                       ? () {
@@ -93,6 +99,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                if(widget.userSettingsData?.data?.accessRole != 'operations user')
                 IconButton(
                   onPressed: currentChartIndex < 2
                       ? () {
@@ -228,7 +235,8 @@ class PieChartWidgetState extends State<PieChartWidget> {
         ];
       }
     } else if (currentChartIndex == 1) {
-      return [
+      if(widget.userSettingsData?.data?.accessRole != 'operations user'){
+         return [
         ChartData(
             label: 'Correct', value: widget.validationCount?.correct ?? 0),
         ChartData(
@@ -237,8 +245,11 @@ class PieChartWidgetState extends State<PieChartWidget> {
             label: 'Not Validated',
             value: widget.validationCount?.notValidated ?? 0)
       ];
+      } 
+     
     } else if (currentChartIndex == 2) {
-      if (widget.validationByCount?.data != null) {
+      if(widget.userSettingsData?.data?.accessRole != 'operations user'){
+        if (widget.validationByCount?.data != null) {
         return [
           ChartData(
               label: 'Agent 1',
@@ -251,6 +262,8 @@ class PieChartWidgetState extends State<PieChartWidget> {
               value: widget.validationByCount?.data?.agent3 ?? 0),
         ];
       }
+      }
+      
     }
 
     return [];

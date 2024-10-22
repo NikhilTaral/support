@@ -38,16 +38,26 @@ class DashboardDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? pieChartData;
     final ValidationCountAttributeModel? getValidationCountAttributeModel;
     final GetValidationByCountAttributeModel? getValidationByCountAttributeModel;
+    final GetUserSettingsAttributeModel? getUserSettingsAttributeModel;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String? selectedPipeline;
 
   DashboardDataSuccess({
-    required this.pieChartData,
-    required this.selectedDate,
-    required this.selectedMonth,
-    required this.selectedPipeline,
-    required this.getValidationCountAttributeModel,
-    required this.getValidationByCountAttributeModel
+     this.pieChartData,
+     this.selectedDate,
+     this.selectedMonth,
+     this.selectedPipeline,
+     this.getUserSettingsAttributeModel,
+     this.getValidationCountAttributeModel,
+     this.getValidationByCountAttributeModel
   });
+}
+
+class UserSettingsLoadingState extends DashboardState{}
+
+class UserSettingsFailureState extends DashboardState{
+  final String? message;
+
+  UserSettingsFailureState({required this.message});
 }

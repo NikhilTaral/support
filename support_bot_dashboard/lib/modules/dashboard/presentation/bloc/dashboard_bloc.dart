@@ -4,13 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_get_validation_count_response_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/get_user_settings_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/get_validation_by_count_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_user_settings_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_user_settings_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_count_usecase.dart';
+import 'package:support_bot_dashboard/utils/service/auth/auth_service.dart';
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
@@ -21,11 +25,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<FetchDashboardDataEvent>(_onFetchDashboardData);
     on<GetValidationCountEvent>(_onGetValidationCount);
     on<GetValidationByCountEvent>(_onGetValidationByCountEvent);
+    on<GetUserSettingsEvent>(_onGetUserSettingsEvent);
   }
 
   ValidationCountAttributeModel? getValidationCountAttribute;
   DashboardChartAttributeModel? dashboardChartData;
   GetValidationByCountAttributeModel? getValidationByCountAttribute;
+  GetUserSettingsAttributeModel? userSettingsAtrribute;
 
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
@@ -77,7 +83,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
               selectedPipeline: event.selectedPipeline,
               getValidationByCountAttributeModel:
-                  getValidationByCountAttribute));
+                  getValidationByCountAttribute,
+                  ));
         } else {
           emit(DashboardDataError(
             message: model.message ?? 'Unknown error',
@@ -149,7 +156,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 agent1: model.data?.agent1,
                 agent2: model.data?.agent2,
                 agent3: model.data?.agent3));
-        
+
         if (getValidationByCountAttribute?.data != null) {
           emit(DashboardDataSuccess(
               pieChartData: dashboardChartData,
@@ -158,7 +165,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               selectedPipeline: event.selectedPipeline,
               getValidationCountAttributeModel: getValidationCountAttribute,
               getValidationByCountAttributeModel:
-                  getValidationByCountAttribute));
+                  getValidationByCountAttribute ));
         } else {
           emit(DashboardDataEmpty());
         }
@@ -167,6 +174,34 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             selectedDate: event.selectedDate ?? DateTime.now(),
             selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
             message: 'Exception: $e'));
+      }
+    }
+  }
+
+  FutureOr<void> _onGetUserSettingsEvent(
+      GetUserSettingsEvent event, Emitter<DashboardState> emit) async {
+    emit(UserSettingsLoadingState());
+    final repository = serviceLocator<DashboardGetUserSettingsUsecase>();
+    final AuthService authService = serviceLocator<AuthService>();
+
+    String? email = await authService.getUseremail();
+    final response = await repository.invoke(email);
+    if (response.isLeft) {
+      emit(UserSettingsFailureState(message: 'Failed to load data'));
+    } else {
+      try {
+        final model = GetUserSettingsResponseModel.fromJson(response.right);
+         userSettingsAtrribute = GetUserSettingsAttributeModel(
+            data: UserSettingsData(accessRole: model.data?.accessRole));
+        emit(DashboardDataSuccess(
+           pieChartData: dashboardChartData,
+             
+              getValidationCountAttributeModel: getValidationCountAttribute,
+              getValidationByCountAttributeModel:
+                  getValidationByCountAttribute,
+            getUserSettingsAttributeModel: userSettingsAtrribute));
+      } catch (e) {
+        emit(UserSettingsFailureState(message: 'Exception: $e'));
       }
     }
   }

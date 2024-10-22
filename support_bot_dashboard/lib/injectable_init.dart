@@ -3,6 +3,7 @@ import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_chart_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_user_settings_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_by_count_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_pipeline_repo_impl.dart';
@@ -14,6 +15,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/unreve
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_chart_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_user_settings_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_pipeline_repository.dart';
@@ -25,6 +27,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/unre
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_chart_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_user_settings_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_pipeline_usecase.dart';
@@ -127,4 +130,8 @@ Future<void> initServiceLocator() async {
   //get validation by count
   serviceLocator.registerLazySingleton<DashboardGetValidationByCountUsecase>(()=> DashboardGetValidationByCountUsecase());
   serviceLocator.registerLazySingleton<GetValidationByCountRepository>(()=> DashboardGetValidationByCountRepoImpl());
+
+  //get user settings
+  serviceLocator.registerLazySingleton<DashboardGetUserSettingsUsecase>(()=> DashboardGetUserSettingsUsecase());
+  serviceLocator.registerLazySingleton<GetUserSettingsRepository>(()=> DashboardGetUserSettingsRepoImpl());
 }

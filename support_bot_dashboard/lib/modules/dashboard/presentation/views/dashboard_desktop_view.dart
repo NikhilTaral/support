@@ -60,7 +60,9 @@ class DashboardDesktopView extends StatelessWidget {
               ..add(GetValidationByCountEvent(
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
-                  selectedPipeline: pipeline))),
+                  selectedPipeline: pipeline))
+              ..add(GetUserSettingsEvent())
+          ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
@@ -99,7 +101,8 @@ class DashboardDesktopView extends StatelessWidget {
         BlocProvider(
             create: (context) => serviceLocator<DashboardPipelineBloc>()
               ..add(FilterPipelineEvent(
-                  DateTime.now(), null, 'Expert Care Level 1')))
+                  DateTime.now(), null, 'Expert Care Level 1'))),
+      
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -624,6 +627,7 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         validationByCount: state
                                             .getValidationByCountAttributeModel,
+                                        userSettingsData: state.getUserSettingsAttributeModel,
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
@@ -882,3 +886,4 @@ class DashboardDesktopView extends StatelessWidget {
     return DateTime(2024, months[month]!);
   }
 }
+
