@@ -25,6 +25,7 @@ enum FilterChangeType {
 
 class DashboardFilterWidget extends StatelessWidget {
   String? pipeline;
+  String? pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
   String? selectedClassification;
@@ -140,8 +141,8 @@ class DashboardFilterWidget extends StatelessWidget {
 
                       if (state is DashboardDataSuccess) {
                         selectedMonth = state.selectedMonth;
-                        selectedMonthString = _monthToString(
-                            selectedMonth?.month ?? DateTime.now().month);
+                        selectedMonthString =
+                            _monthToString(selectedMonth?.month ?? DateTime.now().month);
                         pipeline = state.selectedPipeline;
                       }
                       return CustomMonthDropdown(
@@ -198,6 +199,7 @@ class DashboardFilterWidget extends StatelessWidget {
                       } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
                       }
+
                       final classificationItems = [
                         'All',
                         'Spam/Marketing',

@@ -16,6 +16,7 @@ class ValidationReasonRenderer extends StatefulWidget {
   String pipeline;
 
   ValidationReasonRenderer({
+  ValidationReasonRenderer({
     Key? key,
     required this.rowID,
     required this.plutotableBloc,
@@ -235,76 +236,128 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
   Widget build(BuildContext context) {
     final String rowId = widget.rowID;
 
-    return Column(
-      children: [
-        Flexible(
-          child: SizedBox(
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: _selectedValue,
-              items: [
-                DropdownMenuItem<String>(
-                  value: 'Select',
-                  child: Text(
-                    'Select',
-                    style: SupportBotTextstyle.hint.copyWith(
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.none,
-                      color: SupportBotColors.gray.shade700,
+    return BlocListener<PlutotableBloc, PlutotableState>(
+      listener: (context, state) {
+      
+        if (state is FetchTableDataSuccess) {
+        
+
+          if (state.getValidationDetailsAttributeModel?.data?.status == true) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(S.of(context).statusUpdated),
+                  content: Text(
+                      state.getValidationDetailsAttributeModel?.data?.message ??
+                          ""),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: SupportBotColors.bluePrimary,
+                        foregroundColor: SupportBotColors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 40),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        S.of(context).ok,
+                        style: SupportBotTextstyle.hint.copyWith(
+                          color: SupportBotColors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'correct',
-                  child: Text(
-                    'Correct',
-                    style: SupportBotTextstyle.hint.copyWith(
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.none,
-                      color: SupportBotColors.black,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'incorrect',
-                  child: Text(
-                    'Incorrect',
-                    style: SupportBotTextstyle.hint.copyWith(
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.none,
-                      color: SupportBotColors.black,
-                    ),
-                  ),
-                ),
-              ],
-              onChanged: (String? newValue) {
-                setState(() {
-                  _previousValue = _selectedValue;
-                  _selectedValue = newValue!;
-                  widget.row.cells['validation']!.value = _selectedValue;
-                  if (_selectedValue == 'incorrect') {
-                    _showPopup(rowId);
-                  } else {
-                    context.read<PlutotableBloc>().add(UpdateValidationEvent(
-                        id: rowId,
-                        validation: _selectedValue,
-                        reason: '',
-                        selectedDate: widget.date,
-                        selectedMonth: widget.month,
-                        pipeline: widget.pipeline));
-                  }
-                });
+                  ],
+                );
               },
-              icon: const Icon(Icons.keyboard_arrow_down_rounded),
-              iconSize: 30,
-              iconEnabledColor: SupportBotColors.gray.shade800,
-              iconDisabledColor: SupportBotColors.gray.shade800,
-              underline: const SizedBox.shrink(),
-              dropdownColor: Colors.white,
+            );
+          } else if(state.getValidationDetailsAttributeModel?.data?.status == false){
+          
+            context.read<PlutotableBloc>().add(
+                  UpdateValidationEvent(
+                    id: widget.rowID,
+                    validation: _selectedValue,
+                    reason: '',
+                    selectedDate: widget.date,
+                    selectedMonth: widget.month,
+                    pipeline: widget.pipeline,
+                  ),
+                );
+          }
+        } else if (state is GetValidationDetailsFailure) {
+          print("Failure state received: ${state.message}");
+        }
+      },
+      child: Column(
+        children: [
+          Flexible(
+            child: SizedBox(
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: _selectedValue,
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'Select',
+                    child: Text(
+                      'Select',
+                      style: SupportBotTextstyle.hint.copyWith(
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.none,
+                        color: SupportBotColors.gray.shade700,
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'correct',
+                    child: Text(
+                      'Correct',
+                      style: SupportBotTextstyle.hint.copyWith(
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.none,
+                        color: SupportBotColors.black,
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'incorrect',
+                    child: Text(
+                      'Incorrect',
+                      style: SupportBotTextstyle.hint.copyWith(
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.none,
+                        color: SupportBotColors.black,
+                      ),
+                    ),
+                  ),
+                ],
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _previousValue = _selectedValue;
+                    _selectedValue = newValue!;
+                    widget.row.cells['validation']!.value = _selectedValue;
+                    if (_selectedValue == 'incorrect') {
+                      _showPopup(rowId);
+                    } else {
+                      BlocProvider.of<PlutotableBloc>(context).add(GetValidationDetailsEvent(ticketId: rowId));
+                    }
+                  });
+                },
+                icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                iconSize: 30,
+                iconEnabledColor: SupportBotColors.gray.shade800,
+                iconDisabledColor: SupportBotColors.gray.shade800,
+                underline: const SizedBox.shrink(),
+                dropdownColor: Colors.white,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

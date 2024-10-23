@@ -4,7 +4,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/utils/service/failure.dart';
 import 'package:support_bot_dashboard/utils/service/usecase.dart';
 
-class DashboardValidationUsecase implements UseCaseFiveInput<String , String, String , String, String, dynamic>{
+class DashboardValidationUsecase implements UseCaseFiveInput<String , String, String , String, String,dynamic>{
   @override
   Future<Either<Failure, dynamic>> invoke(
        id,  validation,  reason, pipeline, classification) async {

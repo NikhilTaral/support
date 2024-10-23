@@ -6,6 +6,7 @@ class FetchDashboardDataEvent extends DashboardEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String? selectedPipeline;
+  final String? selectedPipeline;
 
   FetchDashboardDataEvent(
       {this.selectedDate, this.selectedMonth, required this.selectedPipeline});

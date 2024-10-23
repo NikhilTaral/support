@@ -6,7 +6,6 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ticket_classification_gridkey.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_validation_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_sidebar.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
@@ -17,14 +16,16 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationTableWidget extends StatelessWidget {
-  final DashboardTableAttributeModel tableData;
+  final DashboardTableAttributeModel? tableData;
   final DateTime? selectedMonth;
+  final DateTime? selectedDate;
   final DateTime? selectedDate;
   String pipeline;
   String pipelineId;
   String? selectedClassification;
   String? selectedClassificationValidation;
 
+  final ValueNotifier<int> currentPage;
   final ValueNotifier<int> currentPage;
   final ValueNotifier<int> pageSize;
 
@@ -33,6 +34,12 @@ class TicketClassificationTableWidget extends StatelessWidget {
       required this.tableData,
       required this.selectedMonth,
       required this.pipeline,
+      required this.currentPage,
+      required this.pageSize,
+      required this.selectedClassification,
+      required this.selectedClassificationValidation,
+      required this.selectedDate,
+      required this.pipelineId})
       required this.currentPage,
       required this.pageSize,
       required this.selectedClassification,
@@ -142,17 +149,339 @@ class TicketClassificationTableWidget extends StatelessWidget {
       buildPlutoColumn(
         title: S.of(context).validation,
         field: TicketClassificationGridKey.validation,
-        type: PlutoColumnType.text(),
+        type: PlutoColumnType.select(['Select', 'Correct', 'Incorrect']),
         width: UIHelpers.screenWidth(context) * 0.15,
         readOnly: false,
-        renderer: (PlutoColumnRendererContext plutoRenderercontext) {
-          return ValidationReasonRenderer(
-            rowID: plutoRenderercontext.row.cells['id']?.value ?? "N/A",
-            plutotableBloc: context.read<PlutotableBloc>(),
-            date: selectedDate ?? null,
-            month: selectedMonth ?? null,
-            row: plutoRenderercontext.row,
-            pipeline: pipelineId ?? "",
+        renderer: (rendererContext) {
+          return BlocBuilder<PlutotableBloc, PlutotableState>(
+            builder: (context, state) {
+              return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  String currentValue = rendererContext.cell.value ?? 'Select';
+
+                  String displayValue =
+                      currentValue.toLowerCase().split(' ').map((word) {
+                    return word.isEmpty
+                        ? ''
+                        : '${word[0].toUpperCase()}${word.substring(1)}';
+                  }).join(' ');
+
+                  if (!['select', 'correct', 'incorrect']
+                      .contains(currentValue.toLowerCase())) {
+                    displayValue = 'Select';
+                  }
+
+                  return DropdownButton<String>(
+                    value: displayValue,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          displayValue = newValue;
+                        });
+
+                        final rowId = rendererContext
+                            .row.cells[TicketClassificationGridKey.id]?.value;
+                        if (rowId != null) {
+                          BlocProvider.of<PlutotableBloc>(context).add(
+                            GetValidationDetailsEvent(ticketId: rowId),
+                          );
+                          context.read<PlutotableBloc>().stream.listen((state) {
+                            if (state is FetchTableDataSuccess &&
+                                state.getValidationDetailsAttributeModel !=
+                                    null) {
+                              if (state.getValidationDetailsAttributeModel?.data
+                                      ?.status ==
+                                  false) {
+                                rendererContext.stateManager.changeCellValue(
+                                    rendererContext.cell, newValue,
+                                    force: true);
+
+                                if (newValue.toLowerCase() == 'incorrect') {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      String reason = '';
+                                      String _selectedClassification = 'Select';
+
+                                      return AlertDialog(
+                                        title: Text(
+                                            S.of(context).emailValidations),
+                                        backgroundColor: SupportBotColors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        content: SizedBox(
+                                          width:
+                                              UIHelpers.screenWidth(context) *
+                                                  0.3,
+                                          height:
+                                              UIHelpers.screenHeight(context) *
+                                                  0.3,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextField(
+                                                onChanged: (value) {
+                                                  reason = value;
+                                                },
+                                                decoration: InputDecoration(
+                                                  hintText:
+                                                      S.of(context).comments,
+                                                  contentPadding:
+                                                      const EdgeInsets.all(
+                                                          16.0),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                  ),
+                                                ),
+                                                maxLines: 4,
+                                              ),
+                                              UIHelpers.verticalSpaceSmall,
+                                              Text(
+                                                S.of(context).classification,
+                                                style: SupportBotTextstyle
+                                                    .subheadingH6
+                                                    .copyWith(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                              ),
+                                              UIHelpers.verticalSpaceTiny,
+                                              SizedBox(
+                                                width: UIHelpers.screenWidth(
+                                                        context) *
+                                                    0.2,
+                                                height: UIHelpers.screenHeight(
+                                                        context) *
+                                                    0.05,
+                                                child: DropdownButtonFormField<
+                                                    String>(
+                                                  value: _selectedClassification,
+                                                  items: [
+                                                    'Select',
+                                                    'Spam/Marketing',
+                                                    'No Action Required',
+                                                    'Genuine Query',
+                                                    'Acknowledgement Required'
+                                                  ].map<
+                                                          DropdownMenuItem<
+                                                              String>>(
+                                                      (String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: value,
+                                                      child: Text(
+                                                        value,
+                                                        style:
+                                                            SupportBotTextstyle
+                                                                .medium
+                                                                .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              SupportBotColors
+                                                                  .black,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (String?
+                                                      newClassification) {
+                                                    if (newClassification !=
+                                                        null) {
+                                                      setState(() {
+                                                        _selectedClassification =
+                                                            newClassification;
+                                                      });
+                                                    }
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    contentPadding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                    ),
+                                                  ),
+                                                  icon: const Icon(
+                                                    Icons
+                                                        .keyboard_arrow_down_rounded,
+                                                    size: 30,
+                                                    color:
+                                                        SupportBotColors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  SupportBotColors.danger,
+                                              foregroundColor:
+                                                  SupportBotColors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                      horizontal: 40),
+                                            ),
+                                            child: Text(
+                                              S.of(context).cancel,
+                                              style: SupportBotTextstyle.hint
+                                                  .copyWith(
+                                                color: SupportBotColors.white,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(dialogContext).pop();
+                                            },
+                                          ),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  SupportBotColors.bluePrimary,
+                                              foregroundColor:
+                                                  SupportBotColors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                      horizontal: 40),
+                                            ),
+                                            child: Text(
+                                              S.of(context).save,
+                                              style: SupportBotTextstyle.hint
+                                                  .copyWith(
+                                                color: SupportBotColors.white,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              if (reason.isNotEmpty &&
+                                                  _selectedClassification !=
+                                                      'Select') {
+                                                BlocProvider.of<PlutotableBloc>(
+                                                        context)
+                                                    .add(
+                                                  UpdateValidationEvent(
+                                                    id: rowId,
+                                                    validation: 'Incorrect',
+                                                    reason: reason,
+                                                    selectedDate: selectedDate,
+                                                    selectedMonth:
+                                                        selectedMonth,
+                                                    pipeline: pipelineId,
+                                                    classification: _selectedClassification
+                                                  ),
+                                                );
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                      content: Text(
+                                                          'Please provide reason and select classification')),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else if (newValue.toLowerCase() != 'select') {
+                                  context.read<PlutotableBloc>().add(
+                                        UpdateValidationEvent(
+                                          id: rowId,
+                                          validation: newValue,
+                                          reason: '',
+                                          selectedDate: selectedDate,
+                                          selectedMonth: selectedMonth,
+                                          pipeline: pipeline,
+                                        ),
+                                      );
+                                }
+                              } else {
+                                setState(() {
+                                  displayValue =
+                                      rendererContext.cell.value ?? 'Select';
+                                });
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext _) {
+                                    return BlocProvider.value(
+                                      value: context.read<PlutotableBloc>(),
+                                      child: AlertDialog(
+                                        title: const Text("Validation Exists"),
+                                        content: Text(state
+                                                .getValidationDetailsAttributeModel
+                                                ?.data
+                                                ?.message ??
+                                            ""),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text(S.of(context).ok),
+                                            onPressed: () {
+                                              BlocProvider.of<PlutotableBloc>(
+                                                      context)
+                                                  .add(FetchTableDataEvent(
+                                                      selectedDate:
+                                                          selectedDate,
+                                                      selectedMonth:
+                                                          selectedMonth,
+                                                      selectedPipeline:
+                                                          pipelineId));
+
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          });
+                        }
+                      }
+                    },
+                    items: ['Select', 'Correct', 'Incorrect']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: SupportBotTextstyle.hint.copyWith(
+                        fontWeight: FontWeight.w500,
+                        decoration: TextDecoration.none,
+                        color: SupportBotColors.black,
+                      ),),
+                      );
+                    }).toList(),
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                iconSize: 30,
+                iconEnabledColor: SupportBotColors.gray.shade800,
+                iconDisabledColor: SupportBotColors.gray.shade800,
+                underline: const SizedBox.shrink(),
+                dropdownColor: Colors.white,
+                  );
+                },
+              );
+            },
           );
         },
       ),
@@ -198,17 +527,18 @@ class TicketClassificationTableWidget extends StatelessWidget {
           context,
           selectedDate ?? null,
           selectedMonth,
+          tableData
         ),
       ),
     ];
 
-    final rows = tableData.items.map((item) {
+    final rows = tableData?.items.map((item) {
       return PlutoRow(
         cells: {
           TicketClassificationGridKey.id:
               PlutoCell(value: item.id?.isEmpty ?? true ? 'N/A' : item.id),
           TicketClassificationGridKey.classification: PlutoCell(
-              value: item.classification.isEmpty ?? true
+              value: item.classification?.isEmpty ?? true
                   ? 'N/A'
                   : item.classification),
           TicketClassificationGridKey.reasoning: PlutoCell(
@@ -231,13 +561,15 @@ class TicketClassificationTableWidget extends StatelessWidget {
               value:
                   item.isUpdatedToHubspot == true ? "Updated" : "Not Updated"),
           TicketClassificationGridKey.actions: PlutoCell(value: 'View'),
+          'validatedClassification': PlutoCell(value: item.validatedClassification),
+          'classificationValidatedBy': PlutoCell(value: item.classificationValidatedBy)
         },
       );
     }).toList();
 
     return Column(
       children: [
-        PlutoTableWidget(columns: columns, rows: rows),
+        PlutoTableWidget(columns: columns, rows: rows ?? []),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 0),
           child: Row(
@@ -292,8 +624,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                 children: [
                   Text(
                     "${(currentPage.value - 1) * pageSize.value + 1} - "
-                    "${(currentPage.value * pageSize.value > (tableData.totalRecords ?? 0)) ? tableData.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
-                    "${tableData.totalRecords ?? 0}",
+                    "${(currentPage.value * pageSize.value > (tableData?.totalRecords ?? 0)) ? tableData?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                    "${tableData?.totalRecords ?? 0}",
                     style: TextStyle(
                       color: SupportBotColors.bluePrimary.shade500,
                       fontSize: 14,
@@ -338,10 +670,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: (currentPage.value * pageSize.value) <
-                            (tableData.totalRecords ?? 0)
+                            (tableData?.totalRecords ?? 0)
                         ? () {
-                            print(
-                                'fghjhgfdcsx $selectedClassificationValidation');
                             currentPage.value++;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
@@ -378,6 +708,7 @@ Widget actionsRenderer(
   PlutoColumnRendererContext rendererContext,
   DateTime? selectedDate,
   DateTime? selectedMonth,
+    final DashboardTableAttributeModel? tableData
 ) {
   final id =
       rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
@@ -413,7 +744,7 @@ Widget actionsRenderer(
                     value: S.of(context).view,
                     child: InkWell(
                       onTap: () {
-                        _showSidebar(context, rows, currentIndex);
+                        _showSidebar(context, rows, currentIndex, tableData);
                       },
                       child: Row(
                         children: [
@@ -433,7 +764,7 @@ Widget actionsRenderer(
                             context.read<PlutotableBloc>().add(
                                   RevertClassificationEvent(
                                       ticketId: id,
-                                      selectedDate: selectedDate ?? null,
+                                      selectedDate: selectedDate,
                                       selectedMonth: selectedMonth,
                                       selectedClassification: classification),
                                 );
@@ -497,7 +828,7 @@ Widget actionsRenderer(
   );
 }
 
-void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex) {
+void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex, final DashboardTableAttributeModel? tableData) {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
   showDialog(
@@ -513,17 +844,19 @@ void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex) {
               onNext: () {
                 Navigator.pop(context);
                 if (isNextEnabled) {
-                  _showSidebar(context, rows, currentIndex + 1);
+                  _showSidebar(context, rows, currentIndex + 1, tableData);
                 }
               },
               onPrevious: () {
                 Navigator.pop(context);
                 if (isPreviousEnabled) {
-                  _showSidebar(context, rows, currentIndex - 1);
+                  _showSidebar(context, rows, currentIndex - 1, tableData);
                 }
               },
               isNextEnabled: isNextEnabled,
-              isPreviousEnabled: isPreviousEnabled),
+              isPreviousEnabled: isPreviousEnabled,
+              tableData: tableData,
+              ),
         ),
       );
     },
@@ -623,3 +956,4 @@ void _showRevertToHubspotPopup(BuildContext context, String message) {
     },
   );
 }
+

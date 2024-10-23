@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_get_validation_details_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_details_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_details_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
@@ -13,8 +17,10 @@ part 'plutotable_event.dart';
 part 'plutotable_state.dart';
 
 class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
-  DashboardTableAttributeModel? initialData;
+  // DashboardTableAttributeModel? initialData;
   bool isUpdatedToHubspot = false;
+   GetValidationDetailsAttributeModel? getValidationAttributeModel;
+   DashboardTableAttributeModel? tableData;
   List<PlutoRow>? rows;
   PlutotableBloc() : super(PlutotableInitial()) {
     on<FetchTableDataEvent>(_onFetchTableDataEvent);
@@ -26,6 +32,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     on<RevertClassificationEvent>(_onRevertClassificationEvent);
     on<UnRevertClassificationEvent>(_onUnRevertClassificationEvent);
     on<SearchTableEvent>(_onSearchTableEvent);
+    on<GetValidationDetailsEvent>(_onGetValidationDetailsEvent);
   }
 
   FutureOr<void> _onFetchTableDataEvent(
@@ -62,28 +69,29 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         if (model.success == true) {
           List<TableItem> items = (model.data?.items as List<Item>).map((item) {
             return TableItem(
-              id: item.id.s,
-              classification: item.classification.s,
-              hsPipelineStage: item.hsPipelineStage.s,
-              reasoning: item.reasoning.s,
-              createdAt: item.createdAt.s,
-              ticketDescription: item.ticketDescription.s,
-              classificationValidation: item.classificationValidation.s,
+              id: item.id.s ?? "",
+              classification: item.classification.s ?? "",
+              hsPipelineStage: item.hsPipelineStage.s ?? "",
+              reasoning: item.reasoning.s ?? "",
+              createdAt: item.createdAt.s ?? "",
+              ticketDescription: item.ticketDescription.s ?? "",
+              classificationValidation: item.classificationValidation.s ?? "",
               classificationValidationReason:
-                  item.classificationValidationReason.s,
+                  item.classificationValidationReason.s ?? "",
               isUpdatedToHubspot:
                   item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
+              validatedClassification: item.validatedClassification.s ?? "",
+              classificationValidatedBy: item.classificationValidatedBy.s ?? ""
             );
           }).toList();
 
-          final tableData = DashboardTableAttributeModel(
+           tableData = DashboardTableAttributeModel(
               totalRecords: model.data?.totalRecords,
               items: items,
               pageSize: model.data.pageSize,
               currentPage: model.data.currentPage);
 
-          initialData = tableData;
-
+          // initialData = tableData;
           emit(FetchTableDataSuccess(
               selectedClassification: event.selectedClassification ?? "",
               tableData: tableData,
@@ -91,7 +99,9 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               selectedMonth: event.selectedMonth ?? null,
               selectedValidation: event.selectedClassificationValidation ?? "",
               noDataAvailable: items.isEmpty,
-              selectedPipeline: event.selectedPipeline ?? ""));
+              selectedPipeline: event.selectedPipeline ?? "",
+              getValidationDetailsAttributeModel: getValidationAttributeModel
+              ));
         } else {
           emit(FetchTableDataEmpty());
         }
@@ -140,6 +150,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       emit(UpdateValidationSuccess(
         selectedDate: event.selectedDate ?? null,
         selectedMonth: event.selectedMonth ?? null,
+        updatedValidation: event.validation
       ));
     } catch (e) {
       emit(UpdateValidationError(errorMessage: 'Exception occurred: $e'));
@@ -185,6 +196,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                     item.classificationValidationReason.s,
                 isUpdatedToHubspot:
                     item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
+                validatedClassification: item.validatedClassification.s,
+                classificationValidatedBy: item.classificationValidatedBy.s
               );
             }).toList();
 
@@ -246,6 +259,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                     item.classificationValidationReason.s,
                 isUpdatedToHubspot:
                     item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
+                  validatedClassification: item.validatedClassification.s,
+                classificationValidatedBy: item.classificationValidatedBy.s
               );
             }).toList();
 
@@ -322,6 +337,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                   item.classificationValidationReason.s,
               isUpdatedToHubspot:
                   item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
+                validatedClassification: item.validatedClassification.s,
+                classificationValidatedBy: item.classificationValidatedBy.s
             );
           }).toList();
 
@@ -347,11 +364,11 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       // both classification and validation are "Select"
       emit(FetchTableDataSuccess(
           selectedClassification: 'All',
-          tableData: initialData!,
+          tableData: tableData,
           selectedDate: event.selectedDate,
           selectedMonth: event.selectedMonth,
           selectedValidation: null,
-          noDataAvailable: initialData!.items.isEmpty,
+          noDataAvailable: tableData?.items.isEmpty,
           selectedPipeline: event.pipeline ?? ""));
     }
   }
@@ -425,6 +442,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                   item.classificationValidationReason.s,
               isUpdatedToHubspot:
                   item.isUpdatedToHubspot?.isUpdatedToHubspotBool,
+                validatedClassification: item.validatedClassification.s,
+                classificationValidatedBy: item.classificationValidatedBy.s
             );
           }).toList();
 
@@ -434,13 +453,13 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
               pageSize: model.data.pageSize,
               currentPage: model.data.currentPage);
 
-          initialData = tableData;
+          // initialData = tableData;
 
           emit(FetchTableDataSuccess(
               selectedClassification: event.classification ?? "",
               tableData: tableData,
-              selectedDate: event.selectDate ?? null,
-              selectedMonth: event.selectMonth ?? null,
+              selectedDate: event.selectDate ,
+              selectedMonth: event.selectMonth,
               selectedValidation: event.classificationValidation ?? "",
               noDataAvailable: items.isEmpty,
               selectedPipeline: event.pipeline ?? ""));
@@ -450,6 +469,34 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
       }
     } catch (e) {
       emit(SearchFailureState(message: 'Exception: $e'));
+    }
+  }
+
+  FutureOr<void> _onGetValidationDetailsEvent(
+      GetValidationDetailsEvent event, Emitter<PlutotableState> emit) async {
+    //  emit(GetValidationDetailsLoading());
+    try {
+      final repository = serviceLocator<DashboardGetValidationDetailsUsecase>();
+      final response = await repository.invoke(event.ticketId ?? '');
+      if (response.isLeft) {
+        emit(GetValidationDetailsFailure(message: 'Failed to load data'));
+      } else {
+        final model =
+            GetValidationDetailsResponseModel.fromJson(response.right);
+        final getValidationAttributeModel = GetValidationDetailsAttributeModel(
+            data: ValidationData(
+                message: model.data?.message, status: model.data?.status));
+               
+        emit(FetchTableDataSuccess(
+            selectedDate: event.selectDate,
+            selectedMonth: event.selectMonth,
+            selectedPipeline: event.pipeline,
+            tableData: tableData,
+            getValidationDetailsAttributeModel: getValidationAttributeModel));
+           
+      }
+    } catch (e) {
+      emit(GetValidationDetailsFailure(message: 'Exception occurred: $e'));
     }
   }
 }
