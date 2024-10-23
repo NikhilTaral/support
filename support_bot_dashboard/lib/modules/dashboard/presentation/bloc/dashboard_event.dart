@@ -31,8 +31,8 @@ class GetValidationCountEvent extends DashboardEvent {
   final String selectedPipeline;
 
   GetValidationCountEvent(
-      {required this.selectedDate,
-      required this.selectedMonth,
+      { this.selectedDate,
+       this.selectedMonth,
       required this.selectedPipeline});
 }
 
@@ -42,8 +42,8 @@ class GetValidationByCountEvent extends DashboardEvent {
   final String selectedPipeline;
 
   GetValidationByCountEvent(
-      {required this.selectedDate,
-      required this.selectedMonth,
+      { this.selectedDate,
+       this.selectedMonth,
       required this.selectedPipeline});
 }
 
