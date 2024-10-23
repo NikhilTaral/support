@@ -69,8 +69,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (widget.userSettingsData?.data?.accessRole !=
-                    'operations user')
+                  if(widget.isAIQuery == false)
                   IconButton(
                     onPressed: currentChartIndex > 0
                         ? () {
@@ -98,8 +97,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (widget.userSettingsData?.data?.accessRole !=
-                    'operations user')
+                   if(widget.isAIQuery == false)
                   IconButton(
                     onPressed: currentChartIndex < 2
                         ? () {
