@@ -115,11 +115,11 @@ class DashboardFilterWidget extends StatelessWidget {
                                   pageSize: pageSize.value));
                           BlocProvider.of<DashboardBloc>(context).add(
                               GetValidationCountEvent(
-                                  selectedDate: selectedDate,
+                                  selectedDate: newDate,
                                   selectedPipeline: pipeline ?? ""));
                           BlocProvider.of<DashboardBloc>(context).add(
                               GetValidationByCountEvent(
-                                  selectedDate: selectedDate,
+                                  selectedDate: newDate,
                                   selectedPipeline: pipeline ?? ""));
                           onFilterChanged(FilterChangeType.date, newDate);
                         },
@@ -174,11 +174,11 @@ class DashboardFilterWidget extends StatelessWidget {
                                     pageSize: pageSize.value));
                             BlocProvider.of<DashboardBloc>(context).add(
                                 GetValidationCountEvent(
-                                    selectedMonth: selectedMonth,
+                                    selectedMonth: monthDateTime,
                                     selectedPipeline: pipeline ?? ""));
                             BlocProvider.of<DashboardBloc>(context).add(
                                 GetValidationByCountEvent(
-                                    selectedMonth: selectedMonth,
+                                    selectedMonth: monthDateTime,
                                     selectedPipeline: pipeline ?? ""));
                             onFilterChanged(FilterChangeType.month, value);
                           }
