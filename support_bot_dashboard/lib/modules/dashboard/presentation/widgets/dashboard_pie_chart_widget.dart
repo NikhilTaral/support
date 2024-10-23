@@ -51,8 +51,6 @@ class PieChartWidgetState extends State<PieChartWidget> {
         .where((data) => data.value != null && data.value! > 0)
         .toList();
 
-    print(widget.userSettingsData?.data?.accessRole);
-
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
       child: Container(
@@ -81,7 +79,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
                             });
                           }
                         : null,
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back_ios,
                       size: 15,
                     ),
@@ -110,7 +108,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
                             });
                           }
                         : null,
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_forward_ios,
                       size: 15,
                     ),
@@ -237,7 +235,6 @@ class PieChartWidgetState extends State<PieChartWidget> {
         ];
       }
     } else if (currentChartIndex == 1) {
-      if (widget.userSettingsData?.data?.accessRole != 'operations user') {
         return [
           ChartData(
               label: 'Correct', value: widget.validationCount?.correct ?? 0),
@@ -248,29 +245,12 @@ class PieChartWidgetState extends State<PieChartWidget> {
               label: 'Not Validated',
               value: widget.validationCount?.notValidated ?? 0)
         ];
-      }
     } else if (currentChartIndex == 2) {
-      // if(widget.userSettingsData?.data?.accessRole != 'operations user'){
-      //   if (widget.validationByCount?.data != null) {
-      //   return [
-      //     ChartData(
-      //         label: 'Agent 1',
-      //         value: widget.validationByCount?.data?.agent1 ?? 0),
-      //     ChartData(
-      //         label: 'Agent 2',
-      //         value: widget.validationByCount?.data?.agent2 ?? 0),
-      //     ChartData(
-      //         label: 'Agent 3',
-      //         value: widget.validationByCount?.data?.agent3 ?? 0),
-      //   ];
-      // }
       if (currentChartIndex == 2) {
-        if (widget.userSettingsData?.data?.accessRole != 'operations user') {
           if (widget.validationByCount?.data != null) {
             return widget.validationByCount!.data!.entries.map((entry) {
               return ChartData(label: entry.key, value: entry.value);
             }).toList();
-          }
         }
       }
     }
