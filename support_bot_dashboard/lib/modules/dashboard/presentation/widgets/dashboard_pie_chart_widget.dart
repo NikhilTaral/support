@@ -71,20 +71,21 @@ class PieChartWidgetState extends State<PieChartWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if(widget.userSettingsData?.data?.accessRole != 'operations user')
-                IconButton(
-                  onPressed: currentChartIndex > 0
-                      ? () {
-                          setState(() {
-                            currentChartIndex--;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    size: 15,
+                if (widget.userSettingsData?.data?.accessRole !=
+                    'operations user')
+                  IconButton(
+                    onPressed: currentChartIndex > 0
+                        ? () {
+                            setState(() {
+                              currentChartIndex--;
+                            });
+                          }
+                        : null,
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      size: 15,
+                    ),
                   ),
-                ),
                 Expanded(
                   child: Text(
                     currentChartIndex == 0
@@ -99,20 +100,21 @@ class PieChartWidgetState extends State<PieChartWidget> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if(widget.userSettingsData?.data?.accessRole != 'operations user')
-                IconButton(
-                  onPressed: currentChartIndex < 2
-                      ? () {
-                          setState(() {
-                            currentChartIndex++;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
+                if (widget.userSettingsData?.data?.accessRole !=
+                    'operations user')
+                  IconButton(
+                    onPressed: currentChartIndex < 2
+                        ? () {
+                            setState(() {
+                              currentChartIndex++;
+                            });
+                          }
+                        : null,
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ),
                   ),
-                ),
               ],
             ),
             Padding(
@@ -235,37 +237,43 @@ class PieChartWidgetState extends State<PieChartWidget> {
         ];
       }
     } else if (currentChartIndex == 1) {
-      if(widget.userSettingsData?.data?.accessRole != 'operations user'){
-         return [
-        ChartData(
-            label: 'Correct', value: widget.validationCount?.correct ?? 0),
-        ChartData(
-            label: 'Incorrect', value: widget.validationCount?.incorrect ?? 0),
-        ChartData(
-            label: 'Not Validated',
-            value: widget.validationCount?.notValidated ?? 0)
-      ];
-      } 
-     
-    } else if (currentChartIndex == 2) {
-      if(widget.userSettingsData?.data?.accessRole != 'operations user'){
-        if (widget.validationByCount?.data != null) {
+      if (widget.userSettingsData?.data?.accessRole != 'operations user') {
         return [
           ChartData(
-              label: 'Agent 1',
-              value: widget.validationByCount?.data?.agent1 ?? 0),
+              label: 'Correct', value: widget.validationCount?.correct ?? 0),
           ChartData(
-              label: 'Agent 2',
-              value: widget.validationByCount?.data?.agent2 ?? 0),
+              label: 'Incorrect',
+              value: widget.validationCount?.incorrect ?? 0),
           ChartData(
-              label: 'Agent 3',
-              value: widget.validationByCount?.data?.agent3 ?? 0),
+              label: 'Not Validated',
+              value: widget.validationCount?.notValidated ?? 0)
         ];
       }
+    } else if (currentChartIndex == 2) {
+      // if(widget.userSettingsData?.data?.accessRole != 'operations user'){
+      //   if (widget.validationByCount?.data != null) {
+      //   return [
+      //     ChartData(
+      //         label: 'Agent 1',
+      //         value: widget.validationByCount?.data?.agent1 ?? 0),
+      //     ChartData(
+      //         label: 'Agent 2',
+      //         value: widget.validationByCount?.data?.agent2 ?? 0),
+      //     ChartData(
+      //         label: 'Agent 3',
+      //         value: widget.validationByCount?.data?.agent3 ?? 0),
+      //   ];
+      // }
+      if (currentChartIndex == 2) {
+        if (widget.userSettingsData?.data?.accessRole != 'operations user') {
+          if (widget.validationByCount?.data != null) {
+            return widget.validationByCount!.data!.entries.map((entry) {
+              return ChartData(label: entry.key, value: entry.value);
+            }).toList();
+          }
+        }
       }
-      
     }
-
     return [];
   }
 }

@@ -113,6 +113,16 @@ class DashboardFilterWidget extends StatelessWidget {
                                   selectedPipeline: pipeline,
                                   page: currentPage.value,
                                   pageSize: pageSize.value));
+                          BlocProvider.of<DashboardBloc>(context).add(
+                              GetValidationCountEvent(
+                                  selectedDate: selectedDate,
+                                  selectedMonth: selectedMonth,
+                                  selectedPipeline: pipeline ?? ""));
+                          BlocProvider.of<DashboardBloc>(context).add(
+                              GetValidationByCountEvent(
+                                  selectedDate: selectedDate,
+                                  selectedMonth: selectedMonth,
+                                  selectedPipeline: pipeline ?? ""));
                           onFilterChanged(FilterChangeType.date, newDate);
                         },
                         label: S.of(context).day,
@@ -130,8 +140,8 @@ class DashboardFilterWidget extends StatelessWidget {
 
                       if (state is DashboardDataSuccess) {
                         selectedMonth = state.selectedMonth;
-                        selectedMonthString =
-                            _monthToString(selectedMonth?.month ?? DateTime.now().month);
+                        selectedMonthString = _monthToString(
+                            selectedMonth?.month ?? DateTime.now().month);
                         pipeline = state.selectedPipeline;
                       }
                       return CustomMonthDropdown(
@@ -305,7 +315,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                   duration: const Duration(milliseconds: 300),
                                   height:
                                       UIHelpers.screenHeight(context) * 0.05,
-                                      // width: UIHelpers.screenWidth(context) * 0.15,
+                                  // width: UIHelpers.screenWidth(context) * 0.15,
                                   decoration: isOpen
                                       ? BoxDecoration(
                                           color: Colors.white,
@@ -356,10 +366,15 @@ class DashboardFilterWidget extends StatelessWidget {
                                             controller: _searchController,
                                             decoration: InputDecoration(
                                               hintText: 'Search...',
-                                              hintStyle: SupportBotTextstyle.medium.copyWith(color: SupportBotColors.gray.shade600),
+                                              hintStyle: SupportBotTextstyle
+                                                  .medium
+                                                  .copyWith(
+                                                      color: SupportBotColors
+                                                          .gray.shade600),
                                               border: InputBorder.none,
                                               isDense: true,
-                                              contentPadding: EdgeInsets.only(bottom: -2),
+                                              contentPadding:
+                                                  EdgeInsets.only(bottom: -2),
                                             ),
                                             onSubmitted: (value) {
                                               if (value.isNotEmpty) {
