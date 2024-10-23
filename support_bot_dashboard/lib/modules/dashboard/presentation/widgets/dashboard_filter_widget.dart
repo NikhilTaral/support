@@ -25,7 +25,6 @@ enum FilterChangeType {
 
 class DashboardFilterWidget extends StatelessWidget {
   String? pipeline;
-  String? pipeline;
   DateTime? selectedDate;
   DateTime? selectedMonth;
   String? selectedClassification;

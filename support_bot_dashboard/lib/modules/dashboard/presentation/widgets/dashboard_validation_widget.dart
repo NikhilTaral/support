@@ -16,7 +16,6 @@ class ValidationReasonRenderer extends StatefulWidget {
   String pipeline;
 
   ValidationReasonRenderer({
-  ValidationReasonRenderer({
     Key? key,
     required this.rowID,
     required this.plutotableBloc,

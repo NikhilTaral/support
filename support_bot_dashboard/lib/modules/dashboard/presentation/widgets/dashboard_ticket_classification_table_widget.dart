@@ -19,13 +19,11 @@ class TicketClassificationTableWidget extends StatelessWidget {
   final DashboardTableAttributeModel? tableData;
   final DateTime? selectedMonth;
   final DateTime? selectedDate;
-  final DateTime? selectedDate;
   String pipeline;
   String pipelineId;
   String? selectedClassification;
   String? selectedClassificationValidation;
 
-  final ValueNotifier<int> currentPage;
   final ValueNotifier<int> currentPage;
   final ValueNotifier<int> pageSize;
 
@@ -34,12 +32,6 @@ class TicketClassificationTableWidget extends StatelessWidget {
       required this.tableData,
       required this.selectedMonth,
       required this.pipeline,
-      required this.currentPage,
-      required this.pageSize,
-      required this.selectedClassification,
-      required this.selectedClassificationValidation,
-      required this.selectedDate,
-      required this.pipelineId})
       required this.currentPage,
       required this.pageSize,
       required this.selectedClassification,
