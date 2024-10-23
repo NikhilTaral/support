@@ -151,11 +151,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       try {
         final model =
             GetValidationByCountResponseModel.fromJson(response.right);
-        getValidationByCountAttribute = GetValidationByCountAttributeModel(
-            data: ValidationByCountData(
-                agent1: model.data?.agent1,
-                agent2: model.data?.agent2,
-                agent3: model.data?.agent3));
+          getValidationByCountAttribute = GetValidationByCountAttributeModel(
+        data: model.data,
+      );
 
         if (getValidationByCountAttribute?.data != null) {
           emit(DashboardDataSuccess(

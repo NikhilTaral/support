@@ -9,7 +9,7 @@ GetValidationByCountResponseModel getValidationByCountResponseModelFromJson(Stri
 String getValidationByCountResponseModelToJson(GetValidationByCountResponseModel data) => json.encode(data.toJson());
 
 class GetValidationByCountResponseModel {
-    final Data? data;
+    final Map<String, int>? data;
     final bool? success;
     final int? failCode;
     final Params? params;
@@ -24,7 +24,7 @@ class GetValidationByCountResponseModel {
     });
 
     factory GetValidationByCountResponseModel.fromJson(Map<String, dynamic> json) => GetValidationByCountResponseModel(
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+        data: Map.from(json["data"]!).map((k, v) => MapEntry<String, int>(k, v)),
         success: json["success"],
         failCode: json["failCode"],
         params: json["params"] == null ? null : Params.fromJson(json["params"]),
@@ -32,35 +32,11 @@ class GetValidationByCountResponseModel {
     );
 
     Map<String, dynamic> toJson() => {
-        "data": data?.toJson(),
+        "data": Map.from(data!).map((k, v) => MapEntry<String, dynamic>(k, v)),
         "success": success,
         "failCode": failCode,
         "params": params?.toJson(),
         "message": message,
-    };
-}
-
-class Data {
-    final int? agent1;
-    final int? agent2;
-    final int? agent3;
-
-    Data({
-        this.agent1,
-        this.agent2,
-        this.agent3,
-    });
-
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
-        agent1: json["agent1"],
-        agent2: json["agent2"],
-        agent3: json["agent3"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "agent1": agent1,
-        "agent2": agent2,
-        "agent3": agent3,
     };
 }
 
