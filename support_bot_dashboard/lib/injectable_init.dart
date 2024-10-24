@@ -4,6 +4,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashbo
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_details_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_export_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_user_settings_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_by_count_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_repo_impl.dart';
@@ -13,11 +14,11 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashbo
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_validation_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/revert_classification_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/unrevert_classification_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/unrevert_classification_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_chart_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_details_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_export_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_user_settings_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
@@ -27,11 +28,11 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_validation_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/revert_classification_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/unrevert_classification_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/unrevert_classification_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_chart_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_details_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_export_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_user_settings_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_count_usecase.dart';
@@ -41,12 +42,12 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/unrevert_classification_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/unrevert_classification_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_pipeline/dashboard_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/export_bloc/export_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
@@ -144,4 +145,9 @@ Future<void> initServiceLocator() async {
   //get user settings
   serviceLocator.registerLazySingleton<DashboardGetUserSettingsUsecase>(()=> DashboardGetUserSettingsUsecase());
   serviceLocator.registerLazySingleton<GetUserSettingsRepository>(()=> DashboardGetUserSettingsRepoImpl());
+
+  //export
+  serviceLocator.registerLazySingleton<DashboardExportusecase>(()=> DashboardExportusecase());
+  serviceLocator.registerLazySingleton<DashboardExportRepository>(()=> DashboardExportRepoImpl());
+  serviceLocator.registerFactory<ExportBloc>(()=> ExportBloc());
 }

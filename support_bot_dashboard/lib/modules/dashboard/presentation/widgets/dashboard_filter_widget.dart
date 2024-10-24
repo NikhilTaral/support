@@ -138,8 +138,8 @@ class DashboardFilterWidget extends StatelessWidget {
 
                       if (state is DashboardDataSuccess) {
                         selectedMonth = state.selectedMonth;
-                        selectedMonthString =
-                            _monthToString(selectedMonth?.month ?? DateTime.now().month);
+                        selectedMonthString = _monthToString(
+                            selectedMonth?.month ?? DateTime.now().month);
                         pipeline = state.selectedPipeline;
                       }
                       return CustomMonthDropdown(
@@ -410,9 +410,26 @@ class DashboardFilterWidget extends StatelessWidget {
                   ),
                   Tooltip(
                     message: S.of(context).export,
-                    child: const ExportButton(
-                        icon: 'assets/icons/Export.svg',
-                        selectedButtonText: "Ticket Classification"),
+                    child: BlocBuilder<PlutotableBloc, PlutotableState>(
+                      builder: (context, state) {
+                         if (state is FetchTableDataSuccess) {
+                          selectedDate = state.selectedDate;
+                          selectedMonth = state.selectedMonth;
+                          selectedClassification = state.selectedClassification;
+                          selectedClassificationValidation = state.selectedValidation ?? '';
+                        }
+                        return ExportButton(
+                          icon: 'assets/icons/Export.svg',
+                          selectedButtonText: "Ticket Classification",
+                          selectedDate: selectedDate,
+                          selectedMonth: selectedMonth,
+                          selectedClassification: selectedClassification,
+                          selectedClassificationValidation:
+                              selectedClassificationValidation,
+                          selectedPipeline: pipeline,
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
