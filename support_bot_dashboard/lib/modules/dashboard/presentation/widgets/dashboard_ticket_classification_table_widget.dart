@@ -4,6 +4,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ticket_classification_gridkey.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_sidebar.dart';
@@ -211,7 +212,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                               UIHelpers.screenHeight(context) *
                                                   0.3,
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               TextField(
@@ -252,7 +254,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                                     0.05,
                                                 child: DropdownButtonFormField<
                                                     String>(
-                                                  value: _selectedClassification,
+                                                  value:
+                                                      _selectedClassification,
                                                   items: [
                                                     'Select',
                                                     'Spam/Marketing',
@@ -370,16 +373,35 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                                         context)
                                                     .add(
                                                   UpdateValidationEvent(
-                                                    id: rowId,
-                                                    validation: 'Incorrect',
-                                                    reason: reason,
-                                                    selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
-                                                    pipeline: pipelineId,
-                                                    classification: _selectedClassification
-                                                  ),
+                                                      id: rowId,
+                                                      validation: 'Incorrect',
+                                                      reason: reason,
+                                                      selectedDate:
+                                                          selectedDate,
+                                                      selectedMonth:
+                                                          selectedMonth,
+                                                      pipeline: pipelineId,
+                                                      classification:
+                                                          _selectedClassification),
                                                 );
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                pipelineId ??
+                                                                    ""));
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationByCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                pipelineId ??
+                                                                    ""));
                                                 Navigator.of(dialogContext)
                                                     .pop();
                                               } else {
@@ -404,9 +426,27 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                           reason: '',
                                           selectedDate: selectedDate,
                                           selectedMonth: selectedMonth,
-                                          pipeline: pipeline,
+                                          pipeline: pipelineId,
                                         ),
                                       );
+                                       BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                pipelineId ??
+                                                                    ""));
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationByCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                pipelineId ??
+                                                                    ""));
                                 }
                               } else {
                                 setState(() {
@@ -429,15 +469,15 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                           TextButton(
                                             child: Text(S.of(context).ok),
                                             onPressed: () {
-                                              BlocProvider.of<PlutotableBloc>(
-                                                      context)
-                                                  .add(FetchTableDataEvent(
-                                                      selectedDate:
-                                                          selectedDate,
-                                                      selectedMonth:
-                                                          selectedMonth,
-                                                      selectedPipeline:
-                                                          pipelineId));
+                                              // BlocProvider.of<PlutotableBloc>(
+                                              //         context)
+                                              //     .add(FetchTableDataEvent(
+                                              //         selectedDate:
+                                              //             selectedDate,
+                                              //         selectedMonth:
+                                              //             selectedMonth,
+                                              //         selectedPipeline:
+                                              //             pipelineId));
 
                                               Navigator.of(context).pop();
                                             },
@@ -457,19 +497,22 @@ class TicketClassificationTableWidget extends StatelessWidget {
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value, style: SupportBotTextstyle.hint.copyWith(
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.none,
-                        color: SupportBotColors.black,
-                      ),),
+                        child: Text(
+                          value,
+                          style: SupportBotTextstyle.hint.copyWith(
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                            color: SupportBotColors.black,
+                          ),
+                        ),
                       );
                     }).toList(),
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                iconSize: 30,
-                iconEnabledColor: SupportBotColors.gray.shade800,
-                iconDisabledColor: SupportBotColors.gray.shade800,
-                underline: const SizedBox.shrink(),
-                dropdownColor: Colors.white,
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                    iconSize: 30,
+                    iconEnabledColor: SupportBotColors.gray.shade800,
+                    iconDisabledColor: SupportBotColors.gray.shade800,
+                    underline: const SizedBox.shrink(),
+                    dropdownColor: Colors.white,
                   );
                 },
               );
@@ -516,11 +559,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
         width: UIHelpers.screenWidth(context) * 0.07,
         textAlign: PlutoColumnTextAlign.center,
         renderer: (context) => actionsRenderer(
-          context,
-          selectedDate ?? null,
-          selectedMonth,
-          tableData
-        ),
+            context, selectedDate ?? null, selectedMonth, tableData),
       ),
     ];
 
@@ -553,8 +592,10 @@ class TicketClassificationTableWidget extends StatelessWidget {
               value:
                   item.isUpdatedToHubspot == true ? "Updated" : "Not Updated"),
           TicketClassificationGridKey.actions: PlutoCell(value: 'View'),
-          'validatedClassification': PlutoCell(value: item.validatedClassification),
-          'classificationValidatedBy': PlutoCell(value: item.classificationValidatedBy)
+          'validatedClassification':
+              PlutoCell(value: item.validatedClassification),
+          'classificationValidatedBy':
+              PlutoCell(value: item.classificationValidatedBy)
         },
       );
     }).toList();
@@ -697,11 +738,10 @@ class TicketClassificationTableWidget extends StatelessWidget {
 }
 
 Widget actionsRenderer(
-  PlutoColumnRendererContext rendererContext,
-  DateTime? selectedDate,
-  DateTime? selectedMonth,
-    final DashboardTableAttributeModel? tableData
-) {
+    PlutoColumnRendererContext rendererContext,
+    DateTime? selectedDate,
+    DateTime? selectedMonth,
+    final DashboardTableAttributeModel? tableData) {
   final id =
       rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
   final rows = rendererContext.stateManager.refRows.toList();
@@ -820,7 +860,8 @@ Widget actionsRenderer(
   );
 }
 
-void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex, final DashboardTableAttributeModel? tableData) {
+void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex,
+    final DashboardTableAttributeModel? tableData) {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
   showDialog(
@@ -832,23 +873,23 @@ void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex, f
         child: SizedBox(
           width: UIHelpers.screenWidth(context) * 0.3,
           child: CustomSidebar(
-              rowData: rows[currentIndex],
-              onNext: () {
-                Navigator.pop(context);
-                if (isNextEnabled) {
-                  _showSidebar(context, rows, currentIndex + 1, tableData);
-                }
-              },
-              onPrevious: () {
-                Navigator.pop(context);
-                if (isPreviousEnabled) {
-                  _showSidebar(context, rows, currentIndex - 1, tableData);
-                }
-              },
-              isNextEnabled: isNextEnabled,
-              isPreviousEnabled: isPreviousEnabled,
-              tableData: tableData,
-              ),
+            rowData: rows[currentIndex],
+            onNext: () {
+              Navigator.pop(context);
+              if (isNextEnabled) {
+                _showSidebar(context, rows, currentIndex + 1, tableData);
+              }
+            },
+            onPrevious: () {
+              Navigator.pop(context);
+              if (isPreviousEnabled) {
+                _showSidebar(context, rows, currentIndex - 1, tableData);
+              }
+            },
+            isNextEnabled: isNextEnabled,
+            isPreviousEnabled: isPreviousEnabled,
+            tableData: tableData,
+          ),
         ),
       );
     },
@@ -948,4 +989,3 @@ void _showRevertToHubspotPopup(BuildContext context, String message) {
     },
   );
 }
-
