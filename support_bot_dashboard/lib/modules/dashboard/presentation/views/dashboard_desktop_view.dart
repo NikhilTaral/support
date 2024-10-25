@@ -623,6 +623,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       radius: 8,
                                     );
                                   } else if (state is DashboardDataSuccess) {
+                                   
                                     return PieChartWidget(
                                         validationCount: state
                                             .getValidationCountAttributeModel,
@@ -646,7 +647,7 @@ class DashboardDesktopView extends StatelessWidget {
                                         height:
                                             UIHelpers.screenHeight(context) *
                                                 0.75,
-                                        child: const EmptyWidget());
+                                        child: Center(child: const EmptyWidget()));
                                   } else {
                                     return Container();
                                   }

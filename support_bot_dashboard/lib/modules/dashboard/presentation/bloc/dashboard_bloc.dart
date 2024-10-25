@@ -104,7 +104,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onGetValidationCount(
       GetValidationCountEvent event, Emitter<DashboardState> emit) async {
-    emit(DashboardDataLoading());
+    // emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardGetValidationCountUsecase>();
     final response = await repository.invoke(
         event.selectedDate, event.selectedMonth, event.selectedPipeline);
@@ -138,7 +138,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onGetValidationByCountEvent(
       GetValidationByCountEvent event, Emitter<DashboardState> emit) async {
-    emit(DashboardDataLoading());
+    // emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
     final response = await repository.invoke(
         event.selectedDate, event.selectedMonth, event.selectedPipeline);
@@ -155,7 +155,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         data: model.data,
       );
 
-        if (getValidationByCountAttribute?.data != null) {
+     
           emit(DashboardDataSuccess(
               pieChartData: dashboardChartData,
               selectedDate: event.selectedDate,
@@ -164,9 +164,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               getValidationCountAttributeModel: getValidationCountAttribute,
               getValidationByCountAttributeModel:
                   getValidationByCountAttribute ));
-        } else {
-          emit(DashboardDataEmpty());
-        }
+       
       } catch (e) {
         emit(DashboardDataError(
             selectedDate: event.selectedDate ?? DateTime.now(),

@@ -220,15 +220,15 @@ class DashboardFilterWidget extends StatelessWidget {
                             pageSize.value = 10;
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
-                                .add(FilterClassificationEvent(
-                                    selectedDate ?? null,
-                                    selectedMonth,
-                                    value,
-                                    null,
-                                    pipeline,
-                                    ticketId,
-                                    currentPage.value,
-                                    pageSize.value));
+                                .add(FetchTableDataEvent(
+                                    selectedDate:  selectedDate ?? null,
+                                   selectedMonth:  selectedMonth,
+                                   selectedClassification:  value,
+                                   selectedClassificationValidation:  null,
+                                   selectedPipeline:  pipeline,
+                                   ticketId:  ticketId,
+                                   page:  currentPage.value,
+                                   pageSize:  pageSize.value));
                             onFilterChanged(
                                 FilterChangeType.classification, value);
                           }
@@ -259,7 +259,7 @@ class DashboardFilterWidget extends StatelessWidget {
                             state.selectedValidation ?? "";
                       }
                       final validationItems = [
-                        'Not Updated',
+                        'Not Validated',
                         'All',
                         'Correct',
                         'Incorrect'
@@ -273,8 +273,8 @@ class DashboardFilterWidget extends StatelessWidget {
                                 : selectedClassificationValidation == 'all'
                                     ? 'All'
                                     : selectedClassificationValidation ==
-                                            'not updated'
-                                        ? 'Not Updated'
+                                            'not validated'
+                                        ? 'Not Validated'
                                         : selectedClassificationValidation,
                         items: validationItems,
                         onChanged: (String? value) {
@@ -284,15 +284,15 @@ class DashboardFilterWidget extends StatelessWidget {
                             String lowercaseValue = value.toLowerCase();
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
-                                .add(FilterValidationEvent(
-                                    lowercaseValue,
-                                    selectedDate ?? null,
-                                    selectedMonth,
-                                    selectedClassification ?? "",
-                                    pipeline,
-                                    ticketId,
-                                    currentPage.value,
-                                    pageSize.value));
+                                .add(FetchTableDataEvent(
+                                    selectedClassificationValidation:  lowercaseValue,
+                                    selectedDate:  selectedDate ?? null,
+                                    selectedMonth:  selectedMonth,
+                                  selectedClassification:   selectedClassification ?? "",
+                                  selectedPipeline:   pipeline,
+                                  ticketId:   ticketId,
+                                  page:   currentPage.value,
+                                  pageSize:   pageSize.value));
                             onFilterChanged(FilterChangeType.validation, value);
                           }
                         },
@@ -387,12 +387,12 @@ class DashboardFilterWidget extends StatelessWidget {
                                                 BlocProvider.of<PlutotableBloc>(
                                                         context)
                                                     .add(
-                                                  SearchTableEvent(
+                                                  FetchTableDataEvent(
                                                       ticketId: value,
-                                                      selectDate: selectedDate,
-                                                      selectMonth:
+                                                      selectedDate: selectedDate,
+                                                      selectedMonth:
                                                           selectedMonth,
-                                                      pipeline: pipeline),
+                                                      selectedPipeline: pipeline),
                                                 );
                                               }
                                             },

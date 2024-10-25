@@ -430,6 +430,16 @@ class S {
     );
   }
 
+  //validation exists
+  String get validationExists {
+    return Intl.message(
+      'Validation Exists',
+      name: 'validationExists',
+      desc: 'Validation Existss',
+      args: [],
+    );
+  }
+
   //no
   String get no {
     return Intl.message(

@@ -429,24 +429,14 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                           pipeline: pipelineId,
                                         ),
                                       );
-                                       BlocProvider.of<DashboardBloc>(
-                                                        context)
-                                                    .add(
-                                                        GetValidationCountEvent(
-                                                            selectedDate:
-                                                                selectedDate,
-                                                            selectedPipeline:
-                                                                pipelineId ??
-                                                                    ""));
-                                                BlocProvider.of<DashboardBloc>(
-                                                        context)
-                                                    .add(
-                                                        GetValidationByCountEvent(
-                                                            selectedDate:
-                                                                selectedDate,
-                                                            selectedPipeline:
-                                                                pipelineId ??
-                                                                    ""));
+                                  BlocProvider.of<DashboardBloc>(context).add(
+                                      GetValidationCountEvent(
+                                          selectedDate: selectedDate,
+                                          selectedPipeline: pipelineId ?? ""));
+                                  BlocProvider.of<DashboardBloc>(context).add(
+                                      GetValidationByCountEvent(
+                                          selectedDate: selectedDate,
+                                          selectedPipeline: pipelineId ?? ""));
                                 }
                               } else {
                                 setState(() {
@@ -459,28 +449,38 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                     return BlocProvider.value(
                                       value: context.read<PlutotableBloc>(),
                                       child: AlertDialog(
-                                        title: const Text("Validation Exists"),
+                                        title:  Text(S.of(context).validationExists),
                                         content: Text(state
                                                 .getValidationDetailsAttributeModel
                                                 ?.data
                                                 ?.message ??
                                             ""),
                                         actions: <Widget>[
-                                          TextButton(
-                                            child: Text(S.of(context).ok),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  SupportBotColors.bluePrimary,
+                                              foregroundColor:
+                                                  SupportBotColors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                      horizontal: 40),
+                                            ),
                                             onPressed: () {
-                                              // BlocProvider.of<PlutotableBloc>(
-                                              //         context)
-                                              //     .add(FetchTableDataEvent(
-                                              //         selectedDate:
-                                              //             selectedDate,
-                                              //         selectedMonth:
-                                              //             selectedMonth,
-                                              //         selectedPipeline:
-                                              //             pipelineId));
-
                                               Navigator.of(context).pop();
                                             },
+                                            child: Text(
+                                              S.of(context).ok,
+                                              style: SupportBotTextstyle.hint
+                                                  .copyWith(
+                                                color: SupportBotColors.white,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),

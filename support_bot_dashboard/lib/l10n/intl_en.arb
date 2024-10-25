@@ -146,5 +146,9 @@
   "userValidation": "User Validation",
   "@userValidation":{
     "description": "User Validation"
+  },
+  "validationExists": "Validation Exists",
+  "@validationExists":{
+    "description": "Validation Exists"
   }
 }

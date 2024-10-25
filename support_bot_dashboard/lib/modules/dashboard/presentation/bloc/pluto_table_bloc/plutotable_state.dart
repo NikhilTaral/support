@@ -15,19 +15,18 @@ class FetchTableDataSuccess extends PlutotableState {
   final bool? noDataAvailable;
   final String? selectedPipeline;
   final String? ticketId;
-    final GetValidationDetailsAttributeModel? getValidationDetailsAttributeModel;
+  final GetValidationDetailsAttributeModel? getValidationDetailsAttributeModel;
 
   FetchTableDataSuccess(
       {required this.tableData,
       required this.selectedDate,
       required this.selectedMonth,
-       this.selectedClassification,
-       this.selectedValidation,
-       this.noDataAvailable,
+      this.selectedClassification,
+      this.selectedValidation,
+      this.noDataAvailable,
       required this.selectedPipeline,
       this.ticketId,
-      this.getValidationDetailsAttributeModel
-      });
+      this.getValidationDetailsAttributeModel});
 }
 
 class FetchTableDataError extends PlutotableState {
@@ -70,25 +69,15 @@ class UpdateValidationSuccess extends PlutotableState {
   final String updatedValidation;
 
   UpdateValidationSuccess(
-      {required this.selectedDate, required this.selectedMonth, required this.updatedValidation});
+      {required this.selectedDate,
+      required this.selectedMonth,
+      required this.updatedValidation});
 }
 
 class UpdateValidationError extends PlutotableState {
   final String errorMessage;
 
   UpdateValidationError({required this.errorMessage});
-}
-
-class CustomSidebarInitial extends PlutotableState {
-  final int initialIndex;
-
-  CustomSidebarInitial(this.initialIndex);
-}
-
-class CustomSidebarLoaded extends PlutotableState {
-  final int currentIndex;
-
-  CustomSidebarLoaded(this.currentIndex);
 }
 
 final class RevertClassificationSuccessState extends PlutotableState {
@@ -127,24 +116,13 @@ final class UnRevertClassificationFailureState extends PlutotableState {
   UnRevertClassificationFailureState({required this.message});
 }
 
-final class SearchFailureState extends PlutotableState {
-  final String message;
+class GetValidationDetailsLoading extends GetValidationDetailsActionState {}
 
-  SearchFailureState({required this.message});
-}
+class GetValidationDetailsActionState extends PlutotableState {}
 
-// class GetValidationDetailsSuccess extends PlutotableState{
-//   final GetValidationDetailsAttributeModel getValidationDetailsAttributeModel;
+class GetValidationDetailsEmpty extends PlutotableState {}
 
-//   GetValidationDetailsSuccess({required this.getValidationDetailsAttributeModel});
-// }
-
-class GetValidationDetailsLoading extends GetValidationDetailsActionState{}
-class GetValidationDetailsActionState extends PlutotableState{}
-
-class GetValidationDetailsEmpty extends PlutotableState{}
-
-class GetValidationDetailsFailure extends PlutotableState{
+class GetValidationDetailsFailure extends PlutotableState {
   final String? message;
 
   GetValidationDetailsFailure({required this.message});

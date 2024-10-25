@@ -61,75 +61,6 @@ class UpdateValidationEvent extends PlutotableEvent {
       });
 }
 
-class SelectClassificationEvent extends PlutotableEvent {
-  final String selectedClassification;
-
-  SelectClassificationEvent({required this.selectedClassification});
-}
-
-class SelectPipelineEvent extends PlutotableEvent {
-  final String selectedPipeline;
-
-  SelectPipelineEvent({required this.selectedPipeline});
-}
-
-class FilterClassificationEvent extends PlutotableEvent {
-  final String selectedClassification;
-  final String? pipeline;
-  final String? ticketId;
-  final String? selectedClassificationValidation;
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
-  final num? page;
-  final num? pageSize;
-
-  FilterClassificationEvent(
-      this.selectedDate,
-      this.selectedMonth,
-      this.selectedClassification,
-      this.selectedClassificationValidation,
-      this.pipeline,
-      this.ticketId,
-      this.page,
-      this.pageSize);
-}
-
-class FilterValidationEvent extends PlutotableEvent {
-  final String selectedClassificationValidation;
-  final String selectedClassification;
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
-  final String? pipeline;
-  final String? ticketId;
-  final num? page;
-  final num? pageSize;
-
-  FilterValidationEvent(
-      this.selectedClassificationValidation,
-      this.selectedDate,
-      this.selectedMonth,
-      this.selectedClassification,
-      this.pipeline,
-      this.ticketId,
-      this.page,
-      this.pageSize);
-}
-
-// class FilterPipelineEvent extends PlutotableEvent {
-//   final DateTime selectedDate;
-//   final DateTime selectedMonth;
-//   final String selectedPipeline;
-
-//   FilterPipelineEvent(
-//       this.selectedDate, this.selectedMonth, this.selectedPipeline);
-// }
-
-class CustomSidebarLoadRowData extends PlutotableEvent {
-  final int rowIndex;
-
-  CustomSidebarLoadRowData(this.rowIndex);
-}
-
 class RevertClassificationEvent extends PlutotableEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
@@ -152,27 +83,6 @@ class UnRevertClassificationEvent extends PlutotableEvent {
       required this.selectedMonth,
       required this.ticketId,
       required this.selectedClassification});
-}
-
-class SearchTableEvent extends PlutotableEvent {
-  final DateTime? selectDate;
-  final DateTime? selectMonth;
-  final String? classification;
-  final String? classificationValidation;
-  final String? pipeline;
-  final String? ticketId;
-  final num? page;
-  final num? pageSize;
-
-  SearchTableEvent(
-      {required this.selectDate,
-      required this.selectMonth,
-      required this.ticketId,
-      this.pipeline,
-      this.classification,
-      this.classificationValidation,
-      this.page,
-      this.pageSize});
 }
 
 class GetValidationDetailsEvent extends PlutotableEvent{
