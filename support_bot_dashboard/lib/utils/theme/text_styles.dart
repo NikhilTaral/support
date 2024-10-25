@@ -32,7 +32,7 @@ class SupportBotTextstyle {
   //Piechart heading
   static const TextStyle pierchartHeading = TextStyle(
       fontFamily: _fontFamily,
-      fontSize: 22,
+      fontSize: 18,
       fontWeight: FontWeight.w600,
       color: SupportBotColors.black);
 

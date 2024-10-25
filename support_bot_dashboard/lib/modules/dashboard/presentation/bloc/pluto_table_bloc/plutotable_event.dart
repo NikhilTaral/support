@@ -48,6 +48,7 @@ class UpdateValidationEvent extends PlutotableEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String pipeline;
+  final String? classification;
 
   UpdateValidationEvent(
       {this.selectedDate,
@@ -55,76 +56,9 @@ class UpdateValidationEvent extends PlutotableEvent {
       required this.id,
       required this.pipeline,
       required this.validation,
-      required this.reason});
-}
-
-class SelectClassificationEvent extends PlutotableEvent {
-  final String selectedClassification;
-
-  SelectClassificationEvent({required this.selectedClassification});
-}
-
-class SelectPipelineEvent extends PlutotableEvent {
-  final String selectedPipeline;
-
-  SelectPipelineEvent({required this.selectedPipeline});
-}
-
-class FilterClassificationEvent extends PlutotableEvent {
-  final String selectedClassification;
-  final String pipeline;
-  final String? ticketId;
-  final String? selectedClassificationValidation;
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
-  final num? page;
-  final num? pageSize;
-
-  FilterClassificationEvent(
-      this.selectedDate,
-      this.selectedMonth,
-      this.selectedClassification,
-      this.selectedClassificationValidation,
-      this.pipeline,
-      this.ticketId,
-      this.page,
-      this.pageSize);
-}
-
-class FilterValidationEvent extends PlutotableEvent {
-  final String selectedClassificationValidation;
-  final String selectedClassification;
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
-  final String? pipeline;
-  final String? ticketId;
-  final num? page;
-  final num? pageSize;
-
-  FilterValidationEvent(
-      this.selectedClassificationValidation,
-      this.selectedDate,
-      this.selectedMonth,
-      this.selectedClassification,
-      this.pipeline,
-      this.ticketId,
-      this.page,
-      this.pageSize);
-}
-
-// class FilterPipelineEvent extends PlutotableEvent {
-//   final DateTime selectedDate;
-//   final DateTime selectedMonth;
-//   final String selectedPipeline;
-
-//   FilterPipelineEvent(
-//       this.selectedDate, this.selectedMonth, this.selectedPipeline);
-// }
-
-class CustomSidebarLoadRowData extends PlutotableEvent {
-  final int rowIndex;
-
-  CustomSidebarLoadRowData(this.rowIndex);
+      required this.reason,
+      this.classification
+      });
 }
 
 class RevertClassificationEvent extends PlutotableEvent {
@@ -151,23 +85,11 @@ class UnRevertClassificationEvent extends PlutotableEvent {
       required this.selectedClassification});
 }
 
-class SearchTableEvent extends PlutotableEvent {
+class GetValidationDetailsEvent extends PlutotableEvent{
+  final String? ticketId;
   final DateTime? selectDate;
   final DateTime? selectMonth;
-  final String? classification;
-  final String? classificationValidation;
   final String? pipeline;
-  final String? ticketId;
-  final num? page;
-  final num? pageSize;
 
-  SearchTableEvent(
-      {required this.selectDate,
-      required this.selectMonth,
-      required this.ticketId,
-      this.pipeline,
-      this.classification,
-      this.classificationValidation,
-      this.page,
-      this.pageSize});
+  GetValidationDetailsEvent({required this.ticketId, this.selectDate, this.selectMonth, this.pipeline});
 }

@@ -22,9 +22,3 @@ class DashboardPipelineFailure extends DashboardPipelineState{
 
   DashboardPipelineFailure({required this.message});
 }
-
-class UpdatePipeline extends DashboardPipelineState{
-  final String? pipeline;
-
-  UpdatePipeline({required this.pipeline});
-}
