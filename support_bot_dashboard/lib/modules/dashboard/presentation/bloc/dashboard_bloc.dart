@@ -104,7 +104,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onGetValidationCount(
       GetValidationCountEvent event, Emitter<DashboardState> emit) async {
-    // emit(DashboardDataLoading());
+    emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardGetValidationCountUsecase>();
     final response = await repository.invoke(
         event.selectedDate, event.selectedMonth, event.selectedPipeline);
@@ -138,7 +138,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onGetValidationByCountEvent(
       GetValidationByCountEvent event, Emitter<DashboardState> emit) async {
-    // emit(DashboardDataLoading());
+    emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
     final response = await repository.invoke(
         event.selectedDate, event.selectedMonth, event.selectedPipeline);
@@ -176,7 +176,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onGetUserSettingsEvent(
       GetUserSettingsEvent event, Emitter<DashboardState> emit) async {
-    emit(UserSettingsLoadingState());
+    emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardGetUserSettingsUsecase>();
     final AuthService authService = serviceLocator<AuthService>();
 

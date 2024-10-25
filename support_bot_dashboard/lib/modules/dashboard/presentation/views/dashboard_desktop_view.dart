@@ -612,6 +612,7 @@ class DashboardDesktopView extends StatelessWidget {
                                   }
                                 },
                               ),
+                              UIHelpers.verticalSpaceTiny,
                               BlocBuilder<DashboardBloc, DashboardState>(
                                 builder: (context, state) {
                                   if (state is DashboardDataLoading) {
