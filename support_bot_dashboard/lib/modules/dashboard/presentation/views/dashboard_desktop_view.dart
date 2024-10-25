@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_que
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_pipeline/dashboard_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/export_bloc/export_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
@@ -102,7 +103,7 @@ class DashboardDesktopView extends StatelessWidget {
             create: (context) => serviceLocator<DashboardPipelineBloc>()
               ..add(FilterPipelineEvent(
                   DateTime.now(), null, 'Expert Care Level 1'))),
-      
+        BlocProvider(create: (context)=> serviceLocator<ExportBloc>())
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -611,6 +612,7 @@ class DashboardDesktopView extends StatelessWidget {
                                   }
                                 },
                               ),
+                              UIHelpers.verticalSpaceTiny,
                               BlocBuilder<DashboardBloc, DashboardState>(
                                 builder: (context, state) {
                                   if (state is DashboardDataLoading) {
@@ -622,6 +624,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       radius: 8,
                                     );
                                   } else if (state is DashboardDataSuccess) {
+                                   
                                     return PieChartWidget(
                                         validationCount: state
                                             .getValidationCountAttributeModel,
@@ -645,7 +648,7 @@ class DashboardDesktopView extends StatelessWidget {
                                         height:
                                             UIHelpers.screenHeight(context) *
                                                 0.75,
-                                        child: const EmptyWidget());
+                                        child: Center(child: const EmptyWidget()));
                                   } else {
                                     return Container();
                                   }

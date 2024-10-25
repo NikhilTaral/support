@@ -7,6 +7,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_user_settings_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
@@ -69,7 +70,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                  if(widget.isAIQuery == false)
+                if (widget.isAIQuery == false)
                   IconButton(
                     onPressed: currentChartIndex > 0
                         ? () {
@@ -97,7 +98,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                   if(widget.isAIQuery == false)
+                if (widget.isAIQuery == false)
                   IconButton(
                     onPressed: currentChartIndex < 2
                         ? () {
@@ -117,50 +118,57 @@ class PieChartWidgetState extends State<PieChartWidget> {
               padding: const EdgeInsets.only(right: 10, left: 10),
               child: Divider(color: SupportBotColors.blueSecondary.shade200),
             ),
-            SizedBox(
-              height: UIHelpers.screenHeight(context) * 0.5,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                                .touchedSection?.touchedSectionIndex ??
-                            0;
-                      });
-                    },
-                  ),
-                  centerSpaceRadius: 1,
-                  sectionsSpace: 1,
-                  sections: List.generate(
-                    nonZeroChartData.length,
-                    (index) {
-                      final isTouched = index == touchedIndex;
-                      final double fontSize = isTouched ? 12 : 14;
-                      return PieChartSectionData(
-                        value: nonZeroChartData[index].value?.toDouble() ?? 0.0,
-                        title: isTouched
-                            ? '${nonZeroChartData[index].label}\n${nonZeroChartData[index].value}'
-                            : null,
-                        color: blueShades[index % blueShades.length],
-                        radius: radius,
-                        titleStyle:
-                            SupportBotTextstyle.pierchartNormal.copyWith(
-                          fontSize: fontSize,
-                        ),
-                        showTitle: true,
-                      );
-                    },
+            if (nonZeroChartData.isEmpty)
+              SizedBox(
+                  width: UIHelpers.screenWidth(context) * 0.19,
+                  height: UIHelpers.screenHeight(context) * 0.6,
+                  child: const Center(child: EmptyWidget())),
+            if (nonZeroChartData.isNotEmpty)
+              SizedBox(
+                height: UIHelpers.screenHeight(context) * 0.5,
+                child: PieChart(
+                  PieChartData(
+                    pieTouchData: PieTouchData(
+                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            touchedIndex = -1;
+                            return;
+                          }
+                          touchedIndex = pieTouchResponse
+                                  .touchedSection?.touchedSectionIndex ??
+                              0;
+                        });
+                      },
+                    ),
+                    centerSpaceRadius: 1,
+                    sectionsSpace: 1,
+                    sections: List.generate(
+                      nonZeroChartData.length,
+                      (index) {
+                        final isTouched = index == touchedIndex;
+                        final double fontSize = isTouched ? 12 : 14;
+                        return PieChartSectionData(
+                          value:
+                              nonZeroChartData[index].value?.toDouble() ?? 0.0,
+                          title: isTouched
+                              ? '${nonZeroChartData[index].label}\n${nonZeroChartData[index].value}'
+                              : null,
+                          color: blueShades[index % blueShades.length],
+                          radius: radius,
+                          titleStyle:
+                              SupportBotTextstyle.pierchartNormal.copyWith(
+                            fontSize: fontSize,
+                          ),
+                          showTitle: true,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
             UIHelpers.verticalSpaceTinySmall,
             Expanded(
               child: SingleChildScrollView(
@@ -233,25 +241,30 @@ class PieChartWidgetState extends State<PieChartWidget> {
         ];
       }
     } else if (currentChartIndex == 1) {
-        return [
-          ChartData(
-              label: 'Correct', value: widget.validationCount?.correct ?? 0),
-          ChartData(
-              label: 'Incorrect',
-              value: widget.validationCount?.incorrect ?? 0),
-          ChartData(
-              label: 'Not Validated',
-              value: widget.validationCount?.notValidated ?? 0)
-        ];
+      return [
+        ChartData(
+            label: 'Correct', value: widget.validationCount?.correct ?? 0),
+        ChartData(
+            label: 'Incorrect', value: widget.validationCount?.incorrect ?? 0),
+        ChartData(
+            label: 'Not Validated',
+            value: widget.validationCount?.notValidated ?? 0)
+      ];
     } else if (currentChartIndex == 2) {
-      if (currentChartIndex == 2) {
-          if (widget.validationByCount?.data != null) {
-            return widget.validationByCount!.data!.entries.map((entry) {
-              return ChartData(label: entry.key, value: entry.value);
-            }).toList();
-        }
-      }
+       if (widget.validationByCount?.data != null) {
+      return widget.validationByCount!.data!.entries.map((entry) {
+        final email = entry.key;
+        final name = email.split('@').first.replaceAll('.', ' ').capitalize();
+        return ChartData(label: name, value: entry.value);
+      }).toList();
+    }
     }
     return [];
+  }
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return split(' ').map((word) => word[0].toUpperCase() + word.substring(1)).join(' ');
   }
 }

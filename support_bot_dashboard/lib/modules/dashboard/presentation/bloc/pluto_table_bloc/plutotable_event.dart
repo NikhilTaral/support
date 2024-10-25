@@ -59,6 +59,7 @@ class UpdateValidationEvent extends PlutotableEvent {
       required this.reason,
       this.classification
       });
+>>>>>>>>> Temporary merge branch 2
 }
 
 class SelectClassificationEvent extends PlutotableEvent {
@@ -152,27 +153,6 @@ class UnRevertClassificationEvent extends PlutotableEvent {
       required this.selectedMonth,
       required this.ticketId,
       required this.selectedClassification});
-}
-
-class SearchTableEvent extends PlutotableEvent {
-  final DateTime? selectDate;
-  final DateTime? selectMonth;
-  final String? classification;
-  final String? classificationValidation;
-  final String? pipeline;
-  final String? ticketId;
-  final num? page;
-  final num? pageSize;
-
-  SearchTableEvent(
-      {required this.selectDate,
-      required this.selectMonth,
-      required this.ticketId,
-      this.pipeline,
-      this.classification,
-      this.classificationValidation,
-      this.page,
-      this.pageSize});
 }
 
 class GetValidationDetailsEvent extends PlutotableEvent{

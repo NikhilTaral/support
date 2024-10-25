@@ -90,7 +90,7 @@ class S {
     );
   }
 
-    /// `Validation Status`
+  /// `Validation Status`
   String get validationStatus {
     return Intl.message(
       'Validation Status',
@@ -109,7 +109,6 @@ class S {
       args: [],
     );
   }
-  
 
   /// `Spam`
   String get spam {
@@ -381,10 +380,10 @@ class S {
     );
   }
 
-    /// `UpdateSuccess`
+  /// `UpdateSuccess`
   String get UpdateSuccess {
     return Intl.message(
-      'Ticket Stage Updated Successfully',
+      'Do you want to mark this ticket as No Contact Needed/Spam in HubSpot?',
       name: 'UpdateSuccess',
       desc: 'Ticket Stage Updated successfully',
       args: [],
@@ -417,6 +416,36 @@ class S {
       'Ok',
       name: 'ok',
       desc: 'Ok',
+      args: [],
+    );
+  }
+
+  //yes
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: 'Yes',
+      args: [],
+    );
+  }
+
+  //validation exists
+  String get validationExists {
+    return Intl.message(
+      'Validation Exists',
+      name: 'validationExists',
+      desc: 'Validation Existss',
+      args: [],
+    );
+  }
+
+  //no
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: 'No',
       args: [],
     );
   }

@@ -115,11 +115,11 @@ class DashboardFilterWidget extends StatelessWidget {
                                   pageSize: pageSize.value));
                           BlocProvider.of<DashboardBloc>(context).add(
                               GetValidationCountEvent(
-                                  selectedDate: selectedDate,
+                                  selectedDate: newDate,
                                   selectedPipeline: pipeline ?? ""));
                           BlocProvider.of<DashboardBloc>(context).add(
                               GetValidationByCountEvent(
-                                  selectedDate: selectedDate,
+                                  selectedDate: newDate,
                                   selectedPipeline: pipeline ?? ""));
                           onFilterChanged(FilterChangeType.date, newDate);
                         },
@@ -174,11 +174,11 @@ class DashboardFilterWidget extends StatelessWidget {
                                     pageSize: pageSize.value));
                             BlocProvider.of<DashboardBloc>(context).add(
                                 GetValidationCountEvent(
-                                    selectedMonth: selectedMonth,
+                                    selectedMonth: monthDateTime,
                                     selectedPipeline: pipeline ?? ""));
                             BlocProvider.of<DashboardBloc>(context).add(
                                 GetValidationByCountEvent(
-                                    selectedMonth: selectedMonth,
+                                    selectedMonth: monthDateTime,
                                     selectedPipeline: pipeline ?? ""));
                             onFilterChanged(FilterChangeType.month, value);
                           }
@@ -203,6 +203,7 @@ class DashboardFilterWidget extends StatelessWidget {
                       } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
                       }
+
                       final classificationItems = [
                         'All',
                         'Spam/Marketing',
@@ -219,15 +220,15 @@ class DashboardFilterWidget extends StatelessWidget {
                             pageSize.value = 10;
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
-                                .add(FilterClassificationEvent(
-                                    selectedDate ?? null,
-                                    selectedMonth,
-                                    value,
-                                    null,
-                                    pipeline,
-                                    ticketId,
-                                    currentPage.value,
-                                    pageSize.value));
+                                .add(FetchTableDataEvent(
+                                    selectedDate:  selectedDate ?? null,
+                                   selectedMonth:  selectedMonth,
+                                   selectedClassification:  value,
+                                   selectedClassificationValidation:  null,
+                                   selectedPipeline:  pipeline,
+                                   ticketId:  ticketId,
+                                   page:  currentPage.value,
+                                   pageSize:  pageSize.value));
                             onFilterChanged(
                                 FilterChangeType.classification, value);
                           }
@@ -258,7 +259,7 @@ class DashboardFilterWidget extends StatelessWidget {
                             state.selectedValidation ?? "";
                       }
                       final validationItems = [
-                        'Not Updated',
+                        'Not Validated',
                         'All',
                         'Correct',
                         'Incorrect'
@@ -272,8 +273,8 @@ class DashboardFilterWidget extends StatelessWidget {
                                 : selectedClassificationValidation == 'all'
                                     ? 'All'
                                     : selectedClassificationValidation ==
-                                            'not updated'
-                                        ? 'Not Updated'
+                                            'not validated'
+                                        ? 'Not Validated'
                                         : selectedClassificationValidation,
                         items: validationItems,
                         onChanged: (String? value) {
@@ -283,15 +284,15 @@ class DashboardFilterWidget extends StatelessWidget {
                             String lowercaseValue = value.toLowerCase();
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
-                                .add(FilterValidationEvent(
-                                    lowercaseValue,
-                                    selectedDate ?? null,
-                                    selectedMonth,
-                                    selectedClassification ?? "",
-                                    pipeline,
-                                    ticketId,
-                                    currentPage.value,
-                                    pageSize.value));
+                                .add(FetchTableDataEvent(
+                                    selectedClassificationValidation:  lowercaseValue,
+                                    selectedDate:  selectedDate ?? null,
+                                    selectedMonth:  selectedMonth,
+                                  selectedClassification:   selectedClassification ?? "",
+                                  selectedPipeline:   pipeline,
+                                  ticketId:   ticketId,
+                                  page:   currentPage.value,
+                                  pageSize:   pageSize.value));
                             onFilterChanged(FilterChangeType.validation, value);
                           }
                         },
@@ -386,12 +387,12 @@ class DashboardFilterWidget extends StatelessWidget {
                                                 BlocProvider.of<PlutotableBloc>(
                                                         context)
                                                     .add(
-                                                  SearchTableEvent(
+                                                  FetchTableDataEvent(
                                                       ticketId: value,
-                                                      selectDate: selectedDate,
-                                                      selectMonth:
+                                                      selectedDate: selectedDate,
+                                                      selectedMonth:
                                                           selectedMonth,
-                                                      pipeline: pipeline),
+                                                      selectedPipeline: pipeline),
                                                 );
                                               }
                                             },
@@ -409,9 +410,26 @@ class DashboardFilterWidget extends StatelessWidget {
                   ),
                   Tooltip(
                     message: S.of(context).export,
-                    child: const ExportButton(
-                        icon: 'assets/icons/Export.svg',
-                        selectedButtonText: "Ticket Classification"),
+                    child: BlocBuilder<PlutotableBloc, PlutotableState>(
+                      builder: (context, state) {
+                         if (state is FetchTableDataSuccess) {
+                          selectedDate = state.selectedDate;
+                          selectedMonth = state.selectedMonth;
+                          selectedClassification = state.selectedClassification;
+                          selectedClassificationValidation = state.selectedValidation ?? '';
+                        }
+                        return ExportButton(
+                          icon: 'assets/icons/Export.svg',
+                          selectedButtonText: "Ticket Classification",
+                          selectedDate: selectedDate,
+                          selectedMonth: selectedMonth,
+                          selectedClassification: selectedClassification,
+                          selectedClassificationValidation:
+                              selectedClassificationValidation,
+                          selectedPipeline: pipeline,
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

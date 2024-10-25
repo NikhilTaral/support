@@ -155,7 +155,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         data: model.data,
       );
 
-        if (getValidationByCountAttribute?.data != null) {
+     
           emit(DashboardDataSuccess(
               pieChartData: dashboardChartData,
               selectedDate: event.selectedDate,
@@ -164,9 +164,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               getValidationCountAttributeModel: getValidationCountAttribute,
               getValidationByCountAttributeModel:
                   getValidationByCountAttribute ));
-        } else {
-          emit(DashboardDataEmpty());
-        }
+       
       } catch (e) {
         emit(DashboardDataError(
             selectedDate: event.selectedDate ?? DateTime.now(),
@@ -178,7 +176,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _onGetUserSettingsEvent(
       GetUserSettingsEvent event, Emitter<DashboardState> emit) async {
-    emit(UserSettingsLoadingState());
+    emit(DashboardDataLoading());
     final repository = serviceLocator<DashboardGetUserSettingsUsecase>();
     final AuthService authService = serviceLocator<AuthService>();
 

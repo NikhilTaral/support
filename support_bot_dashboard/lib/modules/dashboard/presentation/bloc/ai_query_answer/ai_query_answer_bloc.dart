@@ -16,7 +16,6 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     on<SelectedDateEvent>(_onSelectedDateEvent);
     on<SelectedMonthEvent>(_onSelectedMonthEvent);
     on<UpdateAiAnswerInitialEvent>(_onUpdateAiAnswers);
- 
   }
 
   FutureOr<void> _onAiQueryAnswerEvent(
@@ -25,7 +24,12 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     try {
       final repository = serviceLocator<DashboardAiQueryUsecase>();
       final response = await repository.invoke(
-          event.selectedDate, event.selectedMonth, event.selectedPipeline, event.page, event.pageSize,event.selectedClassification);
+          event.selectedDate,
+          event.selectedMonth,
+          event.selectedPipeline,
+          event.page,
+          event.pageSize,
+          event.selectedClassification);
       if (response.isLeft) {
         emit(AiQUeryAnswerFailure(message: 'Failed to fetch data'));
       } else {
@@ -56,10 +60,10 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
             selectedMonth: event.selectedMonth ?? DateTime(2024 - 01),
             selectedClassification: event.selectedClassification,
             classification: event.selectedClassification == true
-                  ? 'Answered'
-                  : event.selectedClassification == false
-                      ? 'Not Answered'
-                      : 'Select'));
+                ? 'Answered'
+                : event.selectedClassification == false
+                    ? 'Not Answered'
+                    : 'Select'));
       }
     } catch (e) {
       emit(AiQUeryAnswerFailure(message: 'Exception occured $e'));
@@ -74,7 +78,10 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     add(FetchAiQueryAnswerEvent(
         selectedDate: event.selectedDate,
         selectedMonth: null,
-        selectedPipeline: event.selectedPipeline, page: event.page,pageSize: event.pageSize, selectedClassification: null));
+        selectedPipeline: event.selectedPipeline,
+        page: event.page,
+        pageSize: event.pageSize,
+        selectedClassification: null));
   }
 
   FutureOr<void> _onSelectedMonthEvent(
@@ -85,7 +92,10 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     add(FetchAiQueryAnswerEvent(
         selectedDate: null,
         selectedMonth: event.selectedMonth,
-        selectedPipeline: event.selectedPipeline,page: event.page,pageSize: event.pageSize,selectedClassification: null));
+        selectedPipeline: event.selectedPipeline,
+        page: event.page,
+        pageSize: event.pageSize,
+        selectedClassification: null));
   }
 
   FutureOr<void> _onUpdateAiAnswers(UpdateAiAnswerInitialEvent event,
@@ -102,6 +112,4 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         ticketId: event.ticketId,
         newAnswer: event.newAnswer));
   }
-
- 
 }

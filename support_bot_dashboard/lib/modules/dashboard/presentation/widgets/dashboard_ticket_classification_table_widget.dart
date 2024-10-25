@@ -4,12 +4,14 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ticket_classification_gridkey.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_sidebar.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
@@ -210,7 +212,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                               UIHelpers.screenHeight(context) *
                                                   0.3,
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               TextField(
@@ -251,7 +254,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                                     0.05,
                                                 child: DropdownButtonFormField<
                                                     String>(
-                                                  value: _selectedClassification,
+                                                  value:
+                                                      _selectedClassification,
                                                   items: [
                                                     'Select',
                                                     'Spam/Marketing',
@@ -369,16 +373,35 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                                         context)
                                                     .add(
                                                   UpdateValidationEvent(
-                                                    id: rowId,
-                                                    validation: 'Incorrect',
-                                                    reason: reason,
-                                                    selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
-                                                    pipeline: pipelineId,
-                                                    classification: _selectedClassification
-                                                  ),
+                                                      id: rowId,
+                                                      validation: 'Incorrect',
+                                                      reason: reason,
+                                                      selectedDate:
+                                                          selectedDate,
+                                                      selectedMonth:
+                                                          selectedMonth,
+                                                      pipeline: pipelineId,
+                                                      classification:
+                                                          _selectedClassification),
                                                 );
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                pipelineId ??
+                                                                    ""));
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationByCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                pipelineId ??
+                                                                    ""));
                                                 Navigator.of(dialogContext)
                                                     .pop();
                                               } else {
@@ -403,9 +426,17 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                           reason: '',
                                           selectedDate: selectedDate,
                                           selectedMonth: selectedMonth,
-                                          pipeline: pipeline,
+                                          pipeline: pipelineId,
                                         ),
                                       );
+                                  BlocProvider.of<DashboardBloc>(context).add(
+                                      GetValidationCountEvent(
+                                          selectedDate: selectedDate,
+                                          selectedPipeline: pipelineId ?? ""));
+                                  BlocProvider.of<DashboardBloc>(context).add(
+                                      GetValidationByCountEvent(
+                                          selectedDate: selectedDate,
+                                          selectedPipeline: pipelineId ?? ""));
                                 }
                               } else {
                                 setState(() {
@@ -418,28 +449,38 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                     return BlocProvider.value(
                                       value: context.read<PlutotableBloc>(),
                                       child: AlertDialog(
-                                        title: const Text("Validation Exists"),
+                                        title:  Text(S.of(context).validationExists),
                                         content: Text(state
                                                 .getValidationDetailsAttributeModel
                                                 ?.data
                                                 ?.message ??
                                             ""),
                                         actions: <Widget>[
-                                          TextButton(
-                                            child: Text(S.of(context).ok),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  SupportBotColors.bluePrimary,
+                                              foregroundColor:
+                                                  SupportBotColors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                      horizontal: 40),
+                                            ),
                                             onPressed: () {
-                                              BlocProvider.of<PlutotableBloc>(
-                                                      context)
-                                                  .add(FetchTableDataEvent(
-                                                      selectedDate:
-                                                          selectedDate,
-                                                      selectedMonth:
-                                                          selectedMonth,
-                                                      selectedPipeline:
-                                                          pipelineId));
-
                                               Navigator.of(context).pop();
                                             },
+                                            child: Text(
+                                              S.of(context).ok,
+                                              style: SupportBotTextstyle.hint
+                                                  .copyWith(
+                                                color: SupportBotColors.white,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -456,19 +497,22 @@ class TicketClassificationTableWidget extends StatelessWidget {
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value, style: SupportBotTextstyle.hint.copyWith(
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.none,
-                        color: SupportBotColors.black,
-                      ),),
+                        child: Text(
+                          value,
+                          style: SupportBotTextstyle.hint.copyWith(
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                            color: SupportBotColors.black,
+                          ),
+                        ),
                       );
                     }).toList(),
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                iconSize: 30,
-                iconEnabledColor: SupportBotColors.gray.shade800,
-                iconDisabledColor: SupportBotColors.gray.shade800,
-                underline: const SizedBox.shrink(),
-                dropdownColor: Colors.white,
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                    iconSize: 30,
+                    iconEnabledColor: SupportBotColors.gray.shade800,
+                    iconDisabledColor: SupportBotColors.gray.shade800,
+                    underline: const SizedBox.shrink(),
+                    dropdownColor: Colors.white,
                   );
                 },
               );
@@ -515,11 +559,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
         width: UIHelpers.screenWidth(context) * 0.07,
         textAlign: PlutoColumnTextAlign.center,
         renderer: (context) => actionsRenderer(
-          context,
-          selectedDate ?? null,
-          selectedMonth,
-          tableData
-        ),
+            context, selectedDate ?? null, selectedMonth, tableData),
       ),
     ];
 
@@ -552,8 +592,10 @@ class TicketClassificationTableWidget extends StatelessWidget {
               value:
                   item.isUpdatedToHubspot == true ? "Updated" : "Not Updated"),
           TicketClassificationGridKey.actions: PlutoCell(value: 'View'),
-          'validatedClassification': PlutoCell(value: item.validatedClassification),
-          'classificationValidatedBy': PlutoCell(value: item.classificationValidatedBy)
+          'validatedClassification':
+              PlutoCell(value: item.validatedClassification),
+          'classificationValidatedBy':
+              PlutoCell(value: item.classificationValidatedBy)
         },
       );
     }).toList();
@@ -696,11 +738,10 @@ class TicketClassificationTableWidget extends StatelessWidget {
 }
 
 Widget actionsRenderer(
-  PlutoColumnRendererContext rendererContext,
-  DateTime? selectedDate,
-  DateTime? selectedMonth,
-    final DashboardTableAttributeModel? tableData
-) {
+    PlutoColumnRendererContext rendererContext,
+    DateTime? selectedDate,
+    DateTime? selectedMonth,
+    final DashboardTableAttributeModel? tableData) {
   final id =
       rendererContext.row.cells[TicketClassificationGridKey.id]?.value ?? "";
   final rows = rendererContext.stateManager.refRows.toList();
@@ -746,9 +787,7 @@ Widget actionsRenderer(
                       ),
                     ),
                   ),
-                  if ((classification == 'Spam/Marketing' ||
-                          classification == 'No Action Required') &&
-                      isUpdatedToHubspot == true)
+                  if (isUpdatedToHubspot == true)
                     PopupMenuItem<String>(
                       value: S.of(context).revert,
                       child: InkWell(
@@ -761,10 +800,10 @@ Widget actionsRenderer(
                                       selectedMonth: selectedMonth,
                                       selectedClassification: classification),
                                 );
-                            _showUpdatedToHubspotPopup(
+                            _showRevertToHubspotPopup(
                                 context, S.of(context).revertSuccess);
                           } else {
-                            _showUpdatedToHubspotPopup(
+                            _showRevertToHubspotPopup(
                                 context, S.of(context).noRevert);
                           }
                         },
@@ -777,25 +816,28 @@ Widget actionsRenderer(
                         ),
                       ),
                     ),
-                  if ((classification == 'Spam/Marketing' ||
-                          classification == 'No Action Required') &&
-                      isUpdatedToHubspot == false)
+                  if (isUpdatedToHubspot == false)
                     PopupMenuItem<String>(
                       value: S.of(context).updateTicket,
                       child: InkWell(
                         onTap: () {
                           if (!isUpdatedToHubspot) {
-                            context.read<PlutotableBloc>().add(
-                                  UnRevertClassificationEvent(
-                                      ticketId: id,
-                                      selectedDate: selectedDate,
-                                      selectedMonth: selectedMonth,
-                                      selectedClassification: classification),
-                                );
                             _showUpdatedToHubspotPopup(
-                                context, S.of(context).UpdateSuccess);
+                              context,
+                              S.of(context).UpdateSuccess,
+                              () {
+                                context.read<PlutotableBloc>().add(
+                                      UnRevertClassificationEvent(
+                                        ticketId: id,
+                                        selectedDate: selectedDate ?? null,
+                                        selectedMonth: selectedMonth,
+                                        selectedClassification: classification,
+                                      ),
+                                    );
+                              },
+                            );
                           } else {
-                            _showUpdatedToHubspotPopup(
+                            _showRevertToHubspotPopup(
                                 context, S.of(context).noRevert);
                           }
                         },
@@ -818,7 +860,8 @@ Widget actionsRenderer(
   );
 }
 
-void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex, final DashboardTableAttributeModel? tableData) {
+void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex,
+    final DashboardTableAttributeModel? tableData) {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
   showDialog(
@@ -830,30 +873,91 @@ void _showSidebar(BuildContext context, List<PlutoRow> rows, int currentIndex, f
         child: SizedBox(
           width: UIHelpers.screenWidth(context) * 0.3,
           child: CustomSidebar(
-              rowData: rows[currentIndex],
-              onNext: () {
-                Navigator.pop(context);
-                if (isNextEnabled) {
-                  _showSidebar(context, rows, currentIndex + 1, tableData);
-                }
-              },
-              onPrevious: () {
-                Navigator.pop(context);
-                if (isPreviousEnabled) {
-                  _showSidebar(context, rows, currentIndex - 1, tableData);
-                }
-              },
-              isNextEnabled: isNextEnabled,
-              isPreviousEnabled: isPreviousEnabled,
-              tableData: tableData,
-              ),
+            rowData: rows[currentIndex],
+            onNext: () {
+              Navigator.pop(context);
+              if (isNextEnabled) {
+                _showSidebar(context, rows, currentIndex + 1, tableData);
+              }
+            },
+            onPrevious: () {
+              Navigator.pop(context);
+              if (isPreviousEnabled) {
+                _showSidebar(context, rows, currentIndex - 1, tableData);
+              }
+            },
+            isNextEnabled: isNextEnabled,
+            isPreviousEnabled: isPreviousEnabled,
+            tableData: tableData,
+          ),
         ),
       );
     },
   );
 }
 
-void _showUpdatedToHubspotPopup(BuildContext context, String message) {
+void _showUpdatedToHubspotPopup(
+    BuildContext context, String message, VoidCallback onYesPressed) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(S.of(context).statusUpdated),
+        content: Text(message),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: SupportBotColors.bluePrimary,
+                  foregroundColor: SupportBotColors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+                ),
+                onPressed: () {
+                  onYesPressed();
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  S.of(context).yes,
+                  style: SupportBotTextstyle.hint.copyWith(
+                    color: SupportBotColors.white,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: SupportBotColors.bluePrimary,
+                  foregroundColor: SupportBotColors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  S.of(context).no,
+                  style: SupportBotTextstyle.hint.copyWith(
+                    color: SupportBotColors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showRevertToHubspotPopup(BuildContext context, String message) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -885,4 +989,3 @@ void _showUpdatedToHubspotPopup(BuildContext context, String message) {
     },
   );
 }
-

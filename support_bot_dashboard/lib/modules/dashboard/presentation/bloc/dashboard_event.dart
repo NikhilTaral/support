@@ -13,7 +13,7 @@ class FetchDashboardDataEvent extends DashboardEvent {
 
 class UpdateSelectedDateEvent extends DashboardEvent {
   final DateTime selectedDate;
-   final String? selectedPipeline;
+  final String? selectedPipeline;
 
   UpdateSelectedDateEvent(this.selectedDate, this.selectedPipeline);
 }
