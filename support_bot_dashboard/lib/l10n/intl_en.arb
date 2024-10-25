@@ -123,6 +123,14 @@
   "@ok": {
     "description": "Ok"
   },
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes"
+  },
+  "no": "No",
+  "@no": {
+    "description": "No"
+  },
   "link": "Link",
   "@link": {
     "description": "Link"
@@ -130,5 +138,17 @@
   "isAnswerEdited": "isAnswerEdited",
   "@isAnswerEdited":{
     "description": "isAnswerEdited"
+  },
+  "validationStatus": "Validation Status",
+  "@validationStatus":{
+    "description": "Validation Status"
+  },
+  "userValidation": "User Validation",
+  "@userValidation":{
+    "description": "User Validation"
+  },
+  "validationExists": "Validation Exists",
+  "@validationExists":{
+    "description": "Validation Exists"
   }
 }

@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_que
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_pipeline/dashboard_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/export_bloc/export_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
@@ -48,12 +49,21 @@ class DashboardDesktopView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: null,
-                selectedPipeline: pipeline)),
-        ),
+            create: (context) => serviceLocator<DashboardBloc>()
+              ..add(FetchDashboardDataEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetValidationCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetValidationByCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetUserSettingsEvent())
+          ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
@@ -92,7 +102,8 @@ class DashboardDesktopView extends StatelessWidget {
         BlocProvider(
             create: (context) => serviceLocator<DashboardPipelineBloc>()
               ..add(FilterPipelineEvent(
-                  DateTime.now(), null, 'Expert Care Level 1')))
+                  DateTime.now(), null, 'Expert Care Level 1'))),
+        BlocProvider(create: (context)=> serviceLocator<ExportBloc>())
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -226,6 +237,7 @@ class DashboardDesktopView extends StatelessWidget {
                           ),
                           BlocBuilder<CustombuttonBloc, CustombuttonState>(
                             builder: (context, state) {
+                            
                               if (state is CustomButtonInitial ||
                                   (state is ButtonSelectedState &&
                                       state.selectedButtonText ==
@@ -352,7 +364,7 @@ class DashboardDesktopView extends StatelessWidget {
                                           child: const Center(
                                               child: EmptyWidget()));
                                     } else if (state is FetchTableDataSuccess) {
-                                      if (state.noDataAvailable) {
+                                      if (state.noDataAvailable == true) {
                                         return SizedBox(
                                             height: UIHelpers.screenHeight(
                                                     context) *
@@ -363,7 +375,7 @@ class DashboardDesktopView extends StatelessWidget {
                                       return TicketClassificationTableWidget(
                                         tableData: state.tableData,
                                         selectedDate:
-                                            state.selectedDate ?? null,
+                                            state.selectedDate ?? selectedDate,
                                         selectedMonth: state.selectedMonth,
                                         pipeline: pipeline,
                                         pipelineId: selectedPipelineId,
@@ -600,6 +612,7 @@ class DashboardDesktopView extends StatelessWidget {
                                   }
                                 },
                               ),
+                              UIHelpers.verticalSpaceTiny,
                               BlocBuilder<DashboardBloc, DashboardState>(
                                 builder: (context, state) {
                                   if (state is DashboardDataLoading) {
@@ -611,8 +624,14 @@ class DashboardDesktopView extends StatelessWidget {
                                       radius: 8,
                                     );
                                   } else if (state is DashboardDataSuccess) {
+                                   
                                     return PieChartWidget(
+                                        validationCount: state
+                                            .getValidationCountAttributeModel,
                                         data: state.pieChartData,
+                                        validationByCount: state
+                                            .getValidationByCountAttributeModel,
+                                        userSettingsData: state.getUserSettingsAttributeModel,
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
@@ -622,6 +641,14 @@ class DashboardDesktopView extends StatelessWidget {
                                             UIHelpers.screenHeight(context) *
                                                 0.75,
                                         color: SupportBotColors.gray);
+                                  } else if (state is DashboardDataEmpty) {
+                                    return SizedBox(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        child: Center(child: const EmptyWidget()));
                                   } else {
                                     return Container();
                                   }
@@ -863,3 +890,4 @@ class DashboardDesktopView extends StatelessWidget {
     return DateTime(2024, months[month]!);
   }
 }
+

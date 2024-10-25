@@ -24,17 +24,21 @@ class DashboardPlutotableResponseModel {
   });
 
   factory DashboardPlutotableResponseModel.fromJson(Map<String, dynamic> json) {
-  return DashboardPlutotableResponseModel(
-    data: json["data"] is List 
-        ? Data(totalRecords: 0, items: [], lastEvaluatedKey: LastEvaluatedKey(),pageSize: 10,currentPage: 1) 
-        : Data.fromJson(json["data"]),
-    success: json["success"],
-    failCode: json["failCode"],
-    params: Params.fromJson(json["params"]),
-    message: json["message"],
-  );
-}
-
+    return DashboardPlutotableResponseModel(
+      data: json["data"] is List
+          ? Data(
+              totalRecords: 0,
+              items: [],
+              lastEvaluatedKey: LastEvaluatedKey(),
+              pageSize: 10,
+              currentPage: 1)
+          : Data.fromJson(json["data"]),
+      success: json["success"],
+      failCode: json["failCode"],
+      params: Params.fromJson(json["params"]),
+      message: json["message"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "data": data.toJson(),
@@ -60,14 +64,16 @@ class Data {
     required this.lastEvaluatedKey,
   });
 
-   factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         totalRecords: json["totalRecords"] ?? 0,
-        items: json["items"] != null 
-            ? List<Item>.from(json["items"].map((x) => Item.fromJson(x))) 
+        items: json["items"] != null
+            ? List<Item>.from(json["items"].map((x) => Item.fromJson(x)))
             : [],
-          pageSize: json["pageSize"],
+        pageSize: json["pageSize"],
         currentPage: json["currentPage"],
-        lastEvaluatedKey: json["lastEvaluatedKey"] == null ? null : LastEvaluatedKey.fromJson(json["lastEvaluatedKey"]),
+        lastEvaluatedKey: json["lastEvaluatedKey"] == null
+            ? null
+            : LastEvaluatedKey.fromJson(json["lastEvaluatedKey"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -89,18 +95,21 @@ class Item {
   final CreatedAt classificationValidation;
   final CreatedAt classificationValidationReason;
   final IsUpdatedToHubspot? isUpdatedToHubspot;
+  final CreatedAt validatedClassification;
+  final CreatedAt classificationValidatedBy;
 
-  Item({
-    required this.classification,
-    required this.hsPipelineStage,
-    required this.id,
-    required this.reasoning,
-    required this.createdAt,
-    required this.ticketDescription,
-    required this.classificationValidation,
-    required this.classificationValidationReason,
-    required this.isUpdatedToHubspot,
-  });
+  Item(
+      {required this.classification,
+      required this.hsPipelineStage,
+      required this.id,
+      required this.reasoning,
+      required this.createdAt,
+      required this.ticketDescription,
+      required this.classificationValidation,
+      required this.classificationValidationReason,
+      required this.isUpdatedToHubspot,
+      required this.validatedClassification,
+      required this.classificationValidatedBy});
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
@@ -132,6 +141,12 @@ class Item {
       isUpdatedToHubspot: json["isUpdatedToHubspot"] == null
           ? null
           : IsUpdatedToHubspot.fromJson(json["isUpdatedToHubspot"]),
+      validatedClassification: json.containsKey("validatedClassification")
+          ? CreatedAt.fromJson(json["validatedClassification"])
+          : CreatedAt(s: ''),
+      classificationValidatedBy: json.containsKey("classificationValidatedBy")
+          ? CreatedAt.fromJson(json["classificationValidatedBy"])
+          : CreatedAt(s: ''),
     );
   }
 
@@ -141,35 +156,40 @@ class Item {
         "id": id.toJson(),
         "reasoning": reasoning.toJson(),
         "CreatedAt": createdAt.toJson(),
-        "ticketDescription": createdAt.toJson(),
-        "classificationValidation": createdAt.toJson(),
-        "classificationValidationReason": createdAt.toJson(),
+        "ticketDescription": ticketDescription.toJson(),
+        "classificationValidation": classificationValidation.toJson(),
+        "classificationValidationReason": classificationValidationReason.toJson(),
         "isUpdatedToHubspot": isUpdatedToHubspot?.toJson(),
+        'validatedClassification': validatedClassification.toJson(),
+        'classificationValidatedBy': classificationValidatedBy.toJson()
       };
 }
 
 class LastEvaluatedKey {
-    final CreatedAt? id;
-    final CreatedAt? dType;
-    final CreatedAt? createdAt;
+  final CreatedAt? id;
+  final CreatedAt? dType;
+  final CreatedAt? createdAt;
 
-    LastEvaluatedKey({
-        this.id,
-        this.dType,
-        this.createdAt,
-    });
+  LastEvaluatedKey({
+    this.id,
+    this.dType,
+    this.createdAt,
+  });
 
-    factory LastEvaluatedKey.fromJson(Map<String, dynamic> json) => LastEvaluatedKey(
+  factory LastEvaluatedKey.fromJson(Map<String, dynamic> json) =>
+      LastEvaluatedKey(
         id: json["id"] == null ? null : CreatedAt.fromJson(json["id"]),
         dType: json["dType"] == null ? null : CreatedAt.fromJson(json["dType"]),
-        createdAt: json["CreatedAt"] == null ? null : CreatedAt.fromJson(json["CreatedAt"]),
-    );
+        createdAt: json["CreatedAt"] == null
+            ? null
+            : CreatedAt.fromJson(json["CreatedAt"]),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id?.toJson(),
         "dType": dType?.toJson(),
         "CreatedAt": createdAt?.toJson(),
-    };
+      };
 }
 
 class CreatedAt {

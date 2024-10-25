@@ -192,7 +192,7 @@ class AuthService {
   Future<bool> _isValidToken(String? token) async {
     if (token == null) return false;
     Map<String, dynamic> decodedToken = JwtDecoder.decode(_idToken!);
-    int expiryTime = decodedToken['exp'] * 1000; // convert to milliseconds
+    int expiryTime = decodedToken['exp'] * 1000; 
     DateTime expiryDateTime = DateTime.fromMillisecondsSinceEpoch(expiryTime);
     final isTokenExpired = !(DateTime.now().isBefore(expiryDateTime));
     final audience = decodedToken['aud'] as String?;
@@ -228,6 +228,14 @@ class AuthService {
     }
   }
 
+    Future<String?> getUseremail() async {
+    if (_idToken != null) {
+      return JwtDecoder.tryDecode(_idToken!)?["preferred_username"];
+    } else {
+      return null;
+    }
+  }
+
   Future<UserProfile?> getUserProfile() async {
     if (_userProfile != null) return _userProfile;
 
@@ -240,6 +248,7 @@ class AuthService {
     }
 
     final apiProvider = serviceLocator<ApiProvider>();
+
     final response =
         await apiProvider.getData(url: 'profile', body: {
       'username': username,
