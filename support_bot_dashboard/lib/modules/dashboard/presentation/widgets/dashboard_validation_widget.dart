@@ -36,6 +36,16 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _reason = '';
 
+  String _selectedClassification = 'All';
+
+  final List<String> classificationItems = [
+    'All',
+    'Spam/Marketing',
+    'No Action Required',
+    'Genuine Query',
+    'Acknowledgement Required'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +76,7 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
             ),
             content: SizedBox(
               width: UIHelpers.screenWidth(context) * 0.3,
-              height: UIHelpers.screenHeight(context) * 0.2,
+              height: UIHelpers.screenHeight(context) * 0.28,
               child: BlocConsumer<PlutotableBloc, PlutotableState>(
                 listener: (context, state) {
                   if (state is UpdateValidationSuccess) {
@@ -82,6 +92,7 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                     key: _formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
                           onChanged: (value) {
@@ -101,6 +112,49 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                             ),
                           ),
                           maxLines: 4,
+                        ),
+                        UIHelpers.verticalSpaceRegular,
+                        Text(
+                          S.of(context).classification,
+                          style: SupportBotTextstyle.subheadingH6.copyWith(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        UIHelpers.verticalSpaceTiny,
+                        SizedBox(
+                          width: UIHelpers.screenWidth(context) * 0.18,
+                          height: UIHelpers.screenHeight(context) * 0.05,
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedClassification,
+                            items: classificationItems
+                                .map((String classification) {
+                              return DropdownMenuItem<String>(
+                                value: classification,
+                                child: Text(
+                                  classification,
+                                  style: SupportBotTextstyle.medium.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: SupportBotColors.black,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedClassification = newValue!;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(8.0),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 30,
+                              color: SupportBotColors.black,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -157,7 +211,8 @@ class ValidationReasonRendererState extends State<ValidationReasonRenderer> {
                                 reason: _reason,
                                 selectedDate: widget.date,
                                 selectedMonth: widget.month,
-                                pipeline: widget.pipeline));
+                                pipeline: widget.pipeline,
+                                classification: _selectedClassification));
                       }
                     },
                     child: Text(

@@ -90,6 +90,27 @@ class S {
     );
   }
 
+    /// `Validation Status`
+  String get validationStatus {
+    return Intl.message(
+      'Validation Status',
+      name: 'validationStatus',
+      desc: 'Validation Status',
+      args: [],
+    );
+  }
+
+  /// `User Validation`
+  String get userValidation {
+    return Intl.message(
+      'User Validation',
+      name: 'userValidation',
+      desc: 'User Validation',
+      args: [],
+    );
+  }
+  
+
   /// `Spam`
   String get spam {
     return Intl.message(

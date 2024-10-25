@@ -48,12 +48,21 @@ class DashboardDesktopView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => serviceLocator<DashboardBloc>()
-            ..add(FetchDashboardDataEvent(
-                selectedDate: DateTime.now(),
-                selectedMonth: null,
-                selectedPipeline: pipeline)),
-        ),
+            create: (context) => serviceLocator<DashboardBloc>()
+              ..add(FetchDashboardDataEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetValidationCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetValidationByCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetUserSettingsEvent())
+          ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
             ..add(
@@ -92,7 +101,8 @@ class DashboardDesktopView extends StatelessWidget {
         BlocProvider(
             create: (context) => serviceLocator<DashboardPipelineBloc>()
               ..add(FilterPipelineEvent(
-                  DateTime.now(), null, 'Expert Care Level 1')))
+                  DateTime.now(), null, 'Expert Care Level 1'))),
+      
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -613,7 +623,12 @@ class DashboardDesktopView extends StatelessWidget {
                                     );
                                   } else if (state is DashboardDataSuccess) {
                                     return PieChartWidget(
+                                        validationCount: state
+                                            .getValidationCountAttributeModel,
                                         data: state.pieChartData,
+                                        validationByCount: state
+                                            .getValidationByCountAttributeModel,
+                                        userSettingsData: state.getUserSettingsAttributeModel,
                                         isAIQuery: false);
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
@@ -623,6 +638,14 @@ class DashboardDesktopView extends StatelessWidget {
                                             UIHelpers.screenHeight(context) *
                                                 0.75,
                                         color: SupportBotColors.gray);
+                                  } else if (state is DashboardDataEmpty) {
+                                    return SizedBox(
+                                        width: UIHelpers.screenWidth(context) *
+                                            0.19,
+                                        height:
+                                            UIHelpers.screenHeight(context) *
+                                                0.75,
+                                        child: const EmptyWidget());
                                   } else {
                                     return Container();
                                   }
@@ -864,3 +887,4 @@ class DashboardDesktopView extends StatelessWidget {
     return DateTime(2024, months[month]!);
   }
 }
+

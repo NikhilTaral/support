@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:support_bot_dashboard/config/environment/env_config.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
@@ -115,6 +113,14 @@ class DashboardFilterWidget extends StatelessWidget {
                                   selectedPipeline: pipeline,
                                   page: currentPage.value,
                                   pageSize: pageSize.value));
+                          BlocProvider.of<DashboardBloc>(context).add(
+                              GetValidationCountEvent(
+                                  selectedDate: selectedDate,
+                                  selectedPipeline: pipeline ?? ""));
+                          BlocProvider.of<DashboardBloc>(context).add(
+                              GetValidationByCountEvent(
+                                  selectedDate: selectedDate,
+                                  selectedPipeline: pipeline ?? ""));
                           onFilterChanged(FilterChangeType.date, newDate);
                         },
                         label: S.of(context).day,
@@ -132,8 +138,8 @@ class DashboardFilterWidget extends StatelessWidget {
 
                       if (state is DashboardDataSuccess) {
                         selectedMonth = state.selectedMonth;
-                        selectedMonthString =
-                            _monthToString(selectedMonth?.month ?? DateTime.now().month);
+                        selectedMonthString = _monthToString(
+                            selectedMonth?.month ?? DateTime.now().month);
                         pipeline = state.selectedPipeline;
                       }
                       return CustomMonthDropdown(
@@ -166,7 +172,14 @@ class DashboardFilterWidget extends StatelessWidget {
                                     selectedPipeline: pipeline,
                                     page: currentPage.value,
                                     pageSize: pageSize.value));
-
+                            BlocProvider.of<DashboardBloc>(context).add(
+                                GetValidationCountEvent(
+                                    selectedMonth: selectedMonth,
+                                    selectedPipeline: pipeline ?? ""));
+                            BlocProvider.of<DashboardBloc>(context).add(
+                                GetValidationByCountEvent(
+                                    selectedMonth: selectedMonth,
+                                    selectedPipeline: pipeline ?? ""));
                             onFilterChanged(FilterChangeType.month, value);
                           }
                         },
@@ -190,7 +203,6 @@ class DashboardFilterWidget extends StatelessWidget {
                       } else if (state is FetchTableDataError) {
                         selectedClassification = state.selectedClassification;
                       }
-
                       final classificationItems = [
                         'All',
                         'Spam/Marketing',
@@ -308,7 +320,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                   duration: const Duration(milliseconds: 300),
                                   height:
                                       UIHelpers.screenHeight(context) * 0.05,
-                                      // width: UIHelpers.screenWidth(context) * 0.15,
+                                  // width: UIHelpers.screenWidth(context) * 0.15,
                                   decoration: isOpen
                                       ? BoxDecoration(
                                           color: Colors.white,
@@ -359,10 +371,15 @@ class DashboardFilterWidget extends StatelessWidget {
                                             controller: _searchController,
                                             decoration: InputDecoration(
                                               hintText: 'Search...',
-                                              hintStyle: SupportBotTextstyle.medium.copyWith(color: SupportBotColors.gray.shade600),
+                                              hintStyle: SupportBotTextstyle
+                                                  .medium
+                                                  .copyWith(
+                                                      color: SupportBotColors
+                                                          .gray.shade600),
                                               border: InputBorder.none,
                                               isDense: true,
-                                              contentPadding: EdgeInsets.only(bottom: -2),
+                                              contentPadding:
+                                                  EdgeInsets.only(bottom: -2),
                                             ),
                                             onSubmitted: (value) {
                                               if (value.isNotEmpty) {

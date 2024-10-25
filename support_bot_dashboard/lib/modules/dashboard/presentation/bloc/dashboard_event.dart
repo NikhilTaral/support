@@ -6,8 +6,10 @@ class FetchDashboardDataEvent extends DashboardEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String? selectedPipeline;
+  final String? selectedPipeline;
 
-  FetchDashboardDataEvent({this.selectedDate, this.selectedMonth, required this.selectedPipeline});
+  FetchDashboardDataEvent(
+      {this.selectedDate, this.selectedMonth, required this.selectedPipeline});
 }
 
 class UpdateSelectedDateEvent extends DashboardEvent {
@@ -19,7 +21,31 @@ class UpdateSelectedDateEvent extends DashboardEvent {
 
 class UpdateSelectedMonthEvent extends DashboardEvent {
   final DateTime selectedMonth;
-   final String? selectedPipeline;
+  final String? selectedPipeline;
 
   UpdateSelectedMonthEvent(this.selectedMonth, this.selectedPipeline);
 }
+
+class GetValidationCountEvent extends DashboardEvent {
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+  final String selectedPipeline;
+
+  GetValidationCountEvent(
+      { this.selectedDate,
+       this.selectedMonth,
+      required this.selectedPipeline});
+}
+
+class GetValidationByCountEvent extends DashboardEvent {
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
+  final String selectedPipeline;
+
+  GetValidationByCountEvent(
+      { this.selectedDate,
+       this.selectedMonth,
+      required this.selectedPipeline});
+}
+
+class GetUserSettingsEvent extends DashboardEvent {}

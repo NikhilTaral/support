@@ -56,8 +56,9 @@ class UpdateValidationEvent extends PlutotableEvent {
       required this.id,
       required this.pipeline,
       required this.validation,
-      this.classification,
-      required this.reason});
+      required this.reason,
+      this.classification
+      });
 }
 
 class SelectClassificationEvent extends PlutotableEvent {
