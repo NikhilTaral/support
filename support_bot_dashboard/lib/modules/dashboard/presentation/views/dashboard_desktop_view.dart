@@ -588,6 +588,25 @@ class DashboardDesktopView extends StatelessWidget {
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+                                            
+                                              BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationByCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
 
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(
@@ -770,6 +789,25 @@ class DashboardDesktopView extends StatelessWidget {
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationByCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
 
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(
