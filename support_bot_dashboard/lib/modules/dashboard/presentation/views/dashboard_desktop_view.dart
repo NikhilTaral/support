@@ -550,7 +550,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               FetchTableDataEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   page: currentPage.value,
@@ -561,8 +560,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchDashboardDataEvent(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
@@ -573,7 +570,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               FetchAiQueryAnswerEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   selectedClassification:
@@ -585,8 +581,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchAiQueryChartData(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
@@ -619,7 +613,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               UpdateSelectedPipelineEvent(
                                                 selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
                                                 selectedPipelineValue: value,
                                               ),
                                             );
@@ -707,9 +700,6 @@ class DashboardDesktopView extends StatelessWidget {
                                         color: SupportBotColors.gray);
                                   } else if (state
                                       is DashboardPipelineSuccess) {
-                                    // DateTime selectedMonth =
-                                    //     state.selectedMonth;
-                                    // DateTime? selectedDate = state.selectedDate;
                                     pipeline =
                                         state.selectedPipelineValue ?? "";
                                     Map<String, dynamic>
@@ -755,7 +745,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               FetchAiQueryAnswerEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   selectedClassification:
@@ -767,8 +756,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchAiQueryChartData(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
@@ -780,7 +767,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               FetchTableDataEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   page: currentPage.value,
@@ -791,8 +777,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchDashboardDataEvent(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
@@ -823,7 +807,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               UpdateSelectedPipelineEvent(
                                                 selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
                                                 selectedPipelineValue: value,
                                               ),
                                             );

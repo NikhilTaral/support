@@ -17,6 +17,6 @@ class UpdateSelectedPipelineEvent extends DashboardPipelineEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
 
-  UpdateSelectedPipelineEvent({this.selectedPipelineValue,this.dashboardPipelineAttributeModel,this.selectedDate,required this.selectedMonth});
+  UpdateSelectedPipelineEvent({this.selectedPipelineValue,this.dashboardPipelineAttributeModel,this.selectedDate, this.selectedMonth});
 }
 
