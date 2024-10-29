@@ -566,7 +566,9 @@ class DashboardDesktopView extends StatelessWidget {
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
-                                            BlocProvider.of<AiQueryAnswerBloc>(
+
+                                            if(isAIAnswer){
+                                                BlocProvider.of<AiQueryAnswerBloc>(
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
@@ -588,6 +590,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+                                            }
+                                          
                                             
                                               BlocProvider.of<DashboardBloc>(
                                                         context)
@@ -745,7 +749,8 @@ class DashboardDesktopView extends StatelessWidget {
                                             AIcurrentPage.value = 1;
                                             AIpageSize.value = 10;
 
-                                            BlocProvider.of<AiQueryAnswerBloc>(
+                                            if(isAIAnswer){
+                                               BlocProvider.of<AiQueryAnswerBloc>(
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
@@ -767,6 +772,8 @@ class DashboardDesktopView extends StatelessWidget {
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+                                            }
+                                           
 
                                             BlocProvider.of<PlutotableBloc>(
                                                     context)
