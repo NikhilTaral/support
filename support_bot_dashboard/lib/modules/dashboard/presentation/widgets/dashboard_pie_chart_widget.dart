@@ -577,7 +577,6 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_user_settings_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_sidebar.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/uservaidation_barchart.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -913,5 +912,12 @@ class PieChartWidgetState extends State<PieChartWidget> {
       }
     }
     return [];
+  }
+}
+extension StringExtension on String {
+  String capitalize() {
+    return split(' ')
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
   }
 }
