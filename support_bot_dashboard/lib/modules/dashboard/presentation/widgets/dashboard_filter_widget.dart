@@ -180,7 +180,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                 GetValidationByCountEvent(
                                     selectedMonth: monthDateTime,
                                     selectedPipeline: pipeline ?? ""));
-                            onFilterChanged(FilterChangeType.month, value);
+                            onFilterChanged(FilterChangeType.month, monthDateTime);
                           }
                         },
                         label: S.of(context).month,
