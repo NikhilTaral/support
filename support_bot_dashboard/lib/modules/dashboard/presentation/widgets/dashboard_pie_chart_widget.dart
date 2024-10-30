@@ -866,7 +866,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
       
       return sortedEntries.map((entry) {
         final email = entry.key;
-        final name = email.split('@').first.replaceAll('.', ' ').capitalize();
+        final name = email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
         return ChartData(label: name, value: entry.value);
       }).toList();
     }
@@ -906,7 +906,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
         
         return topEntries.map((entry) {
           final email = entry.key;
-          final name = email.split('@').first.replaceAll('.', ' ').capitalize();
+          final name = email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
           return ChartData(label: name, value: entry.value);
         }).toList();
       }
@@ -915,7 +915,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
   }
 }
 extension StringExtension on String {
-  String capitalize() {
+  String capitalizeLetter() {
     return split(' ')
         .map((word) => word[0].toUpperCase() + word.substring(1))
         .join(' ');
