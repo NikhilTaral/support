@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/uservaidation_barchart.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
@@ -50,5 +49,12 @@ class UserValidationSidebar extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+extension StringExtension on String {
+  String capitalize() {
+    return split(' ')
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
   }
 }
