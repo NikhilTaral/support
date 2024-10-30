@@ -54,14 +54,14 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
                   selectedPipeline: pipeline))
-              // ..add(GetValidationCountEvent(
-              //     selectedDate: DateTime.now(),
-              //     selectedMonth: null,
-              //     selectedPipeline: pipeline))
-              // ..add(GetValidationByCountEvent(
-              //     selectedDate: DateTime.now(),
-              //     selectedMonth: null,
-              //     selectedPipeline: pipeline))
+              ..add(GetValidationCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
+              ..add(GetValidationByCountEvent(
+                  selectedDate: DateTime.now(),
+                  selectedMonth: null,
+                  selectedPipeline: pipeline))
               ..add(GetUserSettingsEvent())
           ),
         BlocProvider(
@@ -649,8 +649,7 @@ class DashboardDesktopView extends StatelessWidget {
                                             .getValidationByCountAttributeModel,
                                         userSettingsData: state.getUserSettingsAttributeModel,
                                         isAIQuery: false,
-                                        pipeline: selectedPipelineId,
-                                        selectedDate: selectedDate,
+                                      
                                         );
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
