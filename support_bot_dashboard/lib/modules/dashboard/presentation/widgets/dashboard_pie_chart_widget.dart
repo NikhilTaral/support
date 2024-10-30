@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
@@ -7,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_user_settings_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -18,14 +20,18 @@ class PieChartWidget extends StatefulWidget {
   final GetValidationByCountAttributeModel? validationByCount;
   final GetUserSettingsAttributeModel? userSettingsData;
   final bool isAIQuery;
+  DateTime? selectedDate;
+  String? pipeline;
 
-  const PieChartWidget(
+  PieChartWidget(
       {super.key,
       this.data,
       this.isAIQuery = false,
       this.validationCount,
       this.userSettingsData,
-      this.validationByCount});
+      this.validationByCount,
+      this.selectedDate,
+      this.pipeline});
 
   @override
   State<PieChartWidget> createState() => PieChartWidgetState();
@@ -36,6 +42,24 @@ class PieChartWidgetState extends State<PieChartWidget> {
   int currentChartIndex = 0;
 
   PieChartWidgetState();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDataBasedOnIndex();
+  }
+
+  void _fetchDataBasedOnIndex() {
+    if (currentChartIndex == 1) {
+      BlocProvider.of<DashboardBloc>(context).add(GetValidationCountEvent(
+          selectedPipeline: widget.pipeline ?? "",
+          selectedDate: widget.selectedDate));
+    } else if (currentChartIndex == 2) {
+      BlocProvider.of<DashboardBloc>(context).add(GetValidationByCountEvent(
+          selectedPipeline: widget.pipeline ?? "",
+          selectedDate: widget.selectedDate));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +101,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
                             setState(() {
                               currentChartIndex--;
                             });
+                             _fetchDataBasedOnIndex();
                           }
                         : null,
                     icon: const Icon(
@@ -105,6 +130,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
                             setState(() {
                               currentChartIndex++;
                             });
+                             _fetchDataBasedOnIndex();
                           }
                         : null,
                     icon: const Icon(
@@ -251,13 +277,13 @@ class PieChartWidgetState extends State<PieChartWidget> {
             value: widget.validationCount?.notValidated ?? 0)
       ];
     } else if (currentChartIndex == 2) {
-       if (widget.validationByCount?.data != null) {
-      return widget.validationByCount!.data!.entries.map((entry) {
-        final email = entry.key;
-        final name = email.split('@').first.replaceAll('.', ' ').capitalize();
-        return ChartData(label: name, value: entry.value);
-      }).toList();
-    }
+      if (widget.validationByCount?.data != null) {
+        return widget.validationByCount!.data!.entries.map((entry) {
+          final email = entry.key;
+          final name = email.split('@').first.replaceAll('.', ' ').capitalize();
+          return ChartData(label: name, value: entry.value);
+        }).toList();
+      }
     }
     return [];
   }
@@ -265,6 +291,8 @@ class PieChartWidgetState extends State<PieChartWidget> {
 
 extension StringExtension on String {
   String capitalize() {
-    return split(' ').map((word) => word[0].toUpperCase() + word.substring(1)).join(' ');
+    return split(' ')
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
   }
 }
