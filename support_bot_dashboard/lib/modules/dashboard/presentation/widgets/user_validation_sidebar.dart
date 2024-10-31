@@ -14,11 +14,13 @@ class UserValidationSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back_ios_new,size: 10,),onPressed: (){Navigator.pop(context);},),
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios_new,size: 20,),onPressed: (){Navigator.pop(context);},),
         backgroundColor: SupportBotColors.white,
-        title: const Text(
-          'User Validation Details',
-          style: SupportBotTextstyle.sidebarTitle,
+        title:  Text(
+          'User Validation Count',
+          style: SupportBotTextstyle.normal.copyWith(
+            fontWeight: FontWeight.bold
+          ),
         ),
         centerTitle: true,
       ),

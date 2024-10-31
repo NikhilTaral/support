@@ -32,10 +32,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardChartAttributeModel? dashboardChartData;
   GetValidationByCountAttributeModel? getValidationByCountAttribute;
   GetUserSettingsAttributeModel? userSettingsAtrribute;
+ 
 
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
     emit(DateUpdatedState(event.selectedDate, event.selectedPipeline));
+   
     add(FetchDashboardDataEvent(
       selectedDate: event.selectedDate,
       selectedMonth: null,
@@ -46,6 +48,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _onUpdateSelectedMonthEvent(
       UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async {
     emit(MonthUpdatedState(event.selectedMonth, event.selectedPipeline));
+   
     add(FetchDashboardDataEvent(
         selectedDate: null,
         selectedMonth: event.selectedMonth,

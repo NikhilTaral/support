@@ -563,12 +563,10 @@
 // //   }
 // // }
 
-
 /*************************************************************************************************************** */
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
@@ -619,7 +617,6 @@ class PieChartWidgetState extends State<PieChartWidget> {
         Expanded(
           child: _buildMainChart(context),
         ),
-
       ],
     );
   }
@@ -654,14 +651,11 @@ class PieChartWidgetState extends State<PieChartWidget> {
           children: [
             UIHelpers.verticalSpaceRegular,
             _buildHeader(),
-            
             Padding(
               padding: const EdgeInsets.only(right: 10, left: 10),
               child: Divider(color: SupportBotColors.blueSecondary.shade200),
             ),
-            if (currentChartIndex == 2) _buildViewAllButton(),
-            if (nonZeroChartData.isEmpty)
-              _buildEmptyState(context),
+            if (nonZeroChartData.isEmpty) _buildEmptyState(context),
             if (nonZeroChartData.isNotEmpty)
               _buildPieChart(nonZeroChartData, blueShades, radius),
             UIHelpers.verticalSpaceTinySmall,
@@ -671,9 +665,6 @@ class PieChartWidgetState extends State<PieChartWidget> {
       ),
     );
   }
-
-
-
 
   Widget _buildHeader() {
     return Row(
@@ -702,7 +693,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (widget.isAIQuery == false)
+        if (widget.isAIQuery == false && currentChartIndex != 2)
           IconButton(
             onPressed: currentChartIndex < 2
                 ? () {
@@ -716,42 +707,61 @@ class PieChartWidgetState extends State<PieChartWidget> {
               size: 15,
             ),
           ),
+        if (currentChartIndex == 2) _buildViewAllButton(),
       ],
     );
   }
 
   void _showSidebarDialog(BuildContext context) {
-  final validationData = widget.validationByCount?.data ?? {};
+    final validationData = widget.validationByCount?.data ?? {};
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        insetPadding: EdgeInsets.only(
-          left: UIHelpers.screenWidth(context) * 0.8, 
-          right: 0
-        ),
-        child: SizedBox(
-          width: UIHelpers.screenWidth(context) * 0.2,
-          child: UserValidationSidebar(
-            validationData: validationData,
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.only(
+              left: UIHelpers.screenWidth(context) * 0.8, right: 0),
+          child: SizedBox(
+            width: UIHelpers.screenWidth(context) * 0.2,
+            child: UserValidationSidebar(
+              validationData: validationData,
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   Widget _buildViewAllButton() {
     return Align(
       alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          setState(() {
-           _showSidebarDialog(context);
-          });
-        },
-        child: Text('View All', style: SupportBotTextstyle.medium.copyWith(color: SupportBotColors.bluePrimary.shade500),),
+      child: Tooltip(
+        message: 'View All',
+        child: SizedBox(
+          width: 35,
+          height: 30,
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _showSidebarDialog(context);
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: SupportBotColors.bluePrimary.shade500,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(8)
+            ),
+          
+            child: const Icon(
+              Icons.remove_red_eye,
+              color: SupportBotColors.white,
+              size: 18,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -764,7 +774,8 @@ class PieChartWidgetState extends State<PieChartWidget> {
     );
   }
 
-  Widget _buildPieChart(List<ChartData> nonZeroChartData, List<Color> blueShades, double radius) {
+  Widget _buildPieChart(
+      List<ChartData> nonZeroChartData, List<Color> blueShades, double radius) {
     return SizedBox(
       height: UIHelpers.screenHeight(context) * 0.5,
       child: PieChart(
@@ -778,7 +789,8 @@ class PieChartWidgetState extends State<PieChartWidget> {
                   touchedIndex = -1;
                   return;
                 }
-                touchedIndex = pieTouchResponse.touchedSection?.touchedSectionIndex ?? 0;
+                touchedIndex =
+                    pieTouchResponse.touchedSection?.touchedSectionIndex ?? 0;
               });
             },
           ),
@@ -808,7 +820,8 @@ class PieChartWidgetState extends State<PieChartWidget> {
     );
   }
 
-  Widget _buildLegend(List<ChartData> nonZeroChartData, List<Color> blueShades) {
+  Widget _buildLegend(
+      List<ChartData> nonZeroChartData, List<Color> blueShades) {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
@@ -830,7 +843,9 @@ class PieChartWidgetState extends State<PieChartWidget> {
 
   String _getChartTitle() {
     if (currentChartIndex == 0) {
-      return widget.isAIQuery ? S.of(context).aiQueryAnswer : S.of(context).ticketClassification;
+      return widget.isAIQuery
+          ? S.of(context).aiQueryAnswer
+          : S.of(context).ticketClassification;
     } else if (currentChartIndex == 1) {
       return S.of(context).validationStatus;
     } else {
@@ -860,13 +875,14 @@ class PieChartWidgetState extends State<PieChartWidget> {
   // Existing helper methods remain unchanged
   List<ChartData> _getAllValidationData() {
     if (widget.validationByCount?.data != null) {
-      final List<MapEntry<String, int>> sortedEntries = 
+      final List<MapEntry<String, int>> sortedEntries =
           widget.validationByCount?.data?.entries.toList() ?? []
             ..sort((a, b) => b.value.compareTo(a.value));
-      
+
       return sortedEntries.map((entry) {
         final email = entry.key;
-        final name = email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
+        final name =
+            email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
         return ChartData(label: name, value: entry.value);
       }).toList();
     }
@@ -875,38 +891,54 @@ class PieChartWidgetState extends State<PieChartWidget> {
 
   List<ChartData> _getChartData() {
     if (currentChartIndex == 0) {
-      if (widget.isAIQuery && widget.data is DashboardAiQueryChartAttributeModel) {
+      if (widget.isAIQuery &&
+          widget.data is DashboardAiQueryChartAttributeModel) {
         final aiData = widget.data as DashboardAiQueryChartAttributeModel;
         return [
           ChartData(label: 'AI Query Answer', value: aiData.aiQueryAnswer ?? 0),
-          ChartData(label: 'AI Query Not Answer', value: aiData.aiQueryNotAnswer ?? 0),
+          ChartData(
+              label: 'AI Query Not Answer',
+              value: aiData.aiQueryNotAnswer ?? 0),
         ];
       } else if (widget.data is DashboardChartAttributeModel) {
         final dashboardData = widget.data as DashboardChartAttributeModel;
         return [
-          ChartData(label: S.of(context).genuineQuery, value: dashboardData.genuineQuery ?? 0),
-          ChartData(label: S.of(context).noActionRequired, value: dashboardData.noActionRequired ?? 0),
-          ChartData(label: S.of(context).spam, value: dashboardData.spamMarketing ?? 0),
-          ChartData(label: S.of(context).acknowledgementRequired, value: dashboardData.acknowledgement ?? 0)
+          ChartData(
+              label: S.of(context).genuineQuery,
+              value: dashboardData.genuineQuery ?? 0),
+          ChartData(
+              label: S.of(context).noActionRequired,
+              value: dashboardData.noActionRequired ?? 0),
+          ChartData(
+              label: S.of(context).spam,
+              value: dashboardData.spamMarketing ?? 0),
+          ChartData(
+              label: S.of(context).acknowledgementRequired,
+              value: dashboardData.acknowledgement ?? 0)
         ];
       }
     } else if (currentChartIndex == 1) {
       return [
-        ChartData(label: 'Correct', value: widget.validationCount?.correct ?? 0),
-        ChartData(label: 'Incorrect', value: widget.validationCount?.incorrect ?? 0),
-        ChartData(label: 'Not Validated', value: widget.validationCount?.notValidated ?? 0)
+        ChartData(
+            label: 'Correct', value: widget.validationCount?.correct ?? 0),
+        ChartData(
+            label: 'Incorrect', value: widget.validationCount?.incorrect ?? 0),
+        ChartData(
+            label: 'Not Validated',
+            value: widget.validationCount?.notValidated ?? 0)
       ];
     } else if (currentChartIndex == 2) {
       if (widget.validationByCount?.data != null) {
-        final List<MapEntry<String, int>> sortedEntries = 
+        final List<MapEntry<String, int>> sortedEntries =
             widget.validationByCount?.data?.entries.toList() ?? []
               ..sort((a, b) => b.value.compareTo(a.value));
-        
+
         final topEntries = sortedEntries.take(5).toList();
-        
+
         return topEntries.map((entry) {
           final email = entry.key;
-          final name = email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
+          final name =
+              email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
           return ChartData(label: name, value: entry.value);
         }).toList();
       }
@@ -914,6 +946,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
     return [];
   }
 }
+
 extension StringExtension on String {
   String capitalizeLetter() {
     return split(' ')
