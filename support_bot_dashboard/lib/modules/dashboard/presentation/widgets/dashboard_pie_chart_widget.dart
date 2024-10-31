@@ -928,20 +928,40 @@ class PieChartWidgetState extends State<PieChartWidget> {
             value: widget.validationCount?.notValidated ?? 0)
       ];
     } else if (currentChartIndex == 2) {
-      if (widget.validationByCount?.data != null) {
-        final List<MapEntry<String, int>> sortedEntries =
-            widget.validationByCount?.data?.entries.toList() ?? []
-              ..sort((a, b) => b.value.compareTo(a.value));
+      // if (widget.validationByCount?.data != null) {
+      //   final List<MapEntry<String, int>> sortedEntries =
+      //       widget.validationByCount?.data?.entries.toList() ?? []
+      //         ..sort((a, b) => b.value.compareTo(a.value));
 
-        final topEntries = sortedEntries.take(5).toList();
+      //   final topEntries = sortedEntries.take(5).toList();
 
-        return topEntries.map((entry) {
-          final email = entry.key;
-          final name =
-              email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
-          return ChartData(label: name, value: entry.value);
-        }).toList();
-      }
+      //   return topEntries.map((entry) {
+      //     final email = entry.key;
+      //     final name =
+      //         email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
+      //     return ChartData(label: name, value: entry.value);
+      //   }).toList();
+      // }
+        if (widget.validationByCount?.data != null && 
+        widget.validationByCount!.data!.isNotEmpty) {
+      final List<MapEntry<String, int>> sortedEntries =
+          widget.validationByCount!.data!.entries.toList()
+            ..sort((a, b) => b.value.compareTo(a.value));
+
+      final topEntries = sortedEntries.take(5).toList();
+
+      return topEntries.map((entry) {
+        final email = entry.key;
+        final name =
+            email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
+        return ChartData(label: name, value: entry.value);
+      }).toList();
+    } else {
+      // Return an empty list or a default placeholder if no data
+      return [
+        ChartData(label: 'No Data', value: 0)
+      ];
+    }
     }
     return [];
   }

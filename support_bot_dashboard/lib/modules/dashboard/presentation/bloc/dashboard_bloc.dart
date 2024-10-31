@@ -25,7 +25,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<FetchDashboardDataEvent>(_onFetchDashboardData);
     on<GetValidationCountEvent>(_onGetValidationCount);
     on<GetValidationByCountEvent>(_onGetValidationByCountEvent);
-    on<GetUserSettingsEvent>(_onGetUserSettingsEvent);
+    // on<GetUserSettingsEvent>(_onGetUserSettingsEvent);
   }
 
   ValidationCountAttributeModel? getValidationCountAttribute;
@@ -177,31 +177,31 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  FutureOr<void> _onGetUserSettingsEvent(
-      GetUserSettingsEvent event, Emitter<DashboardState> emit) async {
-    emit(DashboardDataLoading());
-    final repository = serviceLocator<DashboardGetUserSettingsUsecase>();
-    final AuthService authService = serviceLocator<AuthService>();
+  // FutureOr<void> _onGetUserSettingsEvent(
+  //     GetUserSettingsEvent event, Emitter<DashboardState> emit) async {
+  //   emit(DashboardDataLoading());
+  //   final repository = serviceLocator<DashboardGetUserSettingsUsecase>();
+  //   final AuthService authService = serviceLocator<AuthService>();
 
-    String? email = await authService.getUseremail();
-    final response = await repository.invoke(email);
-    if (response.isLeft) {
-      emit(UserSettingsFailureState(message: 'Failed to load data'));
-    } else {
-      try {
-        final model = GetUserSettingsResponseModel.fromJson(response.right);
-         userSettingsAtrribute = GetUserSettingsAttributeModel(
-            data: UserSettingsData(accessRole: model.data?.accessRole));
-        emit(DashboardDataSuccess(
-           pieChartData: dashboardChartData,
+  //   String? email = await authService.getUseremail();
+  //   final response = await repository.invoke(email);
+  //   if (response.isLeft) {
+  //     emit(UserSettingsFailureState(message: 'Failed to load data'));
+  //   } else {
+  //     try {
+  //       final model = GetUserSettingsResponseModel.fromJson(response.right);
+  //        userSettingsAtrribute = GetUserSettingsAttributeModel(
+  //           data: UserSettingsData(accessRole: model.data?.accessRole));
+  //       emit(DashboardDataSuccess(
+  //          pieChartData: dashboardChartData,
              
-              getValidationCountAttributeModel: getValidationCountAttribute,
-              getValidationByCountAttributeModel:
-                  getValidationByCountAttribute,
-            getUserSettingsAttributeModel: userSettingsAtrribute));
-      } catch (e) {
-        emit(UserSettingsFailureState(message: 'Exception: $e'));
-      }
-    }
-  }
+  //             getValidationCountAttributeModel: getValidationCountAttribute,
+  //             getValidationByCountAttributeModel:
+  //                 getValidationByCountAttribute,
+  //           getUserSettingsAttributeModel: userSettingsAtrribute));
+  //     } catch (e) {
+  //       emit(UserSettingsFailureState(message: 'Exception: $e'));
+  //     }
+  //   }
+  // }
 }

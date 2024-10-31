@@ -37,7 +37,7 @@ class DashboardDataSuccess extends DashboardState {
   final DashboardChartAttributeModel? pieChartData;
   final ValidationCountAttributeModel? getValidationCountAttributeModel;
   final GetValidationByCountAttributeModel? getValidationByCountAttributeModel;
-  final GetUserSettingsAttributeModel? getUserSettingsAttributeModel;
+  // final GetUserSettingsAttributeModel? getUserSettingsAttributeModel;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   final String? selectedPipeline;
@@ -47,7 +47,7 @@ class DashboardDataSuccess extends DashboardState {
       this.selectedDate,
       this.selectedMonth,
       this.selectedPipeline,
-      this.getUserSettingsAttributeModel,
+      // this.getUserSettingsAttributeModel,
       this.getValidationCountAttributeModel,
       this.getValidationByCountAttributeModel
       });

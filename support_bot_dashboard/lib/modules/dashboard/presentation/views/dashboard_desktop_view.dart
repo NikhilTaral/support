@@ -647,7 +647,7 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         validationByCount: state
                                             .getValidationByCountAttributeModel,
-                                        userSettingsData: state.getUserSettingsAttributeModel,
+                                        // userSettingsData: state.getUserSettingsAttributeModel,
                                         isAIQuery: false,
                                       
                                         );
