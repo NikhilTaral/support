@@ -62,7 +62,7 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
                   selectedPipeline: pipeline))
-              ..add(GetUserSettingsEvent())
+              // ..add(GetUserSettingsEvent())
           ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
