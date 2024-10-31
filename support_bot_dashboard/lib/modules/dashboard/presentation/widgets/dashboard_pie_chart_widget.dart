@@ -630,9 +630,9 @@ class PieChartWidgetState extends State<PieChartWidget> {
     ];
     double radius = UIHelpers.screenWidth(context) * 0.08;
 
-    List<ChartData> chartData = _getChartData();
+    List<ChartData>? chartData = _getChartData();
     final nonZeroChartData = chartData
-        .where((data) => data.value != null && data.value! > 0)
+        ?.where((data) => data.value != null && data.value! > 0)
         .toList();
 
     return Padding(
@@ -655,11 +655,19 @@ class PieChartWidgetState extends State<PieChartWidget> {
               padding: const EdgeInsets.only(right: 10, left: 10),
               child: Divider(color: SupportBotColors.blueSecondary.shade200),
             ),
-            if (nonZeroChartData.isEmpty) _buildEmptyState(context),
-            if (nonZeroChartData.isNotEmpty)
+            // if (nonZeroChartData.isEmpty) _buildEmptyState(context),
+            // if (nonZeroChartData.isNotEmpty)
+            //   _buildPieChart(nonZeroChartData, blueShades, radius),
+            // UIHelpers.verticalSpaceTinySmall,
+            // _buildLegend(nonZeroChartData, blueShades),
+
+            if (nonZeroChartData == null || nonZeroChartData.isEmpty)
+              _buildEmptyState(context)
+            else ...[
               _buildPieChart(nonZeroChartData, blueShades, radius),
-            UIHelpers.verticalSpaceTinySmall,
-            _buildLegend(nonZeroChartData, blueShades),
+              UIHelpers.verticalSpaceTinySmall,
+              _buildLegend(nonZeroChartData, blueShades),
+            ]
           ],
         ),
       ),
@@ -747,14 +755,12 @@ class PieChartWidgetState extends State<PieChartWidget> {
               });
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: SupportBotColors.bluePrimary.shade500,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.all(8)
-            ),
-          
+                backgroundColor: SupportBotColors.bluePrimary.shade500,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(8)),
             child: const Icon(
               Icons.remove_red_eye,
               color: SupportBotColors.white,
@@ -889,7 +895,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
     return [];
   }
 
-  List<ChartData> _getChartData() {
+  List<ChartData>? _getChartData() {
     if (currentChartIndex == 0) {
       if (widget.isAIQuery &&
           widget.data is DashboardAiQueryChartAttributeModel) {
@@ -928,39 +934,26 @@ class PieChartWidgetState extends State<PieChartWidget> {
             value: widget.validationCount?.notValidated ?? 0)
       ];
     } else if (currentChartIndex == 2) {
-      // if (widget.validationByCount?.data != null) {
-      //   final List<MapEntry<String, int>> sortedEntries =
-      //       widget.validationByCount?.data?.entries.toList() ?? []
-      //         ..sort((a, b) => b.value.compareTo(a.value));
+     if (widget.validationByCount?.data != null) {
+      final List<MapEntry<String, int>>? sortedEntries =
+          widget.validationByCount?.data?.entries.toList()
+            ?..sort((a, b) => b.value.compareTo(a.value));
 
-      //   final topEntries = sortedEntries.take(5).toList();
+      final topEntries = sortedEntries?.take(5).toList();
 
-      //   return topEntries.map((entry) {
-      //     final email = entry.key;
-      //     final name =
-      //         email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
-      //     return ChartData(label: name, value: entry.value);
-      //   }).toList();
-      // }
-        if (widget.validationByCount?.data != null && 
-        widget.validationByCount!.data!.isNotEmpty) {
-      final List<MapEntry<String, int>> sortedEntries =
-          widget.validationByCount!.data!.entries.toList()
-            ..sort((a, b) => b.value.compareTo(a.value));
+      return topEntries?.map((entry) {
+        // Add null and empty checks
+        if (entry.key == null || entry.key.isEmpty) {
+          return ChartData(label: 'Unknown', value: entry.value);
+        }
 
-      final topEntries = sortedEntries.take(5).toList();
-
-      return topEntries.map((entry) {
         final email = entry.key;
-        final name =
-            email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
+        final name = email.contains('@') 
+            ? email.split('@').first.replaceAll('.', ' ').capitalizeLetter() 
+            : email.capitalizeLetter();
+        
         return ChartData(label: name, value: entry.value);
       }).toList();
-    } else {
-      // Return an empty list or a default placeholder if no data
-      return [
-        ChartData(label: 'No Data', value: 0)
-      ];
     }
     }
     return [];
@@ -969,8 +962,13 @@ class PieChartWidgetState extends State<PieChartWidget> {
 
 extension StringExtension on String {
   String capitalizeLetter() {
+    if (this.isEmpty) return '';
+
     return split(' ')
-        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .map((word) => word.isNotEmpty 
+            ? word[0].toUpperCase() + word.substring(1) 
+            : '')
         .join(' ');
   }
 }
+
