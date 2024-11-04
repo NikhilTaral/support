@@ -627,8 +627,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value = 1;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: selectedDate,
-                                  selectedMonth: selectedMonth,
+                                   selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
+                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,
@@ -670,8 +670,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value--;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: selectedDate,
-                                  selectedMonth: selectedMonth,
+                                  selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
+                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,
@@ -707,8 +707,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value++;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: selectedDate,
-                                  selectedMonth: selectedMonth,
+                                  selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
+                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,

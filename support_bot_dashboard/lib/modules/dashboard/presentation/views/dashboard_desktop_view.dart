@@ -62,7 +62,7 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
                   selectedPipeline: pipeline))
-              ..add(GetUserSettingsEvent())
+              // ..add(GetUserSettingsEvent())
           ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
@@ -647,8 +647,10 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         validationByCount: state
                                             .getValidationByCountAttributeModel,
-                                        userSettingsData: state.getUserSettingsAttributeModel,
-                                        isAIQuery: false);
+                                        // userSettingsData: state.getUserSettingsAttributeModel,
+                                        isAIQuery: false,
+                                      
+                                        );
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
                                         width: UIHelpers.screenWidth(context) *
