@@ -21,6 +21,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
   GetValidationDetailsAttributeModel? getValidationAttributeModel;
   DashboardTableAttributeModel? tableData;
   List<PlutoRow>? rows;
+   bool? isDateSelected = false;
+  bool? isMonthselected =false;
   PlutotableBloc() : super(PlutotableInitial()) {
     on<FetchTableDataEvent>(_onFetchTableDataEvent);
     on<SelectDateEvent>(_onSelectDateEvent);
@@ -128,6 +130,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     emit(UpdateDateState(
         selectedDate: event.selectedDate,
         selectedPipeline: event.selectedPipeline));
+     isDateSelected = true;
+    isMonthselected = false;
     add(FetchTableDataEvent(
         selectedDate: event.selectedDate,
         selectedMonth: null,
@@ -141,6 +145,8 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
     emit(UpdateMonthState(
         selectedMonth: event.selectedMonth,
         selectedPipeline: event.selectedPipeline));
+         isMonthselected= true;
+    isDateSelected = false;
     add(FetchTableDataEvent(
         selectedDate: null,
         selectedMonth: event.selectedMonth,
