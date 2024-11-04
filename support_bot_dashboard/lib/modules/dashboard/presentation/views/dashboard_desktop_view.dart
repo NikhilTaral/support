@@ -62,7 +62,7 @@ class DashboardDesktopView extends StatelessWidget {
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
                   selectedPipeline: pipeline))
-              ..add(GetUserSettingsEvent())
+              // ..add(GetUserSettingsEvent())
           ),
         BlocProvider(
           create: (context) => serviceLocator<PlutotableBloc>()
@@ -550,7 +550,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               FetchTableDataEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   page: currentPage.value,
@@ -561,17 +560,16 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchDashboardDataEvent(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
-                                            BlocProvider.of<AiQueryAnswerBloc>(
+
+                                            if(isAIAnswer){
+                                                BlocProvider.of<AiQueryAnswerBloc>(
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   selectedClassification:
@@ -583,11 +581,30 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchAiQueryChartData(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+                                            }
+                                          
+                                            
+                                              BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationByCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
 
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(
@@ -596,7 +613,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               UpdateSelectedPipelineEvent(
                                                 selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
                                                 selectedPipelineValue: value,
                                               ),
                                             );
@@ -631,8 +647,10 @@ class DashboardDesktopView extends StatelessWidget {
                                         data: state.pieChartData,
                                         validationByCount: state
                                             .getValidationByCountAttributeModel,
-                                        userSettingsData: state.getUserSettingsAttributeModel,
-                                        isAIQuery: false);
+                                        // userSettingsData: state.getUserSettingsAttributeModel,
+                                        isAIQuery: false,
+                                      
+                                        );
                                   } else if (state is DashboardDataError) {
                                     return FailureWidget(
                                         width: UIHelpers.screenWidth(context) *
@@ -684,9 +702,6 @@ class DashboardDesktopView extends StatelessWidget {
                                         color: SupportBotColors.gray);
                                   } else if (state
                                       is DashboardPipelineSuccess) {
-                                    // DateTime selectedMonth =
-                                    //     state.selectedMonth;
-                                    // DateTime? selectedDate = state.selectedDate;
                                     pipeline =
                                         state.selectedPipelineValue ?? "";
                                     Map<String, dynamic>
@@ -726,12 +741,12 @@ class DashboardDesktopView extends StatelessWidget {
                                             AIcurrentPage.value = 1;
                                             AIpageSize.value = 10;
 
-                                            BlocProvider.of<AiQueryAnswerBloc>(
+                                            if(isAIAnswer){
+                                               BlocProvider.of<AiQueryAnswerBloc>(
                                                     context)
                                                 .add(
                                               FetchAiQueryAnswerEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   selectedClassification:
@@ -743,18 +758,17 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchAiQueryChartData(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+                                            }
+                                           
 
                                             BlocProvider.of<PlutotableBloc>(
                                                     context)
                                                 .add(
                                               FetchTableDataEvent(
                                                   selectedDate: selectedDate,
-                                                  selectedMonth: selectedMonth,
                                                   selectedPipeline:
                                                       selectedPipelineId,
                                                   page: currentPage.value,
@@ -765,11 +779,28 @@ class DashboardDesktopView extends StatelessWidget {
                                                     context)
                                                 .add(FetchDashboardDataEvent(
                                                     selectedDate: selectedDate,
-                                                    selectedMonth:
-                                                        selectedMonth,
                                                     selectedPipeline:
                                                         selectedPipelineId ??
                                                             ""));
+
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
+                                                BlocProvider.of<DashboardBloc>(
+                                                        context)
+                                                    .add(
+                                                        GetValidationByCountEvent(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            selectedPipeline:
+                                                                selectedPipelineId ??
+                                                                    ""));
 
                                             BlocProvider.of<
                                                         DashboardPipelineBloc>(
@@ -778,7 +809,6 @@ class DashboardDesktopView extends StatelessWidget {
                                                 .add(
                                               UpdateSelectedPipelineEvent(
                                                 selectedDate: selectedDate,
-                                                selectedMonth: selectedMonth,
                                                 selectedPipelineValue: value,
                                               ),
                                             );
