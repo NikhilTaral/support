@@ -715,7 +715,9 @@ class PieChartWidgetState extends State<PieChartWidget> {
               size: 15,
             ),
           ),
-        if (currentChartIndex == 2) _buildViewAllButton(),
+        if (currentChartIndex == 2 &&
+            (widget.validationByCount?.data?.isNotEmpty ?? false))
+          _buildViewAllButton(),
       ],
     );
   }
@@ -934,27 +936,27 @@ class PieChartWidgetState extends State<PieChartWidget> {
             value: widget.validationCount?.notValidated ?? 0)
       ];
     } else if (currentChartIndex == 2) {
-     if (widget.validationByCount?.data != null) {
-      final List<MapEntry<String, int>>? sortedEntries =
-          widget.validationByCount?.data?.entries.toList()
-            ?..sort((a, b) => b.value.compareTo(a.value));
+      if (widget.validationByCount?.data != null) {
+        final List<MapEntry<String, int>>? sortedEntries =
+            widget.validationByCount?.data?.entries.toList()
+              ?..sort((a, b) => b.value.compareTo(a.value));
 
-      final topEntries = sortedEntries?.take(5).toList();
+        final topEntries = sortedEntries?.take(5).toList();
 
-      return topEntries?.map((entry) {
-        // Add null and empty checks
-        if (entry.key == null || entry.key.isEmpty) {
-          return ChartData(label: 'Unknown', value: entry.value);
-        }
+        return topEntries?.map((entry) {
+          // Add null and empty checks
+          if (entry.key == null || entry.key.isEmpty) {
+            return ChartData(label: 'Unknown', value: entry.value);
+          }
 
-        final email = entry.key;
-        final name = email.contains('@') 
-            ? email.split('@').first.replaceAll('.', ' ').capitalizeLetter() 
-            : email.capitalizeLetter();
-        
-        return ChartData(label: name, value: entry.value);
-      }).toList();
-    }
+          final email = entry.key;
+          final name = email.contains('@')
+              ? email.split('@').first.replaceAll('.', ' ').capitalizeLetter()
+              : email.capitalizeLetter();
+
+          return ChartData(label: name, value: entry.value);
+        }).toList();
+      }
     }
     return [];
   }
@@ -965,10 +967,8 @@ extension StringExtension on String {
     if (this.isEmpty) return '';
 
     return split(' ')
-        .map((word) => word.isNotEmpty 
-            ? word[0].toUpperCase() + word.substring(1) 
-            : '')
+        .map((word) =>
+            word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
         .join(' ');
   }
 }
-
