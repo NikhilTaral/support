@@ -12,14 +12,16 @@ class ValidationCountPieChartWidget extends StatefulWidget {
   final Object? data;
   final bool isAIQuery;
 
-  const ValidationCountPieChartWidget({super.key, this.data, this.isAIQuery = false});
+  const ValidationCountPieChartWidget(
+      {super.key, this.data, this.isAIQuery = false});
 
   @override
-  State<ValidationCountPieChartWidget> createState() => ValidationCountPieChartWidgetState();
+  State<ValidationCountPieChartWidget> createState() =>
+      ValidationCountPieChartWidgetState();
 }
 
-class ValidationCountPieChartWidgetState extends State<ValidationCountPieChartWidget> {
-
+class ValidationCountPieChartWidgetState
+    extends State<ValidationCountPieChartWidget> {
   int? touchedIndex;
 
   ValidationCountPieChartWidgetState();
@@ -36,29 +38,28 @@ class ValidationCountPieChartWidgetState extends State<ValidationCountPieChartWi
 
     List<ChartData> chartData;
 
-    if (widget.isAIQuery && widget.data is DashboardAiQueryChartAttributeModel) {
+    if (widget.isAIQuery &&
+        widget.data is DashboardAiQueryChartAttributeModel) {
       final aiData = widget.data as DashboardAiQueryChartAttributeModel;
       chartData = [
-        ChartData(
-            label: 'AI Query Answer',
-            value: aiData.aiQueryAnswer),
-        ChartData(
-            label: 'AI Query Not Answer',
-            value: aiData.aiQueryNotAnswer),
+        ChartData(label: 'AI Query Answer', value: aiData.aiQueryAnswer),
+        ChartData(label: 'AI Query Not Answer', value: aiData.aiQueryNotAnswer),
       ];
     } else if (widget.data is DashboardChartAttributeModel) {
       final dashboardData = widget.data as DashboardChartAttributeModel;
       chartData = [
         ChartData(
             label: S.of(context).genuineQuery,
-            value: dashboardData.genuineQuery),
+            value: dashboardData.data?.counts?.genuineQuery),
         ChartData(
             label: S.of(context).noActionRequired,
-            value: dashboardData.noActionRequired),
-        ChartData(label: S.of(context).spam, value: dashboardData.spamMarketing),
+            value: dashboardData.data?.counts?.noActionRequired),
+        ChartData(
+            label: S.of(context).spam,
+            value: dashboardData.data?.counts?.spamMarketing),
         ChartData(
             label: S.of(context).acknowledgementRequired,
-            value: dashboardData.acknowledgement)
+            value: dashboardData.data?.counts?.acknowledgementRequired)
       ];
     } else {
       chartData = [];
@@ -87,14 +88,22 @@ class ValidationCountPieChartWidgetState extends State<ValidationCountPieChartWi
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Icon(Icons.arrow_back_ios_new,size: 15,),
+                Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 15,
+                ),
                 Text(
                   widget.isAIQuery
-                    ? S.of(context).aiQueryAnswer
-                    : S.of(context).ticketClassification,
+                      ? S.of(context).aiQueryAnswer
+                      : S.of(context).ticketClassification,
                   style: SupportBotTextstyle.pierchartHeading,
                 ),
-                InkWell(onTap: (){}, child: Icon(Icons.arrow_forward_ios,size: 15,))
+                InkWell(
+                    onTap: () {},
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ))
               ],
             ),
             Padding(
@@ -186,4 +195,3 @@ class ValidationCountPieChartWidgetState extends State<ValidationCountPieChartWi
     );
   }
 }
-
