@@ -922,10 +922,14 @@ class PieChartWidgetState extends State<PieChartWidget> {
           widget.data is DashboardAiQueryChartAttributeModel) {
         final aiData = widget.data as DashboardAiQueryChartAttributeModel;
         return [
-          ChartData(label: 'AI Query Answer', value: aiData.aiQueryAnswer ?? 0),
+          ChartData(
+              label: 'AI Query Answer',
+              value: aiData.data?.counts?.answeredCount ?? 0,
+              percentage: aiData.data?.percentages?.answeredCount ?? 0),
           ChartData(
               label: 'AI Query Not Answer',
-              value: aiData.aiQueryNotAnswer ?? 0),
+              value: aiData.data?.counts?.notAnsweredCount ?? 0,
+              percentage: aiData.data?.percentages?.notAnsweredCount ?? 0),
         ];
       } else if (widget.data is DashboardChartAttributeModel) {
         final dashboardData = widget.data as DashboardChartAttributeModel;

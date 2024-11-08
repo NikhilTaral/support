@@ -29,8 +29,14 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
             DashboardAiQueryChartResponseModel.fromJson(response.right);
         if (model.success == true) {
           final dashboardAiQueryChartData = DashboardAiQueryChartAttributeModel(
-              aiQueryAnswer: model.data?.aiQueryAnswer,
-              aiQueryNotAnswer: model.data?.aiQueryNotAnswer);
+              data: AiQueryData(
+                  counts: AiQueryDataCounts(
+                      answeredCount: model.data?.counts?.answeredCount,
+                      notAnsweredCount: model.data?.counts?.notAnsweredCount),
+                  percentages: AiQueryDataCounts(
+                      answeredCount: model.data?.percentages?.answeredCount,
+                      notAnsweredCount:
+                          model.data?.percentages?.notAnsweredCount)));
 
           emit(AiQueryChartSuccess(
               pieChartData: dashboardAiQueryChartData,
@@ -46,15 +52,23 @@ class AiQueryChartBloc extends Bloc<AiQueryChartEvent, AiQueryChartState> {
 
   FutureOr<void> _onSelectedChartDateEvent(
       SelectedChartDateEvent event, Emitter<AiQueryChartState> emit) {
-    emit(UpdateSelectedChartDateState(selectedDate: event.selectedDate,selectedPipeline: event.selectedPipeline));
+    emit(UpdateSelectedChartDateState(
+        selectedDate: event.selectedDate,
+        selectedPipeline: event.selectedPipeline));
     add(FetchAiQueryChartData(
-        selectedDate: event.selectedDate, selectedMonth: DateTime(2024 - 01),selectedPipeline: event.selectedPipeline));
+        selectedDate: event.selectedDate,
+        selectedMonth: DateTime(2024 - 01),
+        selectedPipeline: event.selectedPipeline));
   }
 
   FutureOr<void> _onSelectedChartMonthEvent(
       SelectedChartMonthEvent event, Emitter<AiQueryChartState> emit) {
-    emit(UpdateSelectedChartMonthState(selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline));
+    emit(UpdateSelectedChartMonthState(
+        selectedMonth: event.selectedMonth,
+        selectedPipeline: event.selectedPipeline));
     add(FetchAiQueryChartData(
-        selectedDate: DateTime.now(), selectedMonth: event.selectedMonth,selectedPipeline: event.selectedPipeline));
+        selectedDate: DateTime.now(),
+        selectedMonth: event.selectedMonth,
+        selectedPipeline: event.selectedPipeline));
   }
 }

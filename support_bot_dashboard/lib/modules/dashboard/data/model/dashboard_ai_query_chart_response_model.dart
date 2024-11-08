@@ -1,15 +1,21 @@
+// To parse this JSON data, do
+//
+//     final dashboardAiQueryChartResponseModel = dashboardAiQueryChartResponseModelFromJson(jsonString);
+
 import 'dart:convert';
 
-DashboardAiQueryChartResponseModel dashboardAiQueryChartResponseModelFromJson(String str) =>
+DashboardAiQueryChartResponseModel dashboardAiQueryChartResponseModelFromJson(
+        String str) =>
     DashboardAiQueryChartResponseModel.fromJson(json.decode(str));
 
-String dashboardAiQueryChartResponseModelToJson(DashboardAiQueryChartResponseModel data) =>
+String dashboardAiQueryChartResponseModelToJson(
+        DashboardAiQueryChartResponseModel data) =>
     json.encode(data.toJson());
 
 class DashboardAiQueryChartResponseModel {
   final Data? data;
   final bool? success;
-  final num? failCode;
+  final int? failCode;
   final Params? params;
   final String? message;
 
@@ -21,12 +27,13 @@ class DashboardAiQueryChartResponseModel {
     this.message,
   });
 
-  factory DashboardAiQueryChartResponseModel.fromJson(Map<String, dynamic> json) =>
+  factory DashboardAiQueryChartResponseModel.fromJson(
+          Map<String, dynamic> json) =>
       DashboardAiQueryChartResponseModel(
-        data: Data.fromJson(json["data"]),
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
         success: json["success"],
         failCode: json["failCode"],
-        params: Params.fromJson(json["params"]),
+        params: json["params"] == null ? null : Params.fromJson(json["params"]),
         message: json["message"],
       );
 
@@ -40,20 +47,44 @@ class DashboardAiQueryChartResponseModel {
 }
 
 class Data {
-  final num? aiQueryAnswer;
-  final num? aiQueryNotAnswer;
+  final Counts? counts;
+  final Counts? percentages;
 
-  Data(
-      {this.aiQueryAnswer,
-      this.aiQueryNotAnswer});
+  Data({
+    this.counts,
+    this.percentages,
+  });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-      aiQueryAnswer: json["answered"],
-      aiQueryNotAnswer: json["notAnswered"],);
+        counts: json["counts"] == null ? null : Counts.fromJson(json["counts"]),
+        percentages: json["percentages"] == null
+            ? null
+            : Counts.fromJson(json["percentages"]),
+      );
 
   Map<String, dynamic> toJson() => {
-        "answered": aiQueryAnswer,
-        "notAnswered": aiQueryNotAnswer,
+        "counts": counts?.toJson(),
+        "percentages": percentages?.toJson(),
+      };
+}
+
+class Counts {
+  final double? answeredCount;
+  final double? notAnsweredCount;
+
+  Counts({
+    this.answeredCount,
+    this.notAnsweredCount,
+  });
+
+  factory Counts.fromJson(Map<String, dynamic> json) => Counts(
+        answeredCount: json["answeredCount"],
+        notAnsweredCount: json["notAnsweredCount"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "answeredCount": answeredCount,
+        "notAnsweredCount": notAnsweredCount,
       };
 }
 
