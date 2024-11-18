@@ -79,9 +79,9 @@ class CustomSidebar extends StatelessWidget {
                       validationReason.isEmpty ? 'N/A' : validationReason),
                   _buildRow(
                       'Status:', status == true ? "Updated" : "Not Updated"),
-                  _buildRow('Validated Classification',
+                  _buildRow('Validated Classification:',
                       validatedClassification ?? "N/A"),
-                  _buildRow('Classification ValidatedBy',
+                  _buildRow('Classification Validated By:',
                       classificationValidatedBy ?? "N/A")
                 ],
               ),
