@@ -25,15 +25,26 @@ class CustomSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-       final id = rowData.cells[TicketClassificationGridKey.id]?.value ?? 'N/A';
-    final description = rowData.cells[TicketClassificationGridKey.ticketDescription]?.value ?? 'N/A';
-    final reasoning = rowData.cells[TicketClassificationGridKey.reasoning]?.value ?? 'N/A';
-    final validation = rowData.cells[TicketClassificationGridKey.validation]?.value ?? 'N/A';
-    final validationReason = rowData.cells[TicketClassificationGridKey.validationReason]?.value ?? 'N/A';
-    final status = rowData.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value == true ? "Updated" : "Not Updated";
-    final validatedClassification = rowData.cells['validatedClassification']?.value ?? 'N/A';
-    final classificationValidatedBy = rowData.cells['classificationValidatedBy']?.value ?? 'N/A';
+    final id = rowData.cells[TicketClassificationGridKey.id]?.value ?? 'N/A';
+    final description =
+        rowData.cells[TicketClassificationGridKey.ticketDescription]?.value ??
+            'N/A';
+    final reasoning =
+        rowData.cells[TicketClassificationGridKey.reasoning]?.value ?? 'N/A';
+    final validation =
+        rowData.cells[TicketClassificationGridKey.validation]?.value ?? 'N/A';
+    final validationReason =
+        rowData.cells[TicketClassificationGridKey.validationReason]?.value ??
+            'N/A';
+    final status =
+        rowData.cells[TicketClassificationGridKey.isUpdatedToHubspot]?.value ==
+                true
+            ? "Updated"
+            : "Not Updated";
+    final validatedClassification =
+        rowData.cells['validatedClassification']?.value ?? 'N/A';
+    final classificationValidatedBy =
+        rowData.cells['classificationValidatedBy']?.value ?? 'N/A';
 
     return Scaffold(
       appBar: AppBar(
@@ -74,15 +85,25 @@ class CustomSidebar extends StatelessWidget {
                   _buildRow('Description:', description ?? ""),
                   _buildRow('Reasoning:', reasoning ?? ""),
                   _buildRow(
-                      'Validation:', validation.isEmpty ? 'N/A' : validation),
+                    'Validation:',
+                    validation.isEmpty
+                        ? 'N/A'
+                        : capitalizeFirstLetter(validation),
+                  ),
                   _buildRow('Validation Reason:',
                       validationReason.isEmpty ? 'N/A' : validationReason),
                   _buildRow(
                       'Status:', status == true ? "Updated" : "Not Updated"),
-                  _buildRow('Validated Classification',
-                      validatedClassification ?? "N/A"),
-                  _buildRow('Classification ValidatedBy',
-                      classificationValidatedBy ?? "N/A")
+                  _buildRow(
+                      'Validated Classification:',
+                      validatedClassification?.isEmpty ?? true
+                          ? "N/A"
+                          : validatedClassification),
+                  _buildRow(
+                      'Classification Validated By:',
+                      classificationValidatedBy?.isEmpty ?? true
+                          ? "N/A"
+                          : classificationValidatedBy)
                 ],
               ),
             ),
@@ -90,6 +111,11 @@ class CustomSidebar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 
   Widget _buildRow(String title, String value) {

@@ -14,27 +14,32 @@ class CountContainerData {
   });
 }
 
-List<CountContainerData> getCountContainerData(BuildContext context, {DashboardDataSuccess? state, num totalCount = 0}) {
+List<CountContainerData> getCountContainerData(BuildContext context,
+    {DashboardDataSuccess? state, num totalCount = 0}) {
   return [
     CountContainerData(
       text: S.of(context).spam,
       iconPath: 'assets/icons/Spam.svg',
-      count: state?.pieChartData?.spamMarketing?.toString() ?? '0',
+      count:
+          state?.pieChartData?.data?.counts?.spamMarketing?.toString() ?? '0',
     ),
     CountContainerData(
       text: S.of(context).noActionRequired,
       iconPath: 'assets/icons/NotSpam.svg',
-      count: state?.pieChartData?.noActionRequired?.toString() ?? '0',
+      count: state?.pieChartData?.data?.counts?.noActionRequired?.toString() ??
+          '0',
     ),
     CountContainerData(
       text: S.of(context).genuineQuery,
       iconPath: 'assets/icons/genuine.svg',
-      count: state?.pieChartData?.genuineQuery?.toString() ?? '0',
+      count: state?.pieChartData?.data?.counts?.genuineQuery?.toString() ?? '0',
     ),
     CountContainerData(
       text: S.of(context).acknowledgementRequired,
       iconPath: 'assets/icons/acknowledgement.svg',
-      count: state?.pieChartData?.acknowledgement?.toString() ?? '0',
+      count: state?.pieChartData?.data?.counts?.acknowledgementRequired
+              ?.toString() ??
+          '0',
     ),
     CountContainerData(
       text: S.of(context).total,

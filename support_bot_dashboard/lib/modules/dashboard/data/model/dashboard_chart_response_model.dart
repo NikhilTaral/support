@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final dashboardChartResponseModel = dashboardChartResponseModelFromJson(jsonString);
+
 import 'dart:convert';
 
 DashboardChartResponseModel dashboardChartResponseModelFromJson(String str) =>
@@ -9,7 +13,7 @@ String dashboardChartResponseModelToJson(DashboardChartResponseModel data) =>
 class DashboardChartResponseModel {
   final Data? data;
   final bool? success;
-  final num? failCode;
+  final int? failCode;
   final Params? params;
   final String? message;
 
@@ -23,10 +27,10 @@ class DashboardChartResponseModel {
 
   factory DashboardChartResponseModel.fromJson(Map<String, dynamic> json) =>
       DashboardChartResponseModel(
-        data: Data.fromJson(json["data"]),
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
         success: json["success"],
         failCode: json["failCode"],
-        params: Params.fromJson(json["params"]),
+        params: json["params"] == null ? null : Params.fromJson(json["params"]),
         message: json["message"],
       );
 
@@ -40,34 +44,56 @@ class DashboardChartResponseModel {
 }
 
 class Data {
-  final num? genuineQuery;
-  final num? noActionRequired;
-  final num? spamMarketing;
-  final num? acknowledgement;
-  final num? notClassified;
+  final Counts? counts;
+  final Counts? percentages;
 
-  Data(
-      {this.genuineQuery,
-      this.noActionRequired,
-      this.spamMarketing,
-      this.acknowledgement,
-      this.notClassified
-      });
+  Data({
+    this.counts,
+    this.percentages,
+  });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-      genuineQuery: json["Genuine Query"],
-      noActionRequired: json["No Action Required"],
-      spamMarketing: json["Spam/Marketing"],
-      acknowledgement: json['Acknowledgement Required'],
-      notClassified: json['Not Classified']
+        counts: json["counts"] == null ? null : Counts.fromJson(json["counts"]),
+        percentages: json["percentages"] == null
+            ? null
+            : Counts.fromJson(json["percentages"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "counts": counts?.toJson(),
+        "percentages": percentages?.toJson(),
+      };
+}
+
+class Counts {
+  final double? genuineQuery;
+  final double? noActionRequired;
+  final double? spamMarketing;
+  final double? acknowledgementRequired;
+  final double? notClassified;
+
+  Counts({
+    this.genuineQuery,
+    this.noActionRequired,
+    this.spamMarketing,
+    this.acknowledgementRequired,
+    this.notClassified,
+  });
+
+  factory Counts.fromJson(Map<String, dynamic> json) => Counts(
+        genuineQuery: json["Genuine Query"]?.toDouble(),
+        noActionRequired: json["No Action Required"]?.toDouble(),
+        spamMarketing: json["Spam/Marketing"]?.toDouble(),
+        acknowledgementRequired: json["Acknowledgement Required"]?.toDouble(),
+        notClassified: json["Not Classified"]?.toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
         "Genuine Query": genuineQuery,
         "No Action Required": noActionRequired,
         "Spam/Marketing": spamMarketing,
-        "Acknowledgement Required": acknowledgement,
-        "Not Classified": notClassified
+        "Acknowledgement Required": acknowledgementRequired,
+        "Not Classified": notClassified,
       };
 }
 

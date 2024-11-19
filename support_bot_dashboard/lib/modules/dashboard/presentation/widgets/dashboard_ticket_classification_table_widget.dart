@@ -12,7 +12,6 @@ import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.da
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
-import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
@@ -593,7 +592,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
                   item.isUpdatedToHubspot == true ? "Updated" : "Not Updated"),
           TicketClassificationGridKey.actions: PlutoCell(value: 'View'),
           'validatedClassification':
-              PlutoCell(value: item.validatedClassification),
+              PlutoCell(value: item.validatedClassification ?? "N/A"),
           'classificationValidatedBy':
               PlutoCell(value: item.classificationValidatedBy)
         },
@@ -628,8 +627,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value = 1;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: selectedDate,
-                                  selectedMonth: selectedMonth,
+                                   selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
+                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,
@@ -671,8 +670,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value--;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: selectedDate,
-                                  selectedMonth: selectedMonth,
+                                  selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
+                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,
@@ -708,8 +707,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value++;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: selectedDate,
-                                  selectedMonth: selectedMonth,
+                                  selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
+                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,
