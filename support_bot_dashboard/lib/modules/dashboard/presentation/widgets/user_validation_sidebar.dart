@@ -61,13 +61,12 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class UserValidationSidebar extends StatelessWidget {
-  final Map<String, int> validationData;
+  final Map<String, double>? validationData;
 
   const UserValidationSidebar({
     Key? key,
@@ -77,8 +76,8 @@ class UserValidationSidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Sort validation data by value in descending order
-    final sortedEntries = validationData.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final sortedEntries = validationData?.entries.toList()
+      ?..sort((a, b) => b.value.compareTo(a.value));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -88,7 +87,8 @@ class UserValidationSidebar extends StatelessWidget {
           children: [
             // Custom App Bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
               child: Row(
                 children: [
                   IconButton(
@@ -108,23 +108,23 @@ class UserValidationSidebar extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const Divider(height: 1, color: Colors.grey),
-            
+
             Expanded(
               child: ListView.builder(
-                itemCount: sortedEntries.length,
+                itemCount: sortedEntries?.length,
                 itemBuilder: (context, index) {
-                  final entry = sortedEntries[index];
-                  final name = _formatName(entry.key);
-                  
+                  final entry = sortedEntries?[index];
+                  final name = _formatName(entry?.key ?? "");
+
                   return ListTile(
                     title: Text(
-                      name, 
+                      name,
                       style: SupportBotTextstyle.pierchartLabel,
                     ),
                     trailing: Text(
-                      entry.value.toString(), 
+                      entry?.value.toString() ?? "",
                       style: SupportBotTextstyle.pierchartLabel,
                     ),
                   );
@@ -140,10 +140,10 @@ class UserValidationSidebar extends StatelessWidget {
   // Helper method to format name
   String _formatName(String email) {
     if (email.isEmpty) return 'Unknown';
-    
-    return email.contains('@') 
-      ? email.split('@').first.replaceAll('.', ' ').capitalize()
-      : email.capitalize();
+
+    return email.contains('@')
+        ? email.split('@').first.replaceAll('.', ' ').capitalize()
+        : email.capitalize();
   }
 }
 
@@ -153,9 +153,8 @@ extension StringExtension on String {
     if (isEmpty) return '';
 
     return split(' ')
-        .map((word) => word.isNotEmpty 
-            ? word[0].toUpperCase() + word.substring(1) 
-            : '')
+        .map((word) =>
+            word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
         .join(' ');
   }
 }

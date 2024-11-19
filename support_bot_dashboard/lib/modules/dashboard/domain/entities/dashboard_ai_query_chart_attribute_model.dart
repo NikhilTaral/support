@@ -1,14 +1,27 @@
-import 'package:equatable/equatable.dart';
+class DashboardAiQueryChartAttributeModel {
+  final AiQueryData? data;
 
-class DashboardAiQueryChartAttributeModel extends Equatable {
-   final num? aiQueryAnswer;
-  final num? aiQueryNotAnswer;
+  DashboardAiQueryChartAttributeModel({
+    this.data,
+  });
+}
 
-  const DashboardAiQueryChartAttributeModel(
-      {required this.aiQueryAnswer,
-      required this.aiQueryNotAnswer,});
+class AiQueryData {
+  final AiQueryDataCounts? counts;
+  final AiQueryDataCounts? percentages;
 
-  @override
-  List<Object?> get props =>
-      [aiQueryAnswer, aiQueryNotAnswer];
+  AiQueryData({
+    this.counts,
+    this.percentages,
+  });
+}
+
+class AiQueryDataCounts {
+  final double? answeredCount;
+  final double? notAnsweredCount;
+
+  AiQueryDataCounts({
+    this.answeredCount,
+    this.notAnsweredCount,
+  });
 }

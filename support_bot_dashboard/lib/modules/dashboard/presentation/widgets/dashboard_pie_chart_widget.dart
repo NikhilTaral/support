@@ -582,7 +582,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PieChartWidget extends StatefulWidget {
   final Object? data;
-  final ValidationCountAttributeModel? validationCount;
+  final GetValidationCountAttributeModel? validationCount;
   final GetValidationByCountAttributeModel? validationByCount;
   final GetUserSettingsAttributeModel? userSettingsData;
   final bool isAIQuery;
@@ -716,14 +716,16 @@ class PieChartWidgetState extends State<PieChartWidget> {
             ),
           ),
         if (currentChartIndex == 2 &&
-            (widget.validationByCount?.data?.isNotEmpty ?? false))
+            (widget.validationByCount?.data?.counts?.isNotEmpty ??
+                false || widget.validationByCount?.data?.percentages != null ??
+                false))
           _buildViewAllButton(),
       ],
     );
   }
 
   void _showSidebarDialog(BuildContext context) {
-    final validationData = widget.validationByCount?.data ?? {};
+    final validationData = widget.validationByCount?.data?.counts ?? {};
 
     showDialog(
       context: context,
@@ -807,12 +809,29 @@ class PieChartWidgetState extends State<PieChartWidget> {
           sections: List.generate(
             nonZeroChartData.length,
             (index) {
+              // final isTouched = index == touchedIndex;
+              // final double fontSize = isTouched ? 12 : 14;
+              // return PieChartSectionData(
+              //   value: nonZeroChartData[index].value?.toDouble() ?? 0.0,
+              //   title: isTouched
+              //       ? '${nonZeroChartData[index].label}\n${nonZeroChartData[index].value}'
+              //       : null,
+              //   color: blueShades[index % blueShades.length],
+              //   radius: radius,
+              //   titleStyle: SupportBotTextstyle.pierchartNormal.copyWith(
+              //     fontSize: fontSize,
+              //   ),
+              //   showTitle: true,
+              // );/
               final isTouched = index == touchedIndex;
               final double fontSize = isTouched ? 12 : 14;
+              final chartData = nonZeroChartData[index];
+              final count = chartData.value ?? 0;
+              final percentage = chartData.percentage ?? 0.0;
               return PieChartSectionData(
-                value: nonZeroChartData[index].value?.toDouble() ?? 0.0,
+                value: count.toDouble(),
                 title: isTouched
-                    ? '${nonZeroChartData[index].label}\n${nonZeroChartData[index].value}'
+                    ? '${chartData.label}\n$count (${percentage.toStringAsFixed(1)}%)'
                     : null,
                 color: blueShades[index % blueShades.length],
                 radius: radius,
@@ -880,22 +899,22 @@ class PieChartWidgetState extends State<PieChartWidget> {
     );
   }
 
-  // Existing helper methods remain unchanged
-  List<ChartData> _getAllValidationData() {
-    if (widget.validationByCount?.data != null) {
-      final List<MapEntry<String, int>> sortedEntries =
-          widget.validationByCount?.data?.entries.toList() ?? []
-            ..sort((a, b) => b.value.compareTo(a.value));
+  // // Existing helper methods remain unchanged
+  // List<ChartData> _getAllValidationData() {
+  //   if (widget.validationByCount?.data != null) {
+  //     final List<MapEntry<String, int>> sortedEntries =
+  //         widget.validationByCount?.data?.entries.toList() ?? []
+  //           ..sort((a, b) => b.value.compareTo(a.value));
 
-      return sortedEntries.map((entry) {
-        final email = entry.key;
-        final name =
-            email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
-        return ChartData(label: name, value: entry.value);
-      }).toList();
-    }
-    return [];
-  }
+  //     return sortedEntries.map((entry) {
+  //       final email = entry.key;
+  //       final name =
+  //           email.split('@').first.replaceAll('.', ' ').capitalizeLetter();
+  //       return ChartData(label: name, value: entry.value);
+  //     }).toList();
+  //   }
+  //   return [];
+  // }
 
   List<ChartData>? _getChartData() {
     if (currentChartIndex == 0) {
@@ -903,50 +922,72 @@ class PieChartWidgetState extends State<PieChartWidget> {
           widget.data is DashboardAiQueryChartAttributeModel) {
         final aiData = widget.data as DashboardAiQueryChartAttributeModel;
         return [
-          ChartData(label: 'AI Query Answer', value: aiData.aiQueryAnswer ?? 0),
+          ChartData(
+              label: 'AI Query Answer',
+              value: aiData.data?.counts?.answeredCount ?? 0,
+              percentage: aiData.data?.percentages?.answeredCount ?? 0),
           ChartData(
               label: 'AI Query Not Answer',
-              value: aiData.aiQueryNotAnswer ?? 0),
+              value: aiData.data?.counts?.notAnsweredCount ?? 0,
+              percentage: aiData.data?.percentages?.notAnsweredCount ?? 0),
         ];
       } else if (widget.data is DashboardChartAttributeModel) {
         final dashboardData = widget.data as DashboardChartAttributeModel;
         return [
           ChartData(
               label: S.of(context).genuineQuery,
-              value: dashboardData.genuineQuery ?? 0),
+              value: dashboardData.data?.counts?.genuineQuery ?? 0,
+              percentage: dashboardData.data?.percentages?.genuineQuery ?? 0),
           ChartData(
               label: S.of(context).noActionRequired,
-              value: dashboardData.noActionRequired ?? 0),
+              value: dashboardData.data?.counts?.noActionRequired ?? 0,
+              percentage:
+                  dashboardData.data?.percentages?.noActionRequired ?? 0),
           ChartData(
               label: S.of(context).spam,
-              value: dashboardData.spamMarketing ?? 0),
+              value: dashboardData.data?.counts?.spamMarketing ?? 0,
+              percentage: dashboardData.data?.percentages?.spamMarketing ?? 0),
           ChartData(
               label: S.of(context).acknowledgementRequired,
-              value: dashboardData.acknowledgement ?? 0)
+              value: dashboardData.data?.counts?.acknowledgementRequired ?? 0,
+              percentage:
+                  dashboardData.data?.percentages?.acknowledgementRequired ?? 0)
         ];
       }
     } else if (currentChartIndex == 1) {
       return [
         ChartData(
-            label: 'Correct', value: widget.validationCount?.correct ?? 0),
+            label: 'Correct',
+            value: widget.validationCount?.data?.counts?.correct ?? 0,
+            percentage:
+                widget.validationCount?.data?.percentages?.correct ?? 0),
         ChartData(
-            label: 'Incorrect', value: widget.validationCount?.incorrect ?? 0),
+            label: 'Incorrect',
+            value: widget.validationCount?.data?.counts?.incorrect ?? 0,
+            percentage:
+                widget.validationCount?.data?.percentages?.incorrect ?? 0),
         ChartData(
             label: 'Not Validated',
-            value: widget.validationCount?.notValidated ?? 0)
+            value: widget.validationCount?.data?.counts?.notValidated ?? 0,
+            percentage:
+                widget.validationCount?.data?.percentages?.notValidated ?? 0)
       ];
     } else if (currentChartIndex == 2) {
       if (widget.validationByCount?.data != null) {
-        final List<MapEntry<String, int>>? sortedEntries =
-            widget.validationByCount?.data?.entries.toList()
-              ?..sort((a, b) => b.value.compareTo(a.value));
+        final counts = widget.validationByCount?.data?.counts ?? {};
+        final percentages = widget.validationByCount?.data?.percentages ?? {};
 
-        final topEntries = sortedEntries?.take(5).toList();
+        // Sorting the counts and percentages based on the count value
+        final sortedEntries = counts.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
 
-        return topEntries?.map((entry) {
-          // Add null and empty checks
+        final topEntries = sortedEntries.take(5).toList();
+
+        return topEntries.map((entry) {
+          // Add null and empty checks for label
           if (entry.key == null || entry.key.isEmpty) {
-            return ChartData(label: 'Unknown', value: entry.value);
+            return ChartData(
+                label: 'Unknown', value: entry.value, percentage: 0);
           }
 
           final email = entry.key;
@@ -954,7 +995,10 @@ class PieChartWidgetState extends State<PieChartWidget> {
               ? email.split('@').first.replaceAll('.', ' ').capitalizeLetter()
               : email.capitalizeLetter();
 
-          return ChartData(label: name, value: entry.value);
+          final count = entry.value;
+          final percentage = percentages[entry.key] ?? 0;
+
+          return ChartData(label: name, value: count, percentage: percentage);
         }).toList();
       }
     }

@@ -1,21 +1,33 @@
-import 'package:equatable/equatable.dart';
+class DashboardChartAttributeModel {
+  final ChartAttributeData? data;
 
-class DashboardChartAttributeModel extends Equatable {
-  final num? genuineQuery;
-  final num? noActionRequired;
-  final num? spamMarketing;
-  final num? acknowledgement;
-  final num? notClassified;
+  DashboardChartAttributeModel({
+    this.data,
+  });
+}
 
-  const DashboardChartAttributeModel(
-      {required this.genuineQuery,
-      required this.noActionRequired,
-      required this.spamMarketing,
-      required this.acknowledgement,
-      required this.notClassified
-      });
+class ChartAttributeData {
+  final ChartAttributeCounts? counts;
+  final ChartAttributeCounts? percentages;
 
-  @override
-  List<Object?> get props =>
-      [genuineQuery, noActionRequired, spamMarketing, acknowledgement,notClassified];
+  ChartAttributeData({
+    this.counts,
+    this.percentages,
+  });
+}
+
+class ChartAttributeCounts {
+  final double? genuineQuery;
+  final double? noActionRequired;
+  final double? spamMarketing;
+  final double? acknowledgementRequired;
+  final double? notClassified;
+
+  ChartAttributeCounts({
+    this.genuineQuery,
+    this.noActionRequired,
+    this.spamMarketing,
+    this.acknowledgementRequired,
+    this.notClassified,
+  });
 }

@@ -4,17 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_get_validation_count_response_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/get_user_settings_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/get_validation_by_count_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_user_settings_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_user_settings_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_count_usecase.dart';
-import 'package:support_bot_dashboard/utils/service/auth/auth_service.dart';
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
@@ -28,16 +25,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     // on<GetUserSettingsEvent>(_onGetUserSettingsEvent);
   }
 
-  ValidationCountAttributeModel? getValidationCountAttribute;
+  GetValidationCountAttributeModel? getValidationCountAttribute;
   DashboardChartAttributeModel? dashboardChartData;
   GetValidationByCountAttributeModel? getValidationByCountAttribute;
   GetUserSettingsAttributeModel? userSettingsAtrribute;
- 
 
   Future<void> _onUpdateSelectedDateEvent(
       UpdateSelectedDateEvent event, Emitter<DashboardState> emit) async {
     emit(DateUpdatedState(event.selectedDate, event.selectedPipeline));
-   
+
     add(FetchDashboardDataEvent(
       selectedDate: event.selectedDate,
       selectedMonth: null,
@@ -48,7 +44,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _onUpdateSelectedMonthEvent(
       UpdateSelectedMonthEvent event, Emitter<DashboardState> emit) async {
     emit(MonthUpdatedState(event.selectedMonth, event.selectedPipeline));
-   
+
     add(FetchDashboardDataEvent(
         selectedDate: null,
         selectedMonth: event.selectedMonth,
@@ -68,26 +64,39 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
       ));
     } else {
+      print('print 1');
       try {
         final model =
             dashboardChartResponseModelFromJson(jsonEncode(response.right));
 
         if (model.success == true && model.data != null) {
           dashboardChartData = DashboardChartAttributeModel(
-              genuineQuery: model.data?.genuineQuery ?? 0,
-              noActionRequired: model.data?.noActionRequired ?? 0,
-              spamMarketing: model.data?.spamMarketing ?? 0,
-              acknowledgement: model.data?.acknowledgement ?? 0,
-              notClassified: model.data?.notClassified ?? 0);
+              data: ChartAttributeData(
+            counts: ChartAttributeCounts(
+              genuineQuery: model.data?.counts?.genuineQuery,
+              noActionRequired: model.data?.counts?.noActionRequired,
+              spamMarketing: model.data?.counts?.spamMarketing,
+              acknowledgementRequired:
+                  model.data?.counts?.acknowledgementRequired,
+              notClassified: model.data?.counts?.notClassified,
+            ),
+            percentages: ChartAttributeCounts(
+              genuineQuery: model.data?.percentages?.genuineQuery,
+              noActionRequired: model.data?.percentages?.noActionRequired,
+              spamMarketing: model.data?.percentages?.spamMarketing,
+              acknowledgementRequired:
+                  model.data?.percentages?.acknowledgementRequired,
+              notClassified: model.data?.percentages?.notClassified,
+            ),
+          ));
           emit(DashboardDataSuccess(
-              getValidationCountAttributeModel: getValidationCountAttribute,
-              pieChartData: dashboardChartData,
-              selectedDate: event.selectedDate ?? DateTime.now(),
-              selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
-              selectedPipeline: event.selectedPipeline,
-              getValidationByCountAttributeModel:
-                  getValidationByCountAttribute,
-                  ));
+            getValidationCountAttributeModel: getValidationCountAttribute,
+            pieChartData: dashboardChartData,
+            selectedDate: event.selectedDate ?? DateTime.now(),
+            selectedMonth: event.selectedMonth ?? DateTime(2024, 1),
+            selectedPipeline: event.selectedPipeline,
+            getValidationByCountAttributeModel: getValidationByCountAttribute,
+          ));
         } else {
           emit(DashboardDataError(
             message: model.message ?? 'Unknown error',
@@ -96,6 +105,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           ));
         }
       } catch (e) {
+        print('exception::::::::: $e');
         emit(DashboardDataError(
           message: 'Failed to parse data',
           selectedDate: event.selectedDate ?? DateTime.now(),
@@ -119,10 +129,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } else {
       try {
         final model = GetValidationCountResponseModel.fromJson(response.right);
-        getValidationCountAttribute = ValidationCountAttributeModel(
-            correct: model.data?.correct ?? 0,
-            incorrect: model.data?.incorrect ?? 0,
-            notValidated: model.data?.notValidated ?? 0);
+        getValidationCountAttribute = GetValidationCountAttributeModel(
+            data: ValidationCountData(
+                counts: ValidationCounts(
+                    correct: model.data?.counts?.correct ?? 0,
+                    incorrect: model.data?.counts?.incorrect ?? 0,
+                    notValidated: model.data?.counts?.notValidated ?? 0),
+                percentages: ValidationCounts(
+                    correct: model.data?.percentages?.correct,
+                    incorrect: model.data?.percentages?.incorrect,
+                    notValidated: model.data?.percentages?.notValidated)));
         emit(DashboardDataSuccess(
             pieChartData: dashboardChartData,
             selectedDate: event.selectedDate,
@@ -154,20 +170,18 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       try {
         final model =
             GetValidationByCountResponseModel.fromJson(response.right);
-          getValidationByCountAttribute = GetValidationByCountAttributeModel(
-        data: model.data,
-      );
+        getValidationByCountAttribute = GetValidationByCountAttributeModel(
+            data: ValidationByCountData(
+                counts: model.data?.counts,
+                percentages: model.data?.percentages));
 
-     
-          emit(DashboardDataSuccess(
-              pieChartData: dashboardChartData,
-              selectedDate: event.selectedDate,
-              selectedMonth: event.selectedMonth,
-              selectedPipeline: event.selectedPipeline,
-              getValidationCountAttributeModel: getValidationCountAttribute,
-              getValidationByCountAttributeModel:
-                  getValidationByCountAttribute ));
-       
+        emit(DashboardDataSuccess(
+            pieChartData: dashboardChartData,
+            selectedDate: event.selectedDate,
+            selectedMonth: event.selectedMonth,
+            selectedPipeline: event.selectedPipeline,
+            getValidationCountAttributeModel: getValidationCountAttribute,
+            getValidationByCountAttributeModel: getValidationByCountAttribute));
       } catch (e) {
         emit(DashboardDataError(
             selectedDate: event.selectedDate ?? DateTime.now(),
@@ -194,7 +208,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   //           data: UserSettingsData(accessRole: model.data?.accessRole));
   //       emit(DashboardDataSuccess(
   //          pieChartData: dashboardChartData,
-             
+
   //             getValidationCountAttributeModel: getValidationCountAttribute,
   //             getValidationByCountAttributeModel:
   //                 getValidationByCountAttribute,

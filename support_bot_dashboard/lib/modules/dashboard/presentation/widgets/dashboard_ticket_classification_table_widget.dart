@@ -592,7 +592,7 @@ class TicketClassificationTableWidget extends StatelessWidget {
                   item.isUpdatedToHubspot == true ? "Updated" : "Not Updated"),
           TicketClassificationGridKey.actions: PlutoCell(value: 'View'),
           'validatedClassification':
-              PlutoCell(value: item.validatedClassification),
+              PlutoCell(value: item.validatedClassification ?? "N/A"),
           'classificationValidatedBy':
               PlutoCell(value: item.classificationValidatedBy)
         },

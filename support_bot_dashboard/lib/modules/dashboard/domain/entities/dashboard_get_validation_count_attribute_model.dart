@@ -1,17 +1,29 @@
-import 'package:equatable/equatable.dart';
+class GetValidationCountAttributeModel {
+  final ValidationCountData? data;
 
-class ValidationCountAttributeModel extends Equatable {
-  final num? correct;
-  final num? incorrect;
-  final num? notValidated;
+  GetValidationCountAttributeModel({
+    this.data,
+  });
+}
 
-  const ValidationCountAttributeModel(
-      {required this.correct,
-      required this.incorrect,
-      required this.notValidated
-      });
+class ValidationCountData {
+  final ValidationCounts? counts;
+  final ValidationCounts? percentages;
 
-  @override
-  List<Object?> get props =>
-      [correct, incorrect, notValidated];
+  ValidationCountData({
+    this.counts,
+    this.percentages,
+  });
+}
+
+class ValidationCounts {
+  final double? correct;
+  final double? incorrect;
+  final double? notValidated;
+
+  ValidationCounts({
+    this.correct,
+    this.incorrect,
+    this.notValidated,
+  });
 }
