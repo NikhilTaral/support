@@ -76,7 +76,7 @@ final class SendEmailAiAnswerLoadingState extends AiQueryAnswerState {}
 final class SendEmailAiAnswerSuccessState extends AiQueryAnswerState {
   // final DashboardAiQueryAttributeModel data;
   final String? ticketId;
-  final String? newAnswer;
+  final bool? agentAnsvalidation;
   final String? selectedPipeline;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
@@ -87,7 +87,7 @@ final class SendEmailAiAnswerSuccessState extends AiQueryAnswerState {
     required this.selectedDate,
     required this.selectedMonth,
     required this.ticketId,
-    required this.newAnswer,
+    required this.agentAnsvalidation,
   });
 }
 

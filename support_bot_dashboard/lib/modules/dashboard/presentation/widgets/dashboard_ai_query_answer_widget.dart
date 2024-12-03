@@ -459,7 +459,7 @@ void _showSendEmailPopup(
                 BlocProvider.of<AiQueryAnswerBloc>(context).add(
                   SendEmailAiAnswerInitialEvent(
                     ticketId: id,
-                    newAnswer: aiQueryAnswer,
+                    agentAnsvalidation: true,
                     selectedPipeline: pipeline,
                     selectedDate: selectedDate,
                     selectedMonth: selectedMonth,

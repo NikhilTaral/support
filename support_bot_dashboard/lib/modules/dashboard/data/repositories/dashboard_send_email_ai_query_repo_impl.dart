@@ -8,7 +8,7 @@ import 'package:support_bot_dashboard/utils/service/failure.dart';
 
 class SendEmailAiAnswerRepoImpl extends SendEmailAiAnswerRepository {
   @override
-  Future<Either<Failure, dynamic>> sendEmailAiAnswer(String? ticketId, String? newAnswer, String? selectedPipeline) async {
+  Future<Either<Failure, dynamic>> sendEmailAiAnswer(String? ticketId, bool? agentAnsvalidation, String? selectedPipeline) async {
     final uri = Uri.parse('${EnvConfig.EXP_API_URL}/dashboard/addAnswerValidation');
     final headers = {
       'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ class SendEmailAiAnswerRepoImpl extends SendEmailAiAnswerRepository {
     };
     final body = jsonEncode({
       'ticketId': ticketId,
-      'agentAnsValidation': newAnswer,
+      'agentAnsValidation': agentAnsvalidation,
       'pipeline': selectedPipeline
     });
     final response = await http.post(uri, headers: headers, body: body);

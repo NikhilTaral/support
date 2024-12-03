@@ -117,18 +117,18 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
 
     FutureOr<void> _sendEmailOnUpdateAiAnswers(SendEmailAiAnswerInitialEvent event,
       Emitter<AiQueryAnswerState> emit) async {
-    emit(UpdateAiAnswerLoadingState());
+    emit(SendEmailAiAnswerLoadingState());
  try{
      final repository = serviceLocator<SendEmailAiAnswerUsecase>();
     final response = await repository.invoke(
-        event.ticketId, event.newAnswer, event.selectedPipeline);
-    emit(UpdateAiAnswerSuccessState(
+        event.ticketId, event.agentAnsvalidation, event.selectedPipeline);
+    emit(SendEmailAiAnswerSuccessState(
         // data: aiQueryAnswerTableData,
         selectedDate: event.selectedDate,
         selectedMonth: event.selectedMonth,
         selectedPipeline: event.selectedPipeline,
         ticketId: event.ticketId,
-        newAnswer: event.newAnswer));
+        agentAnsvalidation: event.agentAnsvalidation));
  }catch(e){
   print(e);
  }

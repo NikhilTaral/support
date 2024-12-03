@@ -63,13 +63,13 @@ class UpdateAiAnswerInitialEvent extends AiQueryAnswerEvent {
 
 class SendEmailAiAnswerInitialEvent extends AiQueryAnswerEvent {
   final String? ticketId;
-  final String? newAnswer;
+  final bool? agentAnsvalidation ;
   final String? selectedPipeline;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   SendEmailAiAnswerInitialEvent(
       {required this.ticketId,
-      required this.newAnswer,
+      required this.agentAnsvalidation,
       this.selectedPipeline,
       required this.selectedDate,
       required this.selectedMonth});
