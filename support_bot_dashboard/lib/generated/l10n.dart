@@ -240,6 +240,16 @@ class S {
     );
   }
 
+    /// `bopsState`
+  String get bopsState {
+    return Intl.message(
+      'Bops State',
+      name: 'bopsState',
+      desc: 'Bops State',
+      args: [],
+    );
+  }
+
   /// `reasoning`
   String get reasoning {
     return Intl.message(

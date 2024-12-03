@@ -86,6 +86,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 hsPipelineStage: item.hsPipelineStage.s ?? "",
                 reasoning: item.reasoning.s ?? "",
                 createdAt: item.createdAt.s ?? "",
+                bopsState: item.bopsState.s ?? "",
                 ticketDescription: item.ticketDescription.s ?? "",
                 classificationValidation: item.classificationValidation.s ?? "",
                 classificationValidationReason:
