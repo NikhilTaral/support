@@ -91,14 +91,11 @@ class DashboardDesktopView extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => serviceLocator<AiQueryChartBloc>()
-            ..add(
-              FetchAiQueryChartData(
+            create: (context) => serviceLocator<AiQueryChartBloc>()
+              ..add(FetchAiQueryChartData(
                   selectedDate: DateTime.now(),
                   selectedMonth: null,
-                  selectedPipeline: selectedPipelineId),
-            ),
-        ),
+                  selectedPipeline: selectedPipelineId))),
         BlocProvider(
             create: (context) => serviceLocator<DashboardPipelineBloc>()
               ..add(FilterPipelineEvent(
@@ -840,6 +837,8 @@ class DashboardDesktopView extends StatelessWidget {
                                   } else if (state is AiQueryChartSuccess) {
                                     if (isAIAnswer) {
                                       return PieChartWidget(
+                                          // aiQueryAnswer: state.pieChartData,
+                                          // aiAnswerEditedData: state.aiAnswerEditedPieChartData,
                                           data: state.pieChartData,
                                           isAIQuery: true);
                                     }

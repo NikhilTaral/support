@@ -1,9 +1,11 @@
+
+
 {
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"
   },
-   "ticketClassification": "Ticket Classification",
+  "ticketClassification": "Ticket Classification",
   "@ticketClassification": {
     "description": "Ticket Classification"
   },
@@ -136,19 +138,23 @@
     "description": "Link"
   },
   "isAnswerEdited": "isAnswerEdited",
-  "@isAnswerEdited":{
+  "@isAnswerEdited": {
     "description": "isAnswerEdited"
   },
   "validationStatus": "Validation Status",
-  "@validationStatus":{
+  "@validationStatus": {
     "description": "Validation Status"
   },
   "userValidation": "User Validation",
-  "@userValidation":{
+  "@userValidation": {
     "description": "User Validation"
   },
   "validationExists": "Validation Exists",
-  "@validationExists":{
+  "@validationExists": {
     "description": "Validation Exists"
+  },
+  "validatEmail": "Validate Email",
+  "@validatEmail": {
+    "description": "Validate Email"
   }
 }

@@ -90,6 +90,16 @@ class S {
     );
   }
 
+  /// `AI Answer Status`
+  String get aiAnswerStatus {
+    return Intl.message(
+      'AI Answer Status',
+      name: 'aiAnswerStatus',
+      desc: 'AI Answer Status',
+      args: [],
+    );
+  }
+
   /// `Validation Status`
   String get validationStatus {
     return Intl.message(
@@ -190,6 +200,16 @@ class S {
     );
   }
 
+  /// `Classification`
+  String get bopsState {
+    return Intl.message(
+      'Bops State',
+      name: 'bopsState',
+      desc: 'bopsState',
+      args: [],
+    );
+  }
+
   //answer edited
   String get isAnswerEdited {
     return Intl.message(
@@ -236,16 +256,6 @@ class S {
       'Ticket Description',
       name: 'ticketDescription',
       desc: 'Ticket Description',
-      args: [],
-    );
-  }
-
-    /// `bopsState`
-  String get bopsState {
-    return Intl.message(
-      'Bops State',
-      name: 'bopsState',
-      desc: 'Bops State',
       args: [],
     );
   }
@@ -396,6 +406,35 @@ class S {
       'Do you want to mark this ticket as No Contact Needed/Spam in HubSpot?',
       name: 'UpdateSuccess',
       desc: 'Ticket Stage Updated successfully',
+      args: [],
+    );
+  }
+
+  /// `Send Validation Email`
+  String get ValidateEmail {
+    return Intl.message(
+      'Do you want to Validate this ticket & Send Email?',
+      name: 'ValidateEmail',
+      desc: 'Email Send successfully',
+      args: [],
+    );
+  }
+
+  /// `sendEmail`
+  String get sendEmail {
+    return Intl.message(
+      'Send Email',
+      name: 'sendEmail',
+      desc: 'Send Email',
+      args: [],
+    );
+  }
+
+  String get validatEmail {
+    return Intl.message(
+      'Validate Email',
+      name: 'validatEmail',
+      desc: 'Validate Email',
       args: [],
     );
   }
