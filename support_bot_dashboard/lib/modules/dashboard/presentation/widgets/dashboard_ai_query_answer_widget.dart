@@ -379,7 +379,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
                 ),
               ),
               PopupMenuItem<String>(
-                value: S.of(context).validatEmail,
+                value: S.of(context).validateAIAnswer,
                 child: InkWell(
                   onTap: () {
                     // showDialog(
@@ -389,7 +389,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
                     //     currentIndex: currentIndex,
                     //   ),
                     // );
-                    _showSendEmailPopup(context, rows, currentIndex,
+                    _showAnswerValidationPopup(context, rows, currentIndex,
                         selectedDate, selectedMonth, pipeline);
                   },
                   child: Row(
@@ -409,7 +409,7 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
   );
 }
 
-void _showSendEmailPopup(
+void _showAnswerValidationPopup(
     BuildContext context,
     List<PlutoRow> rows,
     int currentIndex,
@@ -427,8 +427,8 @@ void _showSendEmailPopup(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text(S.of(context).sendEmail),
-          content: Text(S.of(context).ValidateEmail),
+          title: Text(S.of(context).validateAIAnswer),
+          content: Text(S.of(context).ValidateAIAnswer),
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -489,11 +489,11 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
   final description = row.cells['ticketDescription']?.value ?? "";
   final answeredStatus = row.cells['answeredStatus']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
-  final isEmailSend = idMap != null &&
+  final isAIAnswerValidated = idMap != null &&
           idMap is Map<String, dynamic> &&
           idMap['agentAnsValidation'] == true
-      ? 'Send'
-      : 'Not Send';
+      ? 'Validated'
+      : 'Not Validated';
   // final link = row.cells['link']?.value ?? "";
 
   final result = await showDialog<Map<String, String>>(
@@ -570,7 +570,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                           'AI Query Answer :', aiQueryAnswerController)
                     else
                       _buildDetailRow('AI Query Answer :', aiQueryAnswer),
-                    _buildDetailRow('Email Status :', isEmailSend),
+                    _buildDetailRow('AI Answer Validation Status :', isAIAnswerValidated),
                   ],
                 ),
               ),

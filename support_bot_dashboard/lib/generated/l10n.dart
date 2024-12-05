@@ -439,6 +439,26 @@ class S {
     );
   }
 
+    /// `validateAIAnswer`
+  String get validateAIAnswer {
+    return Intl.message(
+      'Validate AI Answer',
+      name: 'validateAIAnswer',
+      desc: 'Validate AI Answer',
+      args: [],
+    );
+  }
+
+    /// `Validation AI Answer`
+  String get ValidateAIAnswer {
+    return Intl.message(
+      'Do you want to Validate AI Answer for this ticket?',
+      name: 'ValidateAIAnswer',
+      desc: 'AI Answer Validated Successfully',
+      args: [],
+    );
+  }
+
   /// `revertClassification`
   String get revertClassifcation {
     return Intl.message(
