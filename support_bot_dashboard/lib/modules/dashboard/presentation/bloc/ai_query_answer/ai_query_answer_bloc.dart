@@ -58,8 +58,8 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         emit(AiQueryAnswerSuccess(
             data: aiQueryAnswerTableData,
             selectedPipeline: event.selectedPipeline,
-            selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024 - 01),
+            selectedDate: event.selectedDate ??null,
+            selectedMonth: event.selectedMonth ?? null,
             selectedClassification: event.selectedClassification,
             classification: event.selectedClassification == true
                 ? 'Answered'
@@ -129,6 +129,12 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         selectedPipeline: event.selectedPipeline,
         ticketId: event.ticketId,
         agentAnsvalidation: event.agentAnsvalidation));
+    add(FetchAiQueryAnswerEvent(
+      selectedDate: event.selectedDate,
+      selectedMonth: event.selectedMonth,
+      selectedPipeline: event.selectedPipeline,
+
+    ));
  }catch(e){
   print(e);
  }

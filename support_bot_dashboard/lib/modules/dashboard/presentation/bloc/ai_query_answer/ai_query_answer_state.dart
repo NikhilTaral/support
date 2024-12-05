@@ -8,8 +8,8 @@ class AiQueryAnswerLoading extends AiQueryAnswerState {}
 
 class AiQueryAnswerSuccess extends AiQueryAnswerState {
   final DashboardAiQueryAttributeModel data;
-  final DateTime selectedDate;
-  final DateTime selectedMonth;
+  final DateTime? selectedDate;
+  final DateTime? selectedMonth;
   final String? selectedPipeline;
   final bool? selectedClassification;
   final String? classification;

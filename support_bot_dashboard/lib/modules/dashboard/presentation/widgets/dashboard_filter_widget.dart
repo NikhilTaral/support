@@ -512,20 +512,22 @@ class DashboardFilterWidget extends StatelessWidget {
                             AIpageSize.value = 10;
                             DateTime monthDateTime = _stringToMonth(value);
 
-                            BlocProvider.of<AiQueryChartBloc>(context).add(
-                                FetchAiQueryChartData(
-                                    selectedMonth: monthDateTime,
-                                    selectedPipeline: pipeline ?? ""));
+                            // BlocProvider.of<AiQueryChartBloc>(context).add(
+                            //     FetchAiQueryChartData(
+                            //         selectedMonth: monthDateTime,
+                            //         selectedPipeline: pipeline ?? ""));
 
-                            BlocProvider.of<AiQueryAnswerBloc>(context).add(
-                              FetchAiQueryAnswerEvent(
-                                selectedClassification: isAnswer,
-                                selectedMonth: monthDateTime,
-                                selectedPipeline: pipeline ?? "",
-                                page: AIcurrentPage.value,
-                                pageSize: AIpageSize.value,
-                              ),
-                            );
+                            // BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                            //   FetchAiQueryAnswerEvent(
+                            //     selectedClassification: isAnswer,
+                            //     selectedMonth: monthDateTime,
+                            //     selectedPipeline: pipeline ?? "",
+                            //     page: AIcurrentPage.value,
+                            //     pageSize: AIpageSize.value,
+                            //   ),
+                            // );
+                            BlocProvider.of<AiQueryChartBloc>(context).add(SelectedChartMonthEvent(selectedMonth: monthDateTime,selectedPipeline: pipeline ?? ""));
+                            BlocProvider.of<AiQueryAnswerBloc>(context).add(SelectedMonthEvent(selectedMonth: monthDateTime,selectedPipeline: pipeline,page: AIcurrentPage.value,pageSize: AIpageSize.value));
                             onFilterChanged(
                                 FilterChangeType.month, monthDateTime);
                           }
