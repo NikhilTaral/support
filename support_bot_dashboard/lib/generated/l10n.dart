@@ -203,7 +203,7 @@ class S {
   /// `Classification`
   String get bopsState {
     return Intl.message(
-      'Bops State',
+      'BOps State',
       name: 'bopsState',
       desc: 'bopsState',
       args: [],

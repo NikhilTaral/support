@@ -16,7 +16,7 @@ class FetchAiQueryAnswerEvent extends AiQueryAnswerEvent {
       this.selectedMonth,
       this.selectedPipeline,
       this.isAIAnswer,
-      required this.selectedClassification,
+       this.selectedClassification,
       this.page,
       this.pageSize});
 }

@@ -489,6 +489,11 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
   final description = row.cells['ticketDescription']?.value ?? "";
   final answeredStatus = row.cells['answeredStatus']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
+  final isEmailSend = idMap != null &&
+          idMap is Map<String, dynamic> &&
+          idMap['agentAnsValidation'] == true
+      ? 'Send'
+      : 'Not Send';
   // final link = row.cells['link']?.value ?? "";
 
   final result = await showDialog<Map<String, String>>(
@@ -565,6 +570,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                           'AI Query Answer :', aiQueryAnswerController)
                     else
                       _buildDetailRow('AI Query Answer :', aiQueryAnswer),
+                    _buildDetailRow('Email Status :', isEmailSend),
                   ],
                 ),
               ),
