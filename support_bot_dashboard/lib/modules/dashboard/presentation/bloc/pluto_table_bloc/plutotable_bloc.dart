@@ -79,6 +79,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
         final model = DashboardPlutotableResponseModel.fromJson(
             json.decode(response.right));
         if (model.success == true) {
+          isDateSelected = true;
           List<TableItem> items = (model.data?.items as List<Item>).map((item) {
             return TableItem(
                 id: item.id.s ?? "",
@@ -86,6 +87,7 @@ class PlutotableBloc extends Bloc<PlutotableEvent, PlutotableState> {
                 hsPipelineStage: item.hsPipelineStage.s ?? "",
                 reasoning: item.reasoning.s ?? "",
                 createdAt: item.createdAt.s ?? "",
+                bopsState: item.bopsState.s ?? "",
                 ticketDescription: item.ticketDescription.s ?? "",
                 classificationValidation: item.classificationValidation.s ?? "",
                 classificationValidationReason:

@@ -5,6 +5,7 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_query_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_send_email_ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_update_ai_query_usecase.dart';
 
 part 'ai_query_answer_event.dart';
@@ -16,6 +17,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     on<SelectedDateEvent>(_onSelectedDateEvent);
     on<SelectedMonthEvent>(_onSelectedMonthEvent);
     on<UpdateAiAnswerInitialEvent>(_onUpdateAiAnswers);
+    on<SendEmailAiAnswerInitialEvent>(_sendEmailOnUpdateAiAnswers);
   }
 
   FutureOr<void> _onAiQueryAnswerEvent(
@@ -43,7 +45,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               aIResponse: item.aIResponse,
               answeredStatus: item.answeredStatus,
               isAnswerEdited: item.isAnswerEdited,
-              answerValidation: item.answerValidation,
+              agentAnsValidation: item.agentAnsValidation,
               answerValidationReason: item.answerValidationReason);
         }).toList();
 
@@ -56,8 +58,8 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         emit(AiQueryAnswerSuccess(
             data: aiQueryAnswerTableData,
             selectedPipeline: event.selectedPipeline,
-            selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime(2024 - 01),
+            selectedDate: event.selectedDate ??null,
+            selectedMonth: event.selectedMonth ?? null,
             selectedClassification: event.selectedClassification,
             classification: event.selectedClassification == true
                 ? 'Answered'
@@ -111,5 +113,30 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         selectedPipeline: event.selectedPipeline,
         ticketId: event.ticketId,
         newAnswer: event.newAnswer));
+  }
+
+    FutureOr<void> _sendEmailOnUpdateAiAnswers(SendEmailAiAnswerInitialEvent event,
+      Emitter<AiQueryAnswerState> emit) async {
+    emit(SendEmailAiAnswerLoadingState());
+ try{
+     final repository = serviceLocator<SendEmailAiAnswerUsecase>();
+    final response = await repository.invoke(
+        event.ticketId, event.agentAnsvalidation, event.selectedPipeline);
+    emit(SendEmailAiAnswerSuccessState(
+        // data: aiQueryAnswerTableData,
+        selectedDate: event.selectedDate,
+        selectedMonth: event.selectedMonth,
+        selectedPipeline: event.selectedPipeline,
+        ticketId: event.ticketId,
+        agentAnsvalidation: event.agentAnsvalidation));
+    add(FetchAiQueryAnswerEvent(
+      selectedDate: event.selectedDate,
+      selectedMonth: event.selectedMonth,
+      selectedPipeline: event.selectedPipeline,
+
+    ));
+ }catch(e){
+  print(e);
+ }
   }
 }

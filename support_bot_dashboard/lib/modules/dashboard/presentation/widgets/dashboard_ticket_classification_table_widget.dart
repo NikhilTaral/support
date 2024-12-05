@@ -109,35 +109,43 @@ class TicketClassificationTableWidget extends StatelessWidget {
         },
       ),
       buildPlutoColumn(
+        title: S.of(context).bopsState,
+        field: TicketClassificationGridKey.bopsState,
+        type: PlutoColumnType.text(),
+        width: UIHelpers.screenWidth(context) * 0.18,
+        enableFilterMenuItem: true,
+      ),
+      buildPlutoColumn(
         title: S.of(context).classification,
         field: TicketClassificationGridKey.classification,
         type: PlutoColumnType.text(),
         width: UIHelpers.screenWidth(context) * 0.18,
         enableFilterMenuItem: true,
       ),
-      buildPlutoColumn(
-        title: S.of(context).reasoning,
-        field: TicketClassificationGridKey.reasoning,
-        type: PlutoColumnType.text(),
-        width: UIHelpers.screenWidth(context) * 0.2,
-        renderer: (PlutoColumnRendererContext context) {
-          final value = context.cell.value ?? "N/A";
-          return MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: CustomToolTip(
-              message: value.toString(),
-              width: 400,
-              toolTipDirection: CustomToolTip.toolTipRight,
-              isMobile: false,
-              child: Text(
-                value.toString(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          );
-        },
-      ),
+      // buildPlutoColumn(
+      //   title: S.of(context).reasoning,
+      //   field: TicketClassificationGridKey.reasoning,
+      //   type: PlutoColumnType.text(),
+      //   width: UIHelpers.screenWidth(context) * 0.2,
+      //   renderer: (PlutoColumnRendererContext context) {
+      //     final value = context.cell.value ?? "N/A";
+      //     return MouseRegion(
+      //       cursor: SystemMouseCursors.click,
+      //       child: CustomToolTip(
+      //         message: value.toString(),
+      //         width: 400,
+      //         toolTipDirection: CustomToolTip.toolTipRight,
+      //         isMobile: false,
+      //         child: Text(
+      //           value.toString(),
+      //           maxLines: 1,
+      //           overflow: TextOverflow.ellipsis,
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // ),
+
       buildPlutoColumn(
         title: S.of(context).validation,
         field: TicketClassificationGridKey.validation,
@@ -448,7 +456,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                                     return BlocProvider.value(
                                       value: context.read<PlutotableBloc>(),
                                       child: AlertDialog(
-                                        title:  Text(S.of(context).validationExists),
+                                        title: Text(
+                                            S.of(context).validationExists),
                                         content: Text(state
                                                 .getValidationDetailsAttributeModel
                                                 ?.data
@@ -519,31 +528,33 @@ class TicketClassificationTableWidget extends StatelessWidget {
           );
         },
       ),
-      buildPlutoColumn(
-        title: S.of(context).validationReason,
-        field: TicketClassificationGridKey.validationReason,
-        type: PlutoColumnType.text(),
-        width: UIHelpers.screenWidth(context) * 0.15,
-        renderer: (PlutoColumnRendererContext context) {
-          final value = context.cell.value ?? 'N/A';
-          return MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: value.toString().isEmpty
-                ? const Text('N/A')
-                : CustomToolTip(
-                    message: value.toString(),
-                    width: 400,
-                    toolTipDirection: CustomToolTip.toolTipRight,
-                    isMobile: false,
-                    child: Text(
-                      value.toString(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-          );
-        },
-      ),
+
+      // buildPlutoColumn(
+      //   title: S.of(context).validationReason,
+      //   field: TicketClassificationGridKey.validationReason,
+      //   type: PlutoColumnType.text(),
+      //   width: UIHelpers.screenWidth(context) * 0.15,
+      //   renderer: (PlutoColumnRendererContext context) {
+      //     final value = context.cell.value ?? 'N/A';
+      //     return MouseRegion(
+      //       cursor: SystemMouseCursors.click,
+      //       child: value.toString().isEmpty
+      //           ? const Text('N/A')
+      //           : CustomToolTip(
+      //               message: value.toString(),
+      //               width: 400,
+      //               toolTipDirection: CustomToolTip.toolTipRight,
+      //               isMobile: false,
+      //               child: Text(
+      //                 value.toString(),
+      //                 maxLines: 1,
+      //                 overflow: TextOverflow.ellipsis,
+      //               ),
+      //             ),
+      //     );
+      //   },
+      // ),
+
       buildPlutoColumn(
         title: S.of(context).status,
         field: TicketClassificationGridKey.status,
@@ -573,6 +584,8 @@ class TicketClassificationTableWidget extends StatelessWidget {
                   : item.classification),
           TicketClassificationGridKey.reasoning: PlutoCell(
               value: item.reasoning?.isEmpty ?? true ? 'N/A' : item.reasoning),
+              TicketClassificationGridKey.bopsState: PlutoCell(
+              value: item.bopsState?.isEmpty ?? true ? 'N/A' : item.bopsState),
           TicketClassificationGridKey.ticketDescription: PlutoCell(
               value: item.ticketDescription?.isEmpty ?? true
                   ? 'N/A'
@@ -627,8 +640,18 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value = 1;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                   selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
-                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
+                                  selectedDate:
+                                      BlocProvider.of<PlutotableBloc>(context)
+                                                  .isDateSelected ==
+                                              true
+                                          ? selectedDate
+                                          : null,
+                                  selectedMonth:
+                                      BlocProvider.of<PlutotableBloc>(context)
+                                                  .isMonthselected ==
+                                              true
+                                          ? selectedMonth
+                                          : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,
@@ -670,8 +693,18 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value--;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
-                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
+                                  selectedDate:
+                                      BlocProvider.of<PlutotableBloc>(context)
+                                                  .isDateSelected ==
+                                              true
+                                          ? selectedDate
+                                          : null,
+                                  selectedMonth:
+                                      BlocProvider.of<PlutotableBloc>(context)
+                                                  .isMonthselected ==
+                                              true
+                                          ? selectedMonth
+                                          : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,
@@ -707,8 +740,18 @@ class TicketClassificationTableWidget extends StatelessWidget {
                             currentPage.value++;
                             BlocProvider.of<PlutotableBloc>(context).add(
                               FetchTableDataEvent(
-                                  selectedDate: BlocProvider.of<PlutotableBloc>(context).isDateSelected == true? selectedDate : null,
-                                  selectedMonth: BlocProvider.of<PlutotableBloc>(context).isMonthselected == true? selectedMonth : null,
+                                  selectedDate:
+                                      BlocProvider.of<PlutotableBloc>(context)
+                                                  .isDateSelected ==
+                                              true
+                                          ? selectedDate
+                                          : null,
+                                  selectedMonth:
+                                      BlocProvider.of<PlutotableBloc>(context)
+                                                  .isMonthselected ==
+                                              true
+                                          ? selectedMonth
+                                          : null,
                                   selectedPipeline: pipelineId,
                                   page: currentPage.value,
                                   pageSize: pageSize.value,

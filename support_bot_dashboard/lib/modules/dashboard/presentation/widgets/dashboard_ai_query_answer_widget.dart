@@ -378,19 +378,29 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
                   ),
                 ),
               ),
-              // PopupMenuItem<String>(
-              //   value: S.of(context).changeClassifcation,
-              //   child: InkWell(
-              //     onTap: () {},
-              //     child: Row(
-              //       children: [
-              //         const Icon(Icons.loop_rounded),
-              //         UIHelpers.horizontalSpaceTiny,
-              //         Text(S.of(context).changeClassifcation),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              PopupMenuItem<String>(
+                value: S.of(context).validateAIAnswer,
+                child: InkWell(
+                  onTap: () {
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (context) => SendEmailDialog(
+                    //     rows: rows,
+                    //     currentIndex: currentIndex,
+                    //   ),
+                    // );
+                    _showAnswerValidationPopup(context, rows, currentIndex,
+                        selectedDate, selectedMonth, pipeline);
+                  },
+                  child: Row(
+                    children: [
+                      const Icon(Icons.loop_rounded),
+                      UIHelpers.horizontalSpaceTiny,
+                      Text(S.of(context).validatEmail),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -399,11 +409,75 @@ Widget actionsRenderer(PlutoColumnRendererContext rendererContext,
   );
 }
 
+void _showAnswerValidationPopup(
+    BuildContext context,
+    List<PlutoRow> rows,
+    int currentIndex,
+    DateTime? selectedDate,
+    DateTime? selectedMonth,
+    String? pipeline) async {
+  final row = rows[currentIndex];
+  final idMap = row.cells['id']?.value;
+  final id = idMap != null && idMap is Map<String, dynamic>
+      ? idMap['id']?.toString() ?? 'N/A'
+      : 'N/A';
+
+  final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
+  await showDialog<Map<String, String>>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(S.of(context).validateAIAnswer),
+          content: Text(S.of(context).ValidateAIAnswer),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: SupportBotColors.bluePrimary,
+                foregroundColor: SupportBotColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("No"),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: SupportBotColors.bluePrimary,
+                foregroundColor: SupportBotColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+              ),
+              onPressed: () {
+                BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                  SendEmailAiAnswerInitialEvent(
+                    ticketId: id,
+                    agentAnsvalidation: true,
+                    selectedPipeline: pipeline,
+                    selectedDate: selectedDate,
+                    selectedMonth: selectedMonth,
+                  ),
+                );
+                Navigator.of(context).pop();
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      });
+}
+
 void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
     DateTime? selectedDate, DateTime? selectedMonth, String? pipeline) async {
   bool isNextEnabled = currentIndex < rows.length - 1;
   bool isPreviousEnabled = currentIndex > 0;
-  final blocContext = context;
   final row = rows[currentIndex];
   final idMap = row.cells['id']?.value;
   final id = idMap != null && idMap is Map<String, dynamic>
@@ -415,17 +489,21 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
   final description = row.cells['ticketDescription']?.value ?? "";
   final answeredStatus = row.cells['answeredStatus']?.value ?? "";
   final aiQueryAnswer = row.cells['aiQueryAnswer']?.value ?? "";
+  final isAIAnswerValidated = idMap != null &&
+          idMap is Map<String, dynamic> &&
+          idMap['agentAnsValidation'] == true
+      ? 'Validated'
+      : 'Not Validated';
   // final link = row.cells['link']?.value ?? "";
 
   final result = await showDialog<Map<String, String>>(
-    context: blocContext,
-    builder: (BuildContext blocContext) {
+    context: context,
+    builder: (BuildContext dialogContext) {
       final aiQueryAnswerController =
           TextEditingController(text: aiQueryAnswer);
-      // final linkController = TextEditingController(text: link);
       bool isEditing = false;
       return StatefulBuilder(
-        builder: (BuildContext blocContext, StateSetter setState) {
+        builder: (BuildContext statefulContext, StateSetter setState) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -440,9 +518,9 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                   ),
                   onPressed: isPreviousEnabled
                       ? () {
-                          Navigator.pop(context);
+                          Navigator.pop(dialogContext);
                           if (isPreviousEnabled) {
-                            _showDetails(blocContext, rows, currentIndex - 1,
+                            _showDetails(context, rows, currentIndex - 1,
                                 selectedDate, selectedMonth, pipeline);
                           }
                         }
@@ -462,7 +540,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                 IconButton(
                     onPressed: isNextEnabled
                         ? () {
-                            Navigator.pop(context);
+                            Navigator.pop(dialogContext);
                             if (isNextEnabled) {
                               _showDetails(context, rows, currentIndex + 1,
                                   selectedDate, selectedMonth, pipeline);
@@ -492,10 +570,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                           'AI Query Answer :', aiQueryAnswerController)
                     else
                       _buildDetailRow('AI Query Answer :', aiQueryAnswer),
-                    // if (isEditing)
-                    //   _buildEditableRow('Link :', linkController)
-                    // else
-                    // _buildDetailRow('Link :', link),
+                    _buildDetailRow('AI Answer Validation Status :', isAIAnswerValidated),
                   ],
                 ),
               ),
@@ -506,7 +581,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                 children: [
                   TextButton.icon(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(dialogContext).pop();
                     },
                     icon: Icon(Icons.cancel,
                         color: SupportBotColors.bluePrimary.shade500),
@@ -537,9 +612,8 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
                             selectedMonth: selectedMonth,
                           ),
                         );
-                        Navigator.of(context).pop({
+                        Navigator.of(dialogContext).pop({
                           'aiQueryAnswer': aiQueryAnswerController.text,
-                          // 'link': linkController.text,
                         });
                       } else {
                         setState(() {
@@ -575,9 +649,7 @@ void _showDetails(BuildContext context, List<PlutoRow> rows, int currentIndex,
   );
 
   if (result != null) {
-    // Handle the updated values here.
     print('Updated AI Query Answer: ${result['aiQueryAnswer']}');
-    print('Updated Link: ${result['link']}');
   }
 }
 

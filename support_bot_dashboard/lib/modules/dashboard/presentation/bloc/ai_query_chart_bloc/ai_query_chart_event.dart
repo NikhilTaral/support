@@ -21,5 +21,5 @@ class FetchAiQueryChartData extends AiQueryChartEvent{
   final DateTime? selectedMonth;
   final String? selectedPipeline;
 
-  FetchAiQueryChartData({required this.selectedDate,  this.selectedMonth,this.selectedPipeline});
+  FetchAiQueryChartData({ this.selectedDate,  this.selectedMonth,this.selectedPipeline});
 }
