@@ -8,6 +8,7 @@ class TicketClassificationGridKey {
   static const String classification = "classification";
   static const String reasoning = "reasoning";
   static const String ticketDescription = "ticketDescription";
+  static const String bopsState = "bopsState";
   static const String validation = "validation";
   static const String validationReason = "validation_reason";
   static const String isUpdatedToHubspot = "isUpdatedToHubspot";
@@ -23,6 +24,8 @@ class TicketClassificationGridKey {
         return s.classification;
       case TicketClassificationGridKey.reasoning:
         return s.reasoning;
+         case TicketClassificationGridKey.bopsState:
+        return s.bopsState;
       case TicketClassificationGridKey.ticketDescription:
         return s.ticketDescription;
       case TicketClassificationGridKey.validation:

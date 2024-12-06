@@ -180,7 +180,8 @@ class DashboardFilterWidget extends StatelessWidget {
                                 GetValidationByCountEvent(
                                     selectedMonth: monthDateTime,
                                     selectedPipeline: pipeline ?? ""));
-                            onFilterChanged(FilterChangeType.month, monthDateTime);
+                            onFilterChanged(
+                                FilterChangeType.month, monthDateTime);
                           }
                         },
                         label: S.of(context).month,
@@ -221,14 +222,14 @@ class DashboardFilterWidget extends StatelessWidget {
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
                                 .add(FetchTableDataEvent(
-                                    selectedDate:  selectedDate ?? null,
-                                   selectedMonth:  selectedMonth,
-                                   selectedClassification:  value,
-                                   selectedClassificationValidation:  null,
-                                   selectedPipeline:  pipeline,
-                                   ticketId:  ticketId,
-                                   page:  currentPage.value,
-                                   pageSize:  pageSize.value));
+                                    selectedDate: selectedDate ?? null,
+                                    selectedMonth: selectedMonth,
+                                    selectedClassification: value,
+                                    selectedClassificationValidation: null,
+                                    selectedPipeline: pipeline,
+                                    ticketId: ticketId,
+                                    page: currentPage.value,
+                                    pageSize: pageSize.value));
                             onFilterChanged(
                                 FilterChangeType.classification, value);
                           }
@@ -285,14 +286,16 @@ class DashboardFilterWidget extends StatelessWidget {
                             BlocProvider.of<PlutotableBloc>(context,
                                     listen: false)
                                 .add(FetchTableDataEvent(
-                                    selectedClassificationValidation:  lowercaseValue,
-                                    selectedDate:  selectedDate ?? null,
-                                    selectedMonth:  selectedMonth,
-                                  selectedClassification:   selectedClassification ?? "",
-                                  selectedPipeline:   pipeline,
-                                  ticketId:   ticketId,
-                                  page:   currentPage.value,
-                                  pageSize:   pageSize.value));
+                                    selectedClassificationValidation:
+                                        lowercaseValue,
+                                    selectedDate: selectedDate ?? null,
+                                    selectedMonth: selectedMonth,
+                                    selectedClassification:
+                                        selectedClassification ?? "",
+                                    selectedPipeline: pipeline,
+                                    ticketId: ticketId,
+                                    page: currentPage.value,
+                                    pageSize: pageSize.value));
                             onFilterChanged(FilterChangeType.validation, value);
                           }
                         },
@@ -389,10 +392,12 @@ class DashboardFilterWidget extends StatelessWidget {
                                                     .add(
                                                   FetchTableDataEvent(
                                                       ticketId: value,
-                                                      selectedDate: selectedDate,
+                                                      selectedDate:
+                                                          selectedDate,
                                                       selectedMonth:
                                                           selectedMonth,
-                                                      selectedPipeline: pipeline),
+                                                      selectedPipeline:
+                                                          pipeline),
                                                 );
                                               }
                                             },
@@ -412,11 +417,12 @@ class DashboardFilterWidget extends StatelessWidget {
                     message: S.of(context).export,
                     child: BlocBuilder<PlutotableBloc, PlutotableState>(
                       builder: (context, state) {
-                         if (state is FetchTableDataSuccess) {
+                        if (state is FetchTableDataSuccess) {
                           selectedDate = state.selectedDate;
                           selectedMonth = state.selectedMonth;
                           selectedClassification = state.selectedClassification;
-                          selectedClassificationValidation = state.selectedValidation ?? '';
+                          selectedClassificationValidation =
+                              state.selectedValidation ?? '';
                         }
                         return ExportButton(
                           icon: 'assets/icons/Export.svg',
@@ -443,8 +449,8 @@ class DashboardFilterWidget extends StatelessWidget {
                     builder: (context, state) {
                       // DateTime selectedDate = DateTime.now();
                       if (state is AiQueryChartSuccess) {
-                        selectedDate = state.selectedDate ?? DateTime.now();
-                        pipeline = state.selectedPipeline ?? "";
+                        selectedDate = state.selectedDate;
+                        pipeline = state.selectedPipeline;
                       }
                       return DateSelectionWidget(
                         selectedDate: selectedDate,
@@ -460,7 +466,7 @@ class DashboardFilterWidget extends StatelessWidget {
                           BlocProvider.of<AiQueryChartBloc>(context).add(
                               SelectedChartDateEvent(
                                   selectedDate: newDate,
-                                  selectedPipeline: pipeline));
+                                  selectedPipeline: pipeline ?? ""));
                           BlocProvider.of<DashboardBloc>(context)
                               .add(UpdateSelectedDateEvent(newDate, pipeline));
                           onFilterChanged(FilterChangeType.date, newDate);
@@ -472,20 +478,80 @@ class DashboardFilterWidget extends StatelessWidget {
                   ),
 
                   UIHelpers.horizontalSpaceSmall,
+                  // Month dropdown
+                  BlocBuilder<AiQueryAnswerBloc, AiQueryAnswerState>(
+                    builder: (context, state) {
+                      String selectedMonthString = "January";
+
+                      if (state is AiQueryAnswerSuccess) {
+                         selectedMonth = state.selectedMonth;
+                        selectedMonthString = _monthToString(
+                            selectedMonth?.month ?? DateTime.now().month);
+                        pipeline = state.selectedPipeline ?? '';
+                      }
+
+                      return CustomMonthDropdown(
+                        selectedValue: selectedMonthString,
+                        items: const [
+                          'January',
+                          'February',
+                          'March',
+                          'April',
+                          'May',
+                          'June',
+                          'July',
+                          'August',
+                          'September',
+                          'October',
+                          'November',
+                          'December',
+                        ],
+                        onChanged: (String? value) {
+                          if (value != null) {
+                            AIcurrentPage.value = 1;
+                            AIpageSize.value = 10;
+                            DateTime monthDateTime = _stringToMonth(value);
+
+                            // BlocProvider.of<AiQueryChartBloc>(context).add(
+                            //     FetchAiQueryChartData(
+                            //         selectedMonth: monthDateTime,
+                            //         selectedPipeline: pipeline ?? ""));
+
+                            // BlocProvider.of<AiQueryAnswerBloc>(context).add(
+                            //   FetchAiQueryAnswerEvent(
+                            //     selectedClassification: isAnswer,
+                            //     selectedMonth: monthDateTime,
+                            //     selectedPipeline: pipeline ?? "",
+                            //     page: AIcurrentPage.value,
+                            //     pageSize: AIpageSize.value,
+                            //   ),
+                            // );
+                            BlocProvider.of<AiQueryChartBloc>(context).add(SelectedChartMonthEvent(selectedMonth: monthDateTime,selectedPipeline: pipeline ?? ""));
+                            BlocProvider.of<AiQueryAnswerBloc>(context).add(SelectedMonthEvent(selectedMonth: monthDateTime,selectedPipeline: pipeline,page: AIcurrentPage.value,pageSize: AIpageSize.value));
+                            onFilterChanged(
+                                FilterChangeType.month, monthDateTime);
+                          }
+                        },
+                        label: S.of(context).month,
+                      );
+                    },
+                  ),
+                  UIHelpers.horizontalSpaceSmall,
                   // Classification dropdown
                   BlocBuilder<AiQueryAnswerBloc, AiQueryAnswerState>(
                     builder: (context, state) {
                       bool? selectedAIClassification;
                       String? AIclassification = 'Select';
-
+                      
                       if (state is AiQueryAnswerSuccess) {
                         selectedDate = state.selectedDate;
                         selectedMonth = state.selectedMonth;
                         selectedAIClassification = state.selectedClassification;
                         AIclassification = state.classification;
                         pipeline = state.selectedPipeline ?? '';
+                      }else if (state is AiQUeryAnswerFailure) {
+                        selectedClassification = state.selectedClassification;
                       }
-
                       final classificationItems = [
                         'Select',
                         'Answered',
@@ -511,7 +577,7 @@ class DashboardFilterWidget extends StatelessWidget {
                                 .add(
                               FetchAiQueryAnswerEvent(
                                   selectedClassification: isAnswer,
-                                  selectedDate: selectedDate,
+                                  selectedDate: selectedDate ?? null,
                                   selectedMonth: selectedMonth,
                                   selectedPipeline: pipeline,
                                   page: AIcurrentPage.value,

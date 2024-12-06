@@ -9,6 +9,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashbo
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_by_count_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_pipeline_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_send_email_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_table_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_update_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_validation_repo_impl.dart';
@@ -23,6 +24,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_pipeline_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_send_email_ai_query_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_update_ai_query_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_validation_repository.dart';
@@ -37,6 +39,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_pipeline_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_send_email_ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_update_ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
@@ -150,4 +153,10 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<DashboardExportusecase>(()=> DashboardExportusecase());
   serviceLocator.registerLazySingleton<DashboardExportRepository>(()=> DashboardExportRepoImpl());
   serviceLocator.registerFactory<ExportBloc>(()=> ExportBloc());
+
+    //Send Email
+  serviceLocator.registerLazySingleton<SendEmailAiAnswerUsecase>(
+      () => SendEmailAiAnswerUsecase());
+  serviceLocator.registerLazySingleton<SendEmailAiAnswerRepository>(
+      () => SendEmailAiAnswerRepoImpl());
 }

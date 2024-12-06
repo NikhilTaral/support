@@ -76,7 +76,7 @@ class Items {
   final String? aIResponse;
   final bool? answeredStatus;
   final bool? isAnswerEdited;
-  final bool? answerValidation;
+  final bool? agentAnsValidation;
   final String? answerValidationReason;
 
   Items({
@@ -86,7 +86,7 @@ class Items {
     this.aIResponse,
     this.answeredStatus,
     this.isAnswerEdited,
-    this.answerValidation,
+    this.agentAnsValidation,
     this.answerValidationReason,
   });
 
@@ -96,7 +96,7 @@ class Items {
         ticketDescription = json['Ticket_Description'] as String?,
         aIResponse = json['AI_Response'] as String?,
         isAnswerEdited = json['isAnswerEdited'] as bool?,
-        answerValidation = json['answerValidation'] as bool?,
+        agentAnsValidation = json['agentAnsValidation'] as bool?,
         answerValidationReason = json['answerValidationReason'] as String?,
         answeredStatus = json['answeredStatus'] as bool?;
 
@@ -107,7 +107,7 @@ class Items {
         'AI_Response': aIResponse,
         'answeredStatus': answeredStatus,
         'isAnswerEdited': isAnswerEdited,
-        'answerValidation': answerValidation,
+        'agentAnsValidation': agentAnsValidation,
         'answerValidationReason': answerValidationReason
       };
 }

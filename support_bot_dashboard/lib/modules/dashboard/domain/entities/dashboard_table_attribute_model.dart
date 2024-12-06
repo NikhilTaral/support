@@ -21,6 +21,7 @@ class TableItem extends Equatable {
   final String? classification;
   final String? hsPipelineStage;
   final String? reasoning;
+   final String? bopsState;
   final String? createdAt;
   final String? ticketDescription;
   final String? classificationValidation;
@@ -34,6 +35,7 @@ class TableItem extends Equatable {
       this.classification,
       this.hsPipelineStage,
       this.reasoning,
+      this.bopsState,
       this.createdAt,
       this.ticketDescription,
       this.classificationValidation,
@@ -48,6 +50,7 @@ class TableItem extends Equatable {
         classification,
         hsPipelineStage,
         reasoning,
+        bopsState,
         createdAt,
         ticketDescription,
         classificationValidation,

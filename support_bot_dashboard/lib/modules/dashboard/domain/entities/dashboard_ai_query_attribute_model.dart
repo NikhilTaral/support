@@ -24,7 +24,7 @@ class AiQueryAnswerTableItem extends Equatable {
   final String? aIResponse;
   final bool? answeredStatus;
   final bool? isAnswerEdited;
-  final bool? answerValidation;
+  final bool? agentAnsValidation;
   final String? answerValidationReason;
 
   const AiQueryAnswerTableItem( 
@@ -34,7 +34,7 @@ class AiQueryAnswerTableItem extends Equatable {
       required this.aIResponse,
       required this.answeredStatus,
       required this.isAnswerEdited,
-      required this.answerValidation,
+      required this.agentAnsValidation,
       required this.answerValidationReason});
 
   @override
@@ -45,7 +45,7 @@ class AiQueryAnswerTableItem extends Equatable {
         aIResponse,
         answeredStatus,
         isAnswerEdited,
-        answerValidation,
+        agentAnsValidation,
         answerValidationReason
       ];
 }
