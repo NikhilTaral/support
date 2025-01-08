@@ -6,7 +6,7 @@ class DashboardTableAttributeModel extends Equatable {
   final num? pageSize;
   final num? currentPage;
 
-  DashboardTableAttributeModel(
+  const DashboardTableAttributeModel(
       {required this.totalRecords,
       required this.items,
       required this.pageSize,
@@ -21,7 +21,7 @@ class TableItem extends Equatable {
   final String? classification;
   final String? hsPipelineStage;
   final String? reasoning;
-   final String? bopsState;
+  final String? bopsState;
   final String? createdAt;
   final String? ticketDescription;
   final String? classificationValidation;

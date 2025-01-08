@@ -123,6 +123,14 @@
   "@ok": {
     "description": "Ok"
   },
+  "aIClassification": "AI Classification",
+  "@aIClassification": {
+    "description": "AI Classification"
+  },
+  "ackRequired": "Ack Required",
+  "@ackRequired": {
+    "description": "Ack Required"
+  },
   "link": "Link",
   "@link": {
     "description": "Link"

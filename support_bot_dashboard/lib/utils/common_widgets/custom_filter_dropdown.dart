@@ -4,7 +4,7 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class CustomFilterDropdown extends StatelessWidget {
-  final String selectedValue;
+  final String? selectedValue;
   final List<String> items;
   final String label;
   final ValueChanged<String?> onChanged;
@@ -14,7 +14,7 @@ class CustomFilterDropdown extends StatelessWidget {
 
   const CustomFilterDropdown({
     Key? key,
-    required this.selectedValue,
+    this.selectedValue,
     required this.items,
     required this.onChanged,
     required this.width,
@@ -29,51 +29,34 @@ class CustomFilterDropdown extends StatelessWidget {
       onTap: enabled ? () => _showDropdownDialog(context) : null,
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Container(
-              width: width,
-              height: height,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: SupportBotColors.gray,
-                ),
-                borderRadius: BorderRadius.circular(5.0),
+          Container(
+            width: width,
+            height: height,
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: SupportBotColors.bluePrimary.shade500,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Text(
-                      selectedValue.isNotEmpty ? selectedValue : "All",
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(selectedValue ?? "",
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      // style: selectedValue.isNotEmpty
-                      //     ? SupportBotTextstyle.medium.copyWith(fontWeight: FontWeight.w500)
-                      //     : SupportBotTextstyle.mediumHint,
-                    ),
-                  ),
-                   const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 30,
-                    color: SupportBotColors.bluePrimary,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            left: 10,
-            top: 10,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              color: SupportBotColors.white,
-              child: Text(
-                label,
-                style: SupportBotTextstyle.dropdownLabel,
-              ),
+                      style: SupportBotTextstyle.regularTextStyle.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: SupportBotColors.bluePrimary)),
+                ),
+                const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 30,
+                  color: SupportBotColors.bluePrimary,
+                ),
+              ],
             ),
           ),
         ],
@@ -121,7 +104,8 @@ class CustomFilterDropdown extends StatelessWidget {
                         title: Text(
                           _truncateTitle(item, 35),
                           style: item == selectedValue
-                              ? SupportBotTextstyle.medium.copyWith(fontWeight: FontWeight.w500)
+                              ? SupportBotTextstyle.medium
+                                  .copyWith(fontWeight: FontWeight.w500)
                               : SupportBotTextstyle.medium,
                         ),
                         onTap: () {

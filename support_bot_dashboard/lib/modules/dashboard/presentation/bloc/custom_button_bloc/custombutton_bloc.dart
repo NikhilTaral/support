@@ -12,5 +12,6 @@ class CustombuttonBloc extends Bloc<CustombuttonEvent, CustombuttonState> {
   Future<void> _onSelectButtonEvent(
       SelectButtonEvent event, Emitter<CustombuttonState> emit) async {
     emit(ButtonSelectedState(event.buttonText));
+   
   }
 }

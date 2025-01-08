@@ -8,7 +8,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 class CountContainer extends StatelessWidget {
   final String text;
   final String icon;
-  final String count;
+  final double? count;
   const CountContainer(
       {super.key, required this.text, required this.icon, required this.count});
 
@@ -16,8 +16,8 @@ class CountContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
-        margin: const EdgeInsets.only(left: 20),
-        height: UIHelpers.screenHeight(context) * 0.17,
+        margin: const EdgeInsets.only(left: 20, right: 20),
+        height: UIHelpers.screenHeight(context) * 0.13,
         decoration: BoxDecoration(
             color: SupportBotColors.bluePrimary.shade400,
             borderRadius: BorderRadius.circular(8)),
@@ -30,8 +30,8 @@ class CountContainer extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8),
                   child: SvgPicture.asset(
                     icon,
-                    width: 40,
-                    height: 40,
+                    width: 28,
+                    height: 28,
                   ),
                 )),
             Expanded(
@@ -42,15 +42,15 @@ class CountContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                        flex: 6,
+                        flex: 5,
                         child: Text(
-                          count,
+                          "$count",
                           style: SupportBotTextstyle.headingH3,
                           textAlign: TextAlign.right,
                         ),
                       ),
                       Expanded(
-                        flex: 4,
+                        flex: 6,
                         child: Text(
                           text,
                           style: SupportBotTextstyle.countLabel,

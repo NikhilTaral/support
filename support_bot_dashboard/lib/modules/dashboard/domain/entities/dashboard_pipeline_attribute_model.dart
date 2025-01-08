@@ -1,9 +1,13 @@
 class DashboardPipelineAttributeModel {
   final List<PipelineAttribute> data;
 
-  DashboardPipelineAttributeModel({
-    required this.data,
-  });
+  DashboardPipelineAttributeModel({required this.data});
+
+  DashboardPipelineAttributeModel copyWith({List<PipelineAttribute>? data}) {
+    return DashboardPipelineAttributeModel(
+      data: data ?? this.data,
+    );
+  }
 }
 
 class PipelineAttribute {
@@ -14,8 +18,8 @@ class PipelineAttribute {
   final String? hubspotUpdateEnv;
 
   PipelineAttribute(
-      { this.pipelineId,
-       this.pipelineName,
+      {this.pipelineId,
+      this.pipelineName,
       this.aiAnswerPerm,
       this.hubspotUpdateEnv,
       this.hubspotUpdatepPerm});

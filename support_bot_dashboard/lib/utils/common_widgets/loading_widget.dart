@@ -6,7 +6,7 @@ class LoadingWidget extends StatelessWidget {
   final Color baseColor, highlightColor;
   final BorderRadius? borderRadius;
 
-  const LoadingWidget({
+  const   LoadingWidget({
     super.key,
     required this.width,
     required this.height,
