@@ -7,7 +7,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class CountContainer extends StatelessWidget {
   final String text;
-  final String icon;
+  final IconData icon;
   final double? count;
   const CountContainer(
       {super.key, required this.text, required this.icon, required this.count});
@@ -24,16 +24,20 @@ class CountContainer extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: SvgPicture.asset(
-                    icon,
-                    width: 28,
-                    height: 28,
-                  ),
-                )),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    color: Color(0xFFDBE2EF)),
+                child: Icon(
+                  icon,
+                  color: SupportBotColors.bluePrimary,
+                ),
+              ),
+            ),
             Expanded(
               flex: 7,
               child: Padding(

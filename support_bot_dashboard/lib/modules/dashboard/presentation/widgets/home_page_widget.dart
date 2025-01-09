@@ -38,7 +38,7 @@ class HomePageWidget extends StatelessWidget {
                                   final data = countContainers[index];
                                   return CountContainer(
                                     text: data.text,
-                                    icon: data.iconPath,
+                                    icon: data.icon,
                                     count: data.count,
                                   );
                                 }),

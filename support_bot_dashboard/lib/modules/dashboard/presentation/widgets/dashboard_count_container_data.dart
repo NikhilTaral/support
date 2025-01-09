@@ -1,15 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 
 class CountContainerData {
   final String text;
-  final String iconPath;
+  final IconData icon;
   final double? count;
 
   CountContainerData({
     required this.text,
-    required this.iconPath,
+    required this.icon,
     required this.count,
   });
 }
@@ -19,27 +22,27 @@ List<CountContainerData> getCountContainerData(BuildContext context,
   return [
     CountContainerData(
       text: S.of(context).spam,
-      iconPath: 'assets/icons/Spam.svg',
+      icon: Icons.error_outline,
       count: model?.pieChartData?.data?.counts?.spamMarketing,
     ),
     CountContainerData(
       text: S.of(context).noActionRequired,
-      iconPath: 'assets/icons/NotSpam.svg',
+      icon: Icons.check_circle_outline,
       count: model?.pieChartData?.data?.counts?.noActionRequired,
     ),
     CountContainerData(
       text: S.of(context).genuineQuery,
-      iconPath: 'assets/icons/genuine.svg',
+      icon: Icons.menu_rounded,
       count: model?.pieChartData?.data?.counts?.genuineQuery,
     ),
     CountContainerData(
       text: S.of(context).acknowledgementRequired,
-      iconPath: 'assets/icons/acknowledgement.svg',
+      icon: Icons.star_border,
       count: model?.pieChartData?.data?.counts?.acknowledgementRequired,
     ),
     CountContainerData(
       text: S.of(context).total,
-      iconPath: 'assets/icons/TotalTicket.svg',
+      icon: Icons.confirmation_num_outlined,
       count: (model?.pieChartData?.data?.counts?.spamMarketing ?? 0) +
           (model?.pieChartData?.data?.counts?.noActionRequired ?? 0) +
           (model?.pieChartData?.data?.counts?.genuineQuery ?? 0) +
