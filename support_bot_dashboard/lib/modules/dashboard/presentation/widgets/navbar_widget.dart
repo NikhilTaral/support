@@ -31,7 +31,7 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
     _tabController = TabController(
       vsync: this,
       length: organizationItems.length,
-      initialIndex: bloc.currentIndex ?? 0,
+      initialIndex: bloc.currentIndex,
     );
   }
 
@@ -44,49 +44,48 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
   @override
   Widget build(BuildContext context) {
     organizationItems = TabBarWidget.organizationItemList(context);
-    return Stack(
-      children: [
-        Container(
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: BlocBuilder<IndexBloc, IndexState>(
-            builder: (context, state) {
-              final selectedIndex =
-                  BlocProvider.of<IndexBloc>(context).currentIndex;
-
-              return SizedBox(
-                child: TabBar(
-                  controller: _tabController,
-                  isScrollable: true,
-                  labelColor: SupportBotColors.white,
-                  indicator: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                    color: SupportBotColors.bluePrimary,
-                  ),
-                  indicatorColor: Colors.transparent,
-                  labelStyle: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w500),
-                  onTap: (value) {
-                    if (value != selectedIndex) {
-                      BlocProvider.of<IndexBloc>(context)
-                          .add(CurrentIndexEvent(index: value));
-                    }
-                  },
-                  tabs: List.generate(
-                    organizationItems.length,
-                    (index) => _buildTabItem(index, selectedIndex ?? 0),
-                  ),
-                ),
-              );
-            },
-          ),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
         ),
-      ],
+        child: BlocBuilder<IndexBloc, IndexState>(
+          builder: (context, state) {
+            final selectedIndex =
+                BlocProvider.of<IndexBloc>(context).currentIndex;
+
+            return SizedBox(
+              child: TabBar(
+                tabAlignment: TabAlignment.start,
+                controller: _tabController,
+                isScrollable: true,
+                labelColor: SupportBotColors.white,
+                indicator: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                  ),
+                  color: SupportBotColors.bluePrimary,
+                ),
+                indicatorColor: Colors.transparent,
+                labelStyle:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                onTap: (value) {
+                  if (value != selectedIndex) {
+                    BlocProvider.of<IndexBloc>(context)
+                        .add(CurrentIndexEvent(index: value));
+                  }
+                },
+                tabs: List.generate(
+                  organizationItems.length,
+                  (index) => _buildTabItem(index, selectedIndex ?? 0),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -95,15 +94,9 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
     final isSelected = index == selectedIndex;
 
     return Container(
-      padding: const EdgeInsets.only(left: 3),
-      decoration: const BoxDecoration(
-        border: Border(),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (item.icon != null) Icon(item.icon),
             if (item.title != null)

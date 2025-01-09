@@ -1,4 +1,6 @@
+import 'package:support_bot_dashboard/modules/dashboard/data/model/get_all_pipelines_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/validation_status_responset_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/validation_status_attribute_model.dart';
 
 class AttributeMapper {
@@ -26,5 +28,26 @@ class AttributeMapper {
         genuineQuery: acknowledgementRequired?.genuineQuery,
         noActionRequired: acknowledgementRequired?.noActionRequired,
         spamMarketing: acknowledgementRequired?.spamMarketing);
+  }
+
+  static GetAllPipelinesAttributeModel mapGetAllPipelinesAttributeModel(
+      GetAllPipelinesResponsetModel? model) {
+    return GetAllPipelinesAttributeModel(
+        data: mapData(model?.data));
+  }
+
+
+
+
+  static List<Datums>? mapData(List<Datum>? data) {
+    return data
+        ?.map((datum) => Datums(
+              aiAnswerPerm: datum.aiAnswerPerm,
+              hubspotUpdateEnv: datum.hubspotUpdateEnv ?? "",
+              hubspotUpdatepPerm: datum.hubspotUpdatepPerm,
+              pipelineId: datum.pipelineId ?? "",
+              pipelineName: datum.pipelineName ?? "",
+            ))
+        .toList();
   }
 }

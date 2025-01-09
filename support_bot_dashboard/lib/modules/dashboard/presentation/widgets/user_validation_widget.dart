@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/line_chart_graph_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class UserValidationWidget extends StatelessWidget {
@@ -20,9 +21,10 @@ class UserValidationWidget extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   "User Validation",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: SupportBotTextstyle.normal.copyWith(
+                      fontWeight: FontWeight.w600, color: Color(0xFF000000)),
                 ),
                 UIHelpers.verticalSpaceSmall,
                 SizedBox(

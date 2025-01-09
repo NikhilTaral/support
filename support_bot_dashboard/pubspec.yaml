@@ -63,6 +63,7 @@ dependencies:
   shimmer:
   flutter_localization: ^0.2.1
   intl_utils: ^2.8.7
+  calendar_date_picker2: ^1.1.8
 
 dev_dependencies:
   flutter_test:

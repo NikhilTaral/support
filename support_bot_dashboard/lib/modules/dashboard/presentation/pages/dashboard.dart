@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/header/nav_bar.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/index_bloc/index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_mobile_view.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboarde_desktop_view.dart';
@@ -14,6 +15,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       
       body: MultiBlocProvider(
         providers: [
           BlocProvider(

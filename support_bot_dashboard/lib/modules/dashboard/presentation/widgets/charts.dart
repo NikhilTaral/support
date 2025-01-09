@@ -5,6 +5,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/val
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class Charts extends StatelessWidget {
@@ -40,10 +41,12 @@ class Charts extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          UIHelpers.verticalSpaceSmall,
+                          Text(
                             "Validation Status",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                            style: SupportBotTextstyle.normal.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Container(
                               height: UIHelpers.screenHeight(context) * 0.4,

@@ -5,7 +5,6 @@ import 'package:support_bot_dashboard/modules/dashboard/common/validation_status
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/pluto_configruration.dart';
-import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class ValidationStatusWidget extends StatelessWidget {

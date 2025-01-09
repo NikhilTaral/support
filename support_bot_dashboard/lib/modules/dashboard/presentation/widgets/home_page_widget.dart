@@ -15,18 +15,16 @@ class HomePageWidget extends StatelessWidget {
     return Row(
       children: [
         Flexible(
-          flex: 8,
+          flex: 10,
           child: BlocProvider(
             create: (context) =>
-                TicketClassificationBloc()..add(TickiteClassificationEvent( )),
+                TicketClassificationBloc()..add(TickiteClassificationEvent()),
             child: BlocBuilder<TicketClassificationBloc,
                 TicketClassificationState>(
               builder: (context, state) {
                 if (state is TicketClassificationSucssesState) {
                   return Column(
                     children: [
-                      UIHelpers.verticalSpaceRegular,
-                      UIHelpers.verticalSpaceRegular,
                       Builder(
                         builder: (context) {
                           final List<CountContainerData> countContainers =
@@ -35,7 +33,6 @@ class HomePageWidget extends StatelessWidget {
                           return Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: List.generate(countContainers.length,
                                     (index) {
                                   final data = countContainers[index];
@@ -47,7 +44,7 @@ class HomePageWidget extends StatelessWidget {
                                 }),
                               ),
                               UIHelpers.verticalSpaceRegular,
-                               Charts(),
+                              Charts(),
                             ],
                           );
                         },
@@ -57,7 +54,8 @@ class HomePageWidget extends StatelessWidget {
                 } else if (state is TicketClassificationLoadingState) {
                   return Container(
                       child: LoadingWidget(
-                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
                           width: double.infinity,
                           height: UIHelpers.screenHeight(context)));
                 } else {

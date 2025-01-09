@@ -10,6 +10,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboar
 
 part 'ai_query_Edited_answer_event.dart';
 part 'ai_query_Edited_answer_state.dart';
+
 late DashboardDataModel dashboardDataModel = DashboardDataModel();
 
 class AiQueryEditedAnswerBloc
@@ -25,6 +26,10 @@ class AiQueryEditedAnswerBloc
       final repository = await serviceLocator<DashboardAiQueryChartUsecase>();
       final req = DashboardChartDataInitialRequestModel(
         filter: [
+          if (event.selectedDate != null)
+            Filter(
+                fieldValue: ["${event.selectedDate ?? "2024-12-31"}"],
+                fieldName: "StartDate"),
           Filter(
               fieldValue: [event.selectedPipelineValue ?? "11257490"],
               fieldName: event.fildName ?? "pipelines")
@@ -74,7 +79,8 @@ class AiQueryEditedAnswerBloc
             ),
           )));
 
-          emit(AIQueryEditedAnswerSucssesState(dashboardDataModel: dashboardDataModel));
+          emit(AIQueryEditedAnswerSucssesState(
+              dashboardDataModel: dashboardDataModel));
         } else {
           emit(AIQueryEditedAnswerFailureState(
               message: 'Exception: ',

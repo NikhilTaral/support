@@ -4,6 +4,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pi_chart.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationWidget extends StatelessWidget {
@@ -30,9 +31,11 @@ class TicketClassificationWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Ticket Classification",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: SupportBotTextstyle.normal.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   UIHelpers.verticalSpaceRegular,
                   Row(
@@ -47,154 +50,171 @@ class TicketClassificationWidget extends StatelessWidget {
                                 dashboardDataModel: state.dashboardDataModel!)
                             : const SizedBox.shrink(),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.all(10),
-                            width: UIHelpers.screenWidth(context) * 0.2,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: SupportBotColors.blueSecondary.shade100,
-                                width: 1,
+                      Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              width: UIHelpers.screenWidth(context) * 0.2,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      SupportBotColors.blueSecondary.shade100,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
                               ),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color:
-                                        SupportBotColors.bluePrimary.shade400,
-                                    borderRadius: BorderRadius.circular(6),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          SupportBotColors.bluePrimary.shade400,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    height: 24,
+                                    width: 24,
                                   ),
-                                  height: 24,
-                                  width: 24,
-                                ),
-                                const Spacer(),
-                                const Expanded(
-                                  flex: 3,
-                                  child: Text("genuine Query"),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                      " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.genuineQuery}%"),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Second container for the second set of data
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.all(10),
-                            width: UIHelpers.screenWidth(context) * 0.2,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: SupportBotColors.blueSecondary.shade100,
-                                width: 1,
+                                  UIHelpers.horizontalSpaceSmall,
+                                  Text(
+                                    "Genuine Query",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.genuineQuery}%",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                ],
                               ),
-                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF8099C7),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  height: 24,
-                                  width: 24,
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(10),
+                              width: UIHelpers.screenWidth(context) * 0.2,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      SupportBotColors.blueSecondary.shade100,
+                                  width: 1,
                                 ),
-                                const Spacer(),
-                                const Expanded(
-                                  flex: 3,
-                                  child: Text("No Action Required"),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                      " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.noActionRequired}%"),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Third container for the third set of data
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.all(10),
-                            width: UIHelpers.screenWidth(context) * 0.2,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: SupportBotColors.blueSecondary.shade100,
-                                width: 1,
+                                borderRadius: BorderRadius.circular(6),
                               ),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFB6C5DF),
-                                    borderRadius: BorderRadius.circular(6),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF8099C7),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    height: 24,
+                                    width: 24,
                                   ),
-                                  height: 24,
-                                  width: 24,
-                                ),
-                                const Spacer(),
-                                const Expanded(
-                                  flex: 3,
-                                  child: Text("Spam/Marketing"),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                      " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.spamMarketing}%"),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.all(10),
-                            width: UIHelpers.screenWidth(context) * 0.2,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: SupportBotColors.blueSecondary.shade100,
-                                width: 1,
+                                  UIHelpers.horizontalSpaceSmall,
+                                  Text(
+                                    "No Action Required",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.noActionRequired}%",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                ],
                               ),
-                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFDBE2EF),
-                                    borderRadius: BorderRadius.circular(6),
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              width: UIHelpers.screenWidth(context) * 0.2,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      SupportBotColors.blueSecondary.shade100,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFB6C5DF),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    height: 24,
+                                    width: 24,
                                   ),
-                                  height: 24,
-                                  width: 24,
-                                ),
-                                const Spacer(),
-                                const Expanded(
-                                  flex: 3,
-                                  child: Text("No Action Required"),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                      " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.acknowledgementRequired}%"),
-                                ),
-                              ],
+                                  UIHelpers.horizontalSpaceSmall,
+                                  Text(
+                                    "Spam/Marketing",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.spamMarketing}%",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(10),
+                              width: UIHelpers.screenWidth(context) * 0.2,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      SupportBotColors.blueSecondary.shade100,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFDBE2EF),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                  UIHelpers.horizontalSpaceSmall,
+                                  Text(
+                                    "No Action Required",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    " ${state.dashboardDataModel?.pieChartData?.data?.percentages?.acknowledgementRequired}%",
+                                    style: SupportBotTextstyle.small.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xFF000000)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),

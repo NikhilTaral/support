@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
 class Renderer {
   static Widget textRenderer(PlutoColumnRendererContext rendererContext) {
@@ -12,7 +13,6 @@ class Renderer {
       child: Container(
         decoration: BoxDecoration(
           color: getColors(colString: columnName, rowString: firstCellValue),
-          borderRadius: BorderRadius.circular(6),
         ),
         padding: const EdgeInsets.all(8.0),
         child: Text(
@@ -38,15 +38,15 @@ Color getColors({required String? colString, required String? rowString}) {
       colString == rowTitleAck && rowString == colTitle ||
       colString == rowTitleSpam && rowString == rowTitleNoAction ||
       rowString == rowTitleSpam && colString == rowTitleNoAction) {
-    return Colors.orange.withOpacity(0.5);
+    return Color(0xFFFFE3E9);
   } else if (colString == rowString) {
-    return Colors.green.withOpacity(0.5);
+    return Color(0xFFE9F8E9);
   } else if (colString ==
       RequestMentorReportKeys.getTitle(
           RequestMentorReportKeys.aIClassification)) {
     return Colors.transparent;
   } else {
-    return Colors.red.withOpacity(0.3);
+    return Color(0xFFFFE3E9);
   }
 }
 

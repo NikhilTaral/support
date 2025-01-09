@@ -3,6 +3,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_pipeline_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_table_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/validation_status_attribute_model.dart';
 
@@ -10,7 +11,7 @@ class DashboardDataModel {
   final DashboardTableAttributeModel? tableData;
   final DashboardChartAttributeModel? pieChartData;
   final ValidationStatusAttributeModel? validationStatusAttributeModel;
-  
+  final GetAllPipelinesAttributeModel? getAllPipelinesAttributeModel;
   final DashboardAiQueryChartAttributeModel?
       dashboardAiQueryChartAttributeModel;
   final GetValidationByCountAttributeModel? getValidationByCountAttributeModel;
@@ -26,6 +27,7 @@ class DashboardDataModel {
     this.tableData,
     this.pieChartData,
     this.validationStatusAttributeModel,
+    this.getAllPipelinesAttributeModel,
     this.dashboardAiQueryChartAttributeModel,
     this.getValidationCountAttributeModel,
     this.getValidationByCountAttributeModel,
@@ -40,6 +42,7 @@ class DashboardDataModel {
   DashboardDataModel copyWith({
     DashboardTableAttributeModel? tableData,
     DashboardChartAttributeModel? pieChartData,
+    GetAllPipelinesAttributeModel? getAllPipelinesAttributeModel,
     ValidationStatusAttributeModel? validationStatusAttributeModel,
     DashboardAiQueryChartAttributeModel? dashboardAiQueryChartAttributeModel,
     DashboardPipelineAttributeModel? dashboardPipelineAttributeModel,
@@ -57,6 +60,8 @@ class DashboardDataModel {
       pieChartData: pieChartData ?? this.pieChartData,
       validationStatusAttributeModel:
           validationStatusAttributeModel ?? this.validationStatusAttributeModel,
+      getAllPipelinesAttributeModel:
+          getAllPipelinesAttributeModel ?? this.getAllPipelinesAttributeModel,
       dashboardAiQueryChartAttributeModel:
           dashboardAiQueryChartAttributeModel ??
               this.dashboardAiQueryChartAttributeModel,

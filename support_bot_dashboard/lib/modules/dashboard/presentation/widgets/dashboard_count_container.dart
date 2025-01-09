@@ -16,7 +16,7 @@ class CountContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20),
+        margin: const EdgeInsets.only(right: 20),
         height: UIHelpers.screenHeight(context) * 0.13,
         decoration: BoxDecoration(
             color: SupportBotColors.bluePrimary.shade400,
@@ -45,7 +45,9 @@ class CountContainer extends StatelessWidget {
                         flex: 5,
                         child: Text(
                           "$count",
-                          style: SupportBotTextstyle.headingH3,
+                          style: SupportBotTextstyle.subheadingH3.copyWith(
+                              color: SupportBotColors.white,
+                              fontWeight: FontWeight.w600),
                           textAlign: TextAlign.right,
                         ),
                       ),
@@ -53,7 +55,9 @@ class CountContainer extends StatelessWidget {
                         flex: 6,
                         child: Text(
                           text,
-                          style: SupportBotTextstyle.countLabel,
+                          style: SupportBotTextstyle.small.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: SupportBotColors.white),
                           textAlign: TextAlign.right,
                           overflow: TextOverflow.visible,
                         ),

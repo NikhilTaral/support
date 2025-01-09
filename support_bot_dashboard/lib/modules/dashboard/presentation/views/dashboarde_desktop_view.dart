@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/header/nav_bar.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/index_bloc/index_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_filters_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
 
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
@@ -17,9 +19,7 @@ class DashboardDesktopView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<IndexBloc, IndexState>(
       builder: (context, state) {
-        if (state is IndexSucssesState) {
-          // return DashbordLodingState();
-        }
+        if (state is IndexSucssesState) {}
         return _headerView(context: context);
       },
     );
@@ -40,7 +40,7 @@ class DashboardDesktopView extends StatelessWidget {
   }) {
     int selectedIndex = (index != null && index! >= 0)
         ? index!
-        : BlocProvider.of<IndexBloc>(context).currentIndex ?? 0;
+        : BlocProvider.of<IndexBloc>(context).currentIndex;
     var incomeItems = TabBarWidget.organizationItemList(context);
 
     if (incomeItems.isEmpty) {
@@ -50,18 +50,24 @@ class DashboardDesktopView extends StatelessWidget {
     if (selectedIndex < 0 || selectedIndex >= incomeItems.length) {
       selectedIndex = 0;
     }
-    return Padding(
-        padding: padding,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              MyOrganizationNavBar(
-                index: selectedIndex,
-              ),
-              const SizedBox(height: 12),
-              TabBarWidget.organizationItemList(context)[selectedIndex].view,
-            ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          NavBar(
+            showPopArrow: false,
+            navigateTo: () {},
+            text: "",
           ),
-        ));
+          HomeFiltersWidget(),
+          MyOrganizationNavBar(
+            index: selectedIndex,
+          ),
+          const SizedBox(height: 10),
+          TabBarWidget.organizationItemList(context)[selectedIndex].view,
+        ],
+      ),
+    );
   }
 }

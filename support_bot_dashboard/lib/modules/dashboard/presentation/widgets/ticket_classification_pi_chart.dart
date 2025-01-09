@@ -54,7 +54,7 @@ class FlCircularChart extends StatelessWidget {
           );
         }).toList(),
         centerSpaceRadius: 0,
-        sectionsSpace: 4,
+        sectionsSpace: 0,
         startDegreeOffset: 360,
       ),
       duration: Duration(milliseconds: 2000),
