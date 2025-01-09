@@ -55,8 +55,14 @@ class LineChartGraphWidget extends StatelessWidget {
         width: (length + 1) * 50,
         child: LineChart(
           LineChartData(
-            gridData: const FlGridData(
-              show: false,
+            gridData: FlGridData(
+              getDrawingHorizontalLine: (value) =>
+                  FlLine(color: Color(0xFFC8C8C8)),
+              getDrawingVerticalLine: (value) =>
+                  FlLine(color: Color(0xFFC8C8C8))  ,
+              drawHorizontalLine: true,
+              drawVerticalLine: true,
+              show: true,
             ),
             titlesData: FlTitlesData(
               topTitles: const AxisTitles(
@@ -134,7 +140,6 @@ class LineChartGraphWidget extends StatelessWidget {
             ),
             lineBarsData: [
               LineChartBarData(
-                isCurved: true,
                 spots: spots,
                 barWidth: 2,
                 color: SupportBotColors.blueSecondary.shade400,
