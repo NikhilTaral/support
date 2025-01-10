@@ -16,7 +16,6 @@ class HomePageWidget extends StatelessWidget {
       child: Row(
         children: [
           Flexible(
-            flex: 10,
             child: BlocProvider(
               create: (context) =>
                   TicketClassificationBloc()..add(TickiteClassificationEvent()),

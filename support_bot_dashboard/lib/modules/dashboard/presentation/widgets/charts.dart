@@ -18,13 +18,10 @@ class Charts extends StatelessWidget {
     final screenWidth = UIHelpers.screenWidth(context);
 
     return SizedBox(
-      height: screenHeight * 1.08,
-      width: screenWidth,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 2,
             child: Column(
               children: [
                 const TicketClassificationWidget(),
@@ -35,7 +32,6 @@ class Charts extends StatelessWidget {
           ),
           UIHelpers.horizontalSpaceSmall,
           Expanded(
-            flex: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

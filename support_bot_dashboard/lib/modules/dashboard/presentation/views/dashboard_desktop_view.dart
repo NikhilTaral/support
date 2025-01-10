@@ -40,6 +40,7 @@ class DashboardDesktopView extends StatelessWidget {
     int selectedIndex = (index != null && index! >= 0)
         ? index!
         : BlocProvider.of<TabIndexBloc>(context).currentIndex;
+
     var incomeItems = TabBarWidget.organizationItemList(context);
 
     if (incomeItems.isEmpty) {
@@ -50,31 +51,36 @@ class DashboardDesktopView extends StatelessWidget {
       selectedIndex = 0;
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          NavBar(
-            showPopArrow: false,
-            navigateTo: () {},
-            text: "",
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NavBar(
+                showPopArrow: false,
+                navigateTo: () {},
+                text: "",
+              ),
+              Padding(
+                padding: padding,
+                child: HomeFiltersWidget(),
+              ),
+              MyOrganizationNavBar(index: selectedIndex),
+              const SizedBox(height: 10),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: constraints.maxHeight,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 30),
+                  child: incomeItems[selectedIndex].view,
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: padding,
-            child: HomeFiltersWidget(),
-          ),
-          MyOrganizationNavBar(
-            index: selectedIndex,
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child:
-                TabBarWidget.organizationItemList(context)[selectedIndex].view,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

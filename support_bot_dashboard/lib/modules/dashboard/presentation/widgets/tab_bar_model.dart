@@ -42,7 +42,7 @@ class TabBarWidget {
         title: "Ticket Classification",
         view: SizedBox(
           width: double.infinity,
-          child: TicketClassificationPlutoGrideWidget(), // Make it flexible
+          child: TicketClassificationPlutoGrideWidget(),
         ),
         type: TypeBarType.ticketClassification,
       ),

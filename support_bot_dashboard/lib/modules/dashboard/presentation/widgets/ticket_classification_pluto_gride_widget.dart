@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationPlutoGrideWidget extends StatelessWidget {
   final List<PlutoColumn> columns = [
@@ -65,36 +66,41 @@ class TicketClassificationPlutoGrideWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: PlutoGrid(
-          columns: columns,
-          rows: rows,
-          configuration: PlutoGridConfiguration(
-            columnSize: PlutoGridColumnSizeConfig(
-              autoSizeMode: PlutoAutoSizeMode.none,
-            ),
-            style: PlutoGridStyleConfig(
-              enableGridBorderShadow: false,
-              columnHeight: 50,
-              rowHeight: 50,
-              gridBorderColor: Colors.grey.shade300,
-              columnTextStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-              cellTextStyle: const TextStyle(fontSize: 13),
-            ),
-          ),
-          onLoaded: (PlutoGridOnLoadedEvent event) {
-            event.stateManager.setShowColumnFilter(false);
-          },
-          onChanged: (PlutoGridOnChangedEvent event) {},
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: constraints.maxHeight,
         ),
-      ),
-    );
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: PlutoGrid(
+            columns: columns,
+            rows: rows,
+            configuration: PlutoGridConfiguration(
+              columnSize: const PlutoGridColumnSizeConfig(
+                autoSizeMode: PlutoAutoSizeMode.none,
+              ),
+              style: PlutoGridStyleConfig(
+                enableGridBorderShadow: false,
+                columnHeight: 50,
+                rowHeight: 50,
+                gridBorderColor: Colors.grey.shade300,
+                columnTextStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+                cellTextStyle: const TextStyle(fontSize: 13),
+              ),
+            ),
+            onLoaded: (PlutoGridOnLoadedEvent event) {
+              event.stateManager.setShowColumnFilter(false);
+            },
+            onChanged: (PlutoGridOnChangedEvent event) {},
+          ),
+        ),
+      );
+    });
   }
 }
-
 //// this is Hard Coded Pluto girde for TicketClassification bcos of API is Not avalabel
