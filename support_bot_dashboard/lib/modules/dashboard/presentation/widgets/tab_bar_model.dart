@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_page_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pluto_gride_widget.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 
 enum TypeBarType {
   home,
@@ -28,7 +29,7 @@ class TabBarWidget {
 
     tabBarList.add(
       const TabBarWidget(
-        icon: Icons.home_outlined,
+        icon: SupportBotIcons.home,
         view: SizedBox(
           width: double.infinity,
           child: HomePageWidget(),

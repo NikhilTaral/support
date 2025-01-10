@@ -22,27 +22,28 @@ List<CountContainerData> getCountContainerData(BuildContext context,
   return [
     CountContainerData(
       text: S.of(context).spam,
-      icon: Icons.error_outline,
+      icon: SupportBotIcons.infoCircle,
+      //error_outline,
       count: model?.pieChartData?.data?.counts?.spamMarketing,
     ),
     CountContainerData(
       text: S.of(context).noActionRequired,
-      icon: Icons.check_circle_outline,
+      icon: SupportBotIcons.tickcircle,
       count: model?.pieChartData?.data?.counts?.noActionRequired,
     ),
     CountContainerData(
       text: S.of(context).genuineQuery,
-      icon: Icons.menu_rounded,
+      icon: SupportBotIcons.list,
       count: model?.pieChartData?.data?.counts?.genuineQuery,
     ),
     CountContainerData(
       text: S.of(context).acknowledgementRequired,
-      icon: Icons.star_border,
+      icon: SupportBotIcons.star1,
       count: model?.pieChartData?.data?.counts?.acknowledgementRequired,
     ),
     CountContainerData(
       text: S.of(context).total,
-      icon: Icons.confirmation_num_outlined,
+      icon: SupportBotIcons.tickcircle4,
       count: (model?.pieChartData?.data?.counts?.spamMarketing ?? 0) +
           (model?.pieChartData?.data?.counts?.noActionRequired ?? 0) +
           (model?.pieChartData?.data?.counts?.genuineQuery ?? 0) +

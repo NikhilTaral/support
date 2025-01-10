@@ -72,13 +72,13 @@ class NavBar extends StatelessWidget {
                             ),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              _onLogoutTapped(context);
-            },
-            tooltip: 'Logout',
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.logout),
+          //   onPressed: () {
+          //     _onLogoutTapped(context);
+          //   },
+          //   tooltip: 'Logout',
+          // ),
         ],
       ),
     );
@@ -93,9 +93,10 @@ Future<void> _onLogoutTapped(context) async {
 }
 
 Widget _showName(String? name, BuildContext context) {
+  final firstName = name?.split(' ')[0];
   final textPainter = TextPainter(
     text: TextSpan(
-      text: name,
+      text: firstName,
       style: SupportBotTextstyle.medium.copyWith(fontWeight: FontWeight.w600),
     ),
     maxLines: 1,
@@ -105,7 +106,7 @@ Widget _showName(String? name, BuildContext context) {
 
   return Container(
     margin: const EdgeInsets.only(right: 10),
-    width: textWidth + 70, // Adjust the additional width as needed
+    width: textWidth + 70,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(7),
       border: Border.all(color: SupportBotColors.blueSecondary.shade200),
@@ -115,16 +116,23 @@ Widget _showName(String? name, BuildContext context) {
       child: Row(
         children: [
           UIHelpers.horizontalSpaceSmall,
-          const CircleAvatar(
+          CircleAvatar(
             radius: 17,
-            backgroundImage: AssetImage('assets/images/AI.jpg'),
+            backgroundColor: SupportBotColors.blueSecondary.shade400,
+            child: Text(
+              firstName!.isNotEmpty ? name![0].toUpperCase() : '',
+              style: const TextStyle(
+                fontSize: 17,
+                color: SupportBotColors.white,
+              ),
+            ),
           ),
           UIHelpers.horizontalSpaceSmall,
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                name ?? "AI Team",
+                firstName ?? "AI Team",
                 style: SupportBotTextstyle.medium
                     .copyWith(fontWeight: FontWeight.w600),
               ),

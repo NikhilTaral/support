@@ -6,6 +6,9 @@ class SupportBotIcons {
   const SupportBotIcons._();
 
   static const IconData note = Iconsax.note_21;
+  static const IconData tickcircle = Iconsax.tick_circle;
+  static const IconData tickcircle4 = Iconsax.ticket;
+  static const IconData list = Icons.format_list_bulleted_outlined;
   static const IconData filter = Iconsax.filter;
   static const IconData arrowSwap = Iconsax.arrow_swap;
   static const IconData profileCircle = Iconsax.profile_circle;
@@ -25,9 +28,9 @@ class SupportBotIcons {
   static const IconData map = Iconsax.map4;
   static const IconData link = Iconsax.link_214;
   static const IconData maximize = Iconsax.maximize_214;
-  static const IconData menu = Iconsax.menu4;
+  static const IconData menu = Iconsax.menu;
   static const IconData likeTag = Iconsax.like_tag4;
-  static const IconData menuVert3 = Iconsax.menu_14;
+  static const IconData menuVert3 = Iconsax.menu;
   static const IconData microphone = Iconsax.microphone4;
   static const IconData next = Iconsax.next4;
   static const IconData note4 = Iconsax.note4;
@@ -50,6 +53,7 @@ class SupportBotIcons {
   static const IconData play4 = Iconsax.play4;
   static const IconData shoppingCart = Iconsax.shopping_cart4;
   static const IconData star = Iconsax.star4;
+  static const IconData star1 = Icons.star_border;
   static const IconData sort = Iconsax.sort4;
   static const IconData sms = Iconsax.sms4;
   static const IconData task = Iconsax.task4;
@@ -81,7 +85,8 @@ class SupportBotIcons {
   static const IconData bank = Iconsax.bank;
   static const IconData visibilityOff = Iconsax.eye_slash;
   static const IconData document = Iconsax.document;
-  static const IconData home = Iconsax.home_2;
+  static const IconData home = Icons.home_outlined;
+  static const IconData home_outline = Iconsax.home_14;
   static const IconData book = Iconsax.book_1;
   static const IconData profile = Iconsax.profile_2user;
   static const IconData playCircle = Iconsax.play_circle;
@@ -140,6 +145,7 @@ class SupportBotIcons {
   static const IconData bookmark = Iconsax.bookmark;
   static const IconData calendar_1 = Iconsax.calendar_1;
   static const IconData closeCircle = Iconsax.close_circle;
+  static const IconData close = Icons.close;
   static const IconData discountShape = Iconsax.discount_shape;
   static const IconData discover1 = Iconsax.discover_1;
   static const IconData mirrorScreen = Iconsax.mirroring_screen;
@@ -183,7 +189,7 @@ class SupportBotIcons {
   static const IconData infoUpCircleFill = Icons.info_sharp;
   static const IconData cube3d = Iconsax.convert_3d_cube;
   static const IconData horizontalMenu = Iconsax.menu_1;
-  static const IconData menuFilled = Iconsax.menu_15;
+  static const IconData menuFilled = Iconsax.menu_14;
   static const IconData notificationOff = Icons.notifications_off_outlined;
   static const IconData crown = Iconsax.crown_1;
   static const IconData block = Iconsax.slash4;
@@ -204,6 +210,7 @@ class SupportBotIcons {
   static const IconData handyMan = Icons.construction_outlined;
   static const IconData danger5 = Iconsax.danger5;
   static const IconData checkCircle = Icons.check_circle;
+  static const IconData checkCircleOutline = Icons.check_circle_outline;
   static const IconData listUlFirstThingChecklist = FontAwesomeIcons.listUl;
   static const IconData circleQuestion = FontAwesomeIcons.solidQuestionCircle;
   static const IconData file = FontAwesomeIcons.fileAlt;
