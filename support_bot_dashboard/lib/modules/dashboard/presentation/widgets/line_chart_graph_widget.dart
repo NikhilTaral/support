@@ -16,7 +16,6 @@ class LineChartGraphWidget extends StatelessWidget {
                 ?.getValidationByCountAttributeModel?.data?.percentages ??
             {}
       };
-
   @override
   Widget build(BuildContext context) {
     if (apiResponse == null) {
@@ -49,6 +48,10 @@ class LineChartGraphWidget extends StatelessWidget {
         ? spots.map((e) => e.y).reduce((a, b) => a > b ? a : b) + 10
         : 10;
 
+    double maxX = spots.isNotEmpty
+        ? spots.map((e) => e.x).reduce((a, b) => a > b ? a : b) + 2
+        : 2;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
@@ -59,7 +62,7 @@ class LineChartGraphWidget extends StatelessWidget {
               getDrawingHorizontalLine: (value) =>
                   FlLine(color: Color(0xFFC8C8C8)),
               getDrawingVerticalLine: (value) =>
-                  FlLine(color: Color(0xFFC8C8C8))  ,
+                  FlLine(color: Color(0xFFC8C8C8)),
               drawHorizontalLine: true,
               drawVerticalLine: true,
               show: true,
@@ -98,9 +101,7 @@ class LineChartGraphWidget extends StatelessWidget {
                         String data = title.split('@')[0];
                         String name = data.replaceAll('.', ' \n');
                         return Container(
-                          padding: const EdgeInsets.only(
-                            left: 100.0,
-                          ),
+                          padding: const EdgeInsets.only(left: 100.0),
                           child: Text(
                             name,
                             style: const TextStyle(fontSize: 8),
@@ -157,7 +158,7 @@ class LineChartGraphWidget extends StatelessWidget {
               ),
             ],
             minX: 0,
-            maxX: length.toDouble(),
+            maxX: maxX,
             minY: 0,
             maxY: maxY,
           ),

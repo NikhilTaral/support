@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:support_bot_dashboard/utils/theme/iconsax.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 
 class SupportBotIcons {
   const SupportBotIcons._();
+
   static const IconData note = Iconsax.note_21;
   static const IconData filter = Iconsax.filter;
   static const IconData arrowSwap = Iconsax.arrow_swap;
@@ -160,18 +162,54 @@ class SupportBotIcons {
   static const IconData doneAll = Icons.done_all_rounded;
   static const IconData done = Icons.check_rounded;
   static const IconData share = Icons.share_outlined;
-  static const IconData update = Icons.update;
-}
-
-class FontAwesomeIcons {
-  static const IconData solidArrowDown = IconDataSolid(0xf063);
-  static const IconData solidEllipsisV = const IconDataSolid(0xf142);
-}
-
-class IconDataSolid extends IconData {
-  const IconDataSolid(super.codePoint)
-      : super(
-          fontFamily: 'FontAwesomeSolid',
-          fontPackage: 'font_awesome_flutter',
-        );
+  static const IconData iconProgram = Iconsax.cup;
+  static const IconData home25 = Iconsax.home_25;
+  static const IconData dollarCircle4 = Iconsax.dollar_circle4;
+  static const IconData dollarCircle = Iconsax.dollar_circle;
+  static const IconData document5 = Iconsax.document5;
+  static const IconData notificationBing5 = Iconsax.notification_bing5;
+  static const IconData arrow3 = Iconsax.arrow_3;
+  static const IconData received = Iconsax.received4;
+  static const IconData arrowRight1 = Iconsax.arrow_right_1;
+  static const IconData messages_3 = Iconsax.messages_3;
+  static const IconData lock = Iconsax.lock;
+  static const IconData box = Iconsax.box_1;
+  static const IconData equal = Icons.drag_handle;
+  static const IconData dragIndicator = Icons.drag_indicator;
+  static const IconData gps = Iconsax.gps;
+  static const IconData group = Iconsax.profile_2user4;
+  static const IconData directNormal = Iconsax.direct_normal;
+  static const IconData infoUpCircle = Icons.info_outline_rounded;
+  static const IconData infoUpCircleFill = Icons.info_sharp;
+  static const IconData cube3d = Iconsax.convert_3d_cube;
+  static const IconData horizontalMenu = Iconsax.menu_1;
+  static const IconData menuFilled = Iconsax.menu_15;
+  static const IconData notificationOff = Icons.notifications_off_outlined;
+  static const IconData crown = Iconsax.crown_1;
+  static const IconData block = Iconsax.slash4;
+  static const IconData restore = Icons.restore_sharp;
+  static const IconData video = Iconsax.video;
+  static const IconData briefcase = Iconsax.briefcase;
+  static const IconData more = Icons.more_vert_outlined;
+  static const IconData shoppingCartOutlined = Icons.shopping_cart_outlined;
+  static const IconData skipNext = Icons.skip_next_outlined;
+  static const IconData skipBack = Icons.skip_previous_outlined;
+  static const IconData person = Icons.person_outline_rounded;
+  static const IconData checkOutLine = Icons.check_box_outlined;
+  static const IconData export3 = Iconsax.export_3;
+  static const IconData southEast = Icons.south_east;
+  static const IconData northEast = Icons.north_east;
+  static const IconData northWest = Icons.north_west;
+  static const IconData southWest = Icons.south_west;
+  static const IconData handyMan = Icons.construction_outlined;
+  static const IconData danger5 = Iconsax.danger5;
+  static const IconData checkCircle = Icons.check_circle;
+  static const IconData listUlFirstThingChecklist = FontAwesomeIcons.listUl;
+  static const IconData circleQuestion = FontAwesomeIcons.solidQuestionCircle;
+  static const IconData file = FontAwesomeIcons.fileAlt;
+  static const IconData handshake = FontAwesomeIcons.solidHandshake;
+  static const IconData building = FontAwesomeIcons.solidBuilding;
+  static const IconData fileAlt = FontAwesomeIcons.solidFileAlt;
+  static const IconData hourGlass = FontAwesomeIcons.solidHourglassHalf;
+  static const IconData receipt = Iconsax.receipt;
 }

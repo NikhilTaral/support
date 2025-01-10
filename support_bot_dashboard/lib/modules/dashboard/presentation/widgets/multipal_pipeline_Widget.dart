@@ -140,12 +140,16 @@ class DropdownWithCheckbox extends StatelessWidget {
       child: InputDecorator(
         decoration: InputDecoration(
           hintText: hintText,
-          contentPadding: const EdgeInsets.only(left: 10),
+          contentPadding: const EdgeInsets.only(left: 10, right: 30),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
             borderSide: const BorderSide(color: SupportBotColors.bluePrimary),
           ),
-          suffixIcon: const Icon(SupportBotIcons.arrowDown14),
+          suffixIcon: const Icon(
+            SupportBotIcons.arrowDown14,
+            size: 20,
+            color: SupportBotColors.bluePrimary,
+          ),
           hintStyle: SupportBotTextstyle.hint
               .copyWith(color: SupportBotColors.bluePrimary),
           enabledBorder: OutlineInputBorder(

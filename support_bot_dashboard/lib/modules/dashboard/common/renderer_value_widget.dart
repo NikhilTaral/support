@@ -16,6 +16,7 @@ class Renderer {
         ),
         padding: const EdgeInsets.all(8.0),
         child: Text(
+          overflow: TextOverflow.ellipsis,  
           rendererContext.cell.value.toString(),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),

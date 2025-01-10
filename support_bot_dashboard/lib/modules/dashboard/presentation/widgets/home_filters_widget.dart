@@ -5,6 +5,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/multipal_pipeline_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
@@ -75,8 +76,9 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                               calendarViewScrollPhysics:
                                   const NeverScrollableScrollPhysics(),
                               dayTextStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                              ),
                               calendarType: CalendarDatePicker2Type.range,
                               selectedDayHighlightColor:
                                   SupportBotColors.bluePrimary,
@@ -86,7 +88,11 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                               ),
+                              selectableDayPredicate: (date) {
+                                return date.isBefore(DateTime.now());
+                              },
                             );
+
                             final pickedDates =
                                 await showCalendarDatePicker2Dialog(
                               context: context,
@@ -102,25 +108,36 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                             if (pickedDates != null) {
                               selectedDatesNotifier.value =
                                   pickedDates.cast<DateTime>();
+                              final startDate = pickedDates.isNotEmpty
+                                  ? pickedDates[0]
+                                  : null;
+                              final endDate = pickedDates.length > 1
+                                  ? pickedDates[1]
+                                  : null;
+
+                              await LocalStorage.saveSelectedDates(
+                                  startDate, endDate);
                             }
                           },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.calendar_month_outlined,
-                                  color: SupportBotColors.bluePrimary),
-                              const SizedBox(width: 8),
-                              Text(
-                                startDate != null && endDate != null
-                                    ? '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}'
-                                    : '${DateFormat('MMM dd').format(DateTime.now())} - ${DateFormat('MMM dd yyyy').format(DateTime.now())}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: SupportBotColors.bluePrimary,
-                                  fontWeight: FontWeight.w500,
+                          child: FittedBox(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.calendar_month_outlined,
+                                    color: SupportBotColors.bluePrimary),
+                                const SizedBox(width: 8),
+                                Text(
+                                  startDate != null && endDate != null
+                                      ? '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}'
+                                      : '${DateFormat('MMM dd').format(DateTime.now())} - ${DateFormat('MMM dd yyyy').format(DateTime.now())}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: SupportBotColors.bluePrimary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -150,10 +167,34 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
               ),
             );
           } else if (state is GetAllPipelineLoadingState) {
-            return const LoadingWidget(
-              width: 185,
-              height: 40,
-              radius: 6,
+            return Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Row(
+                spacing: 23,
+                children: [
+                  Container(
+                    child: const LoadingWidget(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      height: 40,
+                      width: 160,
+                    ),
+                  ),
+                  Container(
+                    child: const LoadingWidget(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      height: 40,
+                      width: 190,
+                    ),
+                  ),
+                  Container(
+                    child: const LoadingWidget(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      height: 40,
+                      width: 140,
+                    ),
+                  ),
+                ],
+              ),
             );
           } else if (state is GetAllPipelineFailureState) {
             return const Text("No data Found");
