@@ -1,27 +1,28 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_answer_bloc/ai_query_Edited_answer_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-class AiQueryEditedAnswerWidget extends StatelessWidget {
-  const AiQueryEditedAnswerWidget({super.key});
+class AiQueryAnswerTile extends StatelessWidget {
+  const AiQueryAnswerTile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          AiQueryEditedAnswerBloc()..add(AIQueryEditedAnswerCallEvent()),
-      child: BlocBuilder<AiQueryEditedAnswerBloc, AiQueryEditedAnswerState>(
+          AiQueryAnswerBloc()..add(AIQueryAnswerInitialEvent()),
+      child: BlocBuilder<AiQueryAnswerBloc, AiQueryAnswerState>(
         builder: (context, state) {
-          if (state is AIQueryEditedAnswerSucssesState) {
+          print("Ajinkya $state");
+          if (state is AIQueryAnswerSucssesState) {
             return _content(state);
-          } else if (state is AIQueryEditedAnswerLoadingState) {
+          } else if (state is AIQueryAnswerLoadingState) {
             return _loadingView(context);
-          } else if (state is AIQueryEditedAnswerFailureState) {
+          } else if (state is AIQueryAnswerFailureState) {
             return const Text('Failed to load user validation data');
           } else {
             return const SizedBox.shrink();
@@ -31,26 +32,18 @@ class AiQueryEditedAnswerWidget extends StatelessWidget {
     );
   }
 
-  Widget _content(AIQueryEditedAnswerSucssesState state) {
+  Widget _content(AIQueryAnswerSucssesState state) {
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildInfoCard(
-            title: 'AI Query Edited',
-            editedText:
-                'Query Edited: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.answered}%',
-            nonEditedText:
-                'Query Non Edited: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.notAnswered}%',
-          ),
-          UIHelpers.verticalSpaceMedium,
-          _buildInfoCard(
             title: 'AI Query Answer',
             editedText:
-                'AI Query Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.answered}',
+                'Query Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.answered}%',
             nonEditedText:
-                'AI Query Not Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.notAnswered}',
+                'Query Non Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.notAnswered}%',
           ),
         ],
       ),

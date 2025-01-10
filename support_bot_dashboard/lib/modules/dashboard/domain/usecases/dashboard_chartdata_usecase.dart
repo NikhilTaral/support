@@ -7,6 +7,6 @@ class DashboardChartdataUsecase {
   Future<Either<Failure, dynamic>> invoke(
       dashboardChartDataInitialRequestModel) async {
     return await serviceLocator<DashboardChartDataRepository>()
-        .getDashboardChartData(dashboardChartDataInitialRequestModel);
+        .getDashboardAnswerData(dashboardChartDataInitialRequestModel);
   }
 }

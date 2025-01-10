@@ -12,20 +12,20 @@ class DashboardGetValidationRepoImpl extends GetValidationCountRepository {
   final s = serviceLocator<S>();
   @override
   Future<Either<Failure, dynamic>> getValidationCount(
-      DashboardChartDataInitialRequestModel?
-          dashboardChartDataInitialRequestModel) async {
+      DashboardAnswerDataInitialRequestModel?
+          dashboardAnswerDataInitialRequestModel) async {
     try {
       final dynamic response = await serviceLocator<ApiProvider>().getData(
         url: 'dashboard/getValidationCount',
-        body: dashboardChartDataInitialRequestModel?.toJson(),
+        body: dashboardAnswerDataInitialRequestModel?.toJson(),
       );
-      final model = dashboardChartResponseModelFromJson(jsonEncode(response));
+      final model = dashboardAnswerResponseModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message:  s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsg));
       }
       return Right(model);
     } catch (e) {
-      return Left(ServerFailure(message:  s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsg));
     }
   }
 }

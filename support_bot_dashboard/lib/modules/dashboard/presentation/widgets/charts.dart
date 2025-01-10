@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_answer_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_tile.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/validation_status_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_widget.dart';
@@ -15,7 +16,6 @@ class Charts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = UIHelpers.screenHeight(context);
-    final screenWidth = UIHelpers.screenWidth(context);
 
     return SizedBox(
       child: Row(
@@ -89,6 +89,9 @@ class Charts extends StatelessWidget {
   }
 
   Widget _buildAiQueryEditedAnswerCard() {
-    return const AiQueryEditedAnswerWidget();
+    return const Column(
+      spacing: 10,
+      children: [AiQueryAnswerTile(), AiQueryEditedTile()],
+    );
   }
 }

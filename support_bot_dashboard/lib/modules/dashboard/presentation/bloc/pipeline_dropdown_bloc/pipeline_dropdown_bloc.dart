@@ -9,42 +9,63 @@ class PipelineDropdownBloc
   List<String> _selectedItems = [];
 
   PipelineDropdownBloc() : super(PipelineDropdownInitialState()) {
-    on<LoadItemsEvent>((event, emit) {
-      _items = event.items;
-      _selectedItems = List<String>.from(event.selectedItems);
-      emit(PipelineDropdownLoadedState(
-        filteredItems: _items,
-        selectedItems: _selectedItems,
-      ));
-    });
+    on<LoadPipelineTypesEvent>(_onLoadPipelineTypesEvent);
+    on<FilterItemsEvent>(_onFilterItemsEvent);
+    on<UpdateSelectedItemEvent>(_onUpdateSelectedItemEvent);
+  }
 
-    on<FilterItemsEvent>((event, emit) {
-      final List<String> selectedItems;
+  Future<void> _onLoadPipelineTypesEvent(
+      LoadPipelineTypesEvent event, Emitter<PipelineDropdownState> emit) async {
+    _items = event.items;
+    _selectedItems = List<String>.from(event.selectedItems);
 
-      final filteredItems = _items
-          .where((item) =>
-              item.pipelineName
-                  ?.toLowerCase()
-                  .contains(event.query.trim().toLowerCase()) ??
-              false)
-          .toList();
+    emit(DropdownPipelineTypesLoadedState(
+      filteredItems: _items,
+      selectedItems: _selectedItems,
+    ));
+  }
 
-      emit(PipelineDropdownLoadedState(
-        filteredItems: filteredItems,
-        selectedItems: _selectedItems,
-      ));
-    });
+  Future<void> _onFilterItemsEvent(
+      FilterItemsEvent event, Emitter<PipelineDropdownState> emit) async {
+    final filteredItems = _filterItems(event.query);
 
-    on<UpdateSelectedItemEvent>((event, emit) {
-      if (event.isChecked) {
-        _selectedItems.add(event.item);
-      } else {
-        _selectedItems.remove(event.item);
-      }
-      emit(PipelineDropdownLoadedState(
-        filteredItems: _items,
-        selectedItems: _selectedItems,
-      ));
-    });
+    emit(DropdownPipelineTypesLoadedState(
+      filteredItems: filteredItems,
+      selectedItems: _selectedItems,
+    ));
+  }
+
+  Future<void> _onUpdateSelectedItemEvent(UpdateSelectedItemEvent event,
+      Emitter<PipelineDropdownState> emit) async {
+    if (event.isChecked) {
+      _addSelectedItem(event.item);
+    } else {
+      _removeSelectedItem(event.item);
+    }
+
+    emit(DropdownPipelineTypesLoadedState(
+      filteredItems: _items,
+      selectedItems: _selectedItems,
+    ));
+  }
+
+  List<Datums> _filterItems(String query) {
+    return _items
+        .where((item) =>
+            item.pipelineName
+                ?.toLowerCase()
+                .contains(query.trim().toLowerCase()) ??
+            false)
+        .toList();
+  }
+
+  void _addSelectedItem(String item) {
+    if (!_selectedItems.contains(item)) {
+      _selectedItems.add(item);
+    }
+  }
+
+  void _removeSelectedItem(String item) {
+    _selectedItems.remove(item);
   }
 }

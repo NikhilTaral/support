@@ -21,7 +21,7 @@ class ValidationStatusBloc
     emit(ValidationStatusLodingState());
 
     final repository = serviceLocator<ValidationStatusUsecase>();
-    final req = DashboardChartDataInitialRequestModel(
+    final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
             fieldValue: [event.selectedPipeline ?? "11257490"],

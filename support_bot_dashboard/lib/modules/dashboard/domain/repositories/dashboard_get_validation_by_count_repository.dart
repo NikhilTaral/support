@@ -4,6 +4,6 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 
 abstract class GetValidationByCountRepository {
   Future<Either<Failure, dynamic>> getValidationByCount(
-      DashboardChartDataInitialRequestModel?
-          dashboardChartDataInitialRequestModel);
+      DashboardAnswerDataInitialRequestModel?
+          dashboardAnswerDataInitialRequestModel);
 }

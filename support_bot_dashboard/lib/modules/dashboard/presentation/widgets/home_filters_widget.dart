@@ -2,6 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/multipal_pipeline_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
@@ -30,6 +31,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         builder: (context, state) {
           if (state is GetAllAllPipelineSuccessState) {
             List<Datums> items = state.attributeModel?.data ?? [];
+            List<String> pipelineIds = [];
             return SizedBox(
               height: 40,
               child: Row(
@@ -42,9 +44,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                       items: items,
                       selectedItems: selectedItems,
                       onChanged: (value) {
-                        setState(() {
-                          selectedItems = value;
-                        });
+                        _onPipelineSelectionChanged(
+                            value ?? [], items, pipelineIds, context);
                       },
                     ),
                   ),
@@ -167,31 +168,25 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
               ),
             );
           } else if (state is GetAllPipelineLoadingState) {
-            return Padding(
-              padding: const EdgeInsets.all(13.0),
+            return const Padding(
+              padding: EdgeInsets.all(13.0),
               child: Row(
                 spacing: 23,
                 children: [
-                  Container(
-                    child: const LoadingWidget(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      height: 40,
-                      width: 160,
-                    ),
+                  LoadingWidget(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    height: 40,
+                    width: 160,
                   ),
-                  Container(
-                    child: const LoadingWidget(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      height: 40,
-                      width: 190,
-                    ),
+                  LoadingWidget(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    height: 40,
+                    width: 190,
                   ),
-                  Container(
-                    child: const LoadingWidget(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      height: 40,
-                      width: 140,
-                    ),
+                  LoadingWidget(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    height: 40,
+                    width: 140,
                   ),
                 ],
               ),
@@ -202,6 +197,23 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
           return const Text("No data Found");
         },
       ),
+    );
+  }
+
+  void _onPipelineSelectionChanged(List<String> selectedNames,
+      List<Datums> items, List<String> pipelineIds, BuildContext context) {
+    pipelineIds.clear();
+    for (var selectedName in selectedNames) {
+      var matchingItem = items.firstWhere(
+        (item) => item.pipelineName == selectedName,
+        orElse: () => Datums(pipelineName: '', pipelineId: ''),
+      );
+      if (matchingItem.pipelineId?.isNotEmpty == true) {
+        pipelineIds.add(matchingItem.pipelineId ?? "");
+      }
+    }
+    BlocProvider.of<AiQueryAnswerBloc>(context).add(
+      AIQueryAnswerInitialEvent(selectedPipelineValue: pipelineIds),
     );
   }
 }

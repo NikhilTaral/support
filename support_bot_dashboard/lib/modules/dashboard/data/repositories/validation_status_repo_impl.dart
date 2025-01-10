@@ -12,22 +12,22 @@ class ValidationStatusRepoImpl extends ValidationStatusRepository {
   final s = serviceLocator<S>();
   @override
   Future<Either<Failure, dynamic>> validationStatus(
-      DashboardChartDataInitialRequestModel?
-          dashboardChartDataInitialRequestModel) async {
+      DashboardAnswerDataInitialRequestModel?
+          dashboardAnswerDataInitialRequestModel) async {
     try {
       final dynamic response = await serviceLocator<ApiProvider>().getData(
         url: 'dashboard/getValidationCount',
-        body: dashboardChartDataInitialRequestModel?.toJson(),
+        body: dashboardAnswerDataInitialRequestModel?.toJson(),
       );
       final model =
           validationStatusResponsetModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message:  s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsg));
       } else {
         return Right(model);
       }
     } catch (e) {
-      return Left(ServerFailure(message:  s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsg));
     }
   }
 }

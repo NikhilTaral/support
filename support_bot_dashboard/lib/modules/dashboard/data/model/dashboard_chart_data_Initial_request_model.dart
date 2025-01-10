@@ -1,16 +1,16 @@
 // Define the RequestModel class
-class DashboardChartDataInitialRequestModel {
+class DashboardAnswerDataInitialRequestModel {
   final String? startDate;
   final String? endDate;
   final List<Filter>? filter;
 
-  DashboardChartDataInitialRequestModel(
+  DashboardAnswerDataInitialRequestModel(
       {this.startDate, this.endDate, this.filter});
 
   // From JSON
-  factory DashboardChartDataInitialRequestModel.fromJson(
+  factory DashboardAnswerDataInitialRequestModel.fromJson(
       Map<String, dynamic> json) {
-    return DashboardChartDataInitialRequestModel(
+    return DashboardAnswerDataInitialRequestModel(
       startDate: json['startDate'],
       endDate: json['endDate'],
       filter: (json['filter'] as List).map((i) => Filter.fromJson(i)).toList(),

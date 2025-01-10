@@ -12,17 +12,17 @@ import 'package:support_bot_dashboard/core/error/failure.dart';
 class DashboardChartDataRepoImpl extends DashboardChartDataRepository {
   final s = serviceLocator<S>();
   @override
-  Future<Either<Failure, dynamic>> getDashboardChartData(
-      DashboardChartDataInitialRequestModel?
+  Future<Either<Failure, dynamic>> getDashboardAnswerData(
+      DashboardAnswerDataInitialRequestModel?
           dashboardChartDataInitialRequestModel) async {
     try {
       final dynamic response = await serviceLocator<ApiProvider>().getData(
         url: 'dashboard/getCategoryCounts',
         body: dashboardChartDataInitialRequestModel?.toJson(),
       );
-      final model = dashboardChartResponseModelFromJson(jsonEncode(response));
+      final model = dashboardAnswerResponseModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message:  s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsg));
       }
       return Right(model);
     } catch (e) {

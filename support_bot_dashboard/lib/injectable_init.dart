@@ -8,14 +8,15 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashbo
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/get_all_pipelines_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/validation_status_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_chart_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_answer_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_ai_edited_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/get_all_pipelines_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/validation_status_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_chart_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/get_all_pipelines_usecase.dart';
@@ -59,16 +60,18 @@ Future<void> initServiceLocator() async {
       () => DashboardGetAiEditedRepoImpl());
   serviceLocator.registerLazySingleton<DashboardChartDataRepository>(
       () => DashboardChartDataRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardAiQueryChartDataRepository>(
-      () => DashboardAiQueryChartRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardAiQueryAnswerDataRepository>(
+      () => DashboardAiQueryAnswerRepoImpl());
 
   // Dashboard usecase
   serviceLocator.registerLazySingleton<DashboardChartdataUsecase>(
       () => DashboardChartdataUsecase());
   serviceLocator.registerLazySingleton<ValidationStatusUsecase>(
       () => ValidationStatusUsecase());
-  serviceLocator.registerLazySingleton<DashboardAiQueryChartUsecase>(
-      () => DashboardAiQueryChartUsecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryAnswerUsecase>(
+      () => DashboardAiQueryAnswerUsecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryEditedUsecase>(
+      () => DashboardAiQueryEditedUsecase());
 
   //Revert Classification Bloc
 

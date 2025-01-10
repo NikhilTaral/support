@@ -9,7 +9,9 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboar
 
 part 'ticket_classification_event.dart';
 part 'ticket_classification_state.dart';
+
 late DashboardDataModel dashboardDataModel = DashboardDataModel();
+
 class TicketClassificationBloc
     extends Bloc<TickiteClassificationEvent, TicketClassificationState> {
   TicketClassificationBloc() : super(TicketClassificationInitialState()) {
@@ -20,7 +22,7 @@ class TicketClassificationBloc
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
     final repository = serviceLocator<DashboardChartdataUsecase>();
-    final req = DashboardChartDataInitialRequestModel(
+    final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
             fieldValue: [event.selectedPipelineValue ?? "11257490"],

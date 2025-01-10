@@ -6,32 +6,31 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_chart_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
 
-part 'ai_query_Edited_answer_event.dart';
-part 'ai_query_Edited_answer_state.dart';
+part 'ai_query_answer_event.dart';
+part 'ai_query_answer_state.dart';
 
 late DashboardDataModel dashboardDataModel = DashboardDataModel();
 
-class AiQueryEditedAnswerBloc
-    extends Bloc<AiQueryEditedAnswerEvent, AiQueryEditedAnswerState> {
-  AiQueryEditedAnswerBloc() : super(AIQueryEditedAnswerIntialState()) {
-    on<AIQueryEditedAnswerCallEvent>(_onFichAiQueryChartData);
+class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
+  AiQueryAnswerBloc() : super(AIQueryAnswerIntialState()) {
+    on<AIQueryAnswerInitialEvent>(_aIQueryAnswerInitialEvent);
   }
 
-  FutureOr<void> _onFichAiQueryChartData(AIQueryEditedAnswerCallEvent event,
-      Emitter<AiQueryEditedAnswerState> emit) async {
-    emit(AIQueryEditedAnswerLoadingState());
+  FutureOr<void> _aIQueryAnswerInitialEvent(
+      AIQueryAnswerInitialEvent event, Emitter<AiQueryAnswerState> emit) async {
+    emit(AIQueryAnswerLoadingState());
     try {
-      final repository = await serviceLocator<DashboardAiQueryChartUsecase>();
-      final req = DashboardChartDataInitialRequestModel(
+      final repository = serviceLocator<DashboardAiQueryAnswerUsecase>();
+      final req = DashboardAnswerDataInitialRequestModel(
         filter: [
           if (event.selectedDate != null)
             Filter(
-                fieldValue: ["${event.selectedDate ?? "2024-12-31"}"],
+                fieldValue: event.selectedPipelineValue ?? ["11257490"],
                 fieldName: "StartDate"),
           Filter(
-              fieldValue: [event.selectedPipelineValue ?? "11257490"],
+              fieldValue: event.selectedPipelineValue ?? ["11257490"],
               fieldName: event.fildName ?? "pipelines")
         ],
         startDate: (event.selectedDate ?? DateTime.parse("2024-12-31"))
@@ -43,7 +42,7 @@ class AiQueryEditedAnswerBloc
       );
       final responce = await repository.invoke(req);
       if (responce.isLeft) {
-        emit(AIQueryEditedAnswerFailureState(
+        emit(AIQueryAnswerFailureState(
           message: responce.toString(),
           selectedDate: event.selectedDate ?? DateTime.now(),
           selectedMonth: event.selectedMonth ?? DateTime.now(),
@@ -78,18 +77,17 @@ class AiQueryEditedAnswerBloc
               notAnswered: model.data?.percentages?.notAnsweredCount,
             ),
           )));
-
-          emit(AIQueryEditedAnswerSucssesState(
+          emit(AIQueryAnswerSucssesState(
               dashboardDataModel: dashboardDataModel));
         } else {
-          emit(AIQueryEditedAnswerFailureState(
+          emit(AIQueryAnswerFailureState(
               message: 'Exception: ',
               selectedDate: event.selectedDate ?? DateTime.now(),
               selectedMonth: event.selectedMonth ?? DateTime.now()));
         }
       }
     } catch (e) {
-      emit(AIQueryEditedAnswerFailureState(
+      emit(AIQueryAnswerFailureState(
           message: 'Exception: $e',
           selectedDate: event.selectedDate ?? DateTime.now(),
           selectedMonth: event.selectedMonth ?? DateTime.now()));

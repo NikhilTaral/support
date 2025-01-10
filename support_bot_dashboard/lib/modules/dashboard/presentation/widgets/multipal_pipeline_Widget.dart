@@ -29,7 +29,7 @@ class DropdownWithCheckbox extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         final dropdownBloc = PipelineDropdownBloc()
-          ..add(LoadItemsEvent(items, selectedItems));
+          ..add(LoadPipelineTypesEvent(items, selectedItems));
 
         showDialog(
           context: context,
@@ -40,7 +40,7 @@ class DropdownWithCheckbox extends StatelessWidget {
                 backgroundColor: SupportBotColors.white,
                 child: BlocBuilder<PipelineDropdownBloc, PipelineDropdownState>(
                   builder: (context, state) {
-                    if (state is PipelineDropdownLoadedState) {
+                    if (state is DropdownPipelineTypesLoadedState) {
                       return SizedBox(
                         height: 500,
                         width: 400,
@@ -159,7 +159,7 @@ class DropdownWithCheckbox extends StatelessWidget {
         ),
         child: BlocBuilder<PipelineDropdownBloc, PipelineDropdownState>(
           bloc: PipelineDropdownBloc()
-            ..add(LoadItemsEvent(items, selectedItems)),
+            ..add(LoadPipelineTypesEvent(items, selectedItems)),
           builder: (context, state) {
             final displayedItems =
                 selectedItems.isNotEmpty ? selectedItems.join(', ') : hintText;

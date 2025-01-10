@@ -11,23 +11,23 @@ import 'package:support_bot_dashboard/core/error/failure.dart';
 
 class DashboardGetValidationByCountRepoImpl
     extends GetValidationByCountRepository {
-      final s = serviceLocator<S>();
+  final s = serviceLocator<S>();
   @override
   Future<Either<Failure, dynamic>> getValidationByCount(
-      DashboardChartDataInitialRequestModel?
-          dashboardChartDataInitialRequestModel) async {
+      DashboardAnswerDataInitialRequestModel?
+          dashboardAnswerDataInitialRequestModel) async {
     try {
-      if (dashboardChartDataInitialRequestModel == null) {
+      if (dashboardAnswerDataInitialRequestModel == null) {
         return Left(ServerFailure(message: 'Request model is null'));
       }
       final response = await serviceLocator<ApiProvider>().getData(
         url: 'dashboard/getValidatedByCount',
-        body: dashboardChartDataInitialRequestModel.toJson(),
+        body: dashboardAnswerDataInitialRequestModel.toJson(),
       );
       final model =
           getValidationByCountResponseModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message:  s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsg));
       }
       return Right(model);
     } catch (e) {

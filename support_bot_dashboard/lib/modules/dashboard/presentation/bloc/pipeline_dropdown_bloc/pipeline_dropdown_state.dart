@@ -4,11 +4,11 @@ abstract class PipelineDropdownState {}
 
 class PipelineDropdownInitialState extends PipelineDropdownState {}
 
-class PipelineDropdownLoadedState extends PipelineDropdownState {
+class DropdownPipelineTypesLoadedState extends PipelineDropdownState {
   final List<Datums> filteredItems;
   final List<String> selectedItems;
 
-  PipelineDropdownLoadedState({
+  DropdownPipelineTypesLoadedState({
     required this.filteredItems,
     required this.selectedItems,
   });

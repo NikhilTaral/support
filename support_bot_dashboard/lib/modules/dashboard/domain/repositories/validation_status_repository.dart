@@ -4,6 +4,6 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 
 abstract class ValidationStatusRepository {
   Future<Either<Failure, dynamic>> validationStatus(
-      DashboardChartDataInitialRequestModel?
-          dashboardChartDataInitialRequestModel);
+      DashboardAnswerDataInitialRequestModel?
+          dashboardAnswerDataInitialRequestModel);
 }

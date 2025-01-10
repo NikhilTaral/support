@@ -10,7 +10,9 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboar
 
 part 'user_validationevent.dart';
 part 'uservalidation_state.dart';
+
 late DashboardDataModel dashboardDataModel = DashboardDataModel();
+
 class UserValidationBloc
     extends Bloc<UserValidationsEvent, UservalidationState> {
   UserValidationBloc() : super(UserValidationIntialState()) {
@@ -23,7 +25,7 @@ class UserValidationBloc
 
     try {
       final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
-      final req = DashboardChartDataInitialRequestModel(
+      final req = DashboardAnswerDataInitialRequestModel(
           startDate: (event.selectedDate ?? DateTime.parse("2024-10-23"))
               .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
               .toIso8601String(),

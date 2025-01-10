@@ -53,32 +53,38 @@ class DashboardDesktopView extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              NavBar(
-                showPopArrow: false,
-                navigateTo: () {},
-                text: "",
-              ),
-              Padding(
-                padding: padding,
-                child: HomeFiltersWidget(),
-              ),
-              MyOrganizationNavBar(index: selectedIndex),
-              const SizedBox(height: 10),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: constraints.maxHeight,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            NavBar(
+              showPopArrow: false,
+              navigateTo: () {},
+              text: "",
+            ),
+            Padding(
+              padding: padding,
+              child: HomeFiltersWidget(),
+            ),
+            MyOrganizationNavBar(index: selectedIndex),
+            const SizedBox(height: 10),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: constraints.maxHeight,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: incomeItems[selectedIndex].view,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30),
-                  child: incomeItems[selectedIndex].view,
-                ),
               ),
-            ],
-          ),
+            )
+          ],
         );
       },
     );

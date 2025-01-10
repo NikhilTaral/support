@@ -2,11 +2,11 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_
 
 abstract class PipelineDropdownEvent {}
 
-class LoadItemsEvent extends PipelineDropdownEvent {
+class LoadPipelineTypesEvent extends PipelineDropdownEvent {
   final List<Datums> items;
   final List<String> selectedItems;
 
-  LoadItemsEvent(this.items, this.selectedItems);
+  LoadPipelineTypesEvent(this.items, this.selectedItems);
 }
 
 class FilterItemsEvent extends PipelineDropdownEvent {
