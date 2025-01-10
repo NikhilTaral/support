@@ -57,8 +57,8 @@ class FlCircularChart extends StatelessWidget {
         sectionsSpace: 0,
         startDegreeOffset: 360,
       ),
-      duration: Duration(milliseconds: 2000),
-      curve: Curves.easeInOutCirc,
+      swapAnimationCurve: Curves.easeInOutCirc,
+      swapAnimationDuration: const Duration(milliseconds: 2000),
     );
   }
 

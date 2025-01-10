@@ -26,7 +26,7 @@ class ValidationStatusWidget extends StatelessWidget {
           if (state is ValidationStatusSucssesState) {
             final attributeModel = state.attributeModel;
             return Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(8),
               child: PlutoGrid(
                   columns:
                       ValidationStatusReportUtils.validationStatusColumns(),
@@ -37,11 +37,10 @@ class ValidationStatusWidget extends StatelessWidget {
                       PlutoGridConfigurations.plutoGridConfigurations()),
             );
           } else if (state is ValidationStatusLodingState) {
-            return Container(
-                child: LoadingWidget(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    width: double.infinity,
-                    height: UIHelpers.screenHeight(context)));
+            return const LoadingWidget(
+                borderRadius: const BorderRadius.all(Radius.circular(6)),
+                width: double.infinity,
+                height: 200);
           } else if (state is VsalidationStatusFailureState) {
             return const Center(child: Text('Failed to load data'));
           } else {

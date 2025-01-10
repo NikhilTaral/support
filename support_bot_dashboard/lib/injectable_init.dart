@@ -20,8 +20,6 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/get_all_pipelines_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/validation_status_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_Edited_answer_bolc/ai_query_Edited_answer_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/usecases/v3_login_usecases.dart';
@@ -55,7 +53,7 @@ Future<void> initServiceLocator() async {
   // Dashboard repositories
   serviceLocator.registerLazySingleton<ValidationStatusRepository>(
       () => ValidationStatusRepoImpl());
-serviceLocator.registerLazySingleton<GetAllPipelinesRepository>(
+  serviceLocator.registerLazySingleton<GetAllPipelinesRepository>(
       () => GetAllPipelinesRepoImpl());
   serviceLocator.registerLazySingleton<DashboardGetAiEditedRepository>(
       () => DashboardGetAiEditedRepoImpl());
@@ -72,14 +70,7 @@ serviceLocator.registerLazySingleton<GetAllPipelinesRepository>(
   serviceLocator.registerLazySingleton<DashboardAiQueryChartUsecase>(
       () => DashboardAiQueryChartUsecase());
 
-  // Dashboard bloc
-
-  serviceLocator.registerFactory<CustombuttonBloc>(() => CustombuttonBloc());
-  serviceLocator.registerFactory<AiQueryEditedAnswerBloc>(
-      () => AiQueryEditedAnswerBloc());
-
   //Revert Classification Bloc
- 
 
   // get validation count
   serviceLocator.registerLazySingleton<GetValidationCountRepository>(
@@ -91,8 +82,6 @@ serviceLocator.registerLazySingleton<GetAllPipelinesRepository>(
   serviceLocator.registerLazySingleton<GetValidationByCountRepository>(
       () => DashboardGetValidationByCountRepoImpl());
 
-
-      serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
+  serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
       () => GetAllPipelinesUsecase());
 }
- 

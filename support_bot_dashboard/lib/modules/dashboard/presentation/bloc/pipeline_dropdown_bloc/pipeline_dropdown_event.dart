@@ -1,21 +1,21 @@
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 
-abstract class DropdownEvent {}
+abstract class PipelineDropdownEvent {}
 
-class LoadItemsEvent extends DropdownEvent {
+class LoadItemsEvent extends PipelineDropdownEvent {
   final List<Datums> items;
   final List<String> selectedItems;
 
   LoadItemsEvent(this.items, this.selectedItems);
 }
 
-class FilterItemsEvent extends DropdownEvent {
+class FilterItemsEvent extends PipelineDropdownEvent {
   final String query;
 
   FilterItemsEvent(this.query);
 }
 
-class UpdateSelectedItemEvent extends DropdownEvent {
+class UpdateSelectedItemEvent extends PipelineDropdownEvent {
   final String item;
   final bool isChecked;
 

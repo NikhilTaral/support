@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/Pipline_bloc/bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/Pipline_bloc/event.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/Pipline_bloc/state.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_event.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_state.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'dart:ui';
+
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class DropdownWithCheckbox extends StatelessWidget {
   final String hintText;
@@ -25,7 +28,7 @@ class DropdownWithCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final dropdownBloc = DropdownBloc()
+        final dropdownBloc = PipelineDropdownBloc()
           ..add(LoadItemsEvent(items, selectedItems));
 
         showDialog(
@@ -35,9 +38,9 @@ class DropdownWithCheckbox extends StatelessWidget {
               value: dropdownBloc,
               child: Dialog(
                 backgroundColor: SupportBotColors.white,
-                child: BlocBuilder<DropdownBloc, DropdownState>(
+                child: BlocBuilder<PipelineDropdownBloc, PipelineDropdownState>(
                   builder: (context, state) {
-                    if (state is DropdownLoadedState) {
+                    if (state is PipelineDropdownLoadedState) {
                       return SizedBox(
                         height: 500,
                         width: 400,
@@ -68,7 +71,7 @@ class DropdownWithCheckbox extends StatelessWidget {
                                 ),
                                 onChanged: (query) {
                                   context
-                                      .read<DropdownBloc>()
+                                      .read<PipelineDropdownBloc>()
                                       .add(FilterItemsEvent(query));
                                 },
                               ),
@@ -85,7 +88,9 @@ class DropdownWithCheckbox extends StatelessWidget {
                                     title: Text(item.pipelineName ?? ""),
                                     onChanged: (bool? isChecked) {
                                       if (isChecked != null) {
-                                        context.read<DropdownBloc>().add(
+                                        context
+                                            .read<PipelineDropdownBloc>()
+                                            .add(
                                               UpdateSelectedItemEvent(
                                                 item.pipelineName ?? "",
                                                 isChecked,
@@ -135,17 +140,22 @@ class DropdownWithCheckbox extends StatelessWidget {
       child: InputDecorator(
         decoration: InputDecoration(
           hintText: hintText,
+          contentPadding: const EdgeInsets.only(left: 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
             borderSide: const BorderSide(color: SupportBotColors.bluePrimary),
           ),
+          suffixIcon: const Icon(SupportBotIcons.arrowDown14),
+          hintStyle: SupportBotTextstyle.hint
+              .copyWith(color: SupportBotColors.bluePrimary),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
             borderSide: const BorderSide(color: SupportBotColors.bluePrimary),
           ),
         ),
-        child: BlocBuilder<DropdownBloc, DropdownState>(
-          bloc: DropdownBloc()..add(LoadItemsEvent(items, selectedItems)),
+        child: BlocBuilder<PipelineDropdownBloc, PipelineDropdownState>(
+          bloc: PipelineDropdownBloc()
+            ..add(LoadItemsEvent(items, selectedItems)),
           builder: (context, state) {
             final displayedItems =
                 selectedItems.isNotEmpty ? selectedItems.join(', ') : hintText;

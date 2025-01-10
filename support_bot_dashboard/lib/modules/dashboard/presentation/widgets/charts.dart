@@ -9,85 +9,90 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class Charts extends StatelessWidget {
-  Charts({super.key, this.dashboardDataModel});
+  const Charts({super.key, this.dashboardDataModel});
   final DashboardDataModel? dashboardDataModel;
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = UIHelpers.screenHeight(context);
+    final screenWidth = UIHelpers.screenWidth(context);
+
     return SizedBox(
-      height: UIHelpers.screenHeight(context),
-      width: UIHelpers.screenWidth(context),
+      height: screenHeight * 1.08,
+      width: screenWidth,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 5,
+            flex: 2,
             child: Column(
               children: [
-                const Expanded(flex: 5, child: TicketClassificationWidget()),
+                const TicketClassificationWidget(),
                 UIHelpers.verticalSpace(16),
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: SupportBotColors.blueSecondary.shade100,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 1, left: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelpers.verticalSpaceSmall,
-                          Text(
-                            "Validation Status",
-                            style: SupportBotTextstyle.normal.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Container(
-                              height: UIHelpers.screenHeight(context) * 0.4,
-                              child: ValidationStatusWidget(
-                                list: dashboardDataModel,
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                _buildValidationStatusCard(screenHeight, context),
               ],
             ),
           ),
           UIHelpers.horizontalSpaceSmall,
           Expanded(
-            flex: 5,
+            flex: 3,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: SupportBotColors.blueSecondary.shade100,
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const UserValidationWidget()),
-                ),
+                _buildUserValidationCard(),
                 UIHelpers.verticalSpaceRegular,
-                Expanded(
-                    flex: 5,
-                    child: Container(child: AiQueryEditedAnswerWidget())),
+                _buildAiQueryEditedAnswerCard(),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildValidationStatusCard(double screenHeight, BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: SupportBotColors.blueSecondary.shade100, width: 1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 1, left: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            UIHelpers.verticalSpaceSmall,
+            Text(
+              "Validation Status",
+              style: SupportBotTextstyle.normal.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: SupportBotColors.black),
+            ),
+            SizedBox(
+              height: screenHeight * 0.4,
+              child: ValidationStatusWidget(list: dashboardDataModel),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserValidationCard() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: SupportBotColors.blueSecondary.shade100, width: 1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: const UserValidationWidget(),
+    );
+  }
+
+  Widget _buildAiQueryEditedAnswerCard() {
+    return const AiQueryEditedAnswerWidget();
   }
 }

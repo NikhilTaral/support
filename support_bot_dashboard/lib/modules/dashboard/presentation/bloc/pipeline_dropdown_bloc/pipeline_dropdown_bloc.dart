@@ -1,24 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/Pipline_bloc/event.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/Pipline_bloc/state.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_event.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_state.dart';
 
-class DropdownBloc extends Bloc<DropdownEvent, DropdownState> {
+class PipelineDropdownBloc
+    extends Bloc<PipelineDropdownEvent, PipelineDropdownState> {
   List<Datums> _items = [];
   List<String> _selectedItems = [];
 
-  DropdownBloc() : super(DropdownInitialState()) {
+  PipelineDropdownBloc() : super(PipelineDropdownInitialState()) {
     on<LoadItemsEvent>((event, emit) {
       _items = event.items;
       _selectedItems = List<String>.from(event.selectedItems);
-      emit(DropdownLoadedState(
+      emit(PipelineDropdownLoadedState(
         filteredItems: _items,
         selectedItems: _selectedItems,
       ));
     });
 
     on<FilterItemsEvent>((event, emit) {
-
       final List<String> selectedItems;
 
       final filteredItems = _items
@@ -29,7 +29,7 @@ class DropdownBloc extends Bloc<DropdownEvent, DropdownState> {
               false)
           .toList();
 
-      emit(DropdownLoadedState(
+      emit(PipelineDropdownLoadedState(
         filteredItems: filteredItems,
         selectedItems: _selectedItems,
       ));
@@ -41,7 +41,7 @@ class DropdownBloc extends Bloc<DropdownEvent, DropdownState> {
       } else {
         _selectedItems.remove(event.item);
       }
-      emit(DropdownLoadedState(
+      emit(PipelineDropdownLoadedState(
         filteredItems: _items,
         selectedItems: _selectedItems,
       ));

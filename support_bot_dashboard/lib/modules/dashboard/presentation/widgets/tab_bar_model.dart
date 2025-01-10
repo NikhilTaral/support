@@ -24,9 +24,9 @@ class TabBarWidget {
   });
 
   static List<TabBarWidget> organizationItemList(BuildContext context) {
-    List<TabBarWidget> TabBarList = [];
+    List<TabBarWidget> tabBarList = [];
 
-    TabBarList.add(
+    tabBarList.add(
       const TabBarWidget(
         icon: Icons.home_outlined,
         view: SizedBox(
@@ -37,23 +37,21 @@ class TabBarWidget {
       ),
     );
 
-    TabBarList.add(
+    tabBarList.add(
       TabBarWidget(
         title: "Ticket Classification",
         view: SizedBox(
-          height: 500,
           width: double.infinity,
-          child: TicketClassificationPlutoGrideWidget(),
+          child: TicketClassificationPlutoGrideWidget(), // Make it flexible
         ),
         type: TypeBarType.ticketClassification,
       ),
     );
 
-    TabBarList.add(
+    tabBarList.add(
       const TabBarWidget(
         title: "AI Query Edited",
         view: SizedBox(
-          height: 500,
           width: double.infinity,
           child: AiQueryAnswerWidget(),
         ),
@@ -61,6 +59,6 @@ class TabBarWidget {
       ),
     );
 
-    return TabBarList;
+    return tabBarList;
   }
 }

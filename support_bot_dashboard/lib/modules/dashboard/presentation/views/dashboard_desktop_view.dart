@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/index_bloc/index_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_filters_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
 
@@ -17,9 +17,8 @@ class DashboardDesktopView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IndexBloc, IndexState>(
+    return BlocBuilder<TabIndexBloc, TabIndexState>(
       builder: (context, state) {
-        if (state is IndexSucssesState) {}
         return _headerView(context: context);
       },
     );
@@ -30,7 +29,7 @@ class DashboardDesktopView extends StatelessWidget {
   }) {
     return _desktopContentView(
       context: context,
-      padding: const EdgeInsets.fromLTRB(16.0, 20, 16.0, 0),
+      padding: const EdgeInsets.fromLTRB(30.0, 10, 30.0, 10),
     );
   }
 
@@ -40,16 +39,17 @@ class DashboardDesktopView extends StatelessWidget {
   }) {
     int selectedIndex = (index != null && index! >= 0)
         ? index!
-        : BlocProvider.of<IndexBloc>(context).currentIndex;
+        : BlocProvider.of<TabIndexBloc>(context).currentIndex;
     var incomeItems = TabBarWidget.organizationItemList(context);
 
     if (incomeItems.isEmpty) {
-      return Center(child: Text('No items available.'));
+      return const Center(child: Text('No items available.'));
     }
 
     if (selectedIndex < 0 || selectedIndex >= incomeItems.length) {
       selectedIndex = 0;
     }
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -60,12 +60,19 @@ class DashboardDesktopView extends StatelessWidget {
             navigateTo: () {},
             text: "",
           ),
-          HomeFiltersWidget(),
+          Padding(
+            padding: padding,
+            child: HomeFiltersWidget(),
+          ),
           MyOrganizationNavBar(
             index: selectedIndex,
           ),
           const SizedBox(height: 10),
-          TabBarWidget.organizationItemList(context)[selectedIndex].view,
+          Padding(
+            padding: const EdgeInsets.only(left: 30),
+            child:
+                TabBarWidget.organizationItemList(context)[selectedIndex].view,
+          ),
         ],
       ),
     );

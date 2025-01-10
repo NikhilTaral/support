@@ -12,60 +12,53 @@ class HomePageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Flexible(
-          flex: 10,
-          child: BlocProvider(
-            create: (context) =>
-                TicketClassificationBloc()..add(TickiteClassificationEvent()),
-            child: BlocBuilder<TicketClassificationBloc,
-                TicketClassificationState>(
-              builder: (context, state) {
-                if (state is TicketClassificationSucssesState) {
-                  return Column(
-                    children: [
-                      Builder(
-                        builder: (context) {
-                          final List<CountContainerData> countContainers =
-                              getCountContainerData(context,
-                                  model: dashboardDataModel);
-                          return Column(
-                            children: [
-                              Row(
-                                children: List.generate(countContainers.length,
-                                    (index) {
-                                  final data = countContainers[index];
-                                  return CountContainer(
-                                    text: data.text,
-                                    icon: data.icon,
-                                    count: data.count,
-                                  );
-                                }),
-                              ),
-                              UIHelpers.verticalSpaceRegular,
-                              Charts(),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                } else if (state is TicketClassificationLoadingState) {
-                  return Container(
-                      child: LoadingWidget(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8)),
-                          width: double.infinity,
-                          height: UIHelpers.screenHeight(context)));
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
+    return SingleChildScrollView(
+      child: Row(
+        children: [
+          Flexible(
+            flex: 10,
+            child: BlocProvider(
+              create: (context) =>
+                  TicketClassificationBloc()..add(TickiteClassificationEvent()),
+              child: BlocBuilder<TicketClassificationBloc,
+                  TicketClassificationState>(
+                builder: (context, state) {
+                  if (state is TicketClassificationSucssesState) {
+                    final List<CountContainerData> countContainers =
+                        getCountContainerData(context,
+                            model: dashboardDataModel);
+                    return Column(
+                      children: [
+                        Row(
+                          children:
+                              List.generate(countContainers.length, (index) {
+                            final data = countContainers[index];
+                            return CountContainer(
+                              text: data.text,
+                              icon: data.icon,
+                              count: data.count,
+                            );
+                          }),
+                        ),
+                        UIHelpers.verticalSpaceRegular,
+                        Charts(dashboardDataModel: dashboardDataModel),
+                      ],
+                    );
+                  } else if (state is TicketClassificationLoadingState) {
+                    return LoadingWidget(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                        width: double.infinity,
+                        height: UIHelpers.screenHeight(context) * 0.4);
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
             ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/common/attribute_mapper.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
@@ -18,13 +17,13 @@ class GetAllPipelineBloc
 
   FutureOr<void> _onGetAllPipline(GetAllPiplineInitialEvent event,
       Emitter<GetAllPipelineState> emit) async {
-  emit(GetAllPipelineLoadingState());
+    emit(GetAllPipelineLoadingState());
     try {
       final repository = serviceLocator<GetAllPipelinesUsecase>();
       final response = await repository.invoke();
 
       if (response.isLeft) {
-       emit(GetAllPipelineFailureState());
+        emit(GetAllPipelineFailureState());
       } else {
         try {
           final GetAllPipelinesAttributeModel attributeModel =
