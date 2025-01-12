@@ -6,7 +6,6 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/val
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class Charts extends StatelessWidget {
@@ -16,13 +15,14 @@ class Charts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = UIHelpers.screenHeight(context);
-
     return SizedBox(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const TicketClassificationWidget(),
                 UIHelpers.verticalSpace(16),
@@ -33,6 +33,7 @@ class Charts extends StatelessWidget {
           UIHelpers.horizontalSpaceSmall,
           Expanded(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildUserValidationCard(),
@@ -47,32 +48,9 @@ class Charts extends StatelessWidget {
   }
 
   Widget _buildValidationStatusCard(double screenHeight, BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: SupportBotColors.blueSecondary.shade100, width: 1),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 1, left: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UIHelpers.verticalSpaceSmall,
-            Text(
-              "Validation Status",
-              style: SupportBotTextstyle.normal.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: SupportBotColors.black),
-            ),
-            SizedBox(
-              height: screenHeight * 0.4,
-              child: ValidationStatusWidget(list: dashboardDataModel),
-            ),
-          ],
-        ),
-      ),
+    return SizedBox(
+      height: screenHeight * 0.45,
+      child: ValidationStatusWidget(list: dashboardDataModel),
     );
   }
 

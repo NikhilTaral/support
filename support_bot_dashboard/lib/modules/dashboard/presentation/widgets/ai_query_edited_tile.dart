@@ -11,22 +11,18 @@ class AiQueryEditedTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          AiQueryEditedBloc()..add(AIQueryEditedInitialEvent()),
-      child: BlocBuilder<AiQueryEditedBloc, AiQueryEditedState>(
-        builder: (context, state) {
-          if (state is AIQueryEditedSucssesState) {
-            return _content(state);
-          } else if (state is AIQueryEditedLoadingState) {
-            return _loadingView(context);
-          } else if (state is AIQueryEditedFailureState) {
-            return const Text('Failed to load user validation data');
-          } else {
-            return const SizedBox.shrink();
-          }
-        },
-      ),
+    return BlocBuilder<AiQueryEditedBloc, AiQueryEditedState>(
+      builder: (context, state) {
+        if (state is AIQueryEditedSucssesState) {
+          return _content(state);
+        } else if (state is AIQueryEditedLoadingState) {
+          return _loadingView(context);
+        } else if (state is AIQueryEditedFailureState) {
+          return const Text('Failed to load user validation data');
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 

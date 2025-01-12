@@ -6,6 +6,7 @@ import 'package:support_bot_dashboard/modules/dashboard/common/attribute_mapper.
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/validation_status_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/validation_status_usecase.dart';
+import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'validation_status_event.dart';
 part 'validation_status_state.dart';
@@ -21,16 +22,17 @@ class ValidationStatusBloc
     emit(ValidationStatusLodingState());
 
     final repository = serviceLocator<ValidationStatusUsecase>();
+    List<DateTime?> datesList = await getSelectedDates();
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: [event.selectedPipeline ?? "11257490"],
+            fieldValue: event.selectedPipelineValue ?? ["11257490"],
             fieldName: event.fildName ?? "pipelines")
       ],
-      startDate: (event.selectedDate ?? DateTime.parse("2024-12-31"))
+      startDate: (datesList.firstOrNull ?? DateTime.parse("2024-12-31"))
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
           .toIso8601String(),
-      endDate: (event.selectedMonth ?? DateTime.now())
+      endDate: (datesList.lastOrNull ?? DateTime.now())
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
           .toIso8601String(),
     );
@@ -46,5 +48,9 @@ class ValidationStatusBloc
         emit(VsalidationStatusFailureState());
       }
     }
+  }
+
+  Future<List<DateTime?>> getSelectedDates() async {
+    return await LocalStorage.getSelectedDates();
   }
 }

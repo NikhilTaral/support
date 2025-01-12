@@ -7,6 +7,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
+import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ai_query_answer_event.dart';
 part 'ai_query_answer_state.dart';
@@ -23,6 +24,8 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
     emit(AIQueryAnswerLoadingState());
     try {
       final repository = serviceLocator<DashboardAiQueryAnswerUsecase>();
+      List<DateTime?> datesList = await getSelectedDates();
+
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
           if (event.selectedDate != null)
@@ -33,10 +36,10 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               fieldValue: event.selectedPipelineValue ?? ["11257490"],
               fieldName: event.fildName ?? "pipelines")
         ],
-        startDate: (event.selectedDate ?? DateTime.parse("2024-12-31"))
+        startDate: (datesList.firstOrNull ?? DateTime.parse("2024-12-31"))
             .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
             .toIso8601String(),
-        endDate: (event.selectedMonth ?? DateTime.now())
+        endDate: (datesList.lastOrNull ?? DateTime.now())
             .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
             .toIso8601String(),
       );
@@ -92,5 +95,9 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
           selectedDate: event.selectedDate ?? DateTime.now(),
           selectedMonth: event.selectedMonth ?? DateTime.now()));
     }
+  }
+
+  Future<List<DateTime?>> getSelectedDates() async {
+    return await LocalStorage.getSelectedDates();
   }
 }

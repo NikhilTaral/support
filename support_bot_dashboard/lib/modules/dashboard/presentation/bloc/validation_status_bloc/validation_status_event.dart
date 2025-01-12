@@ -5,8 +5,11 @@ abstract class ValidationStatusEvent {}
 class ValidationStatuseCallEvent extends ValidationStatusEvent {
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
-  final String? selectedPipeline;
+  final List<String>? selectedPipelineValue;
   final String? fildName;
   ValidationStatuseCallEvent(
-      {this.selectedDate, this.selectedMonth, this.selectedPipeline,this.fildName});
+      {this.selectedDate,
+      this.selectedMonth,
+      this.selectedPipelineValue,
+      this.fildName});
 }

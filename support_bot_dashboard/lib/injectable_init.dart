@@ -73,8 +73,6 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<DashboardAiQueryEditedUsecase>(
       () => DashboardAiQueryEditedUsecase());
 
-  //Revert Classification Bloc
-
   // get validation count
   serviceLocator.registerLazySingleton<GetValidationCountRepository>(
       () => DashboardGetValidationRepoImpl());

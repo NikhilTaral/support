@@ -6,14 +6,14 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
+import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ticket_classification_event.dart';
 part 'ticket_classification_state.dart';
 
-late DashboardDataModel dashboardDataModel = DashboardDataModel();
-
 class TicketClassificationBloc
     extends Bloc<TickiteClassificationEvent, TicketClassificationState> {
+  DashboardDataModel dashboardDataModel = DashboardDataModel();
   TicketClassificationBloc() : super(TicketClassificationInitialState()) {
     on<TickiteClassificationEvent>(_onTickitClassification);
   }
@@ -22,16 +22,17 @@ class TicketClassificationBloc
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
     final repository = serviceLocator<DashboardChartdataUsecase>();
+    List<DateTime?> datesList = await getSelectedDates();
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: [event.selectedPipelineValue ?? "11257490"],
+            fieldValue: event.selectedPipelineValue ?? ["11257490"],
             fieldName: event.fildName ?? "pipelines")
       ],
-      startDate: (event.selectedDate ?? DateTime.parse("2024-12-31"))
+      startDate: (datesList.firstOrNull ?? DateTime.parse("2024-12-31"))
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
           .toIso8601String(),
-      endDate: (event.selectedMonth ?? DateTime.now())
+      endDate: (datesList.lastOrNull ?? DateTime.now())
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
           .toIso8601String(),
     );
@@ -44,8 +45,7 @@ class TicketClassificationBloc
     } else {
       try {
         final model = response.right;
-        dashboardDataModel =
-            (dashboardDataModel ?? DashboardDataModel()).copyWith(
+        dashboardDataModel = (dashboardDataModel).copyWith(
           pieChartData: (dashboardDataModel.pieChartData ??
                   DashboardChartAttributeModel())
               .copyWith(
@@ -85,5 +85,9 @@ class TicketClassificationBloc
             selectedMonth: event.selectedMonth ?? DateTime.now()));
       }
     }
+  }
+
+  Future<List<DateTime?>> getSelectedDates() async {
+    return await LocalStorage.getSelectedDates();
   }
 }

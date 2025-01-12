@@ -14,42 +14,38 @@ class UserValidationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UserValidationBloc()..add(UserValidationsEvent()),
-      child: BlocBuilder<UserValidationBloc, UservalidationState>(
-        builder: (context, state) {
-          if (state is UserValidationSucssesState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "User Validation",
-                  style: SupportBotTextstyle.normal.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: SupportBotColors.black),
-                ),
-                UIHelpers.verticalSpaceSmall,
-                SizedBox(
-                    height: UIHelpers.screenHeight(context) * 0.4,
-                    child: LineChartGraphWidget(
-                      dashboardDataModel: state.dashboardDataModel,
-                    )),
-              ],
-            );
-          } else if (state is UserValidationLoadingState) {
-            return Container(
-                child: LoadingWidget(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    width: double.infinity,
-                    height: UIHelpers.screenHeight(context)));
-          } else if (state is UserValidationFailureSate) {
-            return const Text('Failed to load user validation data');
-          } else {
-            return SizedBox.shrink();
-          }
-        },
-      ),
+    return BlocBuilder<UserValidationBloc, UservalidationState>(
+      builder: (context, state) {
+        if (state is UserValidationSucssesState) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "User Validation",
+                style: SupportBotTextstyle.normal.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: SupportBotColors.black),
+              ),
+              UIHelpers.verticalSpaceSmall,
+              SizedBox(
+                  height: UIHelpers.screenHeight(context) * 0.4,
+                  child: LineChartGraphWidget(
+                    dashboardDataModel: state.dashboardDataModel,
+                  )),
+            ],
+          );
+        } else if (state is UserValidationLoadingState) {
+          return LoadingWidget(
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              width: double.infinity,
+              height: UIHelpers.screenHeight(context));
+        } else if (state is UserValidationFailureSate) {
+          return const Text('Failed to load user validation data');
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 }

@@ -93,7 +93,13 @@ Future<void> _onLogoutTapped(context) async {
 }
 
 Widget _showName(String? name, BuildContext context) {
-  final firstName = name?.split(' ')[0];
+  String? firstName = "";
+  if (name != null && name.isNotEmpty == true) {
+    firstName = name.split(' ').firstOrNull;
+  } else {
+    firstName = "";
+  }
+
   final textPainter = TextPainter(
     text: TextSpan(
       text: firstName,

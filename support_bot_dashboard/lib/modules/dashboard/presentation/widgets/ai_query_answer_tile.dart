@@ -12,23 +12,18 @@ class AiQueryAnswerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          AiQueryAnswerBloc()..add(AIQueryAnswerInitialEvent()),
-      child: BlocBuilder<AiQueryAnswerBloc, AiQueryAnswerState>(
-        builder: (context, state) {
-          print("Ajinkya $state");
-          if (state is AIQueryAnswerSucssesState) {
-            return _content(state);
-          } else if (state is AIQueryAnswerLoadingState) {
-            return _loadingView(context);
-          } else if (state is AIQueryAnswerFailureState) {
-            return const Text('Failed to load user validation data');
-          } else {
-            return const SizedBox.shrink();
-          }
-        },
-      ),
+    return BlocBuilder<AiQueryAnswerBloc, AiQueryAnswerState>(
+      builder: (context, state) {
+        if (state is AIQueryAnswerSucssesState) {
+          return _content(state);
+        } else if (state is AIQueryAnswerLoadingState) {
+          return _loadingView(context);
+        } else if (state is AIQueryAnswerFailureState) {
+          return const Text('Failed to load user validation data');
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 

@@ -13,17 +13,14 @@ class TicketClassificationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: SupportBotColors.blueSecondary.shade100,
-          width: 1,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: SupportBotColors.blueSecondary.shade100,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(6),
         ),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: BlocProvider(
-        create: (context) =>
-            TicketClassificationBloc()..add(TickiteClassificationEvent()),
         child: BlocBuilder<TicketClassificationBloc, TicketClassificationState>(
           builder: (context, state) {
             if (state is TicketClassificationSucssesState) {
@@ -105,9 +102,7 @@ class TicketClassificationWidget extends StatelessWidget {
             }
             return const SizedBox.shrink();
           },
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildClassificationRow(

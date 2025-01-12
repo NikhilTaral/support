@@ -7,6 +7,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_edited_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_edited.dart';
+import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ai_query_edited_event.dart';
 part 'ai_query_edited_state.dart';
@@ -20,6 +21,7 @@ class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
       AIQueryEditedInitialEvent event, Emitter<AiQueryEditedState> emit) async {
     emit(AIQueryEditedLoadingState());
     final repository = serviceLocator.get<DashboardAiQueryEditedUsecase>();
+    List<DateTime?> datesList = await getSelectedDates();
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         if (event.selectedDate != null)
@@ -30,10 +32,10 @@ class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
             fieldValue: event.selectedPipelineValue ?? ["11257490"],
             fieldName: event.fildName ?? "pipelines")
       ],
-      startDate: (event.selectedDate ?? DateTime.parse("2024-12-31"))
+      startDate: (datesList.firstOrNull ?? DateTime.parse("2024-12-31"))
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
           .toIso8601String(),
-      endDate: (event.selectedMonth ?? DateTime.now())
+      endDate: (datesList.lastOrNull ?? DateTime.now())
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
           .toIso8601String(),
     );
@@ -81,5 +83,9 @@ class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
       failCode: response.failCode,
       message: response.message,
     );
+  }
+
+  Future<List<DateTime?>> getSelectedDates() async {
+    return await LocalStorage.getSelectedDates();
   }
 }

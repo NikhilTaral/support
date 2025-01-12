@@ -7,6 +7,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_dat
 import 'package:support_bot_dashboard/modules/dashboard/data/model/get_validation_by_count_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
+import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'user_validationevent.dart';
 part 'uservalidation_state.dart';
@@ -25,11 +26,12 @@ class UserValidationBloc
 
     try {
       final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
+      List<DateTime?> datesList = await getSelectedDates();
       final req = DashboardAnswerDataInitialRequestModel(
-          startDate: (event.selectedDate ?? DateTime.parse("2024-10-23"))
+          startDate: (datesList.firstOrNull ?? DateTime.parse("2024-10-23"))
               .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
               .toIso8601String(),
-          endDate: (event.selectedMonth ?? DateTime.parse("2024-10-25"))
+          endDate: (datesList.lastOrNull ?? DateTime.now())
               .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
               .toIso8601String(),
           filter: [
@@ -66,5 +68,9 @@ class UserValidationBloc
           selectedDate: event.selectedDate ?? DateTime.now(),
           selectedMonth: event.selectedMonth ?? DateTime.now()));
     }
+  }
+
+  Future<List<DateTime?>> getSelectedDates() async {
+    return await LocalStorage.getSelectedDates();
   }
 }

@@ -68,19 +68,23 @@ class DashboardDesktopView extends StatelessWidget {
             MyOrganizationNavBar(index: selectedIndex),
             const SizedBox(height: 10),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxHeight: constraints.maxHeight,
+              child: ScrollbarTheme(
+                data: const ScrollbarThemeData(
+                    thumbColor: WidgetStatePropertyAll(Colors.transparent)),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: constraints.maxHeight,
+                        ),
+                        child: Padding(
+                          padding: padding,
+                          child: incomeItems[selectedIndex].view,
+                        ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: incomeItems[selectedIndex].view,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             )

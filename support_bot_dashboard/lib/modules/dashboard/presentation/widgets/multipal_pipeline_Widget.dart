@@ -38,6 +38,8 @@ class DropdownWithCheckbox extends StatelessWidget {
               value: dropdownBloc,
               child: Dialog(
                 backgroundColor: SupportBotColors.white,
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 child: BlocBuilder<PipelineDropdownBloc, PipelineDropdownState>(
                   builder: (context, state) {
                     if (state is DropdownPipelineTypesLoadedState) {
@@ -119,7 +121,7 @@ class DropdownWithCheckbox extends StatelessWidget {
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text(
-                                  'Submit',
+                                  'OK',
                                   style:
                                       TextStyle(color: SupportBotColors.white),
                                 ),
