@@ -6,7 +6,6 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeli
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_state.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
-import 'dart:ui';
 
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
@@ -38,8 +37,10 @@ class DropdownWithCheckbox extends StatelessWidget {
               value: dropdownBloc,
               child: Dialog(
                 backgroundColor: SupportBotColors.white,
-                shape: BeveledRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  side: const BorderSide(color: Colors.transparent, width: 1.0),
+                ),
                 child: BlocBuilder<PipelineDropdownBloc, PipelineDropdownState>(
                   builder: (context, state) {
                     if (state is DropdownPipelineTypesLoadedState) {
@@ -94,8 +95,8 @@ class DropdownWithCheckbox extends StatelessWidget {
                                             .read<PipelineDropdownBloc>()
                                             .add(
                                               UpdateSelectedItemEvent(
-                                                item.pipelineName ?? "",
-                                                isChecked,
+                                                item: item.pipelineName ?? "",
+                                                isChecked: isChecked,
                                               ),
                                             );
                                       }
@@ -165,8 +166,8 @@ class DropdownWithCheckbox extends StatelessWidget {
           builder: (context, state) {
             final displayedItems =
                 selectedItems.isNotEmpty ? selectedItems.join(', ') : hintText;
-            return Text(displayedItems,
-                style: const TextStyle(color: Colors.black));
+            return const Text("Pipeline Type",
+                style: TextStyle(color: SupportBotColors.bluePrimary));
           },
         ),
       ),

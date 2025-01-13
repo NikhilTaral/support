@@ -12,7 +12,7 @@ import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dar
 part 'ai_query_answer_event.dart';
 part 'ai_query_answer_state.dart';
 
-late DashboardDataModel dashboardDataModel = DashboardDataModel();
+DashboardDataModel dashboardDataModel = DashboardDataModel();
 
 class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
   AiQueryAnswerBloc() : super(AIQueryAnswerIntialState()) {
@@ -43,15 +43,15 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
             .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
             .toIso8601String(),
       );
-      final responce = await repository.invoke(req);
-      if (responce.isLeft) {
+      final response = await repository.invoke(req);
+      if (response.isLeft) {
         emit(AIQueryAnswerFailureState(
-          message: responce.toString(),
+          message: response.toString(),
           selectedDate: event.selectedDate ?? DateTime.now(),
           selectedMonth: event.selectedMonth ?? DateTime.now(),
         ));
       } else {
-        final DashboardAiQueryChartResponseModel model = responce.right;
+        final DashboardAiQueryChartResponseModel model = response.right;
 
         if (model.success == true && model.data != null) {
           dashboardDataModel = (dashboardDataModel ?? DashboardDataModel())

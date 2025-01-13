@@ -63,7 +63,7 @@ class DashboardDesktopView extends StatelessWidget {
             ),
             Padding(
               padding: padding,
-              child: HomeFiltersWidget(),
+              child: const HomeFiltersWidget(),
             ),
             MyOrganizationNavBar(index: selectedIndex),
             const SizedBox(height: 10),

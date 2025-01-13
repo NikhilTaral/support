@@ -16,27 +16,11 @@ class LineChartGraphWidget extends StatelessWidget {
                 ?.getValidationByCountAttributeModel?.data?.percentages ??
             {}
       };
+
   @override
   Widget build(BuildContext context) {
-    if (apiResponse == null) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("FL Line Chart Example")),
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
-
     final counts = apiResponse['counts'] as Map<String, dynamic>? ?? {};
-    if (counts.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("FL Line Chart Example")),
-        body: const Center(child: Text("No data available")),
-      );
-    }
 
-    int size = dashboardDataModel
-            ?.getValidationByCountAttributeModel?.data?.counts?.length ??
-        0;
-    int length = size;
     List<FlSpot> spots = [];
     double index = 1;
     counts.forEach((key, value) {
@@ -44,124 +28,119 @@ class LineChartGraphWidget extends StatelessWidget {
       index++;
     });
 
+    double minY = spots.isNotEmpty
+        ? spots.map((e) => e.y).reduce((a, b) => a < b ? a : b)
+        : 0;
     double maxY = spots.isNotEmpty
-        ? spots.map((e) => e.y).reduce((a, b) => a > b ? a : b) + 10
+        ? spots.map((e) => e.y).reduce((a, b) => a > b ? a : b)
         : 10;
-
+    double minX = 0;
     double maxX = spots.isNotEmpty
-        ? spots.map((e) => e.x).reduce((a, b) => a > b ? a : b) + 2
+        ? spots.map((e) => e.x).reduce((a, b) => a > b ? a : b) + 1
         : 2;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        width: (length + 1) * 50,
-        child: LineChart(
-          LineChartData(
-            gridData: FlGridData(
-              getDrawingHorizontalLine: (value) =>
-                  FlLine(color: Color(0xFFC8C8C8)),
-              getDrawingVerticalLine: (value) =>
-                  FlLine(color: Color(0xFFC8C8C8)),
-              drawHorizontalLine: true,
-              drawVerticalLine: true,
-              show: true,
+    double yMargin = (maxY - minY) * 0.1;
+    if (yMargin == 0) yMargin = 1;
+    minY = (minY - yMargin).clamp(0, double.infinity);
+    maxY = maxY + yMargin;
+
+    if (spots.length == 1) {
+      minX = 0;
+      maxX = 2;
+      minY = 0;
+      maxY = maxY + 10;
+    }
+
+    return SizedBox(
+      width: 800,
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(
+            getDrawingHorizontalLine: (value) =>
+                const FlLine(color: Color(0xFFC8C8C8)),
+            getDrawingVerticalLine: (value) =>
+                const FlLine(color: Color(0xFFC8C8C8)),
+            drawHorizontalLine: true,
+            drawVerticalLine: true,
+            show: true,
+          ),
+          titlesData: FlTitlesData(
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
             ),
-            titlesData: FlTitlesData(
-              topTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: (maxY / 5).ceilToDouble(),
+                getTitlesWidget: (value, meta) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 4.0, bottom: 0),
+                    child: Text(
+                      value.toStringAsFixed(0),
+                      style: const TextStyle(fontSize: 10),
+                    ),
+                  );
+                },
               ),
-              rightTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  interval: 2,
-                  getTitlesWidget: (value, meta) {
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 1,
+                getTitlesWidget: (value, meta) {
+                  int index = value.toInt() - 1;
+                  if (index >= 0 && index < counts.keys.length) {
+                    String email = counts.keys.elementAt(index);
+                    String name = email.replaceAll('.', ' \n');
                     return Padding(
-                      padding: const EdgeInsets.only(left: 8.0, bottom: 8),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        value.toStringAsFixed(0),
-                        style: const TextStyle(fontSize: 10),
+                        name,
+                        style: const TextStyle(fontSize: 12),
+                        textAlign: TextAlign.center,
                       ),
                     );
-                  },
-                ),
-              ),
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  interval: 1,
-                  getTitlesWidget: (value, meta) {
-                    if (value.toInt() < length) {
-                      int index = value.toInt();
-                      if (index < counts.length) {
-                        String title = counts.keys.elementAt(index);
-                        String data = title.split('@')[0];
-                        String name = data.replaceAll('.', ' \n');
-                        return Container(
-                          padding: const EdgeInsets.only(left: 100.0),
-                          child: Text(
-                            name,
-                            style: const TextStyle(fontSize: 8),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
               ),
             ),
-            borderData: FlBorderData(
-              show: true,
-              border: const Border(
-                bottom: BorderSide(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-                left: BorderSide(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-                right: BorderSide(
-                  color: Colors.transparent,
-                  width: 0,
-                ),
-                top: BorderSide(
-                  color: Colors.transparent,
-                  width: 0,
-                ),
-              ),
-            ),
-            lineBarsData: [
-              LineChartBarData(
-                spots: spots,
-                barWidth: 2,
-                color: SupportBotColors.blueSecondary.shade400,
-                dotData: FlDotData(
-                  show: true,
-                  getDotPainter: (spot, percent, barData, index) {
-                    return FlDotCirclePainter(
-                      radius: 5,
-                      color: SupportBotColors.bluePrimary.shade400,
-                      strokeWidth: 2,
-                      strokeColor: Colors.transparent,
-                    );
-                  },
-                ),
-              ),
-            ],
-            minX: 0,
-            maxX: maxX,
-            minY: 0,
-            maxY: maxY,
           ),
+          borderData: FlBorderData(
+            show: true,
+            border: const Border(
+              bottom: BorderSide(color: Colors.grey, width: 1),
+              left: BorderSide(color: Colors.grey, width: 1),
+              right: BorderSide(color: Colors.transparent, width: 0),
+              top: BorderSide(color: Colors.transparent, width: 0),
+            ),
+          ),
+          lineBarsData: [
+            LineChartBarData(
+              spots: spots,
+              barWidth: 2,
+              color: SupportBotColors.blueSecondary.shade400,
+              dotData: FlDotData(
+                show: true,
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 5,
+                    color: SupportBotColors.bluePrimary.shade400,
+                    strokeWidth: 2,
+                    strokeColor: Colors.transparent,
+                  );
+                },
+              ),
+            ),
+          ],
+          minX: minX,
+          maxX: maxX,
+          minY: minY,
+          maxY: maxY,
         ),
       ),
     );

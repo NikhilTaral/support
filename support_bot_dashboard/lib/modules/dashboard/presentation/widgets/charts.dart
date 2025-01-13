@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/validation_status_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class Charts extends StatelessWidget {
-  const Charts({super.key, this.dashboardDataModel});
-  final DashboardDataModel? dashboardDataModel;
+  const Charts({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +21,7 @@ class Charts extends StatelessWidget {
         children: [
           Expanded(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const TicketClassificationWidget(),
@@ -49,20 +49,35 @@ class Charts extends StatelessWidget {
 
   Widget _buildValidationStatusCard(double screenHeight, BuildContext context) {
     return SizedBox(
-      height: screenHeight * 0.45,
-      child: ValidationStatusWidget(list: dashboardDataModel),
+      height: screenHeight * 0.47,
+      child: ValidationStatusWidget(),
     );
   }
 
   Widget _buildUserValidationCard() {
     return Container(
-      padding: const EdgeInsets.all(10),
+      width: 800,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
             color: SupportBotColors.blueSecondary.shade100, width: 1),
         borderRadius: BorderRadius.circular(6),
       ),
-      child: const UserValidationWidget(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        children: [
+          Text(
+            "User Validation",
+            style: SupportBotTextstyle.normal.copyWith(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                color: SupportBotColors.black),
+          ),
+          const UserValidationWidget(),
+        ],
+      ),
     );
   }
 

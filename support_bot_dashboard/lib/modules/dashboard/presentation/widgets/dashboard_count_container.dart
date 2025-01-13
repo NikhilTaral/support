@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
-import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class CountContainer extends StatelessWidget {
   final String text;
@@ -16,7 +14,7 @@ class CountContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
-        height: UIHelpers.screenHeight(context) * 0.13,
+        height: 100,
         decoration: BoxDecoration(
             color: SupportBotColors.bluePrimary.shade400,
             borderRadius: BorderRadius.circular(8)),

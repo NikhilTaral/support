@@ -71,7 +71,7 @@ class FlCircularChart extends StatelessWidget {
       case 'Spam/Marketing':
         return const Color(0xFFB6C5DF);
       case 'Acknowledge required':
-        return Color(0xFFDBE2EF);
+        return const Color(0xFFDBE2EF);
       default:
         return Colors.grey;
     }

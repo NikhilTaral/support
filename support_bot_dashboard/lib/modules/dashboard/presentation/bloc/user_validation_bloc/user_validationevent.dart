@@ -3,7 +3,7 @@ part of 'user_validation_bloc.dart';
 abstract class UserValidationevent {}
 
 class UserValidationsEvent extends UserValidationevent {
-  final String? selectedPipelineValue;
+  final List<String>? selectedPipelineValue;
   final String? fildName;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;

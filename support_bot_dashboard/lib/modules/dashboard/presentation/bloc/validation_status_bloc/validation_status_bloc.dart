@@ -13,6 +13,8 @@ part 'validation_status_state.dart';
 
 class ValidationStatusBloc
     extends Bloc<ValidationStatusEvent, ValidationStatusState> {
+  DashboardAnswerDataInitialRequestModel requestBody =
+      DashboardAnswerDataInitialRequestModel();
   ValidationStatusBloc() : super(ValidationStatusInitialState()) {
     on<ValidationStatuseCallEvent>(_onValidationStatuseCallEvent);
   }
@@ -23,20 +25,25 @@ class ValidationStatusBloc
 
     final repository = serviceLocator<ValidationStatusUsecase>();
     List<DateTime?> datesList = await getSelectedDates();
-    final req = DashboardAnswerDataInitialRequestModel(
-      filter: [
-        Filter(
-            fieldValue: event.selectedPipelineValue ?? ["11257490"],
-            fieldName: event.fildName ?? "pipelines")
-      ],
-      startDate: (datesList.firstOrNull ?? DateTime.parse("2024-12-31"))
-          .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
-          .toIso8601String(),
-      endDate: (datesList.lastOrNull ?? DateTime.now())
-          .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
-          .toIso8601String(),
+    final startDate = (datesList.firstOrNull ?? DateTime.parse("2024-10-23"))
+        .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
+        .toIso8601String();
+    final endDate = (datesList.lastOrNull ?? DateTime.now())
+        .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
+        .toIso8601String();
+
+    final List<Filter> filter = [
+      Filter(
+        fieldValue: event.selectedPipelineValue ?? ["11257490"],
+        fieldName: event.fildName ?? "pipelines",
+      )
+    ];
+    final requestBody = DashboardAnswerDataInitialRequestModel(
+      startDate: startDate,
+      endDate: endDate,
+      filter: filter,
     );
-    final response = await repository.invoke(req);
+    final response = await repository.invoke(requestBody);
     if (response.isLeft) {
       emit(VsalidationStatusFailureState());
     } else {

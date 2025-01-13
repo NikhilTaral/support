@@ -12,11 +12,5 @@ class TicketClassificationSucssesState extends TicketClassificationState {
 }
 
 class TicketClassificationFailureState extends TicketClassificationState {
-  final String message;
-  final DateTime selectedDate;
-  final DateTime selectedMonth;
-  TicketClassificationFailureState(
-      {required this.message,
-      required this.selectedDate,
-      required this.selectedMonth});
+  TicketClassificationFailureState();
 }

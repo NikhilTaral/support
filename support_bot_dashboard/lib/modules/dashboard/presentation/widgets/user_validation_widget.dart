@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/line_chart_graph_widget.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class UserValidationWidget extends StatelessWidget {
@@ -17,31 +17,25 @@ class UserValidationWidget extends StatelessWidget {
     return BlocBuilder<UserValidationBloc, UservalidationState>(
       builder: (context, state) {
         if (state is UserValidationSucssesState) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "User Validation",
-                style: SupportBotTextstyle.normal.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: SupportBotColors.black),
-              ),
-              UIHelpers.verticalSpaceSmall,
-              SizedBox(
-                  height: UIHelpers.screenHeight(context) * 0.4,
-                  child: LineChartGraphWidget(
-                    dashboardDataModel: state.dashboardDataModel,
-                  )),
-            ],
-          );
+          return SizedBox(
+              height: UIHelpers.screenHeight(context) * 0.4,
+              child: LineChartGraphWidget(
+                dashboardDataModel: state.dashboardDataModel,
+              ));
         } else if (state is UserValidationLoadingState) {
-          return LoadingWidget(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
+          return const LoadingWidget(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
               width: double.infinity,
-              height: UIHelpers.screenHeight(context));
+              height: 310);
         } else if (state is UserValidationFailureSate) {
-          return const Text('Failed to load user validation data');
+          return FailureWidget(
+            onTap: () {
+              BlocProvider.of<UserValidationBloc>(context)
+                  .add(UserValidationsEvent());
+            },
+          );
+        } else if (state is UserValidationEmptyState) {
+          return const EmptyWidget();
         } else {
           return const SizedBox.shrink();
         }

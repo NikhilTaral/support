@@ -36,7 +36,8 @@ class Dashboard extends StatelessWidget {
                 AiQueryEditedBloc()..add(AIQueryEditedInitialEvent()),
           ),
           BlocProvider(
-            create: (context) => GetAllPipelineBloc(),
+            create: (context) =>
+                GetAllPipelineBloc()..add(GetAllPiplineInitialEvent()),
           ),
           BlocProvider(
             create: (context) => PipelineDropdownBloc(),

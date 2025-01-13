@@ -16,8 +16,8 @@ class FilterItemsEvent extends PipelineDropdownEvent {
 }
 
 class UpdateSelectedItemEvent extends PipelineDropdownEvent {
-  final String item;
-  final bool isChecked;
+  final String? item;
+  final bool? isChecked;
 
-  UpdateSelectedItemEvent(this.item, this.isChecked);
+  UpdateSelectedItemEvent({this.item, this.isChecked});
 }

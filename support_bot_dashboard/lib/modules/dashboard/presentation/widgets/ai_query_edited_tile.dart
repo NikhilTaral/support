@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -11,46 +12,8 @@ class AiQueryEditedTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AiQueryEditedBloc, AiQueryEditedState>(
-      builder: (context, state) {
-        if (state is AIQueryEditedSucssesState) {
-          return _content(state);
-        } else if (state is AIQueryEditedLoadingState) {
-          return _loadingView(context);
-        } else if (state is AIQueryEditedFailureState) {
-          return const Text('Failed to load user validation data');
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
-    );
-  }
-
-  Widget _content(AIQueryEditedSucssesState state) {
-    return Padding(
-      padding: const EdgeInsets.all(0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildInfoCard(
-            title: 'AI Query Edited',
-            editedText:
-                'Query Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%',
-            nonEditedText:
-                'Query Non Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.unEditedCount}%',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoCard({
-    required String title,
-    required String editedText,
-    required String nonEditedText,
-  }) {
     return Container(
-      padding: const EdgeInsets.all(13),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
             color: SupportBotColors.blueSecondary.shade100, width: 1),
@@ -60,22 +23,55 @@ class AiQueryEditedTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            'AI Query Edited',
             style: SupportBotTextstyle.normal.copyWith(
               fontWeight: FontWeight.w600,
               color: SupportBotColors.black,
             ),
           ),
           UIHelpers.verticalSpaceSmall,
-          Row(
-            children: [
-              _buildStatisticCard(icon: Icons.add, text: editedText),
-              UIHelpers.horizontalSpaceRegular,
-              _buildStatisticCard(icon: Icons.check, text: nonEditedText),
-            ],
+          BlocBuilder<AiQueryEditedBloc, AiQueryEditedState>(
+            builder: (context, state) {
+              if (state is AIQueryEditedSucssesState) {
+                return _content(state);
+              } else if (state is AIQueryEditedLoadingState) {
+                return _loadingView(context);
+              } else if (state is AIQueryEditedFailureState) {
+                return FailureWidget(
+                  onTap: () {
+                    BlocProvider.of<AiQueryEditedBloc>(context)
+                        .add(AIQueryEditedInitialEvent());
+                  },
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
           ),
         ],
       ),
+    );
+  }
+
+  Widget _content(AIQueryEditedSucssesState state) {
+    return _buildInfoCard(
+      editedText:
+          'Query Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%',
+      nonEditedText:
+          'Query Non Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.unEditedCount}%',
+    );
+  }
+
+  Widget _buildInfoCard({
+    required String editedText,
+    required String nonEditedText,
+  }) {
+    return Row(
+      children: [
+        _buildStatisticCard(icon: Icons.add, text: editedText),
+        UIHelpers.horizontalSpaceRegular,
+        _buildStatisticCard(icon: Icons.check, text: nonEditedText),
+      ],
     );
   }
 

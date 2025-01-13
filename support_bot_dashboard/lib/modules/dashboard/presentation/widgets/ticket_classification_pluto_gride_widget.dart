@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationPlutoGrideWidget extends StatelessWidget {
   final List<PlutoColumn> columns = [

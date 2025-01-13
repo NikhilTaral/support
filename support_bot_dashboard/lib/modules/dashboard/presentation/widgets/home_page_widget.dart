@@ -4,6 +4,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/charts.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container_data.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
@@ -15,17 +16,18 @@ class HomePageWidget extends StatelessWidget {
     return SingleChildScrollView(
       child: Row(
         children: [
-          Flexible(child:
+          Flexible(
+              child: Column(
+            children: [
               BlocBuilder<TicketClassificationBloc, TicketClassificationState>(
-            builder: (context, state) {
-              if (state is TicketClassificationSucssesState) {
-                final List<CountContainerData> countContainers =
-                    getCountContainerData(context,
-                        model: state.dashboardDataModel);
-                return Column(
-                  children: [
-                    Row(
+                builder: (context, state) {
+                  if (state is TicketClassificationSucssesState) {
+                    final List<CountContainerData> countContainers =
+                        getCountContainerData(context,
+                            model: state.dashboardDataModel);
+                    return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       spacing: 20,
                       children: List.generate(countContainers.length, (index) {
                         final data = countContainers[index];
@@ -35,20 +37,27 @@ class HomePageWidget extends StatelessWidget {
                           count: data.count,
                         );
                       }),
-                    ),
-                    UIHelpers.verticalSpaceRegular,
-                    Charts(dashboardDataModel: state.dashboardDataModel),
-                  ],
-                );
-              } else if (state is TicketClassificationLoadingState) {
-                return LoadingWidget(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    width: double.infinity,
-                    height: UIHelpers.screenHeight(context));
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
+                    );
+                  } else if (state is TicketClassificationLoadingState) {
+                    return const LoadingWidget(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        width: double.infinity,
+                        height: 100);
+                  } else if (state is TicketClassificationFailureState) {
+                    return FailureWidget(
+                      onTap: () {
+                        BlocProvider.of<TicketClassificationBloc>(context)
+                            .add(TickiteClassificationEvent());
+                      },
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+              UIHelpers.verticalSpaceRegular,
+              const Charts(),
+            ],
           )),
         ],
       ),

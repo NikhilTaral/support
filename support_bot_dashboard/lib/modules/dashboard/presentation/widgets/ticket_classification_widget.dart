@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pi_chart.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -13,7 +14,7 @@ class TicketClassificationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(
             color: SupportBotColors.blueSecondary.shade100,
@@ -21,21 +22,21 @@ class TicketClassificationWidget extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(6),
         ),
-        child: BlocBuilder<TicketClassificationBloc, TicketClassificationState>(
-          builder: (context, state) {
-            if (state is TicketClassificationSucssesState) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Ticket Classification",
-                    style: SupportBotTextstyle.normal.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: SupportBotColors.black),
-                  ),
-                  UIHelpers.verticalSpaceRegular,
-                  Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Ticket Classification",
+              style: SupportBotTextstyle.normal.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: SupportBotColors.black),
+            ),
+            UIHelpers.verticalSpaceRegular,
+            BlocBuilder<TicketClassificationBloc, TicketClassificationState>(
+              builder: (context, state) {
+                if (state is TicketClassificationSucssesState) {
+                  return Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
@@ -85,23 +86,24 @@ class TicketClassificationWidget extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                ],
-              );
-            } else if (state is TicketClassificationLoadingState) {
-              return Container(
-                child: LoadingWidget(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    width: double.infinity,
-                    height: UIHelpers.screenHeight(context)),
-              );
-            } else if (state is TicketClassificationFailureState) {
-              return Container(
-                  alignment: Alignment.center,
-                  child: const Text("Oops! Something went wrong. . . . "));
-            }
-            return const SizedBox.shrink();
-          },
+                  );
+                } else if (state is TicketClassificationLoadingState) {
+                  return const LoadingWidget(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      width: double.infinity,
+                      height: 280);
+                } else if (state is TicketClassificationFailureState) {
+                  return FailureWidget(
+                    onTap: () {
+                      BlocProvider.of<TicketClassificationBloc>(context)
+                          .add(TickiteClassificationEvent());
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ],
         ));
   }
 

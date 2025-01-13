@@ -23,7 +23,6 @@ List<CountContainerData> getCountContainerData(BuildContext context,
     CountContainerData(
       text: S.of(context).spam,
       icon: SupportBotIcons.infoCircle,
-      //error_outline,
       count: model?.pieChartData?.data?.counts?.spamMarketing,
     ),
     CountContainerData(

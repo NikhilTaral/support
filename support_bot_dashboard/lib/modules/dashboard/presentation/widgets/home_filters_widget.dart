@@ -1,19 +1,22 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/multipal_pipeline_widget.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
-import 'package:intl/intl.dart';
 
 class HomeFiltersWidget extends StatefulWidget {
   const HomeFiltersWidget({super.key});
@@ -30,44 +33,51 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: context.read<GetAllPipelineBloc>()
-        ..add(GetAllPiplineInitialEvent()),
-      child: BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
-        builder: (context, state) {
-          if (state is GetAllAllPipelineSuccessState) {
-            List<Datums> items = state.attributeModel?.data ?? [];
-            return _buildFiltersRow(items);
-          } else if (state is GetAllPipelineLoadingState) {
-            return _buildLoadingState();
-          } else if (state is GetAllPipelineFailureState) {
-            return const Center(child: Text("No data Found"));
-          }
-          return const Center(child: Text("No data Found"));
-        },
-      ),
+    return BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
+      builder: (context, state) {
+        if (state is GetAllAllPipelineSuccessState) {
+          List<Datums> items = state.attributeModel?.data ?? [];
+          return _buildFiltersRow(items);
+        } else if (state is GetAllPipelineLoadingState) {
+          return _buildLoadingState();
+        } else if (state is GetAllPipelineFailureState) {
+          return FailureWidget(
+            onTap: () {
+              BlocProvider.of<GetAllPipelineBloc>(context)
+                  .add(GetAllPiplineInitialEvent());
+            },
+          );
+        }
+        return const Center(child: Text("No data Found"));
+      },
     );
   }
 
   Widget _buildFiltersRow(List<Datums> items) {
-    return SizedBox(
-      height: 40,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _buildPipelineDropdown(items),
-          UIHelpers.horizontalSpaceRegular,
-          _buildDateRangeSelector(),
-          UIHelpers.horizontalSpaceRegular,
-          _buildApplyFilterButton(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 40,
+          child: Row(
+            spacing: 15,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _buildPipelineDropdown(items),
+              _buildDateRangeSelector(),
+              _buildApplyFilterButton(),
+            ],
+          ),
+        ),
+        UIHelpers.verticalSpaceTiny,
+        _buildChips(context)
+      ],
     );
   }
 
   Widget _buildPipelineDropdown(List<Datums> items) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 185),
+      constraints: const BoxConstraints(maxWidth: 420),
       child: DropdownWithCheckbox(
         hintText: "Pipeline type",
         items: items,
@@ -139,7 +149,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         LoadingWidget(
             borderRadius: BorderRadius.all(Radius.circular(8)),
             height: 40,
-            width: 180),
+            width: 450),
         LoadingWidget(
             borderRadius: BorderRadius.all(Radius.circular(8)),
             height: 40,
@@ -196,21 +206,75 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         pipelineIds.add(matchingItem.pipelineId ?? "");
       }
     }
+    setState(() {
+      selectedItems = selectedNames;
+    });
   }
 
   void _addEvents() {
     final selectedPipelineValue = pipelineIds;
-    BlocProvider.of<ValidationStatusBloc>(context).add(
-        ValidationStatuseCallEvent(
-            selectedPipelineValue: selectedPipelineValue));
-    BlocProvider.of<AiQueryAnswerBloc>(context).add(AIQueryAnswerInitialEvent(
-        selectedPipelineValue: selectedPipelineValue));
-    BlocProvider.of<AiQueryEditedBloc>(context).add(AIQueryEditedInitialEvent(
-        selectedPipelineValue: selectedPipelineValue));
-    BlocProvider.of<GetAllPipelineBloc>(context).add(GetAllPiplineInitialEvent(
-        selectedPipelineValue: selectedPipelineValue));
-    BlocProvider.of<TicketClassificationBloc>(context).add(
-        TickiteClassificationEvent(
-            selectedPipelineValue: selectedPipelineValue));
+    if (selectedPipelineValue.isNotEmpty) {
+      BlocProvider.of<ValidationStatusBloc>(context).add(
+          ValidationStatuseCallEvent(
+              selectedPipelineValue: selectedPipelineValue));
+      BlocProvider.of<AiQueryAnswerBloc>(context).add(AIQueryAnswerInitialEvent(
+          selectedPipelineValue: selectedPipelineValue));
+      BlocProvider.of<AiQueryEditedBloc>(context).add(AIQueryEditedInitialEvent(
+          selectedPipelineValue: selectedPipelineValue));
+      BlocProvider.of<GetAllPipelineBloc>(context).add(
+          GetAllPiplineInitialEvent(
+              selectedPipelineValue: selectedPipelineValue));
+      BlocProvider.of<TicketClassificationBloc>(context).add(
+          TickiteClassificationEvent(
+              selectedPipelineValue: selectedPipelineValue));
+      BlocProvider.of<UserValidationBloc>(context).add(
+          UserValidationsEvent(selectedPipelineValue: selectedPipelineValue));
+    }
+  }
+
+  Widget _buildChips(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.start,
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        ...selectedItems.take(2).map((item) => Chip(
+              backgroundColor: SupportBotColors.bluePrimary,
+              label: Text(
+                item,
+                style: const TextStyle(color: SupportBotColors.white),
+              ),
+              deleteIcon: const Icon(
+                SupportBotIcons.close,
+                color: SupportBotColors.white,
+              ),
+              onDeleted: () {
+                setState(() {
+                  selectedItems.remove(item);
+                });
+              },
+            )),
+        if (selectedItems.length > 2) ...[
+          ActionChip(
+            label: const Text(
+              "...",
+              style: TextStyle(color: SupportBotColors.white),
+            ),
+            backgroundColor: SupportBotColors.bluePrimary,
+            onPressed: () {},
+          ),
+          ActionChip(
+            label: Text(
+              "+${selectedItems.length - 2}",
+              style: SupportBotTextstyle.cellHeading.copyWith(
+                color: SupportBotColors.white,
+              ),
+            ),
+            backgroundColor: SupportBotColors.bluePrimary,
+            onPressed: () {},
+          ),
+        ],
+      ],
+    );
   }
 }

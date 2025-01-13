@@ -6,7 +6,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeli
 class PipelineDropdownBloc
     extends Bloc<PipelineDropdownEvent, PipelineDropdownState> {
   List<Datums> _items = [];
-  List<String> _selectedItems = [];
+  List<String> selectedItems = [];
 
   PipelineDropdownBloc() : super(PipelineDropdownInitialState()) {
     on<LoadPipelineTypesEvent>(_onLoadPipelineTypesEvent);
@@ -17,11 +17,11 @@ class PipelineDropdownBloc
   Future<void> _onLoadPipelineTypesEvent(
       LoadPipelineTypesEvent event, Emitter<PipelineDropdownState> emit) async {
     _items = event.items;
-    _selectedItems = List<String>.from(event.selectedItems);
+    selectedItems = List<String>.from(event.selectedItems);
 
     emit(DropdownPipelineTypesLoadedState(
       filteredItems: _items,
-      selectedItems: _selectedItems,
+      selectedItems: selectedItems,
     ));
   }
 
@@ -31,21 +31,24 @@ class PipelineDropdownBloc
 
     emit(DropdownPipelineTypesLoadedState(
       filteredItems: filteredItems,
-      selectedItems: _selectedItems,
+      selectedItems: selectedItems,
     ));
   }
 
   Future<void> _onUpdateSelectedItemEvent(UpdateSelectedItemEvent event,
       Emitter<PipelineDropdownState> emit) async {
-    if (event.isChecked) {
-      _addSelectedItem(event.item);
+    if (event.isChecked == true) {
+      if (event.item?.isNotEmpty == true && event.item != null) {
+        _addSelectedItem(event.item!);
+      }
     } else {
-      _removeSelectedItem(event.item);
+      if (event.item?.isNotEmpty == true && event.item != null) {
+        _removeSelectedItem(event.item!);
+      }
     }
-
     emit(DropdownPipelineTypesLoadedState(
       filteredItems: _items,
-      selectedItems: _selectedItems,
+      selectedItems: selectedItems,
     ));
   }
 
@@ -60,12 +63,12 @@ class PipelineDropdownBloc
   }
 
   void _addSelectedItem(String item) {
-    if (!_selectedItems.contains(item)) {
-      _selectedItems.add(item);
+    if (!selectedItems.contains(item)) {
+      selectedItems.add(item);
     }
   }
 
   void _removeSelectedItem(String item) {
-    _selectedItems.remove(item);
+    selectedItems.remove(item);
   }
 }

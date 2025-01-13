@@ -38,10 +38,7 @@ class TicketClassificationBloc
     );
     final response = await repository.invoke(req);
     if (response.isLeft) {
-      emit(TicketClassificationFailureState(
-          message: response.toString(),
-          selectedDate: event.selectedDate ?? DateTime.now(),
-          selectedMonth: event.selectedMonth ?? DateTime.now()));
+      emit(TicketClassificationFailureState());
     } else {
       try {
         final model = response.right;
@@ -79,10 +76,7 @@ class TicketClassificationBloc
         emit(TicketClassificationSucssesState(
             dashboardDataModel: dashboardDataModel));
       } catch (e) {
-        emit(TicketClassificationFailureState(
-            message: 'Exception: $e',
-            selectedDate: event.selectedDate ?? DateTime.now(),
-            selectedMonth: event.selectedMonth ?? DateTime.now()));
+        emit(TicketClassificationFailureState());
       }
     }
   }
