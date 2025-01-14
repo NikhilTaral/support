@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -14,6 +15,7 @@ class AiQueryAnswerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 800,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
@@ -44,6 +46,8 @@ class AiQueryAnswerTile extends StatelessWidget {
                         .add(AIQueryAnswerInitialEvent());
                   },
                 );
+              } else if (state is AIQueryAnswerEmptyState) {
+                return const EmptyWidget();
               } else {
                 return const SizedBox.shrink();
               }
@@ -131,7 +135,7 @@ class AiQueryAnswerTile extends StatelessWidget {
     return const LoadingWidget(
       borderRadius: BorderRadius.all(Radius.circular(8)),
       width: double.infinity,
-      height: 200,
+      height: 120,
     );
   }
 }

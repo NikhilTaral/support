@@ -12,7 +12,7 @@ import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dar
 part 'user_validationevent.dart';
 part 'uservalidation_state.dart';
 
-late DashboardDataModel dashboardDataModel = DashboardDataModel();
+DashboardDataModel dashboardDataModel = DashboardDataModel();
 
 class UserValidationBloc
     extends Bloc<UserValidationsEvent, UservalidationState> {
@@ -30,7 +30,7 @@ class UserValidationBloc
       final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
       final datesList = await getSelectedDates();
 
-      final startDate = (datesList.firstOrNull ?? DateTime.parse("2024-10-23"))
+      final startDate = (datesList.firstOrNull ?? DateTime.now())
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
           .toIso8601String();
       final endDate = (datesList.lastOrNull ?? DateTime.now())
@@ -76,10 +76,14 @@ class UserValidationBloc
             ),
           ),
         );
+        bool isEmpty = (dashboardDataModel.getValidationByCountAttributeModel
+                    ?.data?.counts?.isEmpty ==
+                true &&
+            dashboardDataModel.getValidationByCountAttributeModel?.data
+                    ?.percentages?.isEmpty ==
+                true);
 
-        if (dashboardDataModel
-                .getValidationByCountAttributeModel?.data?.counts?.isEmpty ==
-            true) {
+        if (isEmpty) {
           emit(UserValidationEmptyState());
         } else {
           emit(UserValidationSucssesState(

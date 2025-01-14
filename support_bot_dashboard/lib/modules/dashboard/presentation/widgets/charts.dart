@@ -23,6 +23,7 @@ class Charts extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const TicketClassificationWidget(),
                 UIHelpers.verticalSpace(16),
@@ -83,6 +84,7 @@ class Charts extends StatelessWidget {
 
   Widget _buildAiQueryEditedAnswerCard() {
     return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [AiQueryAnswerTile(), AiQueryEditedTile()],
     );

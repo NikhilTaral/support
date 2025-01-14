@@ -48,7 +48,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             },
           );
         }
-        return const Center(child: Text("No data Found"));
+        return const SizedBox.shrink();
       },
     );
   }
@@ -213,7 +213,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   void _addEvents() {
     final selectedPipelineValue = pipelineIds;
-    if (selectedPipelineValue.isNotEmpty) {
+    if (selectedItems.isNotEmpty) {
       BlocProvider.of<ValidationStatusBloc>(context).add(
           ValidationStatuseCallEvent(
               selectedPipelineValue: selectedPipelineValue));

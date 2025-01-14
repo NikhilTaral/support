@@ -36,7 +36,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               fieldValue: event.selectedPipelineValue ?? ["11257490"],
               fieldName: event.fildName ?? "pipelines")
         ],
-        startDate: (datesList.firstOrNull ?? DateTime.parse("2024-12-31"))
+        startDate: (datesList.firstOrNull ?? DateTime.now())
             .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
             .toIso8601String(),
         endDate: (datesList.lastOrNull ?? DateTime.now())
@@ -80,8 +80,18 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
               notAnswered: model.data?.percentages?.notAnsweredCount,
             ),
           )));
-          emit(AIQueryAnswerSucssesState(
-              dashboardDataModel: dashboardDataModel));
+          bool isEmpty = dashboardDataModel
+                      .dashboardAiQueryChartAttributeModel?.data?.counts ==
+                  null &&
+              dashboardDataModel
+                      .dashboardAiQueryChartAttributeModel?.data?.percentages ==
+                  null;
+          if (isEmpty) {
+            emit(AIQueryAnswerEmptyState());
+          } else {
+            emit(AIQueryAnswerSucssesState(
+                dashboardDataModel: dashboardDataModel));
+          }
         } else {
           emit(AIQueryAnswerFailureState(
               message: 'Exception: ',

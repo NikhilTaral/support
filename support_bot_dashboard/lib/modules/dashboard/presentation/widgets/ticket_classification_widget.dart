@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pi_chart.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -14,6 +15,7 @@ class TicketClassificationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: 800,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(
@@ -32,7 +34,7 @@ class TicketClassificationWidget extends StatelessWidget {
                   fontSize: 18,
                   color: SupportBotColors.black),
             ),
-            UIHelpers.verticalSpaceRegular,
+            UIHelpers.verticalSpaceSmall,
             BlocBuilder<TicketClassificationBloc, TicketClassificationState>(
               builder: (context, state) {
                 if (state is TicketClassificationSucssesState) {
@@ -92,6 +94,8 @@ class TicketClassificationWidget extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                       width: double.infinity,
                       height: 280);
+                } else if (state is TicketClassificationEmptyState) {
+                  return const EmptyWidget();
                 } else if (state is TicketClassificationFailureState) {
                   return FailureWidget(
                     onTap: () {

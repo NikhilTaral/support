@@ -6,11 +6,11 @@ class TicketClassificationInitialState extends TicketClassificationState {}
 
 class TicketClassificationLoadingState extends TicketClassificationState {}
 
+class TicketClassificationEmptyState extends TicketClassificationState {}
+
 class TicketClassificationSucssesState extends TicketClassificationState {
   final DashboardDataModel? dashboardDataModel;
   TicketClassificationSucssesState({this.dashboardDataModel});
 }
 
-class TicketClassificationFailureState extends TicketClassificationState {
-  TicketClassificationFailureState();
-}
+class TicketClassificationFailureState extends TicketClassificationState {}

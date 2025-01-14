@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/modules/dashboard/common/validation_status_report_utils.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/pluto_configruration.dart';
@@ -22,6 +23,7 @@ class ValidationStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
+      width: 800,
       decoration: BoxDecoration(
         border: Border.all(
             color: SupportBotColors.blueSecondary.shade100, width: 1),
@@ -51,19 +53,20 @@ class ValidationStatusWidget extends StatelessWidget {
                           attributeModel: attributeModel),
                       configuration:
                           PlutoGridConfigurations.plutoGridConfigurations());
-                } else if (state is ValidationStatusLodingState) {
+                } else if (state is ValidationStatusLoadingState) {
                   return const LoadingWidget(
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                       width: double.infinity,
                       height: 200);
-                } else if (state is VsalidationStatusFailureState) {
+                } else if (state is ValidationStatusEmptyState) {
+                  return const EmptyWidget();
+                } else if (state is ValidationStatusFailureState) {
                   return FailureWidget(
                     onTap: () {
                       BlocProvider.of<ValidationStatusBloc>(context)
                           .add(ValidationStatuseCallEvent());
                     },
                   );
-                  ;
                 } else {
                   return const SizedBox.shrink();
                 }

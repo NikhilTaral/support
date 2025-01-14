@@ -6,6 +6,8 @@ class AIQueryAnswerIntialState extends AiQueryAnswerState {}
 
 class AIQueryAnswerLoadingState extends AiQueryAnswerState {}
 
+class AIQueryAnswerEmptyState extends AiQueryAnswerState {}
+
 class AIQueryAnswerSucssesState extends AiQueryAnswerState {
   final DashboardDataModel? dashboardDataModel;
   AIQueryAnswerSucssesState({this.dashboardDataModel});

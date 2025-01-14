@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -13,6 +14,7 @@ class AiQueryEditedTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 800,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
@@ -43,6 +45,8 @@ class AiQueryEditedTile extends StatelessWidget {
                         .add(AIQueryEditedInitialEvent());
                   },
                 );
+              } else if (state is AIQueryEditedEmptyState) {
+                return const EmptyWidget();
               } else {
                 return const SizedBox.shrink();
               }
@@ -127,10 +131,10 @@ class AiQueryEditedTile extends StatelessWidget {
   }
 
   Widget _loadingView(BuildContext context) {
-    return LoadingWidget(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
+    return const LoadingWidget(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
       width: double.infinity,
-      height: UIHelpers.screenHeight(context),
+      height: 120,
     );
   }
 }

@@ -21,11 +21,11 @@ class ValidationStatusBloc
 
   FutureOr<void> _onValidationStatuseCallEvent(ValidationStatuseCallEvent event,
       Emitter<ValidationStatusState> emit) async {
-    emit(ValidationStatusLodingState());
+    emit(ValidationStatusLoadingState());
 
     final repository = serviceLocator<ValidationStatusUsecase>();
     List<DateTime?> datesList = await getSelectedDates();
-    final startDate = (datesList.firstOrNull ?? DateTime.parse("2024-10-23"))
+    final startDate = (datesList.firstOrNull ?? DateTime.now())
         .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
         .toIso8601String();
     final endDate = (datesList.lastOrNull ?? DateTime.now())
@@ -45,14 +45,14 @@ class ValidationStatusBloc
     );
     final response = await repository.invoke(requestBody);
     if (response.isLeft) {
-      emit(VsalidationStatusFailureState());
+      emit(ValidationStatusFailureState());
     } else {
       try {
         final ValidationStatusAttributeModel attributeModel =
             AttributeMapper.mapValidationStatuseResponseModel(response.right);
         emit(ValidationStatusSucssesState(attributeModel: attributeModel));
       } catch (e) {
-        emit(VsalidationStatusFailureState());
+        emit(ValidationStatusFailureState());
       }
     }
   }
