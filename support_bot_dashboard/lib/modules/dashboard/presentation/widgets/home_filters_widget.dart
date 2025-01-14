@@ -9,7 +9,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_al
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/multipal_pipeline_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/multipal_pipeline_Widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
