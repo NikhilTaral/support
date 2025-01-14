@@ -9,6 +9,7 @@ class PlutoGridConfigurations {
           autoSizeMode: PlutoAutoSizeMode.scale),
       style: PlutoGridStyleConfig(
         iconSize: 0,
+        
         defaultCellPadding: EdgeInsets.zero,
         gridBorderRadius: const BorderRadius.all(Radius.circular(0)),
         gridBorderColor: SupportBotColors.blueSecondary.shade100,
