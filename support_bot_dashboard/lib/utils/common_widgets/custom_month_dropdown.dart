@@ -8,7 +8,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 //   final List<String> items;
 //   final ValueChanged<DateTime?> onChanged;
 //   final String label;
-  
+
 //   const CustomMonthDropdown({
 //     Key? key,
 //     required this.selectedValue,
@@ -35,7 +35,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 //           value: selectedValue,
 //           onChanged: onChanged,
 //           items: items.map((String value) {
-//             DateTime dateTimeValue = DateTime(2024, items.indexOf(value) + 1); 
+//             DateTime dateTimeValue = DateTime(2024, items.indexOf(value) + 1);
 //             return DropdownMenuItem<DateTime>(
 //               value: dateTimeValue,
 //               child: Text(value),
@@ -89,11 +89,11 @@ class CustomMonthDropdown extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: SupportBotColors.gray),
+              border: Border.all(color: SupportBotColors.bluePrimary),
               borderRadius: BorderRadius.circular(5.0),
             ),
-            padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
-            margin: const EdgeInsets.only(top: 30, bottom: 10, left: 15, right: 1),
+            padding:
+                const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
             height: UIHelpers.screenHeight(context) * 0.05,
             width: UIHelpers.screenWidth(context) * 0.13,
             child: Row(
@@ -101,9 +101,11 @@ class CustomMonthDropdown extends StatelessWidget {
               children: [
                 Text(
                   selectedValue.isNotEmpty ? selectedValue : label,
-                  style: selectedValue.isNotEmpty
-                      ? SupportBotTextstyle.medium.copyWith(fontWeight: FontWeight.w500)
-                      : SupportBotTextstyle.mediumHint,
+                  style: SupportBotTextstyle.medium.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: SupportBotColors.bluePrimary,
+                  ),
+                  overflow: TextOverflow.clip,
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down_rounded,
@@ -111,18 +113,6 @@ class CustomMonthDropdown extends StatelessWidget {
                   color: SupportBotColors.bluePrimary,
                 ),
               ],
-            ),
-          ),
-          Positioned(
-            left: 25,
-            top: 20,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              color: SupportBotColors.white,
-              child: Text(
-                label,
-                style: SupportBotTextstyle.dropdownLabel,
-              ),
             ),
           ),
         ],
@@ -141,8 +131,8 @@ class CustomMonthDropdown extends StatelessWidget {
         return Stack(
           children: [
             Positioned(
-              left: offset.dx + 15,
-              top: offset.dy + UIHelpers.screenHeight(context) * 0.05 + 30,
+              left: offset.dx,
+              top: offset.dy + UIHelpers.screenHeight(context) * 0.05,
               child: Material(
                 color: Colors.transparent,
                 child: Container(
@@ -170,7 +160,8 @@ class CustomMonthDropdown extends StatelessWidget {
                         title: Text(
                           item,
                           style: item == selectedValue
-                              ? SupportBotTextstyle.medium.copyWith(fontWeight: FontWeight.w500)
+                              ? SupportBotTextstyle.medium
+                                  .copyWith(fontWeight: FontWeight.w500)
                               : SupportBotTextstyle.medium,
                         ),
                         onTap: () {

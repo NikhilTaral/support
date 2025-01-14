@@ -5,8 +5,8 @@
 import 'dart:convert';
 
 DashboardAiQueryChartResponseModel dashboardAiQueryChartResponseModelFromJson(
-        String str) =>
-    DashboardAiQueryChartResponseModel.fromJson(json.decode(str));
+        String jsonString) =>
+    DashboardAiQueryChartResponseModel.fromJson(json.decode(jsonString));
 
 String dashboardAiQueryChartResponseModelToJson(
         DashboardAiQueryChartResponseModel data) =>

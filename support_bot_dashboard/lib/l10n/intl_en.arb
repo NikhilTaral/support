@@ -1,6 +1,6 @@
 
-
 {
+  "@@locale": "en",
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"
@@ -13,9 +13,9 @@
   "@aiQueryAnswer": {
     "description": "AI Query Answer"
   },
-  "spam": "Spam/Marketing",
+  "spam": "Spam",
   "@spam": {
-    "description": "Spam/Marketing"
+    "description": "Spam"
   },
   "noActionRequired": "No Action Required",
   "@noActionRequired": {
@@ -156,5 +156,37 @@
   "validatEmail": "Validate Email",
   "@validatEmail": {
     "description": "Validate Email"
+  },
+  "bopsState": "Bops State",
+  "@bopsState": {
+    "description": "Bops State"
+  },
+  "pipelineType": "Pipeline Type",
+  "@pipelineType": {
+    "description": "PipelineType"
+  },
+  "validateAIAnswer": "Validate AI Answer",
+  "@validateAIAnswer": {
+    "description": "Validate AI Answer"
+  },
+  "updateTicket": "Update Ticket",
+  "@updateTicket": {
+    "description": "Update Ticket"
+  },
+  "updateSuccess": "Update Successfully..",
+  "@updateSuccess": {
+    "description": "Update Successfully"
+  },
+  "aIClassification": "AI Classification",
+  "@aIClassification": {
+    "description": "AI Classification"
+  },
+  "ackRequired": "Ack Required",
+  "@ackRequired": {
+    "description": "Ack Required"
+  },
+ "aPIErrorMsg":"Error fetching data from server",
+  "@aPIErrorMsg": {
+    "description":"Error fetching data from server"
   }
 }
