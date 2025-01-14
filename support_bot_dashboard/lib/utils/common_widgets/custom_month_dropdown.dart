@@ -131,8 +131,8 @@ class CustomMonthDropdown extends StatelessWidget {
         return Stack(
           children: [
             Positioned(
-              left: offset.dx + 15,
-              top: offset.dy + UIHelpers.screenHeight(context) * 0.05 + 30,
+              left: offset.dx,
+              top: offset.dy + UIHelpers.screenHeight(context) * 0.05,
               child: Material(
                 color: Colors.transparent,
                 child: Container(
