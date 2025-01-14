@@ -7,7 +7,7 @@ RUN apt-get install -y curl git unzip
 
 # define variables
 ARG FLUTTER_SDK=/usr/local/flutter
-ARG FLUTTER_VERSION=3.27.2
+ARG FLUTTER_VERSION=3.22.2
 ARG APP=/app/
 
 #clone flutter
@@ -32,7 +32,6 @@ WORKDIR $APP
 # Run build: 1 - clean, 2 - pub get, 3 - build web
 RUN flutter clean
 RUN flutter pub get
-RUN sh prebuild.sh
 RUN flutter build web --no-tree-shake-icons
 
 # once heare the app will be compiled and ready to deploy
