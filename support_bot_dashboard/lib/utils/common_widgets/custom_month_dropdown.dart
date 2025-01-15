@@ -94,8 +94,7 @@ class CustomMonthDropdown extends StatelessWidget {
             ),
             padding:
                 const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 5),
-            height: UIHelpers.screenHeight(context) * 0.05,
-            width: UIHelpers.screenWidth(context) * 0.13,
+            height: 40,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
