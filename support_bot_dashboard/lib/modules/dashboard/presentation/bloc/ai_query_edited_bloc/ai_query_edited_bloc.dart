@@ -30,7 +30,7 @@ class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
               fieldName: "StartDate"),
         Filter(
             fieldValue: event.selectedPipelineValue ?? ["11257490"],
-            fieldName: event.fildName ?? "pipelines")
+            fieldName: event.fieldName ?? "pipelines")
       ],
       startDate: (datesList.firstOrNull ?? DateTime.now())
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)

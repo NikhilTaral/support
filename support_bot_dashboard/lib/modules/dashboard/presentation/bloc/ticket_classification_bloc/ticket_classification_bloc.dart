@@ -27,7 +27,7 @@ class TicketClassificationBloc
       filter: [
         Filter(
             fieldValue: event.selectedPipelineValue ?? ["11257490"],
-            fieldName: event.fildName ?? "pipelines")
+            fieldName: event.fieldName ?? "pipelines")
       ],
       startDate: (datesList.firstOrNull ?? DateTime.now())
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
@@ -53,22 +53,23 @@ class TicketClassificationBloc
                       ChartAttributeCounts())
                   .copyWith(
                 acknowledgementRequired:
-                    model.data?.counts?.acknowledgementRequired,
-                genuineQuery: model.data?.counts?.genuineQuery,
-                noActionRequired: model.data?.counts?.noActionRequired,
-                notClassified: model.data?.counts?.notClassified,
-                spamMarketing: model.data?.counts?.spamMarketing,
+                    model.data?.counts?.acknowledgementRequired ?? "",
+                genuineQuery: model.data?.counts?.genuineQuery ?? "",
+                noActionRequired: model.data?.counts?.noActionRequired ?? "",
+                notClassified: model.data?.counts?.notClassified ?? "",
+                spamMarketing: model.data?.counts?.spamMarketing ?? "",
               ),
               percentages:
                   (dashboardDataModel.pieChartData?.data?.percentages ??
                           ChartAttributeCounts())
                       .copyWith(
                 acknowledgementRequired:
-                    model.data?.percentages?.acknowledgementRequired,
-                genuineQuery: model.data?.percentages?.genuineQuery,
-                noActionRequired: model.data?.percentages?.noActionRequired,
-                notClassified: model.data?.percentages?.notClassified,
-                spamMarketing: model.data?.percentages?.spamMarketing,
+                    model.data?.percentages?.acknowledgementRequired ?? "",
+                genuineQuery: model.data?.percentages?.genuineQuery ?? "",
+                noActionRequired:
+                    model.data?.percentages?.noActionRequired ?? "",
+                notClassified: model.data?.percentages?.notClassified ?? "",
+                spamMarketing: model.data?.percentages?.spamMarketing ?? "",
               ),
             ),
           ),

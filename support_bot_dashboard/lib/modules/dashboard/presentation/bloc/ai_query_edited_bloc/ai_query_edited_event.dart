@@ -4,11 +4,11 @@ abstract class AiQueryEditedEvent {}
 
 class AIQueryEditedInitialEvent extends AiQueryEditedEvent {
   final List<String>? selectedPipelineValue;
-  final String? fildName;
+  final String? fieldName;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
   AIQueryEditedInitialEvent(
-      {this.fildName,
+      {this.fieldName,
       this.selectedDate,
       this.selectedMonth,
       this.selectedPipelineValue});

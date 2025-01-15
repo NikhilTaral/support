@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final ticketClassificationResponseModel = ticketClassificationResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 TicketClassificationResponseModel ticketClassificationResponseModelFromJson(
@@ -15,7 +11,7 @@ String ticketClassificationResponseModelToJson(
 class TicketClassificationResponseModel {
   Data? data;
   bool? success;
-  int? failCode;
+  num? failCode;
   Params? params;
   String? message;
 
@@ -30,7 +26,7 @@ class TicketClassificationResponseModel {
   TicketClassificationResponseModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     Params? params,
     String? message,
   }) =>
@@ -62,11 +58,11 @@ class TicketClassificationResponseModel {
 }
 
 class Data {
-  int? totalRecords;
+  num? totalRecords;
   List<Item>? items;
-  int? pageSize;
+  num? pageSize;
   LastEvaluatedKey? lastEvaluatedKey;
-  int? currentPage;
+  num? currentPage;
 
   Data({
     this.totalRecords,
@@ -77,11 +73,11 @@ class Data {
   });
 
   Data copyWith({
-    int? totalRecords,
+    num? totalRecords,
     List<Item>? items,
-    int? pageSize,
+    num? pageSize,
     LastEvaluatedKey? lastEvaluatedKey,
-    int? currentPage,
+    num? currentPage,
   }) =>
       Data(
         totalRecords: totalRecords ?? this.totalRecords,
