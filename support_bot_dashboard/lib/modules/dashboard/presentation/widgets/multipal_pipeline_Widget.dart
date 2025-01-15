@@ -6,7 +6,6 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeli
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_state.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
-
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class DropdownWithCheckbox extends StatelessWidget {
