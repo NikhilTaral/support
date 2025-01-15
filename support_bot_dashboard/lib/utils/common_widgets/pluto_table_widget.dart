@@ -25,7 +25,6 @@ class PlutoTableWidget extends StatelessWidget {
         activatedBorderColor: Colors.transparent,
         gridBorderRadius: BorderRadius.circular(6),
         gridPopupBorderRadius: BorderRadius.circular(6),
-        rowHeight: 44,
         gridBorderColor: SupportBotColors.blueSecondary.shade200,
         columnTextStyle: SupportBotTextstyle.columnHeading,
         cellTextStyle: SupportBotTextstyle.cellHeading,
