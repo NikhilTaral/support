@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
@@ -25,7 +26,7 @@ class AiQueryEditedTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'AI Query Edited',
+            'AI Tickets Edited',
             style: SupportBotTextstyle.normal.copyWith(
               fontWeight: FontWeight.w600,
               color: SupportBotColors.black,
@@ -60,9 +61,9 @@ class AiQueryEditedTile extends StatelessWidget {
   Widget _content(AIQueryEditedSucssesState state) {
     return _buildInfoCard(
       editedText:
-          'Query Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%',
+          'Ticket Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.editedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%)',
       nonEditedText:
-          'Query Non Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.unEditedCount}%',
+          'Ticket Not Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.unEditedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.unEditedCount}%)',
     );
   }
 
@@ -72,16 +73,17 @@ class AiQueryEditedTile extends StatelessWidget {
   }) {
     return Row(
       children: [
-        _buildStatisticCard(icon: Icons.add, text: editedText),
+        _buildStatisticCard(icon: Icons.add, text: editedText, useSvg: false),
         UIHelpers.horizontalSpaceRegular,
-        _buildStatisticCard(icon: Icons.check, text: nonEditedText),
+        _buildStatisticCard(text: nonEditedText, useSvg: true),
       ],
     );
   }
 
   Widget _buildStatisticCard({
-    required IconData icon,
+    IconData? icon,
     required String text,
+    required bool useSvg,
   }) {
     return Expanded(
       child: Container(
@@ -95,7 +97,19 @@ class AiQueryEditedTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildIcon(icon),
+              useSvg
+                  ? Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        color: SupportBotColors.bluePrimary.shade400,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: SvgPicture.asset(
+                        "assets/icons/WarningCircle.svg",
+                      ),
+                    )
+                  : _buildIcon(icon!),
               UIHelpers.verticalSpaceSmall,
               Text(
                 text,

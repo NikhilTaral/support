@@ -166,7 +166,7 @@ class DropdownWithCheckbox extends StatelessWidget {
           builder: (context, state) {
             final displayedItems =
                 selectedItems.isNotEmpty ? selectedItems.join(', ') : hintText;
-            return const Text("Pipeline Type",
+            return const Text("Select Pipeline",
                 style: TextStyle(color: SupportBotColors.bluePrimary));
           },
         ),

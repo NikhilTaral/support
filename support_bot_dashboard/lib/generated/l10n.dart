@@ -60,16 +60,6 @@ class S {
     );
   }
 
-  /// `Pipeline Type`
-  String get pipelineType {
-    return Intl.message(
-      'Pipeline Type',
-      name: 'pipelineType',
-      desc: 'Pipeline Type',
-      args: [],
-    );
-  }
-
   /// `Ticket Classification`
   String get ticketClassification {
     return Intl.message(
@@ -90,41 +80,11 @@ class S {
     );
   }
 
-  /// `AI Answer Status`
-  String get aiAnswerStatus {
-    return Intl.message(
-      'AI Answer Status',
-      name: 'aiAnswerStatus',
-      desc: 'AI Answer Status',
-      args: [],
-    );
-  }
-
-  /// `Validation Status`
-  String get validationStatus {
-    return Intl.message(
-      'Validation Status',
-      name: 'validationStatus',
-      desc: 'Validation Status',
-      args: [],
-    );
-  }
-
-  /// `User Validation`
-  String get userValidation {
-    return Intl.message(
-      'User Validation',
-      name: 'userValidation',
-      desc: 'User Validation',
-      args: [],
-    );
-  }
-
-  /// `Spam`
+  /// `Spam/Marketing`
   String get spam {
     return Intl.message(
       'Spam/Marketing',
-      name: 'Spam/Marketing',
+      name: 'spam/Marketingm',
       desc: 'Spam/Marketing',
       args: [],
     );
@@ -200,26 +160,6 @@ class S {
     );
   }
 
-  /// `Classification`
-  String get bopsState {
-    return Intl.message(
-      'BOps State',
-      name: 'bopsState',
-      desc: 'bopsState',
-      args: [],
-    );
-  }
-
-  //answer edited
-  String get isAnswerEdited {
-    return Intl.message(
-      'isAnswerEdited',
-      name: 'isAnswerEdited',
-      desc: 'isAnswerEdited',
-      args: [],
-    );
-  }
-
   /// `Validation`
   String get validation {
     return Intl.message(
@@ -230,7 +170,7 @@ class S {
     );
   }
 
-  /// `Export`
+  /// `Export CSV File`
   String get export {
     return Intl.message(
       'Export CSV File',
@@ -240,7 +180,7 @@ class S {
     );
   }
 
-  /// `id`
+  /// `ID`
   String get id {
     return Intl.message(
       'ID',
@@ -250,7 +190,7 @@ class S {
     );
   }
 
-  /// `ticketDescription`
+  /// `Ticket Description`
   String get ticketDescription {
     return Intl.message(
       'Ticket Description',
@@ -260,7 +200,7 @@ class S {
     );
   }
 
-  /// `reasoning`
+  /// `Reasoning`
   String get reasoning {
     return Intl.message(
       'Reasoning',
@@ -270,7 +210,7 @@ class S {
     );
   }
 
-  /// `validationReason`
+  /// `Validation Reason`
   String get validationReason {
     return Intl.message(
       'Validation Reason',
@@ -280,7 +220,7 @@ class S {
     );
   }
 
-  /// `actions`
+  /// `Actions`
   String get actions {
     return Intl.message(
       'Actions',
@@ -290,7 +230,7 @@ class S {
     );
   }
 
-  /// `status`
+  /// `Status`
   String get status {
     return Intl.message(
       'Status',
@@ -300,7 +240,7 @@ class S {
     );
   }
 
-  /// `save`
+  /// `Save`
   String get save {
     return Intl.message(
       'Save',
@@ -310,7 +250,7 @@ class S {
     );
   }
 
-  /// `revert`
+  /// `Revert`
   String get revert {
     return Intl.message(
       'Revert',
@@ -320,17 +260,7 @@ class S {
     );
   }
 
-  /// `Unrevert`
-  String get updateTicket {
-    return Intl.message(
-      'Update',
-      name: 'updateTicket',
-      desc: 'updateTicket',
-      args: [],
-    );
-  }
-
-  /// `view`
+  /// `View`
   String get view {
     return Intl.message(
       'View',
@@ -340,27 +270,17 @@ class S {
     );
   }
 
-  /// `changeClassification`
-  String get changeClassifcation {
-    return Intl.message(
-      'Change Classification',
-      name: 'changeClassifcation',
-      desc: 'Change Classification',
-      args: [],
-    );
-  }
-
-  /// `emailValidations`
+  /// `Email Validation Details`
   String get emailValidations {
     return Intl.message(
-      'Validation Details',
+      'Email Validation Details',
       name: 'emailValidations',
-      desc: 'Validation Details',
+      desc: 'Email Validation Details',
       args: [],
     );
   }
 
-  /// `comments`
+  /// `Please enter your comments`
   String get comments {
     return Intl.message(
       'Please enter your comments',
@@ -370,7 +290,7 @@ class S {
     );
   }
 
-  /// `cancel`
+  /// `Cancel`
   String get cancel {
     return Intl.message(
       'Cancel',
@@ -380,7 +300,7 @@ class S {
     );
   }
 
-  /// `revertSuccess`
+  /// `Ticket stage reverted successfully`
   String get revertSuccess {
     return Intl.message(
       'Ticket stage reverted successfully',
@@ -390,7 +310,7 @@ class S {
     );
   }
 
-  /// `alreadyUpdated`
+  /// `No changes to revert.`
   String get noRevert {
     return Intl.message(
       'No changes to revert.',
@@ -400,66 +320,7 @@ class S {
     );
   }
 
-  /// `UpdateSuccess`
-  String get UpdateSuccess {
-    return Intl.message(
-      'Do you want to mark this ticket as No Contact Needed/Spam in HubSpot?',
-      name: 'UpdateSuccess',
-      desc: 'Ticket Stage Updated successfully',
-      args: [],
-    );
-  }
-
-  /// `Send Validation Email`
-  String get ValidateEmail {
-    return Intl.message(
-      'Do you want to Validate this ticket & Send Email?',
-      name: 'ValidateEmail',
-      desc: 'Email Send successfully',
-      args: [],
-    );
-  }
-
-  /// `sendEmail`
-  String get sendEmail {
-    return Intl.message(
-      'Send Email',
-      name: 'sendEmail',
-      desc: 'Send Email',
-      args: [],
-    );
-  }
-
-  String get validatEmail {
-    return Intl.message(
-      'Validate Email',
-      name: 'validatEmail',
-      desc: 'Validate Email',
-      args: [],
-    );
-  }
-
-    /// `validateAIAnswer`
-  String get validateAIAnswer {
-    return Intl.message(
-      'Validate AI Answer',
-      name: 'validateAIAnswer',
-      desc: 'Validate AI Answer',
-      args: [],
-    );
-  }
-
-    /// `Validation AI Answer`
-  String get ValidateAIAnswer {
-    return Intl.message(
-      'Do you want to Validate AI Answer for this ticket?',
-      name: 'ValidateAIAnswer',
-      desc: 'AI Answer Validated Successfully',
-      args: [],
-    );
-  }
-
-  /// `revertClassification`
+  /// `This classification does not support revert feature`
   String get revertClassifcation {
     return Intl.message(
       'This classification does not support revert feature',
@@ -469,7 +330,17 @@ class S {
     );
   }
 
-  /// `statusUpdated`
+  /// `Change Classification`
+  String get changeClassifcation {
+    return Intl.message(
+      'Change Classification',
+      name: 'changeClassifcation',
+      desc: 'Change Classification',
+      args: [],
+    );
+  }
+
+  /// `Update Status`
   String get statusUpdated {
     return Intl.message(
       'Update Status',
@@ -479,7 +350,7 @@ class S {
     );
   }
 
-  /// `ok`
+  /// `Ok`
   String get ok {
     return Intl.message(
       'Ok',
@@ -489,7 +360,7 @@ class S {
     );
   }
 
-  //yes
+  /// `Yes`
   String get yes {
     return Intl.message(
       'Yes',
@@ -499,17 +370,7 @@ class S {
     );
   }
 
-  //validation exists
-  String get validationExists {
-    return Intl.message(
-      'Validation Exists',
-      name: 'validationExists',
-      desc: 'Validation Existss',
-      args: [],
-    );
-  }
-
-  //no
+  /// `No`
   String get no {
     return Intl.message(
       'No',
@@ -519,12 +380,142 @@ class S {
     );
   }
 
-  /// `link`
+  /// `Link`
   String get link {
     return Intl.message(
       'Link',
       name: 'link',
       desc: 'Link',
+      args: [],
+    );
+  }
+
+  /// `isAnswerEdited`
+  String get isAnswerEdited {
+    return Intl.message(
+      'isAnswerEdited',
+      name: 'isAnswerEdited',
+      desc: 'isAnswerEdited',
+      args: [],
+    );
+  }
+
+  /// `Validation Status`
+  String get validationStatus {
+    return Intl.message(
+      'Validation Status',
+      name: 'validationStatus',
+      desc: 'Validation Status',
+      args: [],
+    );
+  }
+
+  /// `User Validation`
+  String get userValidation {
+    return Intl.message(
+      'User Validation',
+      name: 'userValidation',
+      desc: 'User Validation',
+      args: [],
+    );
+  }
+
+  /// `Validation Exists`
+  String get validationExists {
+    return Intl.message(
+      'Validation Exists',
+      name: 'validationExists',
+      desc: 'Validation Exists',
+      args: [],
+    );
+  }
+
+  /// `Validate Email`
+  String get validatEmail {
+    return Intl.message(
+      'Validate Email',
+      name: 'validatEmail',
+      desc: 'Validate Email',
+      args: [],
+    );
+  }
+
+  /// `Bops State`
+  String get bopsState {
+    return Intl.message(
+      'Bops State',
+      name: 'bopsState',
+      desc: 'Bops State',
+      args: [],
+    );
+  }
+
+  /// `Pipeline Type`
+  String get pipelineType {
+    return Intl.message(
+      'Pipeline Type',
+      name: 'pipelineType',
+      desc: 'PipelineType',
+      args: [],
+    );
+  }
+
+  /// `Validate AI Answer`
+  String get validateAIAnswer {
+    return Intl.message(
+      'Validate AI Answer',
+      name: 'validateAIAnswer',
+      desc: 'Validate AI Answer',
+      args: [],
+    );
+  }
+
+  /// `Update Ticket`
+  String get updateTicket {
+    return Intl.message(
+      'Update Ticket',
+      name: 'updateTicket',
+      desc: 'Update Ticket',
+      args: [],
+    );
+  }
+
+  /// `Update Successfully..`
+  String get updateSuccess {
+    return Intl.message(
+      'Update Successfully..',
+      name: 'updateSuccess',
+      desc: 'Update Successfully',
+      args: [],
+    );
+  }
+
+  /// `AI Classification`
+  String get aIClassification {
+    return Intl.message(
+      'AI Classification',
+      name: 'aIClassification',
+      desc: 'AI Classification',
+      args: [],
+    );
+  }
+
+  /// `Acknowledge Required`
+  String get ackRequired {
+    return Intl.message(
+      'Acknowledge Required',
+      name: 'ackRequired',
+      desc: 'Acknowledge Required',
+      args: [],
+    );
+  }
+
+  /// `Error fetching data from server`
+  String get aPIErrorMsg {
+    return Intl.message(
+      'Error fetching data from server',
+      name: 'aPIErrorMsg',
+      desc: 'Error fetching data from server',
       args: [],
     );
   }

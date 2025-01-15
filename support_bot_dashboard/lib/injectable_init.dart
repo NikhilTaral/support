@@ -1,6 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/data/repositories/ai_query_answer_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/repositories/ai_query_answer_repo.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/usecases/ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_chart_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_ai_edited_repo_impl.dart';
@@ -85,4 +88,9 @@ Future<void> initServiceLocator() async {
 
   serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
       () => GetAllPipelinesUsecase());
+
+  // AI query
+  serviceLocator.registerLazySingleton<AiQueryUsecase>(() => AiQueryUsecase());
+  serviceLocator.registerLazySingleton<AiQueryDataRepository>(
+      () => AiQueryAnswerRepoImpl());
 }

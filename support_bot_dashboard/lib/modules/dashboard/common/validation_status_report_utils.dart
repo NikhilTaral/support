@@ -87,7 +87,7 @@ class ValidationStatusReportUtils {
     rows.add(
       PlutoRow(cells: {
         RequestMentorReportKeys.aIClassification:
-            PlutoCell(value: 'Ack Required'),
+            PlutoCell(value: 'Acknowledge Required'),
         RequestMentorReportKeys.genuineQuery:
             PlutoCell(value: model?.acknowledgementRequired?.genuineQuery ?? 0),
         RequestMentorReportKeys.ackRequired: PlutoCell(
@@ -115,7 +115,7 @@ class ValidationStatusReportUtils {
     );
     rows.add(
       PlutoRow(cells: {
-        RequestMentorReportKeys.aIClassification: PlutoCell(value: "Spam"),
+        RequestMentorReportKeys.aIClassification: PlutoCell(value: "Spam/Marketing"),
         RequestMentorReportKeys.genuineQuery:
             PlutoCell(value: model?.spamMarketing?.genuineQuery ?? 0),
         RequestMentorReportKeys.ackRequired: PlutoCell(

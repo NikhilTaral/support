@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
-import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class PlutoTableWidget extends StatelessWidget {
   final List<PlutoColumn> columns;
@@ -16,18 +15,17 @@ class PlutoTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final configuration = PlutoGridConfiguration(
       style: PlutoGridStyleConfig(
         enableColumnBorderHorizontal: false,
-        enableColumnBorderVertical: true,
-        enableCellBorderVertical: true,
+        enableColumnBorderVertical: false,
+        enableCellBorderVertical: false,
         enableCellBorderHorizontal: true,
-        gridBorderRadius: BorderRadius.circular(8),
-        gridPopupBorderRadius: BorderRadius.circular(8),
-        rowHeight: 50,
-        columnHeight: 50,
-        gridBorderColor: Colors.transparent,
+        activatedColor: Colors.transparent,
+        activatedBorderColor: Colors.transparent,
+        gridBorderRadius: BorderRadius.circular(6),
+        gridPopupBorderRadius: BorderRadius.circular(6),
+        gridBorderColor: SupportBotColors.blueSecondary.shade200,
         columnTextStyle: SupportBotTextstyle.columnHeading,
         cellTextStyle: SupportBotTextstyle.cellHeading,
         enableGridBorderShadow: true,
@@ -37,15 +35,11 @@ class PlutoTableWidget extends StatelessWidget {
       ),
     );
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SizedBox(
-        height: UIHelpers.screenHeight(context) * 0.4,
-        child: PlutoGrid(
-          columns: columns,
-          rows: rows,
-          configuration: configuration,
-        ),
+    return SizedBox(
+      child: PlutoGrid(
+        columns: columns,
+        rows: rows,
+        configuration: configuration,
       ),
     );
   }

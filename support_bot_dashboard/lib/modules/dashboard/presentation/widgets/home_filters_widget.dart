@@ -28,7 +28,7 @@ class HomeFiltersWidget extends StatefulWidget {
 class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
-  List<String> selectedItems = [];
+  List<String> selectedItems = ['Expert Care Level 1'];
   List<String> pipelineIds = [];
 
   @override
@@ -66,6 +66,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
               _buildPipelineDropdown(items),
               _buildDateRangeSelector(),
               _buildApplyFilterButton(),
+              // _buildClearFilterButton()
             ],
           ),
         ),
@@ -79,7 +80,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: DropdownWithCheckbox(
-        hintText: "Pipeline type",
+        hintText: "Pipeline",
         items: items,
         selectedItems: selectedItems,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? [], items),
@@ -88,14 +89,26 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildDateRangeSelector() {
+    if (selectedDatesNotifier.value == null) {
+      final endDate = DateTime.now();
+      final startDate = endDate.subtract(const Duration(days: 7));
+      selectedDatesNotifier.value = [startDate, endDate];
+    }
+
     return Center(
       child: ValueListenableBuilder<List<DateTime>?>(
         valueListenable: selectedDatesNotifier,
         builder: (context, selectedDates, child) {
-          final startDate =
-              selectedDates?.isNotEmpty == true ? selectedDates![0] : null;
-          final endDate =
-              (selectedDates?.length ?? 0) > 1 ? selectedDates![1] : null;
+          final DateTime endDate;
+          final DateTime startDate;
+
+          if (selectedDates?.isNotEmpty == true) {
+            startDate = selectedDates![0];
+            endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
+          } else {
+            endDate = DateTime.now();
+            startDate = endDate.subtract(const Duration(days: 7));
+          }
 
           return OutlinedButton(
             style: OutlinedButton.styleFrom(
@@ -112,9 +125,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                     color: SupportBotColors.bluePrimary),
                 const SizedBox(width: 8),
                 Text(
-                  startDate != null && endDate != null
-                      ? '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}'
-                      : '${DateFormat('MMM dd').format(DateTime.now())} - ${DateFormat('MMM dd yyyy').format(DateTime.now())}',
+                  '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
                   style: SupportBotTextstyle.normal.copyWith(
                     fontSize: 14,
                     color: SupportBotColors.bluePrimary,
@@ -131,16 +142,39 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   Widget _buildApplyFilterButton() {
     return ElevatedButton.icon(
-      onPressed: _addEvents,
-      icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-      label: const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+      onPressed: pipelineIds.isEmpty ? null : _addEvents,
+      icon: Icon(
+        Icons.filter_alt_outlined,
+        color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+      ),
+      label: Text(
+        'Apply Filter',
+        style: TextStyle(
+          color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+        ),
+      ),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-        backgroundColor: SupportBotColors.bluePrimary,
+        backgroundColor: pipelineIds.isEmpty
+            ? SupportBotColors.bluePrimary.withOpacity(0.5)
+            : SupportBotColors.bluePrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
   }
+
+  // Widget _buildClearFilterButton() {
+  //   return ElevatedButton.icon(
+  //     onPressed: _addEvents,
+  //     icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+  //     label: const Text('Clear Filter', style: TextStyle(color: Colors.white)),
+  //     style: ElevatedButton.styleFrom(
+  //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+  //       backgroundColor: SupportBotColors.bluePrimary,
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+  //     ),
+  //   );
+  // }
 
   Widget _buildLoadingState() {
     return const Row(
@@ -163,6 +197,9 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Future<void> _pickDateRange() async {
+    final DateTime endDate = DateTime.now();
+    final DateTime startDate = endDate.subtract(const Duration(days: 7));
+
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle:
@@ -179,9 +216,9 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     final pickedDates = await showCalendarDatePicker2Dialog(
       context: context,
       config: config,
-      dialogSize: const Size(325, 370),
+      dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
-      value: selectedDatesNotifier.value?.cast<DateTime?>() ?? [],
+      value: [startDate, endDate],
       dialogBackgroundColor: Colors.white,
     );
 
@@ -211,8 +248,59 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     });
   }
 
+  Future<void> showSnackbar(BuildContext context, String text) async {
+    final snackBar = SnackBar(
+      backgroundColor: SupportBotColors.blueSecondary.shade100,
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.notifications_active,
+                color: SupportBotColors.bluePrimary.shade400,
+              ),
+              UIHelpers.horizontalSpaceSmall,
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: SupportBotTextstyle.small,
+              ),
+            ],
+          ),
+          SnackBarAction(
+            label: 'X',
+            textColor: SupportBotColors.blueSecondary.shade500,
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
+        ],
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 300, vertical: 20),
+      duration: const Duration(seconds: 5),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   void _addEvents() {
-    final selectedPipelineValue = pipelineIds;
+    final selectedPipelineValue =
+        pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+
+    if (selectedPipelineValue.isEmpty) {
+      showSnackbar(
+        context,
+        'Please select a pipeline to apply filter',
+      );
+      return;
+    }
+
     if (selectedItems.isNotEmpty) {
       BlocProvider.of<ValidationStatusBloc>(context).add(
           ValidationStatuseCallEvent(
@@ -250,7 +338,19 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
               ),
               onDeleted: () {
                 setState(() {
-                  selectedItems.remove(item);
+                  int index = selectedItems.indexOf(item);
+
+                  if (index >= 0) {
+                    if (index < pipelineIds.length) {
+                      pipelineIds.removeAt(index);
+                    }
+                    selectedItems.removeAt(index);
+                  }
+                  if (selectedItems.isEmpty) {
+                    showSnackbar(
+                        context, 'Please select a pipeline to apply filter');
+                    pipelineIds.clear();
+                  }
                 });
               },
             )),

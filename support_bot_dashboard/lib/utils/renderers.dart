@@ -6,6 +6,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/utils/applications_pluto_helper_methods.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -15,9 +16,7 @@ class Renderers {
   static TextStyle frozenStyle(
       PlutoColumnRendererContext rendererContext, TextStyle textStyle) {
     if (rendererContext.cell.column.frozen == PlutoColumnFrozen.start ||
-        rendererContext.cell.column.frozen == PlutoColumnFrozen.end) {
-      // return textStyle.copyWith(fontWeight: FontWeight.w700);
-    }
+        rendererContext.cell.column.frozen == PlutoColumnFrozen.end) {}
     return textStyle;
   }
 
@@ -35,6 +34,7 @@ class Renderers {
       text,
       textAlign: TextAlign.start,
       style: textStyle,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -130,6 +130,7 @@ class Renderers {
               PopupMenuItem<String>(
                 value: "edit",
                 onTap: () {
+                  showTicketDetailsDialog(context);
                   // String? jobUId = actionData['jobUId'];
 
                   // context.go("/edit-jobPost/$jobUId");
@@ -166,15 +167,10 @@ class Renderers {
         child: SizedBox(
           width: 20,
           child: SingleChildScrollView(
-            child: Tooltip(
-              height: 2,
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+            child: CustomToolTip(
+              width: 300,
+              isMobile: false,
               message: cellValue.toString(),
-              verticalOffset: 2,
-              preferBelow: false,
               child: Container(
                 width: 2,
                 height: 50,
@@ -195,7 +191,7 @@ class Renderers {
       ),
     );
   }
-  
+
   static Widget validationDropDown(
     PlutoColumnRendererContext rendererContext, {
     TextStyle? textStyle,
@@ -235,6 +231,159 @@ class Renderers {
           ),
         ),
       ),
+    );
+  }
+
+  static void showTicketDetailsDialog(BuildContext context) {
+    TextEditingController aiQueryController =
+        TextEditingController(text: "Answer not generated");
+    bool isEditing = false;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 500),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Ticket Details",
+                        style: SupportBotTextstyle.columnHeading
+                            .copyWith(fontSize: 20),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Divider(),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Ticket ID: ",
+                      style: SupportBotTextstyle.columnHeading,
+                    ),
+                    UIHelpers.verticalSpaceTiny,
+                    const Text("19069419266",
+                        style: SupportBotTextstyle.cellHeading),
+                    UIHelpers.verticalSpaceRegular,
+                    Text(
+                      "Ticket Description: ",
+                      style: SupportBotTextstyle.columnHeading,
+                    ),
+                    UIHelpers.verticalSpaceTiny,
+                    const Text(
+                      "Date: Tuesday, January 14, 2025 at 07:29:19 PM",
+                      style: SupportBotTextstyle.cellHeading,
+                    ),
+                    UIHelpers.verticalSpaceMedium,
+                    Text(
+                      "Answer Status: ",
+                      style: SupportBotTextstyle.columnHeading,
+                    ),
+                    UIHelpers.verticalSpaceTiny,
+                    const Text(
+                      "Not Answered",
+                      style: SupportBotTextstyle.cellHeading,
+                    ),
+                    UIHelpers.verticalSpaceRegular,
+                    Text(
+                      "AI query answer: ",
+                      style: SupportBotTextstyle.columnHeading,
+                    ),
+                    TextField(
+                      controller: aiQueryController,
+                      enabled: isEditing,
+                      style: isEditing
+                          ? SupportBotTextstyle.cellHeading.copyWith(
+                              color: SupportBotColors.black,
+                              fontWeight: FontWeight.w500,
+                            )
+                          : SupportBotTextstyle.cellHeading.copyWith(
+                              color: SupportBotColors.black,
+                            ),
+                      decoration: const InputDecoration(
+                          hintStyle: SupportBotTextstyle.cellHeading,
+                          disabledBorder: InputBorder.none,
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6))),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6))),
+                          labelStyle: SupportBotTextstyle.cellHeading),
+                    ),
+                    Text(
+                      "AI Answer Validation Status: ",
+                      style: SupportBotTextstyle.columnHeading,
+                    ),
+                    const Text(
+                      "Not Validated",
+                      style: SupportBotTextstyle.cellHeading,
+                    ),
+                    UIHelpers.verticalSpaceRegular,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 40,
+                      children: [
+                        ElevatedButton.icon(
+                          icon: const Icon(SupportBotIcons.closeCircle),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    color: SupportBotColors.bluePrimary),
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                          label: const Text(
+                            "Cancel",
+                            style:
+                                TextStyle(color: SupportBotColors.bluePrimary),
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          icon: const Icon(
+                            SupportBotIcons.edit,
+                            color: SupportBotColors.white,
+                          ),
+                          onPressed: () {
+                            if (isEditing) {}
+                            setState(() {
+                              isEditing = !isEditing;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 15),
+                            backgroundColor: SupportBotColors.bluePrimary,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                          label: Text(
+                            isEditing ? "Save" : "Edit",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
