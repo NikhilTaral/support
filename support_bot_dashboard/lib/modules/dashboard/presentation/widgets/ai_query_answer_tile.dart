@@ -26,7 +26,7 @@ class AiQueryAnswerTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'AI Query Answer',
+            'AI Tickets Answer',
             style: SupportBotTextstyle.normal.copyWith(
               fontWeight: FontWeight.w600,
               color: SupportBotColors.black,
@@ -61,9 +61,9 @@ class AiQueryAnswerTile extends StatelessWidget {
   Widget _content(AIQueryAnswerSucssesState state) {
     return _buildInfoCard(
       editedText:
-          'Query Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.answered}%',
+          'Tickets Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.answered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.answered}%)',
       nonEditedText:
-          'Query Non Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.notAnswered}%',
+          'Tickets Not Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.notAnswered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.notAnswered}%)',
     );
   }
 
@@ -73,9 +73,11 @@ class AiQueryAnswerTile extends StatelessWidget {
   }) {
     return Row(
       children: [
-        _buildStatisticCard(icon: Icons.add, text: editedText),
+        _buildStatisticCard(
+            icon: Icons.check, text: editedText, isRotated: false),
         UIHelpers.horizontalSpaceRegular,
-        _buildStatisticCard(icon: Icons.check, text: nonEditedText),
+        _buildStatisticCard(
+            icon: Icons.add, text: nonEditedText, isRotated: true),
       ],
     );
   }
@@ -83,6 +85,7 @@ class AiQueryAnswerTile extends StatelessWidget {
   Widget _buildStatisticCard({
     required IconData icon,
     required String text,
+    required bool isRotated,
   }) {
     return Expanded(
       child: Container(
@@ -96,7 +99,7 @@ class AiQueryAnswerTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildIcon(icon),
+              _buildIcon(icon, isRotated),
               UIHelpers.verticalSpaceSmall,
               Text(
                 text,
@@ -112,7 +115,7 @@ class AiQueryAnswerTile extends StatelessWidget {
     );
   }
 
-  Widget _buildIcon(IconData icon) {
+  Widget _buildIcon(IconData icon, bool isRotated) {
     return Container(
       height: 30,
       width: 30,
@@ -120,14 +123,20 @@ class AiQueryAnswerTile extends StatelessWidget {
         color: SupportBotColors.bluePrimary.shade400,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Transform.rotate(
-        angle: 45 * math.pi / 180,
-        child: Icon(
-          icon,
-          color: SupportBotColors.white,
-          size: 18,
-        ),
-      ),
+      child: isRotated
+          ? Transform.rotate(
+              angle: 45 * math.pi / 180,
+              child: Icon(
+                icon,
+                color: SupportBotColors.white,
+                size: 18,
+              ),
+            )
+          : Icon(
+              icon,
+              color: SupportBotColors.white,
+              size: 18,
+            ),
     );
   }
 

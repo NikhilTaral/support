@@ -13,9 +13,9 @@
   "@aiQueryAnswer": {
     "description": "AI Query Answer"
   },
-  "spam": "Spam",
+  "spam": "Spam/Marketing",
   "@spam": {
-    "description": "Spam"
+    "description": "Spam/Marketing"
   },
   "noActionRequired": "No Action Required",
   "@noActionRequired": {
@@ -181,9 +181,9 @@
   "@aIClassification": {
     "description": "AI Classification"
   },
-  "ackRequired": "Ack Required",
+  "ackRequired": "Acknowledge Required",
   "@ackRequired": {
-    "description": "Ack Required"
+    "description": "Acknowledge Required"
   },
  "aPIErrorMsg":"Error fetching data from server",
   "@aPIErrorMsg": {

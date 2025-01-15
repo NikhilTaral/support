@@ -65,11 +65,11 @@ class FlCircularChart extends StatelessWidget {
   Color _getColorForLabel(String label) {
     switch (label) {
       case 'Genuine Query':
-        return SupportBotColors.bluePrimary.shade400;
+        return  const Color(0xFFB6C5DF);
       case 'No Action Required':
         return const Color(0xFF8099C7);
       case 'Spam/Marketing':
-        return const Color(0xFFB6C5DF);
+        return SupportBotColors.bluePrimary.shade400;
       case 'Acknowledge required':
         return const Color(0xFFDBE2EF);
       default:
