@@ -59,9 +59,9 @@ class TicketClassificationWidget extends StatelessWidget {
                             _buildClassificationRow(
                               context,
                               color: SupportBotColors.bluePrimary.shade400,
-                              title: "Genuine Query",
+                              title: "Spam/Marketing",
                               percentage:
-                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.genuineQuery}%",
+                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.spamMarketing}%",
                             ),
                             _buildClassificationRow(
                               context,
@@ -72,10 +72,10 @@ class TicketClassificationWidget extends StatelessWidget {
                             ),
                             _buildClassificationRow(
                               context,
-                              color: const Color(0xFFB6C5DF),
-                              title: "Spam/Marketing",
+                               color: const Color(0xFFB6C5DF),
+                              title: "Genuine Query",
                               percentage:
-                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.spamMarketing}%",
+                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.genuineQuery}%",
                             ),
                             _buildClassificationRow(
                               context,

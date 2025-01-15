@@ -127,9 +127,9 @@
   "@aIClassification": {
     "description": "AI Classification"
   },
-  "ackRequired": "Ack Required",
+  "ackRequired": "Acknowledge Required",
   "@ackRequired": {
-    "description": "Ack Required"
+    "description": "Acknowledge Required"
   },
   "link": "Link",
   "@link": {

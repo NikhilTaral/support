@@ -86,7 +86,10 @@ class Charts extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
-      children: [AiQueryAnswerTile(), AiQueryEditedTile()],
+      children: [
+        AiQueryAnswerTile(),
+        AiQueryEditedTile(),
+      ],
     );
   }
 }

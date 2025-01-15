@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -89,11 +90,24 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
 
   Widget _buildTabItem(int index, int selectedIndex) {
     final item = organizationItems[index];
+    final isSelected = index == selectedIndex;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          if (item.svgPath != null)
+            SvgPicture.asset(
+              item.svgPath!,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                isSelected
+                    ? SupportBotColors.bluePrimary.shade100
+                    : SupportBotColors.black,
+                BlendMode.srcIn,
+              ),
+            ),
           if (item.icon != null) Icon(item.icon),
           if (item.title != null)
             Text(

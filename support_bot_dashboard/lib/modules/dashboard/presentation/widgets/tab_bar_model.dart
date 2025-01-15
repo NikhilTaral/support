@@ -14,6 +14,7 @@ class TabBarWidget {
   final String? title;
   final Widget view;
   final IconData? icon;
+  final String? svgPath;
 
   final TypeBarType type;
 
@@ -22,6 +23,7 @@ class TabBarWidget {
     required this.view,
     required this.type,
     this.icon,
+    this.svgPath,
   });
 
   static List<TabBarWidget> organizationItemList(BuildContext context) {
@@ -29,7 +31,7 @@ class TabBarWidget {
 
     tabBarList.add(
       const TabBarWidget(
-        icon: SupportBotIcons.home,
+        svgPath: 'assets/icons/House.svg',
         view: SizedBox(
           width: double.infinity,
           child: HomePageWidget(),
@@ -51,7 +53,7 @@ class TabBarWidget {
 
     tabBarList.add(
       const TabBarWidget(
-        title: "AI Query Edited",
+        title: "AI Query Answer",
         view: SizedBox(
           width: double.infinity,
           child: AiQueryAnswerWidget(),
