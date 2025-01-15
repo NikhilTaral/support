@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/pages/ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_page_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pluto_gride_widget.dart';
@@ -56,7 +57,7 @@ class TabBarWidget {
         title: "AI Query Answer",
         view: SizedBox(
           width: double.infinity,
-          child: AiQueryAnswerWidget(),
+          child: AIQueryEditedScreen(),
         ),
         type: TypeBarType.aIQueryAnswer,
       ),
