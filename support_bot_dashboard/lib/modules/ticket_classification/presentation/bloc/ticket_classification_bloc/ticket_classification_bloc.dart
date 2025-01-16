@@ -38,6 +38,8 @@ class TicketClassificationTabBloc
       final req = TicketClassificationRequestModel(
         startDate: (datesList.firstOrNull ?? DateTime.parse("2024-10-23")),
         endDate: (datesList.lastOrNull ?? DateTime.now()),
+        page: event.page,
+        pageSize: event.pageSize,
         filter: [
           Filter(
               fieldName: "BOPS_States",

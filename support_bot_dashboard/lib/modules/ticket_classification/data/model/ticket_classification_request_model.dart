@@ -4,22 +4,29 @@ class TicketClassificationRequestModel {
   DateTime startDate;
   DateTime endDate;
   List<Filter> filter;
+  final num? page;
+  final num? pageSize;
 
-  TicketClassificationRequestModel({
-    required this.startDate,
-    required this.endDate,
-    required this.filter,
-  });
+  TicketClassificationRequestModel(
+      {required this.startDate,
+      required this.endDate,
+      required this.filter,
+      this.page,
+      this.pageSize});
 
   TicketClassificationRequestModel copyWith({
     DateTime? startDate,
     DateTime? endDate,
     List<Filter>? filter,
+    final num? page,
+    final num? pageSize,
   }) =>
       TicketClassificationRequestModel(
         startDate: startDate ?? this.startDate,
         endDate: endDate ?? this.endDate,
         filter: filter ?? this.filter,
+        page: page ?? this.page,
+        pageSize: page ?? this.pageSize
       );
 
   factory TicketClassificationRequestModel.fromRawJson(String str) =>
@@ -30,16 +37,19 @@ class TicketClassificationRequestModel {
   factory TicketClassificationRequestModel.fromJson(
           Map<String, dynamic> json) =>
       TicketClassificationRequestModel(
-        startDate: DateTime.parse(json["startDate"]),
-        endDate: DateTime.parse(json["endDate"]),
-        filter:
-            List<Filter>.from(json["filter"].map((x) => Filter.fromJson(x))),
-      );
+          startDate: DateTime.parse(json["startDate"]),
+          endDate: DateTime.parse(json["endDate"]),
+          filter:
+              List<Filter>.from(json["filter"].map((x) => Filter.fromJson(x))),
+          page: json['page'],
+          pageSize: json['pageSize']);
 
   Map<String, dynamic> toJson() => {
         "startDate": startDate.toIso8601String(),
         "endDate": endDate.toIso8601String(),
-        "filter": List<dynamic>.from(filter.map((x) => x.toJson()))
+        "filter": List<dynamic>.from(filter.map((x) => x.toJson())),
+        'page': page,
+        'pageSize': pageSize
       };
 }
 

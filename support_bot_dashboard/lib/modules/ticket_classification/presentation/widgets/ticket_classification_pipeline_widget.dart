@@ -6,8 +6,6 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeli
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_clssification_pipeline_dropdown_bloc/ticket_clssification_pipeline_dropdown_bloc.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
-import 'dart:ui';
-
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class TicketClassificationPipelineWidget extends StatelessWidget {
@@ -29,8 +27,7 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         final dropdownBloc = TicketClssificationPipelineDropdownBloc()
-          ..add(
-              TicketClssificationLoadPipelineTypesEvent(items, [selectedItem]));
+          ..add(TicketClssificationLoadPipelineTypesEvent(items, [selectedItem]));
 
         showDialog(
           context: context,
@@ -39,14 +36,14 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
               value: dropdownBloc,
               child: Dialog(
                 backgroundColor: SupportBotColors.white,
-                shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  side: const BorderSide(color: Colors.transparent, width: 1.0),
                 ),
                 child: BlocBuilder<TicketClssificationPipelineDropdownBloc,
                     TicketClssificationPipelineDropdownState>(
                   builder: (context, state) {
-                    if (state
-                        is TicketClssificationDropdownPipelineTypesLoadedState) {
+                    if (state is TicketClssificationDropdownPipelineTypesLoadedState) {
                       return SizedBox(
                         height: 500,
                         width: 400,
@@ -65,8 +62,7 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
                               child: TextFormField(
                                 decoration: InputDecoration(
                                   hintText: 'Search...',
@@ -77,28 +73,27 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                                 ),
                                 onChanged: (query) {
                                   context
-                                      .read<
-                                          TicketClssificationPipelineDropdownBloc>()
+                                      .read<TicketClssificationPipelineDropdownBloc>()
                                       .add(FiltersItemsEvent(query));
                                 },
                               ),
                             ),
+                            const Divider(),
                             Expanded(
-                              child: ListView.builder(
-                                itemCount: state.filteredItems.length,
-                                itemBuilder: (context, index) {
-                                  final item = state.filteredItems[index];
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: state.filteredItems.map((item) {
+                                  final isSelected = selectedItem == item.pipelineName;
+                                  
                                   return ListTile(
-                                    title: Text(item.pipelineName ??
-                                        'Unknown Pipeline'),
-                                    selected: item.pipelineName == selectedItem,
+                                    title: Text(item.pipelineName ?? "Unknown Pipeline"),
+                                    selected: isSelected,
                                     onTap: () {
-                                      onChanged(item.pipelineName ??
-                                          'Unknown Pipeline');
+                                      onChanged(item.pipelineName ?? "Unknown Pipeline");
                                       Navigator.of(context).pop();
                                     },
                                   );
-                                },
+                                }).toList(),
                               ),
                             ),
                           ],
@@ -133,9 +128,20 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
             borderSide: const BorderSide(color: SupportBotColors.bluePrimary),
           ),
         ),
-        child: Text(
-          selectedItem.isNotEmpty ? selectedItem : hintText,
-          style: const TextStyle(color: SupportBotColors.bluePrimary),
+        child: BlocBuilder<TicketClssificationPipelineDropdownBloc,
+            TicketClssificationPipelineDropdownState>(
+          bloc: TicketClssificationPipelineDropdownBloc()
+            ..add(TicketClssificationLoadPipelineTypesEvent(items, [selectedItem])),
+          builder: (context, state) {
+            String displayedItem = hintText;
+            if (selectedItem.isNotEmpty) {
+              displayedItem = selectedItem;
+            }
+            return Text(
+              displayedItem,
+              style: const TextStyle(color: SupportBotColors.bluePrimary),
+            );
+          },
         ),
       ),
     );

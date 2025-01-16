@@ -32,7 +32,12 @@ class Dashboard extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => TicketClassificationTabBloc()
-              ..add(TicketClassificationDataCallEvent()),
+              ..add(TicketClassificationDataCallEvent(
+                startDate: DateTime.now().subtract(const Duration(days: 7)),
+                endDate: DateTime.now(),
+                page: page,
+                pageSize: pageSize,
+              )),
           ),
           BlocProvider(
             create: (context) => TabIndexBloc(),

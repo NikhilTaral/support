@@ -27,21 +27,24 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   String selectedValue = '';
   String bopsState = '';
-  String selectedItems = '';
+  String selectedItem = '';
   String validation = '';
   List<String> pipelineIds = [];
   String selectedPipeline = "";
+
   @override
   void initState() {
     super.initState();
     _loadPipelineIds();
   }
-Future<void> _loadPipelineIds() async {
+
+  Future<void> _loadPipelineIds() async {
     final savedPipelineIds = await LocalStorage.getPipelineIds();
     setState(() {
       pipelineIds = savedPipelineIds;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -123,9 +126,9 @@ Future<void> _loadPipelineIds() async {
 
   Widget _buildPipelineDropdown(List<Datums> items) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 185),
+      constraints: const BoxConstraints(maxWidth: 420),
       child: TicketClassificationPipelineWidget(
-        hintText: "Pipeline type",
+        hintText: "Pipeline",
         items: items,
         selectedItem: selectedPipeline,
         onChanged: (selectedName) async {
@@ -140,7 +143,9 @@ Future<void> _loadPipelineIds() async {
       ),
     );
   }
-  void _onPipelineSelectionChanged(List<String> selectedNames, List<Datums> items) async {
+
+  void _onPipelineSelectionChanged(
+      List<String> selectedNames, List<Datums> items) async {
     pipelineIds = [];
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
@@ -165,14 +170,26 @@ Future<void> _loadPipelineIds() async {
   }
 
   Widget _buildDateRangeSelector() {
+    if (selectedDatesNotifier.value == null) {
+      final endDate = DateTime.now();
+      final startDate = endDate.subtract(const Duration(days: 7));
+      selectedDatesNotifier.value = [startDate, endDate];
+    }
+
     return Center(
       child: ValueListenableBuilder<List<DateTime>?>(
         valueListenable: selectedDatesNotifier,
         builder: (context, selectedDates, child) {
-          final startDate =
-              selectedDates?.isNotEmpty == true ? selectedDates![0] : null;
-          final endDate =
-              (selectedDates?.length ?? 0) > 1 ? selectedDates![1] : null;
+          final DateTime endDate;
+          final DateTime startDate;
+
+          if (selectedDates?.isNotEmpty == true) {
+            startDate = selectedDates![0];
+            endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
+          } else {
+            endDate = DateTime.now();
+            startDate = endDate.subtract(const Duration(days: 7));
+          }
 
           return OutlinedButton(
             style: OutlinedButton.styleFrom(
@@ -189,9 +206,7 @@ Future<void> _loadPipelineIds() async {
                     color: SupportBotColors.bluePrimary),
                 const SizedBox(width: 8),
                 Text(
-                  startDate != null && endDate != null
-                      ? '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}'
-                      : '${DateFormat('MMM dd').format(DateTime.now())} - ${DateFormat('MMM dd yyyy').format(DateTime.now())}',
+                  '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
                   style: SupportBotTextstyle.normal.copyWith(
                     fontSize: 14,
                     color: SupportBotColors.bluePrimary,
@@ -289,34 +304,51 @@ Future<void> _loadPipelineIds() async {
   }
 
   Widget _buildApplyFilterButton() {
-    return BlocProvider(
-      create: (context) => TicketClassificationTabBloc(),
-      child: ElevatedButton.icon(
-        onPressed: (selectedPipeline.isNotEmpty)
-            ? () {
-                BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                    TicketClassificationDataCallEvent(fieldValue: pipelineIds));
-              }
-            : null,
-        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-        label:
-            const Text('Apply Filter', style: TextStyle(color: Colors.white)),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-          backgroundColor: SupportBotColors.bluePrimary,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        ),
+    return ElevatedButton.icon(
+      onPressed: _addEvents,
+      icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+      label: const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+        backgroundColor: SupportBotColors.bluePrimary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
+  }
+
+  void _addEvents() {
+    final selectedItemValue = pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+    DateTime startDate;
+    DateTime endDate;
+
+    if (selectedItemValue.isEmpty) {
+      showSnackbar(
+        context,
+        'Please select a pipeline to apply filter',
+      );
+      return;
+    }
+
+    endDate = DateTime.now();
+    startDate = endDate.subtract(const Duration(days: 7));
+
+    if (selectedItem.isNotEmpty) {
+      BlocProvider.of<TicketClassificationTabBloc>(context)
+          .add(TicketClassificationDataCallEvent(
+        fieldValue: pipelineIds,
+        startDate: startDate,
+        endDate: endDate,
+        page: 1,
+        pageSize: 10,
+      ));
+    }
   }
 
   Widget _buildClearFilterButton() {
     return ElevatedButton.icon(
       onPressed: () async {
         setState(() {
-          selectedPipeline = '';
+          selectedItem = '';
           selectedValue = '';
           bopsState = '';
           validation = '';
@@ -342,6 +374,9 @@ Future<void> _loadPipelineIds() async {
   }
 
   Future<void> _pickDateRange() async {
+    final DateTime endDate = DateTime.now();
+    final DateTime startDate = endDate.subtract(const Duration(days: 7));
+
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle:
@@ -358,7 +393,7 @@ Future<void> _loadPipelineIds() async {
     final pickedDates = await showCalendarDatePicker2Dialog(
       context: context,
       config: config,
-      dialogSize: const Size(325, 370),
+      dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
       value: selectedDatesNotifier.value?.cast<DateTime?>() ?? [],
       dialogBackgroundColor: Colors.white,
@@ -369,10 +404,48 @@ Future<void> _loadPipelineIds() async {
       final startDate = pickedDates.isNotEmpty ? pickedDates[0] : null;
       final endDate = pickedDates.length > 1 ? pickedDates[1] : null;
 
-      if (startDate != null && endDate != null) {
-        await LocalStorage.saveSelectedDates(startDate, endDate);
-      }
+      await LocalStorage.saveSelectedDates(startDate, endDate);
     }
   }
 
+  Future<void> showSnackbar(BuildContext context, String text) async {
+    final snackBar = SnackBar(
+      backgroundColor: SupportBotColors.blueSecondary.shade100,
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.notifications_active,
+                color: SupportBotColors.bluePrimary.shade400,
+              ),
+              UIHelpers.horizontalSpaceSmall,
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: SupportBotTextstyle.small,
+              ),
+            ],
+          ),
+          SnackBarAction(
+            label: 'X',
+            textColor: SupportBotColors.blueSecondary.shade500,
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
+        ],
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 300, vertical: 20),
+      duration: const Duration(seconds: 5),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 }

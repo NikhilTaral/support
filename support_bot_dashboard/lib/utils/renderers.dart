@@ -306,7 +306,14 @@ class Renderers {
                                         create: (context) =>
                                             TicketClassificationTabBloc()
                                               ..add(
-                                                  TicketClassificationDataCallEvent()),
+                                                  TicketClassificationDataCallEvent(
+                                                startDate: DateTime.now()
+                                                    .subtract(const Duration(
+                                                        days: 7)),
+                                                endDate: DateTime.now(),
+                                                page: 1,
+                                                pageSize: 10,
+                                              )),
                                       );
                                       Navigator.of(context).pop();
                                     },
