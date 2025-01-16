@@ -9,11 +9,11 @@ String ticketClassificationResponseModelToJson(
     json.encode(data.toJson());
 
 class TicketClassificationResponseModel {
-  Data? data;
-  bool? success;
-  num? failCode;
-  Params? params;
-  String? message;
+  final Data? data;
+  final bool? success;
+  final int? failCode;
+  final Params? params;
+  final String? message;
 
   TicketClassificationResponseModel({
     this.data,
@@ -26,7 +26,7 @@ class TicketClassificationResponseModel {
   TicketClassificationResponseModel copyWith({
     Data? data,
     bool? success,
-    num? failCode,
+    int? failCode,
     Params? params,
     String? message,
   }) =>

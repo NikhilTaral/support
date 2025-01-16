@@ -28,6 +28,13 @@ import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_logi
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/usecases/v3_login_usecases.dart';
 import 'package:support_bot_dashboard/modules/login_v3/presentation/bloc/v3_login_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/repositories/common_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_pipelines_bloc/get_all_pipelines_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/utils/service/auth/auth_service.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/secure_storage.dart';
@@ -89,8 +96,27 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
       () => GetAllPipelinesUsecase());
 
-  // AI query
-  serviceLocator.registerLazySingleton<AiQueryUsecase>(() => AiQueryUsecase());
-  serviceLocator.registerLazySingleton<AiQueryDataRepository>(
-      () => AiQueryAnswerRepoImpl());
+  // Ticket Classification
+  serviceLocator.registerLazySingleton<ActionUsecase>(() => ActionUsecase());
+  serviceLocator
+      .registerLazySingleton<ActionRepository>(() => ActionRepoImpl());
+  serviceLocator.registerFactory<TicketClassificationActionBloc>(
+      () => TicketClassificationActionBloc());
+
+  serviceLocator.registerLazySingleton<TicketClassificationUsecses>(
+      () => TicketClassificationUsecses());
+  serviceLocator.registerLazySingleton<TicketClassifiacationRepository>(
+      () => TicketClassificationRepoImpl());
+  serviceLocator.registerFactory<TicketClassificationTabBloc>(
+      () => TicketClassificationTabBloc());
+
+  serviceLocator.registerLazySingleton<BopsUsecases>(() => BopsUsecases());
+  serviceLocator.registerLazySingleton<BopsRepository>(() => BopsRepoImpl());
+  serviceLocator.registerFactory<BopsStatesBloc>(() => BopsStatesBloc());
+
+  serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
+      () => GetAllPipelinesUsecase());
+  serviceLocator.registerLazySingleton<BopsRepository>(() => BopsRepoImpl());
+  serviceLocator
+      .registerFactory<GetAllPipelinesBloc>(() => GetAllPipelinesBloc());
 }

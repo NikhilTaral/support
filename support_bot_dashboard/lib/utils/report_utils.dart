@@ -78,7 +78,7 @@ class ReportUtils {
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Validation',
         field: 'validation',
-        type: PlutoColumnType.select(['Validated', 'Invalidated', 'Select']),
+        type: PlutoColumnType.text(),
         enableEditingMode: false,
         enableAutoEditing: false,
         enableColumnDrag: false,
@@ -86,21 +86,21 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
-
-        // renderer: Renderers.applicationTextStatusRenderer,
+        renderer: Renderers.validationDropDown,
       ),
       PlutoColumn(
-          backgroundColor: SupportBotColors.disablePrimary.shade100,
-          title: 'Status',
-          field: 'status',
-          type: PlutoColumnType.text(),
-          enableAutoEditing: false,
-          enableColumnDrag: false,
-          enableContextMenu: false,
-          enableFilterMenuItem: false,
-          enableSorting: false,
-          enableDropToResize: false,
-          renderer: Renderers.applicationTextStatusRenderer),
+        backgroundColor: SupportBotColors.disablePrimary.shade100,
+        title: 'Status',
+        field: 'status',
+        type: PlutoColumnType.text(),
+        enableAutoEditing: false,
+        enableColumnDrag: false,
+        enableContextMenu: false,
+        enableFilterMenuItem: false,
+        enableSorting: false,
+        enableDropToResize: false,
+        renderer: Renderers.textRenderer,
+      ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Action',
@@ -112,7 +112,8 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
-        renderer: (rendererContext) => Renderers.actionButtonRenderer(
+        renderer: (rendererContext) =>
+            Renderers.ticketClassificationActionRenderer(
           rendererContext,
           context: context,
         ),
@@ -137,13 +138,15 @@ class ReportUtils {
                     value: e.classification ?? "N/A",
                   ),
                   "validation": PlutoCell(
-                    value: e.classificationValidation ?? "N/A",
-                  ),
-                  "status": PlutoCell(
                     value: e.isUpdatedToHubspot ?? "N/A",
                   ),
+                  "status": PlutoCell(
+                    value: e.classificationValidation ?? "N/A",
+                  ),
                   "action": PlutoCell(
-                    value: {e.classificationValidatedBy ?? "N/A"},
+                    value: {
+                      "validatedBy": e.classificationValidatedBy,
+                    },
                   ),
                 }))
             .toList() ??
