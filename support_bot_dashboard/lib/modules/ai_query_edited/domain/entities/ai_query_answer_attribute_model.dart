@@ -35,7 +35,7 @@ class AiQueryAttributeItem {
   String? createdAt;
   String? ticketDescription;
   String? aiResponse;
-  bool? answeredStatus;
+  String? answeredStatus;
   bool? isAnswerEdited;
   bool? agentAnsValidation;
   String? answerValidationReason;
