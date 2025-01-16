@@ -1,12 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/utils/applications_pluto_helper_methods.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -109,16 +113,19 @@ class Renderers {
             ),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
-                value: "share",
+                value: "view",
+                onTap: () {
+                  showTicketDetailsDialog(context,
+                      rowData: rendererContext.row);
+                },
                 child: Row(
                   children: [
                     const Icon(
-                      SupportBotIcons.share,
-                      size: 14,
+                      Icons.visibility,
                     ),
                     UIHelpers.horizontalSpaceTiny,
                     Text(
-                      'Share',
+                      'View',
                       style: SupportBotTextstyle.small.copyWith(
                           color: SupportBotColors.gray.shade800,
                           // fontFamily: FontFamily.poppinsRegular,
@@ -128,31 +135,118 @@ class Renderers {
                 ),
               ),
               PopupMenuItem<String>(
-                value: "edit",
+                value: "validate",
                 onTap: () {
-                  showTicketDetailsDialog(context);
-                  // String? jobUId = actionData['jobUId'];
-
-                  // context.go("/edit-jobPost/$jobUId");
+                  showValidateAnswerDialog(context, rendererContext.row);
                 },
                 child: Row(
                   children: [
                     const Icon(
-                      SupportBotIcons.edit,
-                      size: 14,
+                      Icons.loop_rounded,
+                      //size: 14,
                     ),
                     UIHelpers.horizontalSpaceTiny,
-                    Text("Edit",
+                    Text("Validate",
                         style: SupportBotTextstyle.small.copyWith(
                             color: SupportBotColors.gray.shade800,
-                            // fontFamily: FontFamily.poppinsRegular,
                             fontWeight: FontWeight.w400)),
                   ],
                 ),
-              ),
+              )
             ],
           )),
     );
+  }
+
+  static void showValidateAnswerDialog(BuildContext context, PlutoRow rowData) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            title: const Text(
+              'Validate AI Answer',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              'Do you want to Validate AI Answer for this ticket?',
+              style: TextStyle(fontSize: 16),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: SupportBotColors.bluePrimary,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                      side:
+                          const BorderSide(color: SupportBotColors.bluePrimary),
+                      borderRadius: BorderRadius.circular(8.0)),
+                ),
+                child: const Text(
+                  'No',
+                  style: TextStyle(color: SupportBotColors.white),
+                ),
+              ),
+              BlocProvider(
+                create: (context) => AddAnswerValidationBloc(),
+                child: BlocConsumer<AddAnswerValidationBloc,
+                    AddAnswerValidationState>(
+                  listener: (context, state) {
+                    if (state is AddAnswerValidationSuccessState) {
+                      serviceLocator<InstanceSharingService>()
+                          .aiQueryBloc
+                          ?.add(AIQueryInitialEvent(
+                            classificationFilterValue:
+                                serviceLocator<InstanceSharingService>()
+                                    .classificationFilterValue,
+                            selectedPipelineValueList:
+                                serviceLocator<InstanceSharingService>()
+                                    .selectedPipelineValueList,
+                          ));
+                      Navigator.pop(context);
+                    }
+                  },
+                  builder: (context, state) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: SupportBotColors.bluePrimary,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: SupportBotColors.bluePrimary),
+                            borderRadius: BorderRadius.circular(8.0)),
+                      ),
+                      onPressed: () {
+                        BlocProvider.of<AddAnswerValidationBloc>(context).add(
+                            AddAnswerValidationInitialEvent(
+                                agentAnsValidation:
+                                    rowData.cells['validation_status']?.value ==
+                                        "Validated",
+                                ticketId: rowData.cells['id']?.value ?? "",
+                                pipeline:
+                                    serviceLocator<InstanceSharingService>()
+                                            .selectedPipelineValueList
+                                            ?.firstOrNull ??
+                                        "11257490"));
+                      },
+                      child: const Text(
+                        'Yes',
+                        style: TextStyle(color: SupportBotColors.white),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   static Widget tooltip(
@@ -234,9 +328,13 @@ class Renderers {
     );
   }
 
-  static void showTicketDetailsDialog(BuildContext context) {
-    TextEditingController aiQueryController =
-        TextEditingController(text: "Answer not generated");
+  static void showTicketDetailsDialog(
+    BuildContext context, {
+    required PlutoRow rowData,
+  }) {
+    TextEditingController aiQueryController = TextEditingController(
+        text:
+            rowData.cells['ai_query_answer']?.value ?? "Answer not generated");
     bool isEditing = false;
 
     showDialog(
@@ -251,133 +349,218 @@ class Renderers {
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 500),
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Ticket Details",
-                        style: SupportBotTextstyle.columnHeading
-                            .copyWith(fontSize: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Ticket Details",
+                          style: SupportBotTextstyle.columnHeading
+                              .copyWith(fontSize: 20),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Divider(),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Ticket ID: ",
-                      style: SupportBotTextstyle.columnHeading,
-                    ),
-                    UIHelpers.verticalSpaceTiny,
-                    const Text("19069419266",
-                        style: SupportBotTextstyle.cellHeading),
-                    UIHelpers.verticalSpaceRegular,
-                    Text(
-                      "Ticket Description: ",
-                      style: SupportBotTextstyle.columnHeading,
-                    ),
-                    UIHelpers.verticalSpaceTiny,
-                    const Text(
-                      "Date: Tuesday, January 14, 2025 at 07:29:19 PM",
-                      style: SupportBotTextstyle.cellHeading,
-                    ),
-                    UIHelpers.verticalSpaceMedium,
-                    Text(
-                      "Answer Status: ",
-                      style: SupportBotTextstyle.columnHeading,
-                    ),
-                    UIHelpers.verticalSpaceTiny,
-                    const Text(
-                      "Not Answered",
-                      style: SupportBotTextstyle.cellHeading,
-                    ),
-                    UIHelpers.verticalSpaceRegular,
-                    Text(
-                      "AI query answer: ",
-                      style: SupportBotTextstyle.columnHeading,
-                    ),
-                    TextField(
-                      controller: aiQueryController,
-                      enabled: isEditing,
-                      style: isEditing
-                          ? SupportBotTextstyle.cellHeading.copyWith(
-                              color: SupportBotColors.black,
-                              fontWeight: FontWeight.w500,
-                            )
-                          : SupportBotTextstyle.cellHeading.copyWith(
-                              color: SupportBotColors.black,
+                      UIHelpers.verticalSpaceSmall,
+                      const Divider(),
+                      UIHelpers.verticalSpaceSmall,
+                      Text(
+                        "Ticket ID: ",
+                        style: SupportBotTextstyle.columnHeading,
+                      ),
+                      UIHelpers.verticalSpaceTiny,
+                      Text(rowData.cells['id']?.value ?? '',
+                          style: SupportBotTextstyle.cellHeading),
+                      UIHelpers.verticalSpaceRegular,
+                      Text(
+                        "Ticket Description: ",
+                        style: SupportBotTextstyle.columnHeading,
+                      ),
+                      UIHelpers.verticalSpaceTiny,
+                      Text(
+                        rowData.cells['ticket_description']?.value ?? '',
+                        style: SupportBotTextstyle.cellHeading,
+                      ),
+                      UIHelpers.verticalSpaceMedium,
+                      Text(
+                        "Answer Status: ",
+                        style: SupportBotTextstyle.columnHeading,
+                      ),
+                      UIHelpers.verticalSpaceTiny,
+                      Text(
+                        rowData.cells['classification']?.value ?? '',
+                        style: SupportBotTextstyle.cellHeading,
+                      ),
+                      UIHelpers.verticalSpaceRegular,
+                      Text(
+                        "AI query answer: ",
+                        style: SupportBotTextstyle.columnHeading,
+                      ),
+                      TextField(
+                        controller: aiQueryController,
+                        enabled: isEditing,
+                        style: isEditing
+                            ? SupportBotTextstyle.cellHeading.copyWith(
+                                color: SupportBotColors.black,
+                                fontWeight: FontWeight.w500,
+                              )
+                            : SupportBotTextstyle.cellHeading.copyWith(
+                                color: SupportBotColors.black,
+                              ),
+                        decoration: const InputDecoration(
+                            hintStyle: SupportBotTextstyle.cellHeading,
+                            disabledBorder: InputBorder.none,
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6))),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6))),
+                            labelStyle: SupportBotTextstyle.cellHeading),
+                      ),
+                      Text(
+                        "AI Answer Validation Status: ",
+                        style: SupportBotTextstyle.columnHeading,
+                      ),
+                      Text(
+                        rowData.cells['validation_status']?.value ??
+                            "Not Validated",
+                        style: SupportBotTextstyle.cellHeading,
+                      ),
+                      UIHelpers.verticalSpaceRegular,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 40,
+                        children: [
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.cancel,
+                                color: SupportBotColors.bluePrimary),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      color: SupportBotColors.bluePrimary),
+                                  borderRadius: BorderRadius.circular(8.0)),
                             ),
-                      decoration: const InputDecoration(
-                          hintStyle: SupportBotTextstyle.cellHeading,
-                          disabledBorder: InputBorder.none,
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6))),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6))),
-                          labelStyle: SupportBotTextstyle.cellHeading),
-                    ),
-                    Text(
-                      "AI Answer Validation Status: ",
-                      style: SupportBotTextstyle.columnHeading,
-                    ),
-                    const Text(
-                      "Not Validated",
-                      style: SupportBotTextstyle.cellHeading,
-                    ),
-                    UIHelpers.verticalSpaceRegular,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 40,
-                      children: [
-                        ElevatedButton.icon(
-                          icon: const Icon(SupportBotIcons.closeCircle),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                    color: SupportBotColors.bluePrimary),
-                                borderRadius: BorderRadius.circular(8.0)),
+                            label: const Text(
+                              "Cancel",
+                              style: TextStyle(
+                                  color: SupportBotColors.bluePrimary),
+                            ),
                           ),
-                          label: const Text(
-                            "Cancel",
-                            style:
-                                TextStyle(color: SupportBotColors.bluePrimary),
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            SupportBotIcons.edit,
-                            color: SupportBotColors.white,
-                          ),
-                          onPressed: () {
-                            if (isEditing) {}
-                            setState(() {
-                              isEditing = !isEditing;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 15),
-                            backgroundColor: SupportBotColors.bluePrimary,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0)),
-                          ),
-                          label: Text(
-                            isEditing ? "Save" : "Edit",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          BlocProvider(
+                            create: (context) => UpdateAiAnswerBloc(),
+                            child: BlocConsumer<UpdateAiAnswerBloc,
+                                UpdateAiAnswerState>(
+                              listener: (context, state) {
+                                if (state is UpdateAiAnswerSuccessState) {
+                                  serviceLocator<InstanceSharingService>()
+                                      .aiQueryBloc
+                                      ?.add(AIQueryInitialEvent(
+                                        classificationFilterValue:
+                                            serviceLocator<
+                                                    InstanceSharingService>()
+                                                .classificationFilterValue,
+                                        selectedPipelineValueList:
+                                            serviceLocator<
+                                                    InstanceSharingService>()
+                                                .selectedPipelineValueList,
+                                      ));
+                                  Navigator.pop(context);
+                                }
+                              },
+                              builder: (context, state) {
+                                if (state is UpdateAiAnswerSuccessState) {
+                                  return ElevatedButton.icon(
+                                    icon: Icon(
+                                      isEditing ? Icons.save : Icons.edit,
+                                      color: SupportBotColors.white,
+                                    ),
+                                    onPressed: () {
+                                      if (isEditing) {
+                                        context.read<UpdateAiAnswerBloc>().add(
+                                              UpdateAiAnswerInitialEvent(
+                                                ticketId: rowData
+                                                        .cells['id']?.value ??
+                                                    '',
+                                                updatedAnswer:
+                                                    aiQueryController.text,
+                                                selectedPipelineValue:
+                                                    serviceLocator<
+                                                            InstanceSharingService>()
+                                                        .selectedPipelineValue,
+                                              ),
+                                            );
+                                      }
+                                      setState(() {
+                                        isEditing = !isEditing;
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 30, vertical: 15),
+                                      backgroundColor:
+                                          SupportBotColors.bluePrimary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                    ),
+                                    label: Text(
+                                      isEditing ? "Save" : "Edit",
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }
+
+                                return ElevatedButton.icon(
+                                  icon: Icon(
+                                    isEditing ? Icons.save : Icons.edit,
+                                    color: SupportBotColors.white,
+                                  ),
+                                  onPressed: () {
+                                    if (isEditing) {
+                                      BlocProvider.of<UpdateAiAnswerBloc>(
+                                              context)
+                                          .add(
+                                        UpdateAiAnswerInitialEvent(
+                                          ticketId:
+                                              rowData.cells['id']?.value ?? '',
+                                          updatedAnswer: aiQueryController.text,
+                                        ),
+                                      );
+                                    }
+                                    setState(() {
+                                      isEditing = !isEditing;
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 15),
+                                    backgroundColor:
+                                        SupportBotColors.bluePrimary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                  label: Text(
+                                    isEditing ? "Save" : "Edit",
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

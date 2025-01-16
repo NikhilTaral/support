@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/report_utils.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AIQueryEditedDesktopView extends StatelessWidget {
-  AIQueryEditedDesktopView({
-    super.key,
-  });
+  AIQueryEditedDesktopView({super.key});
 
   final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
   final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
@@ -24,6 +24,8 @@ class AIQueryEditedDesktopView extends StatelessWidget {
     return BlocBuilder<AiQueryBloc, AiQueryState>(
       builder: (context, state) {
         if (state is AIQuerySuccessState) {
+          serviceLocator<InstanceSharingService>().aiQueryBloc =
+              BlocProvider.of<AiQueryBloc>(context);
           final utils = ReportUtils(
               context: context,
               aiQueryAttributeModel: state.dashboardDataModel);
@@ -66,7 +68,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                                         AIQueryInitialEvent(
                                           startDate: state.startDate,
                                           endDate: state.endDate,
-                                          selectedPipelineValue:
+                                          selectedPipelineValueList:
                                               state.selectedPipelineValue,
                                           classificationFilterValue:
                                               state.classificationFilterValue,
@@ -104,7 +106,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                                         AIQueryInitialEvent(
                                           startDate: state.startDate,
                                           endDate: state.endDate,
-                                          selectedPipelineValue:
+                                          selectedPipelineValueList:
                                               state.selectedPipelineValue,
                                           classificationFilterValue:
                                               state.classificationFilterValue,
@@ -139,7 +141,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                                         AIQueryInitialEvent(
                                           startDate: state.startDate,
                                           endDate: state.endDate,
-                                          selectedPipelineValue:
+                                          selectedPipelineValueList:
                                               state.selectedPipelineValue,
                                           classificationFilterValue:
                                               state.classificationFilterValue,

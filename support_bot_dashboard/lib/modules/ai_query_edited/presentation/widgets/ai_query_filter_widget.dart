@@ -1,7 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/pipeline_type_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
@@ -281,7 +281,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
 
     if (selectedItem.isNotEmpty) {
       BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent(
-        selectedPipelineValue: selectedPipelineValue,
+        selectedPipelineValueList: selectedPipelineValue,
         classificationFilterValue: classificationNotifier.value,
         startDate: startDate,
         endDate: endDate,

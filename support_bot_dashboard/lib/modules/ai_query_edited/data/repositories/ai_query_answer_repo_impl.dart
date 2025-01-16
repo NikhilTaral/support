@@ -3,6 +3,8 @@ import 'package:support_bot_dashboard/core/error/failure.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/add_answer_validation_request_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/update_ai_answer_request_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/repositories/ai_query_answer_repo.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 
@@ -21,6 +23,38 @@ class AiQueryAnswerRepoImpl extends AiQueryDataRepository {
         return Left(ServerFailure(message: s.aPIErrorMsg));
       }
 
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure(message: s.aPIErrorMsg));
+    }
+  }
+
+  @override
+  Future<Either<Failure, dynamic>> updateAiAnswer(
+      UpdateAiAnswerRequestModel? updateAiAnswerRequestModel) async {
+    try {
+      final dynamic response = await serviceLocator<ApiProvider>().getData(
+          url: 'dashboard/updateAIAnswer',
+          body: updateAiAnswerRequestModel?.toJson());
+      if (response == null) {
+        return Left(ServerFailure(message: 'No response from server'));
+      }
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure(message: s.aPIErrorMsg));
+    }
+  }
+
+  @override
+  Future<Either<Failure, dynamic>> addAnswerValidation(
+      AddAnswerValidationRequestModel? addAnswerValidationRequestModel) async {
+    try {
+      final dynamic response = await serviceLocator<ApiProvider>().getData(
+          url: 'dashboard/addAnswerValidation',
+          body: addAnswerValidationRequestModel?.toJson());
+      if (response == null) {
+        return Left(ServerFailure(message: 'No response from server'));
+      }
       return Right(response);
     } catch (e) {
       return Left(ServerFailure(message: s.aPIErrorMsg));

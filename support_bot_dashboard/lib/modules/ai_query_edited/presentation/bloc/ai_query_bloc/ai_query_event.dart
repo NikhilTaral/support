@@ -3,17 +3,17 @@ part of 'ai_query_bloc.dart';
 abstract class AiQueryEvent {}
 
 class AIQueryInitialEvent extends AiQueryEvent {
-  final List<String>? selectedPipelineValue;
+  final List<String>? selectedPipelineValueList;
   final DateTime? startDate;
   final DateTime? endDate;
   final String? classificationFilterValue;
   final num? page;
   final num? pageSize;
   AIQueryInitialEvent(
-      {required this.startDate,
-      required this.endDate,
+      {this.startDate,
+      this.endDate,
       this.classificationFilterValue,
-      this.selectedPipelineValue,
+      this.selectedPipelineValueList,
       this.page,
       this.pageSize});
 }

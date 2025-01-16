@@ -6,38 +6,40 @@ import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/ai_quer
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/usecases/ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ai_query_event.dart';
 part 'ai_query_state.dart';
 
 class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
-  AiQueryEvent? lastEvent;
-
   AiQueryAttributeModel? aiQueryAttributeModel;
+  AiQueryEvent? lastEvent;
   AiQueryBloc() : super(AIQueryInitialState()) {
     on<AIQueryInitialEvent>(_aIQueryInitialEvent);
   }
 
   FutureOr<void> _aIQueryInitialEvent(
       AIQueryInitialEvent event, Emitter<AiQueryState> emit) async {
-    lastEvent = event;
     emit(AIQueryLoadingState());
     try {
       final repository = serviceLocator.get<AiQueryUsecase>();
       List<DateTime?> datesList = await getSelectedDates();
+
+      serviceLocator<InstanceSharingService>().selectedPipelineValueList =
+          event.selectedPipelineValueList;
+
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
-          if (event.startDate != null && event.endDate != null)
-            Filter(
-                fieldValue: event.selectedPipelineValue ?? ["11257490"],
-                fieldName: "StartDate"),
           Filter(
-              fieldValue: event.selectedPipelineValue ?? ["11257490"],
+              fieldValue: event.selectedPipelineValueList ?? ["11257490"],
               fieldName: "pipelines"),
-          Filter(
-              fieldValue: event.selectedPipelineValue ?? ["11257490"],
-              fieldName: event.classificationFilterValue ?? "answeredStatus")
+          if (event.classificationFilterValue?.isNotEmpty == true ||
+              event.classificationFilterValue != null)
+            Filter(fieldValue: [
+              (event.classificationFilterValue?.toLowerCase() == "answered")
+                  .toString()
+            ], fieldName: "answeredStatus"),
         ],
         page: event.page,
         pageSize: event.pageSize,
@@ -48,22 +50,28 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
             .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
             .toIso8601String(),
       );
+
       final response = await repository.invoke(req);
+
       if (response.isLeft) {
         emit(AIQueryFailureState());
       } else {
         final AiQueryResponseModel model =
             AiQueryResponseModel.fromJson(response.right);
+
         if (model.success == true && model.data != null) {
-          aiQueryAttributeModel = mapResponseToAttributeModel(model);
-        }
-        if (aiQueryAttributeModel?.data?.items?.isEmpty == true) {
-          emit(AIQueryEmptyState());
+          if (model.data?.items?.isEmpty == true) {
+            emit(AIQueryEmptyState());
+          } else {
+            aiQueryAttributeModel = mapResponseToAttributeModel(model);
+            emit(
+                AIQuerySuccessState(dashboardDataModel: aiQueryAttributeModel));
+          }
         } else {
-          emit(AIQuerySuccessState(dashboardDataModel: aiQueryAttributeModel));
+          emit(AIQueryEmptyState());
         }
       }
-    } catch (e) {
+    } catch (e, s) {
       emit(AIQueryFailureState());
     }
   }

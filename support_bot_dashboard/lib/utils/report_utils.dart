@@ -202,6 +202,22 @@ class ReportUtils {
       ),
       PlutoColumn(
           backgroundColor: SupportBotColors.disablePrimary.shade100,
+          title: 'Validation Status',
+          field: 'validation_status',
+          width: 297,
+          hide: true,
+          type: PlutoColumnType.text(),
+          titleTextAlign: PlutoColumnTextAlign.start,
+          enableEditingMode: false,
+          enableAutoEditing: false,
+          enableColumnDrag: false,
+          enableContextMenu: false,
+          enableFilterMenuItem: false,
+          enableSorting: false,
+          enableDropToResize: false,
+          renderer: Renderers.textRenderer),
+      PlutoColumn(
+          backgroundColor: SupportBotColors.disablePrimary.shade100,
           title: 'AI Query Answer',
           field: 'ai_query_answer',
           width: 297,
@@ -245,18 +261,25 @@ class ReportUtils {
       return [];
     }
 
-    return aiQueryAttributeModel.data!.items!.map((item) {
-      return PlutoRow(
-        cells: {
-          'id': PlutoCell(value: item.id ?? ''),
-          'ticket_description': PlutoCell(
-              value: item.ticketDescription?.replaceAll('\n', ' ') ?? ''),
-          'classification': PlutoCell(
-              value: item.answeredStatus == true ? 'Answered' : 'Not Answered'),
-          'ai_query_answer': PlutoCell(value: item.aiResponse ?? ''),
-          'action': PlutoCell(value: '...')
-        },
-      );
-    }).toList();
+    return aiQueryAttributeModel.data?.items?.map((item) {
+          return PlutoRow(
+            cells: {
+              'id': PlutoCell(value: item.id ?? ''),
+              'ticket_description': PlutoCell(
+                  value: item.ticketDescription?.replaceAll('\n', ' ') ?? ''),
+              'classification': PlutoCell(
+                  value: item.answeredStatus == "true"
+                      ? 'Answered'
+                      : 'Not Answered'),
+              'validation_status': PlutoCell(
+                  value: item.answeredStatus == true
+                      ? "Validated"
+                      : "Not Validated"),
+              'ai_query_answer': PlutoCell(value: item.aiResponse ?? ''),
+              'action': PlutoCell(value: '...')
+            },
+          );
+        }).toList() ??
+        [];
   }
 }

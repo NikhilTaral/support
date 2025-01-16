@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:support_bot_dashboard/header/nav_bar.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
@@ -66,6 +66,10 @@ class Dashboard extends StatelessWidget {
                 page: page,
                 pageSize: pageSize,
               )),
+            child: const AIQueryFilterWidget(),
+          ),
+          BlocProvider<UpdateAiAnswerBloc>(
+            create: (context) => UpdateAiAnswerBloc(),
             child: const AIQueryFilterWidget(),
           )
         ],
