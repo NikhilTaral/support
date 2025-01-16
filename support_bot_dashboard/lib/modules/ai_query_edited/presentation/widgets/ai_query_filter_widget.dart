@@ -58,15 +58,18 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
       children: [
         SizedBox(
           height: 40,
-          child: Row(
-            spacing: 15,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildPipelineDropdown(items),
-              _buildDateRangeSelector(),
-              _buildClassificationDropdown(),
-              _buildApplyFilterButton(),
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              spacing: 15,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _buildPipelineDropdown(items),
+                _buildDateRangeSelector(),
+                _buildClassificationDropdown(),
+                _buildApplyFilterButton(),
+              ],
+            ),
           ),
         ),
         UIHelpers.verticalSpaceTiny,

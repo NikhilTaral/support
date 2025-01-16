@@ -23,12 +23,10 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
       AIQueryInitialEvent event, Emitter<AiQueryState> emit) async {
     emit(AIQueryLoadingState());
     try {
-      final repository = serviceLocator.get<AiQueryUsecase>();
+      final repository = serviceLocator<AiQueryUsecase>();
       List<DateTime?> datesList = await getSelectedDates();
-
       serviceLocator<InstanceSharingService>().selectedPipelineValueList =
           event.selectedPipelineValueList;
-
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
           Filter(
@@ -50,15 +48,12 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
             .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
             .toIso8601String(),
       );
-
       final response = await repository.invoke(req);
-
       if (response.isLeft) {
         emit(AIQueryFailureState());
       } else {
         final AiQueryResponseModel model =
             AiQueryResponseModel.fromJson(response.right);
-
         if (model.success == true && model.data != null) {
           if (model.data?.items?.isEmpty == true) {
             emit(AIQueryEmptyState());

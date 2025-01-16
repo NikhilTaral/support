@@ -36,6 +36,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/utils/service/auth/auth_service.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/secure_storage.dart';
 
@@ -114,9 +115,17 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<BopsRepository>(() => BopsRepoImpl());
   serviceLocator.registerFactory<BopsStatesBloc>(() => BopsStatesBloc());
 
-  serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
-      () => GetAllPipelinesUsecase());
-  serviceLocator.registerLazySingleton<BopsRepository>(() => BopsRepoImpl());
   serviceLocator
       .registerFactory<GetAllPipelinesBloc>(() => GetAllPipelinesBloc());
+
+  serviceLocator.registerLazySingleton<UpdateAiAnswerUsecase>(
+      () => UpdateAiAnswerUsecase());
+  serviceLocator.registerLazySingleton<AiQueryDataRepository>(
+      () => AiQueryAnswerRepoImpl());
+  serviceLocator.registerLazySingleton<AiQueryUsecase>(() => AiQueryUsecase());
+  serviceLocator.registerLazySingleton<AddAnswerValidationUsecase>(
+      () => AddAnswerValidationUsecase());
+
+  serviceLocator.registerLazySingleton<InstanceSharingService>(
+      () => InstanceSharingService());
 }
