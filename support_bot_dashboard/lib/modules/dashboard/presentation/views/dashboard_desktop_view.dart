@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_filters_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
 
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
@@ -61,12 +63,20 @@ class DashboardDesktopView extends StatelessWidget {
               navigateTo: () {},
               text: "",
             ),
-            Padding(
-              padding: padding,
-              child: const HomeFiltersWidget(),
-            ),
+            if (selectedIndex == 0 || selectedIndex == 1) ...{
+              Padding(
+                padding: padding,
+                child: const HomeFiltersWidget(),
+              )
+            },
+            if (selectedIndex == 2) ...{
+              Padding(
+                padding: padding,
+                child: const AIQueryFilterWidget(),
+              ),
+            },
             MyOrganizationNavBar(index: selectedIndex),
-            const SizedBox(height: 10),
+            UIHelpers.verticalSpaceSmall,
             Expanded(
               child: ScrollbarTheme(
                 data: const ScrollbarThemeData(
@@ -88,6 +98,7 @@ class DashboardDesktopView extends StatelessWidget {
                 ),
               ),
             )
+          
           ],
         );
       },

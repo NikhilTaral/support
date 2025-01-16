@@ -142,12 +142,22 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   Widget _buildApplyFilterButton() {
     return ElevatedButton.icon(
-      onPressed: _addEvents,
-      icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-      label: const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+      onPressed: pipelineIds.isEmpty ? null : _addEvents,
+      icon: Icon(
+        Icons.filter_alt_outlined,
+        color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+      ),
+      label: Text(
+        'Apply Filter',
+        style: TextStyle(
+          color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+        ),
+      ),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-        backgroundColor: SupportBotColors.bluePrimary,
+        backgroundColor: pipelineIds.isEmpty
+            ? SupportBotColors.bluePrimary.withOpacity(0.5)
+            : SupportBotColors.bluePrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
@@ -273,21 +283,22 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         borderRadius: BorderRadius.circular(12),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 300, vertical: 20),
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 5),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _addEvents() {
-    final selectedPipelineValue = pipelineIds;
+    final selectedPipelineValue =
+        pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
 
     if (selectedPipelineValue.isEmpty) {
       showSnackbar(
         context,
-        'Please select a pipeline',
+        'Please select a pipeline to apply filter',
       );
-      return; // Prevent further execution
+      return;
     }
 
     if (selectedItems.isNotEmpty) {
@@ -328,11 +339,16 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
               onDeleted: () {
                 setState(() {
                   int index = selectedItems.indexOf(item);
-                  if (index >= 0 && index < pipelineIds.length) {
-                    pipelineIds.removeAt(index);
+
+                  if (index >= 0) {
+                    if (index < pipelineIds.length) {
+                      pipelineIds.removeAt(index);
+                    }
+                    selectedItems.removeAt(index);
                   }
-                  selectedItems.remove(item);
                   if (selectedItems.isEmpty) {
+                    showSnackbar(
+                        context, 'Please select a pipeline to apply filter');
                     pipelineIds.clear();
                   }
                 });

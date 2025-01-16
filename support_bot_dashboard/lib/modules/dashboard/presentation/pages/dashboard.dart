@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
@@ -18,6 +20,8 @@ class Dashboard extends StatelessWidget {
   String pipeline = '11257490';
   String selectedPipelineId = '11257490';
   bool isAIAnswer = true;
+  num page = 1;
+  num pageSize = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +58,16 @@ class Dashboard extends StatelessWidget {
             create: (context) =>
                 UserValidationBloc()..add(UserValidationsEvent()),
           ),
+          BlocProvider<AiQueryBloc>(
+            create: (context) => AiQueryBloc()
+              ..add(AIQueryInitialEvent(
+                startDate: DateTime.now().subtract(const Duration(days: 7)),
+                endDate: DateTime.now(),
+                page: page,
+                pageSize: pageSize,
+              )),
+            child: const AIQueryFilterWidget(),
+          )
         ],
         child: const Responsive(
           mobile: DashboardMobileView(),

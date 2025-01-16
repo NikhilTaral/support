@@ -3,9 +3,11 @@ class DashboardAnswerDataInitialRequestModel {
   final String? startDate;
   final String? endDate;
   final List<Filter>? filter;
+  final num? page;
+  final num? pageSize;
 
   DashboardAnswerDataInitialRequestModel(
-      {this.startDate, this.endDate, this.filter});
+      {this.startDate, this.endDate, this.filter, this.page, this.pageSize});
 
   // From JSON
   factory DashboardAnswerDataInitialRequestModel.fromJson(
@@ -14,6 +16,8 @@ class DashboardAnswerDataInitialRequestModel {
       startDate: json['startDate'],
       endDate: json['endDate'],
       filter: (json['filter'] as List).map((i) => Filter.fromJson(i)).toList(),
+      page: json['page'],
+      pageSize: json['pageSize'],
     );
   }
 
@@ -23,6 +27,8 @@ class DashboardAnswerDataInitialRequestModel {
       'startDate': startDate,
       'endDate': endDate,
       'filter': filter?.map((f) => f.toJson()).toList() ?? [],
+      'page': page,
+      'pageSize': pageSize
     };
   }
 }
