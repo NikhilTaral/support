@@ -8,9 +8,19 @@ class AIQueryLoadingState extends AiQueryState {}
 
 class AIQueryEmptyState extends AiQueryState {}
 
-class AIQuerySucssesState extends AiQueryState {
+class AIQuerySuccessState extends AiQueryState {
   final AiQueryAttributeModel? dashboardDataModel;
-  AIQuerySucssesState({this.dashboardDataModel});
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final List<String>? selectedPipelineValue;
+  final String? classificationFilterValue;
+  AIQuerySuccessState({
+    this.dashboardDataModel,
+    this.startDate,
+    this.endDate,
+    this.selectedPipelineValue,
+    this.classificationFilterValue,
+  });
 }
 
 class AIQueryFailureState extends AiQueryState {}

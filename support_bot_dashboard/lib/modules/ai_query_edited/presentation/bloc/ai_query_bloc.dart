@@ -12,6 +12,8 @@ part 'ai_query_event.dart';
 part 'ai_query_state.dart';
 
 class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
+  AiQueryEvent? lastEvent;
+
   AiQueryAttributeModel? aiQueryAttributeModel;
   AiQueryBloc() : super(AIQueryInitialState()) {
     on<AIQueryInitialEvent>(_aIQueryInitialEvent);
@@ -19,13 +21,14 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
 
   FutureOr<void> _aIQueryInitialEvent(
       AIQueryInitialEvent event, Emitter<AiQueryState> emit) async {
+    lastEvent = event;
     emit(AIQueryLoadingState());
     try {
       final repository = serviceLocator.get<AiQueryUsecase>();
       List<DateTime?> datesList = await getSelectedDates();
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
-          if (event.selectedDate != null)
+          if (event.startDate != null && event.endDate != null)
             Filter(
                 fieldValue: event.selectedPipelineValue ?? ["11257490"],
                 fieldName: "StartDate"),
@@ -36,6 +39,8 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
               fieldValue: event.selectedPipelineValue ?? ["11257490"],
               fieldName: event.classificationFilterValue ?? "answeredStatus")
         ],
+        page: event.page,
+        pageSize: event.pageSize,
         startDate: (datesList.firstOrNull ?? DateTime.now())
             .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
             .toIso8601String(),
@@ -55,7 +60,7 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
         if (aiQueryAttributeModel?.data?.items?.isEmpty == true) {
           emit(AIQueryEmptyState());
         } else {
-          emit(AIQuerySucssesState(dashboardDataModel: aiQueryAttributeModel));
+          emit(AIQuerySuccessState(dashboardDataModel: aiQueryAttributeModel));
         }
       }
     } catch (e) {

@@ -20,6 +20,8 @@ class Dashboard extends StatelessWidget {
   String pipeline = '11257490';
   String selectedPipelineId = '11257490';
   bool isAIAnswer = true;
+  num page = 1;
+  num pageSize = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,13 @@ class Dashboard extends StatelessWidget {
                 UserValidationBloc()..add(UserValidationsEvent()),
           ),
           BlocProvider<AiQueryBloc>(
-            create: (context) => AiQueryBloc()..add(AIQueryInitialEvent()),
+            create: (context) => AiQueryBloc()
+              ..add(AIQueryInitialEvent(
+                startDate: DateTime.now().subtract(const Duration(days: 7)),
+                endDate: DateTime.now(),
+                page: page,
+                pageSize: pageSize,
+              )),
             child: const AIQueryFilterWidget(),
           )
         ],

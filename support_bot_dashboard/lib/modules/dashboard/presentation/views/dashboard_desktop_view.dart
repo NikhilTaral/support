@@ -7,6 +7,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/hom
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
 
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
@@ -75,7 +76,7 @@ class DashboardDesktopView extends StatelessWidget {
               ),
             },
             MyOrganizationNavBar(index: selectedIndex),
-            const SizedBox(height: 10),
+            UIHelpers.verticalSpaceSmall,
             Expanded(
               child: ScrollbarTheme(
                 data: const ScrollbarThemeData(
@@ -97,6 +98,7 @@ class DashboardDesktopView extends StatelessWidget {
                 ),
               ),
             )
+          
           ],
         );
       },
