@@ -93,7 +93,8 @@ class DashboardDesktopView extends StatelessWidget {
                     children: [
                       ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxHeight: constraints.maxHeight,
+                          maxHeight:
+                              selectedIndex != 0 ? 550 : constraints.maxHeight,
                         ),
                         child: Padding(
                           padding: padding,

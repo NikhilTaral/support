@@ -7,6 +7,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -109,7 +110,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildDateRangeSelector(),
             UIHelpers.horizontalSpaceRegular,
-            _BopsState(),
+            _bopsState(),
             UIHelpers.horizontalSpaceRegular,
             _buildTicketClassificationDropdown(),
             UIHelpers.horizontalSpaceRegular,
@@ -117,7 +118,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildApplyFilterButton(),
             UIHelpers.horizontalSpaceRegular,
-            _buildClearFilterButton(),
+            _buildExportButton(),
+            //_buildClearFilterButton(),
           ],
         ),
       ),
@@ -157,16 +159,11 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       }
     }
 
-    // Save pipelineIds to local storage
     await LocalStorage.savePipelineIds(pipelineIds);
   }
 
   Future<void> _savePipelineToLocalStorage(String selectedName) async {
-    try {
-      await LocalStorage.savePipeline(selectedName);
-    } catch (e) {
-      debugPrint('Error saving to local storage: $e');
-    }
+    await LocalStorage.savePipeline(selectedName);
   }
 
   Widget _buildDateRangeSelector() {
@@ -202,8 +199,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.calendar_month_outlined,
-                    color: SupportBotColors.bluePrimary),
+                const Icon(
+                  Icons.calendar_month_outlined,
+                  color: SupportBotColors.bluePrimary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
@@ -212,6 +211,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     color: SupportBotColors.bluePrimary,
                     fontWeight: FontWeight.w500,
                   ),
+                  overflow: TextOverflow.clip,
                 ),
               ],
             ),
@@ -221,18 +221,11 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _BopsState() {
+  Widget _bopsState() {
     return SizedBox(
       width: 200,
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
-          if (state is BopsStatesIntialState) {
-            return const LoadingWidget(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              height: 40,
-              width: 130,
-            );
-          }
           if (state is BopsStatesSucssesState) {
             return CustomMonthDropdown(
               items: state.model?.data ?? [],
@@ -249,23 +242,24 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is BopsStatesFailureState) {
             return const SizedBox(child: Text("Data Not Available"));
           }
-          return const SizedBox(width: 200);
+          return CustomMonthDropdown(
+            items: [],
+            label: "BOps State",
+            onChanged: (value) {},
+            selectedValue: bopsState,
+          );
         },
       ),
     );
   }
 
   Future<void> _saveBopsStateLocalStorage(String? value) async {
-    try {
-      await LocalStorage.saveBopsState(value);
-    } catch (e) {
-      print('Error saving to local storage: $e');
-    }
+    await LocalStorage.saveBopsState(value);
   }
 
   Widget _buildTicketClassificationDropdown() {
     return SizedBox(
-      width: 230,
+      width: 250,
       child: CustomMonthDropdown(
         label: "Classification",
         selectedValue: selectedValue,
@@ -276,7 +270,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           await LocalStorage.saveClassification(value);
         },
         items: const [
-          "All",
           "Spam/Marketing",
           "No Action Required",
           "Genuine Query",
@@ -296,6 +289,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           setState(() {
             validation = value ?? "";
           });
+
           await LocalStorage.saveValidation(value);
         },
         items: const ["not validated", "correct", "incorrect"],
@@ -304,44 +298,33 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton() {
-    return ElevatedButton.icon(
-      onPressed: _addEvents,
-      icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-      label: const Text('Apply Filter', style: TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-        backgroundColor: SupportBotColors.bluePrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+    return BlocProvider(
+      create: (context) => TicketClassificationTabBloc(),
+      child: ElevatedButton.icon(
+        onPressed: (selectedPipeline.isNotEmpty)
+            ? () {
+                BlocProvider.of<TicketClassificationTabBloc>(context)
+                    .add(TicketClassificationDataCallEvent(
+                  fieldValue: pipelineIds,
+                  endDate: DateTime.now(),
+                  startDate: DateTime.now().subtract(const Duration(days: 7)),
+                  page: 1,
+                  pageSize: 10,
+                ));
+              }
+            : null,
+        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+        label:
+            const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        ),
       ),
     );
-  }
-
-  void _addEvents() {
-    final selectedItemValue = pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
-    DateTime startDate;
-    DateTime endDate;
-
-    if (selectedItemValue.isEmpty) {
-      showSnackbar(
-        context,
-        'Please select a pipeline to apply filter',
-      );
-      return;
-    }
-
-    endDate = DateTime.now();
-    startDate = endDate.subtract(const Duration(days: 7));
-
-    if (selectedItem.isNotEmpty) {
-      BlocProvider.of<TicketClassificationTabBloc>(context)
-          .add(TicketClassificationDataCallEvent(
-        fieldValue: pipelineIds,
-        startDate: startDate,
-        endDate: endDate,
-        page: 1,
-        pageSize: 10,
-      ));
-    }
   }
 
   Widget _buildClearFilterButton() {
@@ -447,5 +430,27 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Widget _buildExportButton() {
+    String getPipelineId() {
+      if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
+        return pipelineIds.first;
+      }
+      return '';
+    }
+
+    return Tooltip(
+      message: 'Export CSV File',
+      child: ExportButton(
+          icon: 'assets/icons/Export.svg',
+          selectedButtonText: "Ticket Classification",
+          startDate: selectedDatesNotifier.value?.first,
+          endDate: selectedDatesNotifier.value?.last,
+          bopsState: bopsState,
+          selectedClassification: selectedValue,
+          selectedClassificationValidation: validation,
+          selectedPipeline: getPipelineId()),
+    );
   }
 }

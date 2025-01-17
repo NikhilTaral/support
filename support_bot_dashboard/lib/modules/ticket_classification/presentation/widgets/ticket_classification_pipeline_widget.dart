@@ -27,7 +27,8 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         final dropdownBloc = TicketClssificationPipelineDropdownBloc()
-          ..add(TicketClssificationLoadPipelineTypesEvent(items, [selectedItem]));
+          ..add(
+              TicketClssificationLoadPipelineTypesEvent(items, [selectedItem]));
 
         showDialog(
           context: context,
@@ -43,7 +44,8 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                 child: BlocBuilder<TicketClssificationPipelineDropdownBloc,
                     TicketClssificationPipelineDropdownState>(
                   builder: (context, state) {
-                    if (state is TicketClssificationDropdownPipelineTypesLoadedState) {
+                    if (state
+                        is TicketClssificationDropdownPipelineTypesLoadedState) {
                       return SizedBox(
                         height: 500,
                         width: 400,
@@ -62,7 +64,8 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
                               child: TextFormField(
                                 decoration: InputDecoration(
                                   hintText: 'Search...',
@@ -73,7 +76,8 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                                 ),
                                 onChanged: (query) {
                                   context
-                                      .read<TicketClssificationPipelineDropdownBloc>()
+                                      .read<
+                                          TicketClssificationPipelineDropdownBloc>()
                                       .add(FiltersItemsEvent(query));
                                 },
                               ),
@@ -83,13 +87,16 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                               child: ListView(
                                 shrinkWrap: true,
                                 children: state.filteredItems.map((item) {
-                                  final isSelected = selectedItem == item.pipelineName;
-                                  
+                                  final isSelected =
+                                      selectedItem == item.pipelineName;
+
                                   return ListTile(
-                                    title: Text(item.pipelineName ?? "Unknown Pipeline"),
+                                    title: Text(item.pipelineName ??
+                                        "Unknown Pipeline"),
                                     selected: isSelected,
                                     onTap: () {
-                                      onChanged(item.pipelineName ?? "Unknown Pipeline");
+                                      onChanged(item.pipelineName ??
+                                          "Unknown Pipeline");
                                       Navigator.of(context).pop();
                                     },
                                   );
@@ -131,7 +138,8 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
         child: BlocBuilder<TicketClssificationPipelineDropdownBloc,
             TicketClssificationPipelineDropdownState>(
           bloc: TicketClssificationPipelineDropdownBloc()
-            ..add(TicketClssificationLoadPipelineTypesEvent(items, [selectedItem])),
+            ..add(TicketClssificationLoadPipelineTypesEvent(
+                items, [selectedItem])),
           builder: (context, state) {
             String displayedItem = hintText;
             if (selectedItem.isNotEmpty) {

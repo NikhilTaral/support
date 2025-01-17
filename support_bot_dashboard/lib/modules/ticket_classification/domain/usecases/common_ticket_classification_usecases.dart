@@ -1,5 +1,6 @@
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
+import 'package:support_bot_dashboard/core/use_case/use_case.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';
@@ -45,5 +46,12 @@ class GetValidationDetailsUsecase {
           getValidationDetailsRequestModel) async {
     return await serviceLocator<GetValidationDetailsRepository>()
         .getgetValidationDetails(getValidationDetailsRequestModel);
+  }
+}
+class RevertClassificationUsecase implements UseCaseOneInput<String, dynamic> {
+  @override
+  Future<Either<Failure, dynamic>> invoke(ticketId) async {
+    return await serviceLocator<RevertClassificationRepository>()
+        .revertClassification(ticketId: ticketId);
   }
 }

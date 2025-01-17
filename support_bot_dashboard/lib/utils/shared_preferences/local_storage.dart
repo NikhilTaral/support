@@ -85,23 +85,19 @@ class LocalStorage {
 
  
 
-  /// Save pipeline IDs to local storage
-  static Future<void> savePipelineIds(List<String> pipelineIds) async {
+ static Future<void> savePipelineIds(List<String> pipelineIds) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList(_pipelineIdsKeys, pipelineIds);
     } catch (e) {
-      print('Error saving pipelineIds to local storage: $e');
     }
   }
 
-  /// Get pipeline IDs from local storage
   static Future<List<String>> getPipelineIds() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getStringList(_pipelineIdsKeys) ?? [];
     } catch (e) {
-      print('Error retrieving pipelineIds from local storage: $e');
       return [];
     }
   }
@@ -112,8 +108,7 @@ class LocalStorage {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_pipelineIdsKeys);
     } catch (e) {
-      print('Error clearing pipelineIds from local storage: $e');
-    }
+      }
   }
 
 

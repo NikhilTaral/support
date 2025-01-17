@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/renderers.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
+import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class ReportUtils {
   ReportUtils(
@@ -20,7 +28,7 @@ class ReportUtils {
   BuildContext? context;
 
   List<PlutoColumn> createTicketClassificationColumn(
-      {required BuildContext context}) {
+      {required BuildContext context, required List<String> pipelineId}) {
     return [
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -86,7 +94,9 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
-        renderer: Renderers.validationDropDown,
+        renderer: (rendererContext) => Renderers.validationDropDown(
+            rendererContext,
+            piplineid: pipelineId),
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -99,7 +109,7 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
-        renderer: Renderers.textRenderer,
+        renderer: Renderers.statusRenderer,
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -138,14 +148,16 @@ class ReportUtils {
                     value: e.classification ?? "N/A",
                   ),
                   "validation": PlutoCell(
-                    value: e.isUpdatedToHubspot ?? "N/A",
+                    value: capitalizeFirstLetter(
+                        e.classificationValidation ?? "-"),
                   ),
                   "status": PlutoCell(
-                    value: e.classificationValidation ?? "N/A",
+                    value: e.isUpdatedToHubspot ?? "N/A",
                   ),
                   "action": PlutoCell(
                     value: {
                       "validatedBy": e.classificationValidatedBy,
+                      "isUpdatedToHubspot": e.isUpdatedToHubspot
                     },
                   ),
                 }))
@@ -153,24 +165,59 @@ class ReportUtils {
         [];
   }
 
+  String capitalizeFirstLetter(String input) {
+    if (input.isEmpty) {
+      return input;
+    }
+    return input[0].toUpperCase() + input.substring(1).toLowerCase();
+  }
+
   List<PlutoColumn> createAIQueryEditedColumn({required BuildContext context}) {
     return [
       PlutoColumn(
-        backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'ID',
-        field: "id",
-        width: 211,
-        type: PlutoColumnType.text(),
-        titleTextAlign: PlutoColumnTextAlign.start,
-        enableAutoEditing: false,
-        enableEditingMode: false,
-        enableColumnDrag: false,
-        enableContextMenu: false,
-        enableFilterMenuItem: false,
-        enableSorting: false,
-        enableDropToResize: false,
-        renderer: Renderers.textRenderer,
-      ),
+          backgroundColor: SupportBotColors.disablePrimary.shade100,
+          title: 'ID',
+          field: "id",
+          width: 211,
+          type: PlutoColumnType.text(),
+          titleTextAlign: PlutoColumnTextAlign.start,
+          enableAutoEditing: false,
+          enableEditingMode: false,
+          enableColumnDrag: false,
+          enableContextMenu: false,
+          enableFilterMenuItem: false,
+          enableSorting: false,
+          enableDropToResize: false,
+          renderer: (rendererContext) {
+            final value = rendererContext.cell.value;
+
+            if (value is Map<String, Object>) {
+              final id = value['id']?.toString() ?? 'N/A';
+              final isAnswerEdited =
+                  value['isAnswerEdited']?.toString() ?? 'N/A';
+
+              return Wrap(
+                spacing: 10,
+                children: [
+                  Text(id),
+                  if (isAnswerEdited == 'Edited')
+                    Container(
+                        constraints: const BoxConstraints(maxWidth: 70),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        decoration: BoxDecoration(
+                            color: SupportBotColors.bluePrimary.shade500,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                          child: Text(isAnswerEdited,
+                              style: const TextStyle(
+                                  color: SupportBotColors.white)),
+                        )),
+                ],
+              );
+            }
+            return Text(value?.toString() ?? 'N/A');
+          }),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Ticket Description',
@@ -180,6 +227,7 @@ class ReportUtils {
         renderer: Renderers.tooltip,
         titleTextAlign: PlutoColumnTextAlign.start,
         enableAutoEditing: false,
+        suppressedAutoSize: false,
         enableEditingMode: false,
         enableColumnDrag: false,
         enableContextMenu: false,
@@ -267,7 +315,11 @@ class ReportUtils {
     return aiQueryAttributeModel.data?.items?.map((item) {
           return PlutoRow(
             cells: {
-              'id': PlutoCell(value: item.id ?? ''),
+              'id': PlutoCell(value: {
+                'id': item.id ?? "N/A",
+                'isAnswerEdited':
+                    item.isAnswerEdited == true ? "Edited" : "Not Edited",
+              }),
               'ticket_description': PlutoCell(
                   value: item.ticketDescription?.replaceAll('\n', ' ') ?? ''),
               'classification': PlutoCell(

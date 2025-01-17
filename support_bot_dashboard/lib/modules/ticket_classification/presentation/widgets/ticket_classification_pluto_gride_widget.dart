@@ -10,10 +10,12 @@ class TicketClassificationPlutoGrideWidget extends StatefulWidget {
     super.key,
     required this.plutoKey,
     required this.ticketClassificationEntitieModel,
+    required this.piplineId,
   });
 
   final UniqueKey plutoKey;
   final TicketClassificationEntitieModel ticketClassificationEntitieModel;
+  final List<String> piplineId;
 
   @override
   State<TicketClassificationPlutoGrideWidget> createState() =>
@@ -71,7 +73,7 @@ class _TicketClassificationPlutoGrideWidgetState
       );
 
       _rows = reportUtils.createTicketClassificationRow();
-      _columns = reportUtils.createTicketClassificationColumn(context: context);
+      _columns = reportUtils.createTicketClassificationColumn(context: context, pipelineId: widget.piplineId);
     } catch (e, stackTrace) {
       _rows = [];
       _columns = [];

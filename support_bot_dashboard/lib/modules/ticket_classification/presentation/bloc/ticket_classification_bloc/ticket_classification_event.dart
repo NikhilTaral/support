@@ -19,3 +19,9 @@ class TicketClassificationDataCallEvent extends TicketClassificationEvent {
       this.page,
       this.pageSize});
 }
+
+class RevertClassificationEvent extends TicketClassificationEvent {
+  final String? ticketId;
+
+  RevertClassificationEvent({this.ticketId});
+}

@@ -19,6 +19,7 @@ abstract class ActionRepository {
       TicketClassificationActionRequestModel?
           ticketClassificationActionRequestModel);
 }
+
 abstract class UpdateClassificationValidationRepository {
   Future<Either<Failure, dynamic>> getUpdateClassificationValidat(
       UpdateClassificationValidationRequestModel?
@@ -27,6 +28,9 @@ abstract class UpdateClassificationValidationRepository {
 
 abstract class GetValidationDetailsRepository {
   Future<Either<Failure, dynamic>> getgetValidationDetails(
-      GetValidationDetailsRequestModel?
-          getValidationDetailsRequestModel);
+      GetValidationDetailsRequestModel? getValidationDetailsRequestModel);
+}
+
+abstract class RevertClassificationRepository {
+  Future<Either<Failure, dynamic>> revertClassification({String? ticketId});
 }

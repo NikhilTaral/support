@@ -4,6 +4,8 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/cus
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pluto_gride_widget.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
@@ -18,7 +20,6 @@ class TicketClassificationPlutoTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TicketClassificationTabBloc, TicketClassificationState>(
       builder: (context, state) {
-        debugPrint("********************* state ${state.runtimeType}");
         if (state is TicketClassificationLoadingState) {
           return Center(
               child: LoadingWidget(
@@ -34,6 +35,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                   plutoKey: UniqueKey(),
                   ticketClassificationEntitieModel:
                       state.model ?? TicketClassificationEntitieModel(),
+                  piplineId: state.pipelineId,
                 ),
               ),
               Padding(
@@ -148,14 +150,12 @@ class TicketClassificationPlutoTable extends StatelessWidget {
               ),
             ],
           );
+        } else if (state is TicketClassificationFailureState) {
+          return const FailureWidget();
+        } else if (state is TicketClassificationEmptyState) {
+          return Center(child: const EmptyWidget());
         }
-        if (state is TicketClassificationFailureState) {
-          return const Center(child: Text('Failed to load data.'));
-        }
-        if (state is TicketClassificationEmptyState) {
-          return const Center(child: Text('No data1 Found.'));
-        }
-        return const Center(child: Text('No data Found.'));
+        return const SizedBox.shrink();
       },
     );
   }

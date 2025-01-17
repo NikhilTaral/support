@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
@@ -16,8 +18,12 @@ class TicketClassificationTabBloc
   TicketClassificationEntitieModel ticketClassificationEntitieModel =
       TicketClassificationEntitieModel();
 
+  num page = 1;
+  num pageSize = 10;
+
   TicketClassificationTabBloc() : super(TicketClassificationIntialState()) {
     on<TicketClassificationDataCallEvent>(_onTicketClassification);
+    on<RevertClassificationEvent>(_onRevertClassificationEvent);
   }
 
   FutureOr<void> _onTicketClassification(
@@ -27,28 +33,31 @@ class TicketClassificationTabBloc
 
     try {
       final repository = serviceLocator<TicketClassificationUsecses>();
-
       List<DateTime?> datesList = await getSelectedDates();
-
       final bopsState = await LocalStorage.getBopsState();
       final classification = await LocalStorage.getClassification();
-      final validation = await LocalStorage.getValidation();
+      String? validation = await LocalStorage.getValidation();
       final piplineid = await LocalStorage.getPipeline();
-
+      if (validation?.replaceAll(" ", "").toLowerCase() == "notvalidated") {
+        validation = "";
+      }
+      page = event.page ?? 1;
+      pageSize = event.pageSize ?? 10;
       final req = TicketClassificationRequestModel(
         startDate: (datesList.firstOrNull ?? DateTime.parse("2024-10-23")),
         endDate: (datesList.lastOrNull ?? DateTime.now()),
         page: event.page,
         pageSize: event.pageSize,
         filter: [
-          Filter(
-              fieldName: "BOPS_States",
-              fieldValue: bopsState != null ? [bopsState] : []),
+          if (event.fieldValue?.isNotEmpty == true && event.fieldValue != null)
+            Filter(
+                fieldName: "BOPS_States",
+                fieldValue: bopsState != null ? [bopsState] : []),
           Filter(
               fieldName: "classifications",
               fieldValue: classification != null ? [classification] : []),
           Filter(
-              fieldName: "validations",
+              fieldName: "classificationValidations",
               fieldValue: validation != null ? [validation] : []),
           Filter(
               fieldValue: event.fieldValue ?? ["11257490"],
@@ -57,7 +66,7 @@ class TicketClassificationTabBloc
       );
 
       final response = await repository.invoke(req);
-      print("NIKHIL left ${response.isRight}");
+
       if (response.isLeft) {
         emit(TicketClassificationFailureState());
       } else {
@@ -74,18 +83,45 @@ class TicketClassificationTabBloc
             params: model.params,
             success: model.success,
           );
+
+          final pipelineId = await LocalStorage.getPipelineIds();
+
           emit(TicketClassificationSucssesState(
-              model: ticketClassificationEntitieModel));
+              model: ticketClassificationEntitieModel, pipelineId: pipelineId));
         }
       }
     } catch (e) {
-      print("NIKHIL $e");
       emit(TicketClassificationFailureState());
+    }
+  }
+
+  FutureOr<void> _onRevertClassificationEvent(RevertClassificationEvent event,
+      Emitter<TicketClassificationState> emit) async {
+    emit(RevertClassificationLoadingState(
+        model: ticketClassificationEntitieModel));
+    try {
+      final repository = serviceLocator<RevertClassificationUsecase>();
+
+      final req = event.ticketId ?? "";
+      final response = await repository.invoke(req);
+      if (response.isLeft) {
+        emit(RevertClassificationFailureState(
+            errorMsg: "Failed To revert classification",
+            model: ticketClassificationEntitieModel));
+      } else {
+        emit(RevertClassificationSucessState(
+            model: ticketClassificationEntitieModel));
+      }
+    } catch (e) {
+      emit(RevertClassificationFailureState(
+          errorMsg: "Failed To revert classification",
+          model: ticketClassificationEntitieModel));
     }
   }
 }
 
 Future<List<DateTime?>> getSelectedDates() async {
   final dates = await LocalStorage.getSelectedDates();
+
   return dates;
 }
