@@ -118,8 +118,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildApplyFilterButton(),
             UIHelpers.horizontalSpaceRegular,
-            _buildExportButton(),
             _buildClearFilterButton(),
+            UIHelpers.horizontalSpaceRegular,
+            _buildExportButton(),
           ],
         ),
       ),
@@ -287,12 +288,12 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         selectedValue: validation,
         onChanged: (value) async {
           setState(() {
-            validation = value ?? "";
+            validation = value?.toLowerCase() ?? "";
           });
 
-          await LocalStorage.saveValidation(value);
+          await LocalStorage.saveValidation(value?.toLowerCase());
         },
-        items: const ["not validated", "correct", "incorrect"],
+        items: const ["Not Validated", "Correct", "Incorrect"],
       ),
     );
   }
@@ -337,7 +338,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           validation = '';
           selectedDatesNotifier.value = null;
           pipelineIds.clear();
-          selectedPipeline = "";
         });
 
         await LocalStorage.clearPipeline();
@@ -345,6 +345,15 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         await LocalStorage.clearBopsState();
         await LocalStorage.clearValidation();
         await LocalStorage.clearSelectedDates();
+
+        BlocProvider.of<TicketClassificationTabBloc>(context)
+            .add(TicketClassificationDataCallEvent(
+          fieldValue: ['11257490'],
+          endDate: DateTime.now(),
+          startDate: DateTime.now().subtract(const Duration(days: 7)),
+          page: 1,
+          pageSize: 10,
+        ));
       },
       icon: const Icon(Icons.clear_all, color: Colors.white),
       label: const Text('Clear Filters', style: TextStyle(color: Colors.white)),

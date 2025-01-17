@@ -73,24 +73,18 @@ class LocalStorage {
   static const String _classificationKey = "classification";
   static const String _validationKey = "validation";
   static const String _selectedDatesKey = "selected_dates";
-   static const String _pipelineIdsKeys = 'pipelineIds';
+  static const String _pipelineIdsKeys = 'pipelineIds';
 
   static Future<void> savePipeline(String pipelineId) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(_pipelineKey, pipelineId);
   }
 
-  
-
-
- 
-
- static Future<void> savePipelineIds(List<String> pipelineIds) async {
+  static Future<void> savePipelineIds(List<String> pipelineIds) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList(_pipelineIdsKeys, pipelineIds);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   static Future<List<String>> getPipelineIds() async {
@@ -107,11 +101,8 @@ class LocalStorage {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_pipelineIdsKeys);
-    } catch (e) {
-      }
+    } catch (e) {}
   }
-
-
 
   static Future<void> saveBopsState(String? state) async {
     final prefs = await SharedPreferences.getInstance();
@@ -185,5 +176,13 @@ class LocalStorage {
   static Future<void> clearSelectedDates() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(_selectedDatesKey);
+  }
+
+  static Future<void> clearAllFilters() async {
+    await clearPipeline();
+    await clearBopsState();
+    await clearClassification();
+    await clearValidation();
+    await clearSelectedDates();
   }
 }
