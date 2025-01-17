@@ -22,22 +22,73 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "aIClassification":
+            MessageLookupByLibrary.simpleMessage("AI Classification"),
+        "aPIErrorMsg": MessageLookupByLibrary.simpleMessage(
+            "Error fetching data from server"),
+        "ackRequired": MessageLookupByLibrary.simpleMessage("Acknowledge Required"),
         "acknowledgementRequired":
             MessageLookupByLibrary.simpleMessage("Acknowledgement Required"),
+        "actions": MessageLookupByLibrary.simpleMessage("Actions"),
         "aiQueryAnswer":
             MessageLookupByLibrary.simpleMessage("AI Query Answer"),
+        "bopsState": MessageLookupByLibrary.simpleMessage("Bops State"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "changeClassifcation":
+            MessageLookupByLibrary.simpleMessage("Change Classification"),
         "classification":
             MessageLookupByLibrary.simpleMessage("Classification"),
+        "comments":
+            MessageLookupByLibrary.simpleMessage("Please enter your comments"),
         "day": MessageLookupByLibrary.simpleMessage("Day"),
+        "emailValidations":
+            MessageLookupByLibrary.simpleMessage("Email Validation Details"),
+        "export": MessageLookupByLibrary.simpleMessage("Export CSV File"),
         "genuineQuery": MessageLookupByLibrary.simpleMessage("Genuine Query"),
+        "id": MessageLookupByLibrary.simpleMessage("ID"),
+        "isAnswerEdited":
+            MessageLookupByLibrary.simpleMessage("isAnswerEdited"),
+        "link": MessageLookupByLibrary.simpleMessage("Link"),
         "month": MessageLookupByLibrary.simpleMessage("Month"),
+        "no": MessageLookupByLibrary.simpleMessage("No"),
         "noActionRequired":
             MessageLookupByLibrary.simpleMessage("No Action Required"),
+        "noRevert":
+            MessageLookupByLibrary.simpleMessage("No changes to revert."),
+        "ok": MessageLookupByLibrary.simpleMessage("Ok"),
+        "pipelineType": MessageLookupByLibrary.simpleMessage("Pipeline Type"),
+        "reasoning": MessageLookupByLibrary.simpleMessage("Reasoning"),
+        "revert": MessageLookupByLibrary.simpleMessage("Revert"),
+        "revertClassifcation": MessageLookupByLibrary.simpleMessage(
+            "This classification does not support revert feature"),
+        "revertSuccess": MessageLookupByLibrary.simpleMessage(
+            "Ticket stage reverted successfully"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
         "spam": MessageLookupByLibrary.simpleMessage("Spam"),
+        "status": MessageLookupByLibrary.simpleMessage("Status"),
+        "statusUpdated": MessageLookupByLibrary.simpleMessage("Update Status"),
         "ticketClassification":
             MessageLookupByLibrary.simpleMessage("Ticket Classification"),
+        "ticketDescription":
+            MessageLookupByLibrary.simpleMessage("Ticket Description"),
         "title": MessageLookupByLibrary.simpleMessage("Support Bot"),
         "total": MessageLookupByLibrary.simpleMessage("Total"),
-        "validation": MessageLookupByLibrary.simpleMessage("Validation")
+        "updateSuccess":
+            MessageLookupByLibrary.simpleMessage("Update Successfully.."),
+        "updateTicket": MessageLookupByLibrary.simpleMessage("Update Ticket"),
+        "userValidation":
+            MessageLookupByLibrary.simpleMessage("User Validation"),
+        "validatEmail": MessageLookupByLibrary.simpleMessage("Validate Email"),
+        "validateAIAnswer":
+            MessageLookupByLibrary.simpleMessage("Validate AI Answer"),
+        "validation": MessageLookupByLibrary.simpleMessage("Validation"),
+        "validationExists":
+            MessageLookupByLibrary.simpleMessage("Validation Exists"),
+        "validationReason":
+            MessageLookupByLibrary.simpleMessage("Validation Reason"),
+        "validationStatus":
+            MessageLookupByLibrary.simpleMessage("Validation Status"),
+        "view": MessageLookupByLibrary.simpleMessage("View"),
+        "yes": MessageLookupByLibrary.simpleMessage("Yes")
       };
 }

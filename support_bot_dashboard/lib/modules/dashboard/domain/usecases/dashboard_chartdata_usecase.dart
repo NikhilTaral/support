@@ -1,13 +1,12 @@
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
-import 'package:support_bot_dashboard/utils/service/failure.dart';
-import 'package:support_bot_dashboard/utils/service/usecase.dart';
+import 'package:support_bot_dashboard/core/error/failure.dart';
 
-class DashboardChartdataUsecase implements UseCaseThreeInput {
-  @override
-  Future<Either<Failure, dynamic>> invoke(date,month,pipeline) async {
-    return await serviceLocator<DashboardChartDataRepository>().getDashboardChartData(date, month,pipeline);
+class DashboardChartdataUsecase {
+  Future<Either<Failure, dynamic>> invoke(
+      dashboardChartDataInitialRequestModel) async {
+    return await serviceLocator<DashboardChartDataRepository>()
+        .getDashboardAnswerData(dashboardChartDataInitialRequestModel);
   }
-
 }

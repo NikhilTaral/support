@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getValidationByCountResponseModel = getValidationByCountResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GetValidationByCountResponseModel getValidationByCountResponseModelFromJson(
@@ -44,6 +40,22 @@ class GetValidationByCountResponseModel {
         "params": params?.toJson(),
         "message": message,
       };
+
+  GetValidationByCountResponseModel copyWith({
+    Data? data,
+    bool? success,
+    int? failCode,
+    Params? params,
+    String? message,
+  }) {
+    return GetValidationByCountResponseModel(
+      data: data ?? this.data,
+      success: success ?? this.success,
+      failCode: failCode ?? this.failCode,
+      params: params ?? this.params,
+      message: message ?? this.message,
+    );
+  }
 }
 
 class Data {
@@ -68,6 +80,16 @@ class Data {
         "percentages": Map.from(percentages!)
             .map((k, v) => MapEntry<String, dynamic>(k, v)),
       };
+
+  Data copyWith({
+    Map<String, double>? counts,
+    Map<String, double>? percentages,
+  }) {
+    return Data(
+      counts: counts ?? this.counts,
+      percentages: percentages ?? this.percentages,
+    );
+  }
 }
 
 class Params {
@@ -76,4 +98,8 @@ class Params {
   factory Params.fromJson(Map<String, dynamic> json) => Params();
 
   Map<String, dynamic> toJson() => {};
+
+  Params copyWith() {
+    return Params();
+  }
 }

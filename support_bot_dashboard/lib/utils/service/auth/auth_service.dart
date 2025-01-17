@@ -124,7 +124,6 @@ class AuthService {
     _idToken = oktaAuthResult.idToken;
     await _storage.setString(oktaAuthResult.accessToken,
         key: SecureStorageKey.accessToken);
-        print("oktaAuthResult.accessToken >>> ${oktaAuthResult.accessToken}");
     await _storage.setString(oktaAuthResult.idToken,
         key: SecureStorageKey.idToken);
     // await _storage.setString(oktaAuthResult.refreshToken,
@@ -192,7 +191,7 @@ class AuthService {
   Future<bool> _isValidToken(String? token) async {
     if (token == null) return false;
     Map<String, dynamic> decodedToken = JwtDecoder.decode(_idToken!);
-    int expiryTime = decodedToken['exp'] * 1000; 
+    int expiryTime = decodedToken['exp'] * 1000;
     DateTime expiryDateTime = DateTime.fromMillisecondsSinceEpoch(expiryTime);
     final isTokenExpired = !(DateTime.now().isBefore(expiryDateTime));
     final audience = decodedToken['aud'] as String?;
@@ -228,7 +227,7 @@ class AuthService {
     }
   }
 
-    Future<String?> getUseremail() async {
+  Future<String?> getUseremail() async {
     if (_idToken != null) {
       return JwtDecoder.tryDecode(_idToken!)?["preferred_username"];
     } else {
@@ -249,8 +248,7 @@ class AuthService {
 
     final apiProvider = serviceLocator<ApiProvider>();
 
-    final response =
-        await apiProvider.getData(url: 'profile', body: {
+    final response = await apiProvider.getData(url: 'profile', body: {
       'username': username,
     });
 
@@ -275,6 +273,8 @@ class AuthService {
     _idToken = null;
     await _storage.remove(key: SecureStorageKey.accessToken);
     await _storage.remove(key: SecureStorageKey.idToken);
+    await _storage.remove(key: SecureStorageKey.refreshToken);
+    await LocalStorage.clearAllFilters();
   }
 
   Future<void> clearUserProfile() async {
