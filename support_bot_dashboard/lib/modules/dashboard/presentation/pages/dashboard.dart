@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:support_bot_dashboard/header/nav_bar.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
@@ -13,6 +13,8 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_v
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_mobile_view.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_desktop_view.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/responsive.dart';
 
 class Dashboard extends StatelessWidget {
@@ -20,12 +22,23 @@ class Dashboard extends StatelessWidget {
   String pipeline = '11257490';
   String selectedPipelineId = '11257490';
   bool isAIAnswer = true;
+  num page = 1;
+  num pageSize = 10;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (context) => TicketClassificationTabBloc()
+              ..add(TicketClassificationDataCallEvent(
+                startDate: DateTime.now().subtract(const Duration(days: 7)),
+                endDate: DateTime.now(),
+                page: page,
+                pageSize: pageSize,
+              )),
+          ),
           BlocProvider(
             create: (context) => TabIndexBloc(),
           ),
@@ -57,7 +70,17 @@ class Dashboard extends StatelessWidget {
                 UserValidationBloc()..add(UserValidationsEvent()),
           ),
           BlocProvider<AiQueryBloc>(
-            create: (context) => AiQueryBloc()..add(AIQueryInitialEvent()),
+            create: (context) => AiQueryBloc()
+              ..add(AIQueryInitialEvent(
+                startDate: DateTime.now().subtract(const Duration(days: 7)),
+                endDate: DateTime.now(),
+                page: page,
+                pageSize: pageSize,
+              )),
+            child: const AIQueryFilterWidget(),
+          ),
+          BlocProvider<UpdateAiAnswerBloc>(
+            create: (context) => UpdateAiAnswerBloc(),
             child: const AIQueryFilterWidget(),
           )
         ],

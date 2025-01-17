@@ -7,6 +7,8 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/hom
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
 
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_filters_widget.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
@@ -62,10 +64,16 @@ class DashboardDesktopView extends StatelessWidget {
               navigateTo: () {},
               text: "",
             ),
-            if (selectedIndex == 0 || selectedIndex == 1) ...{
+            if (selectedIndex == 0) ...{
               Padding(
                 padding: padding,
                 child: const HomeFiltersWidget(),
+              )
+            },
+            if (selectedIndex == 1) ...{
+              Padding(
+                padding: padding,
+                child: const TicketClassificationFiltersWidget(),
               )
             },
             if (selectedIndex == 2) ...{
@@ -75,7 +83,7 @@ class DashboardDesktopView extends StatelessWidget {
               ),
             },
             MyOrganizationNavBar(index: selectedIndex),
-            const SizedBox(height: 10),
+            UIHelpers.verticalSpaceSmall,
             Expanded(
               child: ScrollbarTheme(
                 data: const ScrollbarThemeData(
@@ -85,7 +93,8 @@ class DashboardDesktopView extends StatelessWidget {
                     children: [
                       ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxHeight: constraints.maxHeight,
+                          maxHeight:
+                              selectedIndex != 0 ? 550 : constraints.maxHeight,
                         ),
                         child: Padding(
                           padding: padding,

@@ -72,13 +72,13 @@ class NavBar extends StatelessWidget {
                             ),
             ),
           ),
-          // IconButton(
-          //   icon: const Icon(Icons.logout),
-          //   onPressed: () {
-          //     _onLogoutTapped(context);
-          //   },
-          //   tooltip: 'Logout',
-          // ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              _onLogoutTapped(context);
+            },
+            tooltip: 'Logout',
+          ),
         ],
       ),
     );

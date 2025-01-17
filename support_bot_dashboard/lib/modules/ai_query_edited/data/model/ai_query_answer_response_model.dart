@@ -83,7 +83,7 @@ class AiQueryItem {
   String? createdAt;
   String? ticketDescription;
   String? aiResponse;
-  bool? answeredStatus;
+  String? answeredStatus;
   bool? isAnswerEdited;
   bool? agentAnsValidation;
   String? answerValidationReason;
@@ -104,7 +104,7 @@ class AiQueryItem {
         createdAt: json["CreatedAt"],
         ticketDescription: json["Ticket_Description"],
         aiResponse: json["AI_Response"],
-        answeredStatus: json["answeredStatus"],
+        answeredStatus: json["answeredStatus"].toString(),
         isAnswerEdited: json["isAnswerEdited"],
         agentAnsValidation: json["agentAnsValidation"],
         answerValidationReason: json["answerValidationReason"],

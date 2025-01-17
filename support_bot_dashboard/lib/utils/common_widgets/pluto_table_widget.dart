@@ -21,6 +21,7 @@ class PlutoTableWidget extends StatelessWidget {
         enableColumnBorderVertical: false,
         enableCellBorderVertical: false,
         enableCellBorderHorizontal: true,
+        rowHeight: 50,
         activatedColor: Colors.transparent,
         activatedBorderColor: Colors.transparent,
         gridBorderRadius: BorderRadius.circular(6),
@@ -28,7 +29,7 @@ class PlutoTableWidget extends StatelessWidget {
         gridBorderColor: SupportBotColors.blueSecondary.shade200,
         columnTextStyle: SupportBotTextstyle.columnHeading,
         cellTextStyle: SupportBotTextstyle.cellHeading,
-        enableGridBorderShadow: true,
+        enableGridBorderShadow: false,
       ),
       columnSize: const PlutoGridColumnSizeConfig(
         autoSizeMode: PlutoAutoSizeMode.scale,

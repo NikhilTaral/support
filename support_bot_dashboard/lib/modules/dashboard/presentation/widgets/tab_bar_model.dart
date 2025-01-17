@@ -3,6 +3,7 @@ import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/pages
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_page_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pluto_gride_widget.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/views/ticket_classification_pluto_table.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 
 enum TypeBarType {
@@ -46,7 +47,7 @@ class TabBarWidget {
         title: "Ticket Classification",
         view: SizedBox(
           width: double.infinity,
-          child: TicketClassificationPlutoGrideWidget(),
+          child: TicketClassificationPlutoTable(),
         ),
         type: TypeBarType.ticketClassification,
       ),

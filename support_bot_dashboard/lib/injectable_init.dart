@@ -6,6 +6,7 @@ import 'package:support_bot_dashboard/modules/ai_query_edited/domain/repositorie
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/usecases/ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_chart_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_export_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_ai_edited_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_by_count_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_repo_impl.dart';
@@ -13,6 +14,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/get_al
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/validation_status_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_answer_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_export_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_ai_edited_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
@@ -21,6 +23,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/vali
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_export_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/get_all_pipelines_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/validation_status_usecase.dart';
@@ -28,7 +31,18 @@ import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_logi
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/usecases/v3_login_usecases.dart';
 import 'package:support_bot_dashboard/modules/login_v3/presentation/bloc/v3_login_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/repositories/common_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/export_bloc/export_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_pipelines_bloc/get_all_pipelines_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/service/auth/auth_service.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/secure_storage.dart';
 
@@ -89,8 +103,59 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
       () => GetAllPipelinesUsecase());
 
-  // AI query
-  serviceLocator.registerLazySingleton<AiQueryUsecase>(() => AiQueryUsecase());
+  // Ticket Classification
+  serviceLocator.registerLazySingleton<ActionUsecase>(() => ActionUsecase());
+  serviceLocator
+      .registerLazySingleton<ActionRepository>(() => ActionRepoImpl());
+  serviceLocator.registerFactory<TicketClassificationActionBloc>(
+      () => TicketClassificationActionBloc());
+
+  serviceLocator.registerLazySingleton<TicketClassificationUsecses>(
+      () => TicketClassificationUsecses());
+  serviceLocator.registerLazySingleton<TicketClassifiacationRepository>(
+      () => TicketClassificationRepoImpl());
+  serviceLocator.registerFactory<TicketClassificationTabBloc>(
+      () => TicketClassificationTabBloc());
+
+  serviceLocator.registerLazySingleton<BopsUsecases>(() => BopsUsecases());
+  serviceLocator.registerLazySingleton<BopsRepository>(() => BopsRepoImpl());
+  serviceLocator.registerFactory<BopsStatesBloc>(() => BopsStatesBloc());
+
+  serviceLocator
+      .registerFactory<GetAllPipelinesBloc>(() => GetAllPipelinesBloc());
+
+  serviceLocator.registerLazySingleton<UpdateAiAnswerUsecase>(
+      () => UpdateAiAnswerUsecase());
   serviceLocator.registerLazySingleton<AiQueryDataRepository>(
       () => AiQueryAnswerRepoImpl());
+  serviceLocator.registerLazySingleton<AiQueryUsecase>(() => AiQueryUsecase());
+  serviceLocator.registerLazySingleton<AddAnswerValidationUsecase>(
+      () => AddAnswerValidationUsecase());
+
+  serviceLocator.registerLazySingleton<InstanceSharingService>(
+      () => InstanceSharingService());
+  serviceLocator.registerLazySingleton<GetValidationDetailsUsecase>(
+      () => GetValidationDetailsUsecase());
+  serviceLocator.registerLazySingleton<GetValidationDetailsRepository>(
+      () => GetValidationDetailsImpl());
+
+  serviceLocator.registerLazySingleton<UpdateClassificationValidationUsecase>(
+      () => UpdateClassificationValidationUsecase());
+  serviceLocator
+      .registerLazySingleton<UpdateClassificationValidationRepository>(
+          () => UpdateClassificationValidationImpl());
+  serviceLocator.registerFactory<UpdateClassificationValidationBloc>(
+      () => UpdateClassificationValidationBloc());
+
+  serviceLocator.registerLazySingleton<RevertClassificationUsecase>(
+      () => RevertClassificationUsecase());
+  serviceLocator.registerLazySingleton<RevertClassificationRepository>(
+      () => RevertClassificationImpl());
+
+  //export
+  serviceLocator.registerLazySingleton<DashboardExportusecase>(
+      () => DashboardExportusecase());
+  serviceLocator.registerLazySingleton<DashboardExportRepository>(
+      () => DashboardExportRepoImpl());
+  serviceLocator.registerFactory<ExportBloc>(() => ExportBloc());
 }
