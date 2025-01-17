@@ -119,7 +119,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             _buildApplyFilterButton(),
             UIHelpers.horizontalSpaceRegular,
             _buildExportButton(),
-            //_buildClearFilterButton(),
+            _buildClearFilterButton(),
           ],
         ),
       ),
