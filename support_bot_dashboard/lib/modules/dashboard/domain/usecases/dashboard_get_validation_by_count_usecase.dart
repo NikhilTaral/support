@@ -1,14 +1,12 @@
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
-import 'package:support_bot_dashboard/utils/service/failure.dart';
-import 'package:support_bot_dashboard/utils/service/usecase.dart';
+import 'package:support_bot_dashboard/core/error/failure.dart';
 
-class DashboardGetValidationByCountUsecase implements UseCaseThreeInput{
-  @override
+class DashboardGetValidationByCountUsecase {
   Future<Either<Failure, dynamic>> invoke(
-       date,month, pipeline) async {
+      dashboardChartDataInitialRequestModel) async {
     return await serviceLocator<GetValidationByCountRepository>()
-        .getValidationByCount(date, month,pipeline);
+        .getValidationByCount(dashboardChartDataInitialRequestModel);
   }
 }

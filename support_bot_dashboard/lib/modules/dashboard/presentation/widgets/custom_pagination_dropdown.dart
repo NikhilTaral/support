@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
@@ -41,9 +42,9 @@ class CustomPaginationDropdown extends StatelessWidget {
               child: Text(
                 '$selectedValue',
                 style: const TextStyle(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   fontSize: 14,
-                  color: SupportBotColors.black,
+                  color: SupportBotColors.bluePrimary,
                 ),
               ),
             ),
@@ -69,7 +70,7 @@ class CustomPaginationDropdown extends StatelessWidget {
           children: [
             Positioned(
               left: offset.dx,
-              top: offset.dy - (height * items.length) - 45, // Positioning above
+              top: offset.dy - (height * items.length) - 25, // Positioning above
               child: Material(
                 color: Colors.transparent,
                 child: Container(
@@ -94,14 +95,14 @@ class CustomPaginationDropdown extends StatelessWidget {
                         title: Text(
                           '$item',
                           style: item == selectedValue
-                              ? const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: SupportBotColors.black,
+                              ? TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: SupportBotColors.bluePrimary,
                                   fontSize: 14,
                                 )
-                              : const TextStyle(
+                              : TextStyle(
                                   fontSize: 14,
-                                  color: SupportBotColors.black,
+                                  color: Colors.grey.shade700,
                                 ),
                         ),
                         onTap: () {

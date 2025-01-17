@@ -1,8 +1,9 @@
 import 'package:either_dart/either.dart';
-import 'package:support_bot_dashboard/utils/service/failure.dart';
+import 'package:support_bot_dashboard/core/error/failure.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 
 abstract class GetValidationByCountRepository {
-
-  Future<Either<Failure, dynamic>> getValidationByCount(DateTime? selectedDate, DateTime? selectedMonth, String? pipeline);
-
+  Future<Either<Failure, dynamic>> getValidationByCount(
+      DashboardAnswerDataInitialRequestModel?
+          dashboardAnswerDataInitialRequestModel);
 }
