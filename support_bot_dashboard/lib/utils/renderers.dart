@@ -12,6 +12,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_plu
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart'
     as ticketClassificationBloc;
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/get_validation_details_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
@@ -114,6 +115,7 @@ class Renderers {
     required BuildContext context,
     void Function(String?)? onDelete,
   }) {
+    final TicketClassificationEntitieModel? ticketClassificationEntitieModel;
     final rowData =
         rendererContext.row.cells.map((key, cell) => MapEntry(key, cell.value));
     final actionData =
@@ -283,7 +285,6 @@ class Renderers {
                       children: [
                         Icon(
                           Icons.visibility,
-                          size: 14,
                         ),
                         SizedBox(width: 8),
                         Text(
@@ -525,7 +526,6 @@ class Renderers {
                       children: [
                         Icon(
                           Icons.update,
-                          size: 14,
                         ),
                         SizedBox(width: 8),
                         Text(
@@ -829,9 +829,11 @@ class Renderers {
           },
           builder: (context, state) {
             return DropdownButton<String>(
+              alignment: Alignment.center,
+              isDense: true,
               icon: const Icon(
+                size: 16,
                 Icons.keyboard_arrow_down_rounded,
-                size: 25,
                 color: SupportBotColors.bluePrimary,
               ),
               borderRadius: BorderRadius.circular(2),
@@ -842,7 +844,7 @@ class Renderers {
               dropdownColor: SupportBotColors.white,
               underline: Container(color: Colors.transparent),
               value: selectedValue,
-              hint: Text(selectedValue ?? 'Select '),
+              hint: Text(selectedValue ?? 'Select'),
               items: items.map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

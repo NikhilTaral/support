@@ -337,6 +337,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           validation = '';
           selectedDatesNotifier.value = null;
           pipelineIds.clear();
+          selectedPipeline = "";
         });
 
         await LocalStorage.clearPipeline();
