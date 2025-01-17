@@ -218,7 +218,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       config: config,
       dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
-      value: [startDate, endDate],
+      value: selectedDatesNotifier.value?.cast<DateTime>() ?? [],
+      //value: [startDate, endDate],
       dialogBackgroundColor: Colors.white,
     );
 
