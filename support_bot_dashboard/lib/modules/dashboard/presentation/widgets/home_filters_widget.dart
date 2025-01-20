@@ -91,7 +91,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   Widget _buildDateRangeSelector() {
     if (selectedDatesNotifier.value == null) {
       final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 7));
+      final startDate = endDate.subtract(const Duration(days: 1));
       selectedDatesNotifier.value = [startDate, endDate];
     }
 
@@ -107,7 +107,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
             endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 7));
+            startDate = endDate.subtract(const Duration(days: 1));
           }
 
           return OutlinedButton(
@@ -198,7 +198,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   Future<void> _pickDateRange() async {
     final DateTime endDate = DateTime.now();
-    final DateTime startDate = endDate.subtract(const Duration(days: 7));
+    final DateTime startDate = endDate.subtract(const Duration(days: 1));
 
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
@@ -218,8 +218,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       config: config,
       dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
-      value: selectedDatesNotifier.value?.cast<DateTime>() ?? [],
-      //value: [startDate, endDate],
+      // value: selectedDatesNotifier.value?.cast<DateTime>() ?? [],
+      value: [startDate, endDate],
       dialogBackgroundColor: Colors.white,
     );
 

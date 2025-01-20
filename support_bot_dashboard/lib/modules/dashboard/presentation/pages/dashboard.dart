@@ -33,7 +33,7 @@ class Dashboard extends StatelessWidget {
           BlocProvider(
             create: (context) => TicketClassificationTabBloc()
               ..add(TicketClassificationDataCallEvent(
-                startDate: DateTime.now().subtract(const Duration(days: 7)),
+                startDate: DateTime.now().subtract(const Duration(days: 1)),
                 endDate: DateTime.now(),
                 page: page,
                 pageSize: pageSize,
@@ -72,7 +72,7 @@ class Dashboard extends StatelessWidget {
           BlocProvider<AiQueryBloc>(
             create: (context) => AiQueryBloc()
               ..add(AIQueryInitialEvent(
-                startDate: DateTime.now().subtract(const Duration(days: 7)),
+                startDate: DateTime.now().subtract(const Duration(days: 1)),
                 endDate: DateTime.now(),
                 page: page,
                 pageSize: pageSize,

@@ -129,7 +129,7 @@ class Renderers {
         if (state is TicketClassificationActionSucssesState) {
           BlocProvider.of<TicketClassificationTabBloc>(context)
               .add(TicketClassificationDataCallEvent(
-            startDate: DateTime.now().subtract(const Duration(days: 7)),
+            startDate: DateTime.now().subtract(const Duration(days: 1)),
             endDate: DateTime.now(),
             page: 1,
             pageSize: 10,
@@ -316,7 +316,7 @@ class Renderers {
                                 .add(
                               TicketClassificationDataCallEvent(
                                 startDate: DateTime.now()
-                                    .subtract(const Duration(days: 7)),
+                                    .subtract(const Duration(days: 1)),
                                 endDate: DateTime.now(),
                                 page: 1,
                                 pageSize: 10,
@@ -429,7 +429,7 @@ class Renderers {
                                                     TicketClassificationDataCallEvent(
                                               startDate: DateTime.now()
                                                   .subtract(
-                                                      const Duration(days: 7)),
+                                                      const Duration(days: 1)),
                                               endDate: DateTime.now(),
                                               page: 1,
                                               pageSize: 10,
@@ -485,7 +485,7 @@ class Renderers {
                                               TicketClassificationDataCallEvent(
                                                 startDate: DateTime.now()
                                                     .subtract(const Duration(
-                                                        days: 7)),
+                                                        days: 1)),
                                                 endDate: DateTime.now(),
                                                 page: 1,
                                                 pageSize: 10,
@@ -569,7 +569,7 @@ class Renderers {
                   BlocProvider.of<TicketClassificationTabBloc>(context).add(
                     TicketClassificationDataCallEvent(
                       startDate:
-                          DateTime.now().subtract(const Duration(days: 7)),
+                          DateTime.now().subtract(const Duration(days: 1)),
                       endDate: DateTime.now(),
                       page: 1,
                       pageSize: 10,
@@ -870,7 +870,7 @@ class Renderers {
                     BlocProvider.of<TicketClassificationTabBloc>(context)
                         .add(TicketClassificationDataCallEvent(
                       startDate:
-                          DateTime.now().subtract(const Duration(days: 7)),
+                          DateTime.now().subtract(const Duration(days: 1)),
                       endDate: DateTime.now(),
                       page:
                           BlocProvider.of<TicketClassificationTabBloc>(context)
@@ -1051,7 +1051,7 @@ class Renderers {
                                       .add(
                                     TicketClassificationDataCallEvent(
                                       startDate: DateTime.now()
-                                          .subtract(const Duration(days: 7)),
+                                          .subtract(const Duration(days: 1)),
                                       endDate: DateTime.now(),
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(

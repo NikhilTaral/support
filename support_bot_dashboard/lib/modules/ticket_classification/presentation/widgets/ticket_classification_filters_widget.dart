@@ -170,7 +170,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Widget _buildDateRangeSelector() {
     if (selectedDatesNotifier.value == null) {
       final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 7));
+      final startDate = endDate.subtract(const Duration(days: 1));
       selectedDatesNotifier.value = [startDate, endDate];
     }
 
@@ -186,7 +186,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
             endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 7));
+            startDate = endDate.subtract(const Duration(days: 1));
           }
 
           return OutlinedButton(
@@ -308,7 +308,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     .add(TicketClassificationDataCallEvent(
                   fieldValue: pipelineIds,
                   endDate: DateTime.now(),
-                  startDate: DateTime.now().subtract(const Duration(days: 7)),
+                  startDate: DateTime.now().subtract(const Duration(days: 1)),
                   page: 1,
                   pageSize: 10,
                 ));
@@ -368,7 +368,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Future<void> _pickDateRange() async {
     final DateTime endDate = DateTime.now();
-    final DateTime startDate = endDate.subtract(const Duration(days: 7));
+    final DateTime startDate = endDate.subtract(const Duration(days: 1));
 
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),

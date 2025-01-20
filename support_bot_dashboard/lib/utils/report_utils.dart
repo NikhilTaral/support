@@ -138,9 +138,8 @@ class ReportUtils {
                   "id": PlutoCell(
                     value: e.id ?? "NA",
                   ),
-                  "ticket_description": PlutoCell(
-                    value: e.ticketDescription ?? [],
-                  ),
+                  'ticket_description': PlutoCell(
+                      value: e.ticketDescription?.replaceAll('\n', ' ') ?? ''),
                   "bops_state": PlutoCell(
                     value: e.bopsState ?? "N/A",
                   ),
