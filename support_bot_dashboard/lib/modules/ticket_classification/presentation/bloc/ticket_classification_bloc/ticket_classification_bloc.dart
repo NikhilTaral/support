@@ -37,7 +37,7 @@ class TicketClassificationTabBloc
       final bopsState = await LocalStorage.getBopsState();
       final classification = await LocalStorage.getClassification();
       String? validation = await LocalStorage.getValidation();
-      final piplineid = await LocalStorage.getPipeline();
+      final piplineids = await LocalStorage.getPipelineIds();
       if (validation?.replaceAll(" ", "").toLowerCase() == "notvalidated") {
         validation = "";
       }
@@ -60,7 +60,7 @@ class TicketClassificationTabBloc
               fieldName: "classificationValidations",
               fieldValue: validation != null ? [validation] : []),
           Filter(
-              fieldValue: event.fieldValue ?? ["11257490"],
+              fieldValue: piplineids,
               fieldName: event.fieldName ?? "pipelines")
         ],
       );
