@@ -25,3 +25,9 @@ class RevertClassificationEvent extends TicketClassificationEvent {
 
   RevertClassificationEvent({this.ticketId});
 }
+
+
+
+class TicketClassificationPreviousDataEvent extends TicketClassificationEvent {}
+
+class TicketClassificationNextDataEvent extends TicketClassificationEvent {}

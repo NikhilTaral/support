@@ -133,44 +133,50 @@ class ReportUtils {
 
   List<PlutoRow> createTicketClassificationRow() {
     final s = serviceLocator<S>();
-    return ticketClassificationEntitieModel.data?.items
-            ?.map((e) => PlutoRow(cells: {
-                  "id": PlutoCell(
-                    value: e.id ?? "NA",
-                  ),
-                  'ticket_description': PlutoCell(
-                      value: e.ticketDescription?.replaceAll('\n', ' ') ?? ''),
-                  "bops_state": PlutoCell(
-                    value: e.bopsState ?? "N/A",
-                  ),
-                  "classification": PlutoCell(
-                    value: e.classification ?? "N/A",
-                  ),
-                  "reasoning": PlutoCell(
-                    value: e.reasoning ?? "N/A",
-                  ),
-                  "validation": PlutoCell(
-                    value: capitalizeFirstLetter(
-                        e.classificationValidation ?? "-"),
-                  ),
-                  "status": PlutoCell(
-                    value: e.isUpdatedToHubspot ?? "N/A",
-                  ),
-                  "Validation Reason": PlutoCell(
-                    value: e.classificationValidationReason ?? "N/A",
-                  ),
-                  "action": PlutoCell(
-                    value: {
-                      "validatedBy": e.classificationValidatedBy,
-                      "isUpdatedToHubspot": e.isUpdatedToHubspot
-                    },
-                  ),
-                  "validatedBy": PlutoCell(
-                    value: e.classificationValidatedBy ?? "N/A",
-                  ),
-                }))
-            .toList() ??
-        [];
+    List<PlutoRow> rows = [];
+    for (int i = 0;
+        i < (ticketClassificationEntitieModel.data?.items ?? []).length;
+        i++) {
+      debugPrint("print 1111111111111 : index : $i");
+      final e = ticketClassificationEntitieModel.data?.items?[i];
+      rows.add(PlutoRow(cells: {
+        "id": PlutoCell(
+          value: e?.id ?? "NA",
+        ),
+        'ticket_description':
+            PlutoCell(value: e?.ticketDescription?.replaceAll('\n', ' ') ?? ''),
+        "bops_state": PlutoCell(
+          value: e?.bopsState ?? "N/A",
+        ),
+        "classification": PlutoCell(
+          value: e?.classification ?? "N/A",
+        ),
+        "reasoning": PlutoCell(
+          value: e?.reasoning ?? "N/A",
+        ),
+        "validation": PlutoCell(
+          value: capitalizeFirstLetter(e?.classificationValidation ?? "-"),
+        ),
+        "status": PlutoCell(
+          value: e?.isUpdatedToHubspot ?? "N/A",
+        ),
+        "Validation Reason": PlutoCell(
+          value: e?.classificationValidationReason ?? "N/A",
+        ),
+        "action": PlutoCell(
+          value: {
+            "allRows": (ticketClassificationEntitieModel.data?.items ?? []),
+            "validatedBy": e?.classificationValidatedBy,
+            "isUpdatedToHubspot": e?.isUpdatedToHubspot,
+            "index": i,
+          },
+        ),
+        "validatedBy": PlutoCell(
+          value: e?.classificationValidatedBy ?? "N/A",
+        ),
+      }));
+    }
+    return rows;
   }
 
   String capitalizeFirstLetter(String input) {
