@@ -471,7 +471,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
-                            text: '${currentRowData.classification}',
+                            text:
+                                '${currentRowData.classification == "" ? "N/A" : currentRowData.classification}',
                             style: TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
@@ -483,7 +484,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
-                            text: '${currentRowData.reasoning}',
+                            text:
+                                '${currentRowData.reasoning == "" ? "N/A" : currentRowData.reasoning}',
                             style: TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
@@ -495,7 +497,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
-                            text: '${currentRowData.bopsState}',
+                            text:
+                                '${currentRowData.bopsState == "null" ? "N/A" : currentRowData.bopsState}',
                             style: TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
@@ -507,7 +510,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
-                            text: '${currentRowData.classificationValidatedBy}',
+                            text:
+                                '${currentRowData.classificationValidatedBy == "" ? "N/A" : currentRowData.classificationValidatedBy}',
                             style: TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
@@ -519,7 +523,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
-                          text: '${currentRowData.classificationValidation}',
+                          text:
+                              '${currentRowData.classificationValidatedBy == "" ? "N/A" : currentRowData.classificationValidatedBy}',
                           style: TextStyle(fontWeight: FontWeight.normal),
                         ),
                       ],
