@@ -33,6 +33,7 @@ class TicketClassificationTabBloc
 
     try {
       final repository = serviceLocator<TicketClassificationUsecses>();
+
       List<DateTime?> datesList = await getSelectedDates();
       final bopsState = await LocalStorage.getBopsState();
       final classification = await LocalStorage.getClassification();
@@ -44,7 +45,7 @@ class TicketClassificationTabBloc
       page = event.page ?? 1;
       pageSize = event.pageSize ?? 10;
       final req = TicketClassificationRequestModel(
-        startDate: (datesList.firstOrNull ?? DateTime.parse("2024-10-23")),
+        startDate: (datesList.firstOrNull ?? DateTime.now()),
         endDate: (datesList.lastOrNull ?? DateTime.now()),
         page: event.page,
         pageSize: event.pageSize,
@@ -60,8 +61,7 @@ class TicketClassificationTabBloc
               fieldName: "classificationValidations",
               fieldValue: validation != null ? [validation] : []),
           Filter(
-              fieldValue: piplineids,
-              fieldName: event.fieldName ?? "pipelines")
+              fieldValue: piplineids, fieldName: event.fieldName ?? "pipelines")
         ],
       );
 

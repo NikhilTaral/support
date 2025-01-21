@@ -27,6 +27,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       ValueNotifier<List<DateTime>?>(null);
 
   String selectedValue = '';
+  List<DateTime?> selectedate = [];
   String bopsState = '';
   String selectedItem = '';
   String validation = '';
@@ -37,6 +38,47 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   void initState() {
     super.initState();
     _loadPipelineIds();
+    _getSelectedDates();
+    _piplineName();
+    _getBopsState();
+    _getValidation();
+    _getClassification();
+    _getSelectedDates();
+  }
+
+  Future<void> _piplineName() async {
+    final piplineid = await LocalStorage.getPipeline();
+    setState(() {
+      selectedPipeline = piplineid ?? "";
+    });
+  }
+
+  Future<void> _getSelectedDates() async {
+    List<DateTime?> datesList = await LocalStorage.getSelectedDates();
+    setState(() {
+      selectedate = datesList;
+    });
+  }
+
+  Future<void> _getValidation() async {
+    final validations = await LocalStorage.getValidation();
+    setState(() {
+      validation = validations ?? "";
+    });
+  }
+
+  Future<void> _getClassification() async {
+    final classification = await LocalStorage.getClassification();
+    setState(() {
+      selectedValue = classification ?? "";
+    });
+  }
+
+  Future<void> _getBopsState() async {
+    final bopsStates = await LocalStorage.getBopsState();
+    setState(() {
+      bopsState = bopsStates ?? "";
+    });
   }
 
   Future<void> _loadPipelineIds() async {
@@ -131,7 +173,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: TicketClassificationPipelineWidget(
-        hintText: "Pipeline",
+        hintText: selectedPipeline.isEmpty ? "Pipeline" : selectedPipeline,
         items: items,
         selectedItem: selectedPipeline,
         onChanged: (selectedName) async {
@@ -168,10 +210,12 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildDateRangeSelector() {
-    if (selectedDatesNotifier.value == null) {
-      final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 1));
-      selectedDatesNotifier.value = [startDate, endDate];
+    if (selectedate.isNotEmpty) {
+      final endDate = selectedate.lastOrNull ?? DateTime.now();
+      final startDate = (selectedate.firstOrNull ?? DateTime.now())
+          .subtract(const Duration(days: 1));
+      selectedate = [startDate, endDate];
+      LocalStorage.saveSelectedDate(startDate, endDate);
     }
 
     return Center(
@@ -230,7 +274,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is BopsStatesSucssesState) {
             return CustomMonthDropdown(
               items: state.model?.data ?? [],
-              label: "BOps State",
+              label: bopsState.isEmpty ? "BOps State" : bopsState,
               onChanged: (value) async {
                 setState(() {
                   bopsState = value ?? '';
@@ -262,7 +306,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       width: 250,
       child: CustomMonthDropdown(
-        label: "Classification",
+        label: selectedValue.isEmpty ? "Classification" : selectedValue,
         selectedValue: selectedValue,
         onChanged: (value) async {
           setState(() {
@@ -284,7 +328,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       width: 200,
       child: CustomMonthDropdown(
-        label: "Validation",
+        label: validation.isEmpty ? "Validation" : validation,
         selectedValue: validation,
         onChanged: (value) async {
           setState(() {
@@ -338,6 +382,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           validation = '';
           selectedDatesNotifier.value = null;
           pipelineIds.clear();
+          selectedPipeline = "";
         });
 
         await LocalStorage.clearPipeline();
@@ -345,6 +390,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         await LocalStorage.clearBopsState();
         await LocalStorage.clearValidation();
         await LocalStorage.clearSelectedDates();
+        await LocalStorage.clearPipeline();
 
         BlocProvider.of<TicketClassificationTabBloc>(context)
             .add(TicketClassificationDataCallEvent(
@@ -397,7 +443,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       final startDate = pickedDates.isNotEmpty ? pickedDates[0] : null;
       final endDate = pickedDates.length > 1 ? pickedDates[1] : null;
 
-      await LocalStorage.saveSelectedDates(startDate, endDate);
+      await LocalStorage.saveSelectedDate(startDate, endDate);
     }
   }
 

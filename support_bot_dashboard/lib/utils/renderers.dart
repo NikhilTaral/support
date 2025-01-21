@@ -115,7 +115,6 @@ class Renderers {
     required BuildContext context,
     void Function(String?)? onDelete,
   }) {
-    final TicketClassificationEntitieModel? ticketClassificationEntitieModel;
     final rowData =
         rendererContext.row.cells.map((key, cell) => MapEntry(key, cell.value));
     final actionData =
@@ -180,13 +179,29 @@ class Renderers {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Ticket details",
-                                        style: SupportBotTextstyle.columnHeading
-                                            .copyWith(fontSize: 20),
-                                      ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(
+                                              Icons.arrow_circle_left_outlined),
+                                        ),
+                                        Text(
+                                          "Ticket details",
+                                          style: SupportBotTextstyle
+                                              .columnHeading
+                                              .copyWith(fontSize: 20),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons
+                                              .arrow_circle_right_outlined),
+                                        ),
+                                      ],
                                     ),
                                     UIHelpers.verticalSpaceSmall,
                                     const Divider(),
@@ -212,6 +227,13 @@ class Renderers {
                                           ? 'N/A'
                                           : entry.value.toString();
 
+                                      if (entry.key.toLowerCase() == 'status') {
+                                        bool statusValue = entry.value == true;
+                                        value = statusValue
+                                            ? 'Correct'
+                                            : 'In Correct';
+                                      }
+
                                       return Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -222,7 +244,7 @@ class Renderers {
                                                 .columnHeading,
                                           ),
                                           UIHelpers.verticalSpaceTiny,
-                                          Text(
+                                          SelectableText(
                                             value,
                                             style: isEmpty
                                                 ? SupportBotTextstyle

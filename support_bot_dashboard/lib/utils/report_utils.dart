@@ -146,6 +146,9 @@ class ReportUtils {
                   "classification": PlutoCell(
                     value: e.classification ?? "N/A",
                   ),
+                  "reasoning": PlutoCell(
+                    value: e.reasoning ?? "N/A",
+                  ),
                   "validation": PlutoCell(
                     value: capitalizeFirstLetter(
                         e.classificationValidation ?? "-"),
@@ -153,11 +156,17 @@ class ReportUtils {
                   "status": PlutoCell(
                     value: e.isUpdatedToHubspot ?? "N/A",
                   ),
+                  "Validation Reason": PlutoCell(
+                    value: e.classificationValidationReason ?? "N/A",
+                  ),
                   "action": PlutoCell(
                     value: {
                       "validatedBy": e.classificationValidatedBy,
                       "isUpdatedToHubspot": e.isUpdatedToHubspot
                     },
+                  ),
+                  "validatedBy": PlutoCell(
+                    value: e.classificationValidatedBy ?? "N/A",
                   ),
                 }))
             .toList() ??
