@@ -93,6 +93,7 @@ class ReportUtils {
         enableContextMenu: false,
         enableFilterMenuItem: false,
         enableSorting: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
         enableDropToResize: false,
         renderer: (rendererContext) => Renderers.validationDropDown(
             rendererContext,
@@ -109,6 +110,7 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
         renderer: Renderers.statusRenderer,
       ),
       PlutoColumn(
@@ -137,7 +139,6 @@ class ReportUtils {
     for (int i = 0;
         i < (ticketClassificationEntitieModel.data?.items ?? []).length;
         i++) {
-      debugPrint("print 1111111111111 : index : $i");
       final e = ticketClassificationEntitieModel.data?.items?[i];
       rows.add(PlutoRow(cells: {
         "id": PlutoCell(

@@ -26,67 +26,13 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
 
-  String selectedValue = '';
+  String selectedClassification = '';
   List<DateTime?> selectedate = [];
-  String bopsState = '';
+  String selectedBOPsState = '';
   String selectedItem = '';
-  String validation = '';
+  String selectedValidation = '';
   List<String> pipelineIds = [];
   String selectedPipeline = "";
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPipelineIds();
-    _getSelectedDates();
-    _piplineName();
-    _getBopsState();
-    _getValidation();
-    _getClassification();
-    _getSelectedDates();
-  }
-
-  Future<void> _piplineName() async {
-    final piplineid = await LocalStorage.getPipeline();
-    setState(() {
-      selectedPipeline = piplineid ?? "";
-    });
-  }
-
-  Future<void> _getSelectedDates() async {
-    List<DateTime?> datesList = await LocalStorage.getSelectedDates();
-    setState(() {
-      selectedate = datesList;
-    });
-  }
-
-  Future<void> _getValidation() async {
-    final validations = await LocalStorage.getValidation();
-    setState(() {
-      validation = validations ?? "";
-    });
-  }
-
-  Future<void> _getClassification() async {
-    final classification = await LocalStorage.getClassification();
-    setState(() {
-      selectedValue = classification ?? "";
-    });
-  }
-
-  Future<void> _getBopsState() async {
-    final bopsStates = await LocalStorage.getBopsState();
-    setState(() {
-      bopsState = bopsStates ?? "";
-    });
-  }
-
-  Future<void> _loadPipelineIds() async {
-    final savedPipelineIds = await LocalStorage.getPipelineIds();
-    setState(() {
-      pipelineIds = savedPipelineIds;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,9 +117,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildPipelineDropdown(List<Datums> items) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 420),
+      constraints: const BoxConstraints(maxWidth: 220),
       child: TicketClassificationPipelineWidget(
-        hintText: selectedPipeline.isEmpty ? "Pipeline" : selectedPipeline,
+        hintText:
+            selectedPipeline.isEmpty ? "Expert Care Level 1" : selectedPipeline,
         items: items,
         selectedItem: selectedPipeline,
         onChanged: (selectedName) async {
@@ -211,11 +158,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildDateRangeSelector() {
     if (selectedate.isNotEmpty) {
-      final endDate = selectedate.lastOrNull ?? DateTime.now();
-      final startDate = (selectedate.firstOrNull ?? DateTime.now())
-          .subtract(const Duration(days: 1));
+      final endDate = selectedate.lastOrNull;
+      final startDate = selectedate.firstOrNull;
       selectedate = [startDate, endDate];
-      LocalStorage.saveSelectedDate(startDate, endDate);
     }
 
     return Center(
@@ -233,32 +178,38 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             startDate = endDate.subtract(const Duration(days: 1));
           }
 
-          return OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: SupportBotColors.bluePrimary),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: () => _pickDateRange(),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.calendar_month_outlined,
-                  color: SupportBotColors.bluePrimary,
+          return Container(
+            height: 180,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: SupportBotColors.bluePrimary),
+                padding: const EdgeInsets.only(
+                  right: 6,
+                  left: 6,
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
-                  style: SupportBotTextstyle.normal.copyWith(
-                    fontSize: 14,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () => _pickDateRange(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.calendar_month_outlined,
                     color: SupportBotColors.bluePrimary,
-                    fontWeight: FontWeight.w500,
                   ),
-                  overflow: TextOverflow.clip,
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
+                    style: SupportBotTextstyle.normal.copyWith(
+                      fontSize: 14,
+                      color: SupportBotColors.bluePrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.clip,
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -274,14 +225,15 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is BopsStatesSucssesState) {
             return CustomMonthDropdown(
               items: state.model?.data ?? [],
-              label: bopsState.isEmpty ? "BOps State" : bopsState,
+              label:
+                  selectedBOPsState.isEmpty ? "BOps State" : selectedBOPsState,
               onChanged: (value) async {
                 setState(() {
-                  bopsState = value ?? '';
+                  selectedBOPsState = value ?? '';
                 });
                 await _saveBopsStateLocalStorage(value);
               },
-              selectedValue: bopsState,
+              selectedValue: selectedBOPsState,
             );
           }
           if (state is BopsStatesFailureState) {
@@ -291,7 +243,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             items: [],
             label: "BOps State",
             onChanged: (value) {},
-            selectedValue: bopsState,
+            selectedValue: selectedBOPsState,
           );
         },
       ),
@@ -306,11 +258,13 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       width: 250,
       child: CustomMonthDropdown(
-        label: selectedValue.isEmpty ? "Classification" : selectedValue,
-        selectedValue: selectedValue,
+        label: selectedClassification.isEmpty
+            ? "Classification"
+            : selectedClassification,
+        selectedValue: selectedClassification,
         onChanged: (value) async {
           setState(() {
-            selectedValue = value ?? "";
+            selectedClassification = value ?? "";
           });
           await LocalStorage.saveClassification(value);
         },
@@ -328,11 +282,11 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       width: 200,
       child: CustomMonthDropdown(
-        label: validation.isEmpty ? "Validation" : validation,
-        selectedValue: validation,
+        label: selectedValidation.isEmpty ? "Validation" : selectedValidation,
+        selectedValue: selectedValidation,
         onChanged: (value) async {
           setState(() {
-            validation = value?.toLowerCase() ?? "";
+            selectedValidation = value?.toLowerCase() ?? "";
           });
 
           await LocalStorage.saveValidation(value?.toLowerCase());
@@ -345,26 +299,87 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Widget _buildApplyFilterButton() {
     return BlocProvider(
       create: (context) => TicketClassificationTabBloc(),
+      child: Container(
+        height: 180,
+        child: ElevatedButton.icon(
+          onPressed: (selectedPipeline.isNotEmpty)
+              ? () {
+                  BlocProvider.of<TicketClassificationTabBloc>(context)
+                      .selectedPipelineId = pipelineIds.first;
+                  BlocProvider.of<TicketClassificationTabBloc>(context)
+                      .selectedBOPsState = selectedBOPsState;
+                  BlocProvider.of<TicketClassificationTabBloc>(context)
+                      .selectedClassification = selectedClassification;
+                  BlocProvider.of<TicketClassificationTabBloc>(context)
+                      .selectedValidation = selectedValidation;
+                  BlocProvider.of<TicketClassificationTabBloc>(context)
+                      .add(TicketClassificationDataCallEvent(
+                    fieldValue: pipelineIds,
+                    endDate: selectedate.lastOrNull,
+                    startDate: selectedate.firstOrNull,
+                    page: 1,
+                    pageSize: 10,
+                  ));
+                }
+              : null,
+          icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+          label:
+              const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+            backgroundColor: SupportBotColors.bluePrimary,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClearFilterButton() {
+    return Container(
+      height: 180,
       child: ElevatedButton.icon(
-        onPressed: (selectedPipeline.isNotEmpty)
-            ? () {
-                BlocProvider.of<TicketClassificationTabBloc>(context)
-                    .add(TicketClassificationDataCallEvent(
-                  fieldValue: pipelineIds,
-                  endDate: DateTime.now(),
-                  startDate: DateTime.now().subtract(const Duration(days: 1)),
-                  page: 1,
-                  pageSize: 10,
-                ));
-              }
-            : null,
-        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+        onPressed: () async {
+          setState(() {
+            selectedItem = '';
+            selectedClassification = '';
+            selectedBOPsState = '';
+            selectedValidation = '';
+            selectedDatesNotifier.value = null;
+            pipelineIds.clear();
+            selectedPipeline = "";
+          });
+          BlocProvider.of<TicketClassificationTabBloc>(context)
+              .selectedPipelineId = "11257490";
+          BlocProvider.of<TicketClassificationTabBloc>(context)
+              .selectedBOPsState = selectedBOPsState;
+          BlocProvider.of<TicketClassificationTabBloc>(context)
+              .selectedClassification = selectedClassification;
+          BlocProvider.of<TicketClassificationTabBloc>(context)
+              .selectedValidation = selectedValidation;
+
+          BlocProvider.of<TicketClassificationTabBloc>(context)
+              .add(TicketClassificationDataCallEvent(
+            fieldValue: ['11257490'],
+            endDate: selectedate.isNotEmpty
+                ? selectedate.lastOrNull
+                : DateTime.now(),
+            startDate: selectedate.isNotEmpty
+                ? selectedate.firstOrNull
+                : DateTime.now().subtract(const Duration(days: 1)),
+            page: 1,
+            pageSize: 10,
+          ));
+        },
+        icon: const Icon(Icons.clear_all, color: Colors.white),
         label:
-            const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+            const Text('Clear Filters', style: TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-          backgroundColor: SupportBotColors.bluePrimary,
+          // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+          backgroundColor: Colors.redAccent, // You can choose another color
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),
@@ -372,50 +387,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _buildClearFilterButton() {
-    return ElevatedButton.icon(
-      onPressed: () async {
-        setState(() {
-          selectedItem = '';
-          selectedValue = '';
-          bopsState = '';
-          validation = '';
-          selectedDatesNotifier.value = null;
-          pipelineIds.clear();
-          selectedPipeline = "";
-        });
-
-        await LocalStorage.clearPipeline();
-        await LocalStorage.clearClassification();
-        await LocalStorage.clearBopsState();
-        await LocalStorage.clearValidation();
-        await LocalStorage.clearSelectedDates();
-        await LocalStorage.clearPipeline();
-
-        BlocProvider.of<TicketClassificationTabBloc>(context)
-            .add(TicketClassificationDataCallEvent(
-          fieldValue: ['11257490'],
-          endDate: DateTime.now(),
-          startDate: DateTime.now().subtract(const Duration(days: 7)),
-          page: 1,
-          pageSize: 10,
-        ));
-      },
-      icon: const Icon(Icons.clear_all, color: Colors.white),
-      label: const Text('Clear Filters', style: TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-        backgroundColor: Colors.redAccent, // You can choose another color
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      ),
-    );
-  }
-
   Future<void> _pickDateRange() async {
-    final DateTime endDate = DateTime.now();
-    final DateTime startDate = endDate.subtract(const Duration(days: 1));
-
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle:
@@ -440,10 +412,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
     if (pickedDates != null) {
       selectedDatesNotifier.value = pickedDates.cast<DateTime>();
-      final startDate = pickedDates.isNotEmpty ? pickedDates[0] : null;
-      final endDate = pickedDates.length > 1 ? pickedDates[1] : null;
-
-      await LocalStorage.saveSelectedDate(startDate, endDate);
+      selectedate = pickedDates;
     }
   }
 
@@ -503,9 +472,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           selectedButtonText: "Ticket Classification",
           startDate: selectedDatesNotifier.value?.first,
           endDate: selectedDatesNotifier.value?.last,
-          bopsState: bopsState,
-          selectedClassification: selectedValue,
-          selectedClassificationValidation: validation,
+          bopsState: selectedBOPsState,
+          selectedClassification: selectedClassification,
+          selectedClassificationValidation: selectedValidation,
           selectedPipeline: getPipelineId()),
     );
   }

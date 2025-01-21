@@ -24,9 +24,11 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
     emit(AIQueryLoadingState());
     try {
       final repository = serviceLocator<AiQueryUsecase>();
-      List<DateTime?> datesList = await getSelectedDates();
       serviceLocator<InstanceSharingService>().selectedPipelineValueList =
           event.selectedPipelineValueList;
+      final endDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      final startDate = endDate.subtract(const Duration(days: 1));
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
           Filter(
@@ -39,14 +41,10 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
                   .toString()
             ], fieldName: "answeredStatus"),
         ],
-        page: event.page,
-        pageSize: event.pageSize,
-        startDate: (datesList.firstOrNull ?? DateTime.now())
-            .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
-            .toIso8601String(),
-        endDate: (datesList.lastOrNull ?? DateTime.now())
-            .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
-            .toIso8601String(),
+        page: event.page ?? 1,
+        pageSize: event.pageSize ?? 10,
+        startDate: (event.startDate ?? startDate).toString(),
+        endDate: (event.endDate ?? endDate).toString(),
       );
       final response = await repository.invoke(req);
       if (response.isLeft) {

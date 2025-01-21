@@ -8,7 +8,6 @@ class TicketClassificationDataCallEvent extends TicketClassificationEvent {
   final DateTime? endDate;
   final num? page;
   final num? pageSize;
-
   final List<String>? fieldValue;
 
   TicketClassificationDataCallEvent(
@@ -25,8 +24,6 @@ class RevertClassificationEvent extends TicketClassificationEvent {
 
   RevertClassificationEvent({this.ticketId});
 }
-
-
 
 class TicketClassificationPreviousDataEvent extends TicketClassificationEvent {}
 

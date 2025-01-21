@@ -24,7 +24,7 @@ class AddAnswerValidationBloc
     try {
       final repository = serviceLocator.get<AddAnswerValidationUsecase>();
       final req = AddAnswerValidationRequestModel(
-          agentAnsValidation: event.agentAnsValidation,
+          agentAnsValidation: event.agentAnsValidation ?? true,
           ticketId: event.ticketId,
           pipeline: event.pipeline ?? "11257490");
       final response = await repository.invoke(req);

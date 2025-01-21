@@ -20,7 +20,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/applications_pluto_helper_methods.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
-import 'package:support_bot_dashboard/utils/ticket_classification_renderer.dart'; 
+import 'package:support_bot_dashboard/utils/ticket_classification_renderer.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
@@ -61,7 +61,7 @@ class Renderers {
             .copyWith(fontSize: 14, color: SupportBotColors.gray.shade800));
 
     return Text(
-      text,
+      text.isEmpty ? "N/A" : text,
       textAlign: TextAlign.start,
       style: textStyle,
       overflow: TextOverflow.ellipsis,
@@ -128,7 +128,7 @@ class Renderers {
     final classification = rowData['classification'] ?? 'N/A';
     int index = rendererContext.cell.value?['index'] ?? 0;
     final allRows = rendererContext.cell.value?['allRows'] ?? [];
-    debugPrint("print 2222222222 : index : $index");
+
     return TicketClassificationActionRenderer(
       classification: classification,
       id: id,
@@ -140,7 +140,6 @@ class Renderers {
     );
   }
 
- 
   static Widget actionButtonRenderer(
     PlutoColumnRendererContext rendererContext, {
     required BuildContext context,

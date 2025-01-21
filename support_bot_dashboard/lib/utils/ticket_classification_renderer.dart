@@ -40,14 +40,14 @@ class _TicketClassificationActionRendererState
     return BlocConsumer<TicketClassificationTabBloc, TicketClassificationState>(
       listener: (context, state) {
         if (state is TicketClassificationSucssesState) {
-          BlocProvider.of<TicketClassificationTabBloc>(context).add(
-            TicketClassificationDataCallEvent(
-              startDate: DateTime.now().subtract(const Duration(days: 1)),
-              endDate: DateTime.now(),
-              page: 1,
-              pageSize: 10,
-            ),
-          );
+          // BlocProvider.of<TicketClassificationTabBloc>(context).add(
+          //   TicketClassificationDataCallEvent(
+          //     startDate: DateTime.now().subtract(const Duration(days: 1)),
+          //     endDate: DateTime.now(),
+          //     page: 1,
+          //     pageSize: 10,
+          //   ),
+          // );
         }
       },
       builder: (context, state) {
@@ -121,20 +121,20 @@ class _TicketClassificationActionRendererState
                             ticketId: widget.id,
                           ));
 
-                          Future.delayed(const Duration(milliseconds: 1000),
-                              () {
-                            BlocProvider.of<TicketClassificationTabBloc>(
-                                    context)
-                                .add(
-                              TicketClassificationDataCallEvent(
-                                startDate: DateTime.now()
-                                    .subtract(const Duration(days: 1)),
-                                endDate: DateTime.now(),
-                                page: 1,
-                                pageSize: 10,
-                              ),
-                            );
-                          });
+                          // Future.delayed(const Duration(milliseconds: 1000),
+                          //     () {
+                          //   BlocProvider.of<TicketClassificationTabBloc>(
+                          //           context)
+                          //       .add(
+                          //     TicketClassificationDataCallEvent(
+                          //       startDate: DateTime.now()
+                          //           .subtract(const Duration(days: 1)),
+                          //       endDate: DateTime.now(),
+                          //       page: 1,
+                          //       pageSize: 10,
+                          //     ),
+                          //   );
+                          // });
                           Navigator.of(context).pop();
                           // _showRevertToHubspotPopup(
                           //     context, S.of(context).revertSuccess);
@@ -233,18 +233,18 @@ class _TicketClassificationActionRendererState
                                                   ),
                                                 );
 
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                                    TicketClassificationDataCallEvent(
-                                              startDate: DateTime.now()
-                                                  .subtract(
-                                                      const Duration(days: 1)),
-                                              endDate: DateTime.now(),
-                                              page: 1,
-                                              pageSize: 10,
-                                            ));
+                                            // BlocProvider.of<
+                                            //             TicketClassificationTabBloc>(
+                                            //         context)
+                                            //     .add(
+                                            //         TicketClassificationDataCallEvent(
+                                            //   startDate: DateTime.now()
+                                            //       .subtract(
+                                            //           const Duration(days: 1)),
+                                            //   endDate: DateTime.now(),
+                                            //   page: 1,
+                                            //   pageSize: 10,
+                                            // ));
 
                                             Navigator.of(context).pop();
                                           },
@@ -289,19 +289,19 @@ class _TicketClassificationActionRendererState
                                           Future.delayed(
                                               const Duration(milliseconds: 500),
                                               () {
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                              TicketClassificationDataCallEvent(
-                                                startDate: DateTime.now()
-                                                    .subtract(const Duration(
-                                                        days: 1)),
-                                                endDate: DateTime.now(),
-                                                page: 1,
-                                                pageSize: 10,
-                                              ),
-                                            );
+                                            // BlocProvider.of<
+                                            //             TicketClassificationTabBloc>(
+                                            //         context)
+                                            //     .add(
+                                            //   TicketClassificationDataCallEvent(
+                                            //     startDate: DateTime.now()
+                                            //         .subtract(const Duration(
+                                            //             days: 1)),
+                                            //     endDate: DateTime.now(),
+                                            //     page: 1,
+                                            //     pageSize: 10,
+                                            //   ),
+                                            // );
                                             Navigator.of(context).pop();
                                           });
                                         },
@@ -597,14 +597,14 @@ _showRevertToHubspotPopup(BuildContext context, String message) {
             ),
             onPressed: () {
               Future.delayed(const Duration(milliseconds: 500), () {
-                BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                  TicketClassificationDataCallEvent(
-                    startDate: DateTime.now().subtract(const Duration(days: 1)),
-                    endDate: DateTime.now(),
-                    page: 1,
-                    pageSize: 10,
-                  ),
-                );
+                // BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                //   TicketClassificationDataCallEvent(
+                //     startDate: DateTime.now().subtract(const Duration(days: 1)),
+                //     endDate: DateTime.now(),
+                //     page: 1,
+                //     pageSize: 10,
+                //   ),
+                // );
                 Navigator.of(context).pop();
               });
               Navigator.of(context).pop();

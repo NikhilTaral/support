@@ -30,15 +30,7 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => TicketClassificationTabBloc()
-              ..add(TicketClassificationDataCallEvent(
-                startDate: DateTime.now().subtract(const Duration(days: 1)),
-                endDate: DateTime.now(),
-                page: page,
-                pageSize: pageSize,
-              )),
-          ),
+          BlocProvider(create: (context) => TicketClassificationTabBloc()),
           BlocProvider(
             create: (context) => TabIndexBloc(),
           ),
@@ -70,13 +62,7 @@ class Dashboard extends StatelessWidget {
                 UserValidationBloc()..add(UserValidationsEvent()),
           ),
           BlocProvider<AiQueryBloc>(
-            create: (context) => AiQueryBloc()
-              ..add(AIQueryInitialEvent(
-                startDate: DateTime.now().subtract(const Duration(days: 1)),
-                endDate: DateTime.now(),
-                page: page,
-                pageSize: pageSize,
-              )),
+            create: (context) => AiQueryBloc(),
             child: const AIQueryFilterWidget(),
           ),
           BlocProvider<UpdateAiAnswerBloc>(

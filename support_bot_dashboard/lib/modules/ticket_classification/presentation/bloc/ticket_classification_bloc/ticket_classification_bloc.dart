@@ -18,6 +18,10 @@ class TicketClassificationTabBloc
 
   num page = 1;
   num pageSize = 10;
+  String selectedBOPsState = "";
+  String selectedClassification = "";
+  String selectedValidation = "";
+  String selectedPipelineId = "11257490";
 
   TicketClassificationTabBloc() : super(TicketClassificationIntialState()) {
     on<TicketClassificationDataCallEvent>(_onTicketClassification);
@@ -32,34 +36,32 @@ class TicketClassificationTabBloc
     try {
       final repository = serviceLocator<TicketClassificationUsecses>();
 
-      List<DateTime?> datesList = await getSelectedDates();
-      final bopsState = await LocalStorage.getBopsState();
-      final classification = await LocalStorage.getClassification();
-      String? validation = await LocalStorage.getValidation();
-      final piplineids = await LocalStorage.getPipelineIds();
-      if (validation?.replaceAll(" ", "").toLowerCase() == "notvalidated") {
-        validation = "";
-      }
+      final endDate = DateTime.now();
+      final startDate = endDate.subtract(const Duration(days: 1));
       page = event.page ?? 1;
       pageSize = event.pageSize ?? 10;
       final req = TicketClassificationRequestModel(
-        startDate: (datesList.firstOrNull ?? DateTime.parse("2024-10-23")),
-        endDate: (datesList.lastOrNull ?? DateTime.now()),
+        startDate: (event.startDate ?? startDate),
+        endDate: (event.endDate ?? DateTime.now()),
         page: event.page,
         pageSize: event.pageSize,
         filter: [
-          if (event.fieldValue?.isNotEmpty == true && event.fieldValue != null)
+          if (selectedBOPsState != "")
+            Filter(fieldName: "BOPS_States", fieldValue: [selectedBOPsState]),
+          if (selectedClassification != "")
             Filter(
-                fieldName: "BOPS_States",
-                fieldValue: bopsState != null ? [bopsState] : []),
+                fieldName: "classifications",
+                fieldValue: [selectedClassification]),
+          if (selectedValidation != "")
+            Filter(
+                fieldName: "classificationValidations",
+                fieldValue: [selectedValidation]),
           Filter(
-              fieldName: "classifications",
-              fieldValue: classification != null ? [classification] : []),
-          Filter(
-              fieldName: "classificationValidations",
-              fieldValue: validation != null ? [validation] : []),
-          Filter(
-              fieldValue: piplineids, fieldName: event.fieldName ?? "pipelines")
+            fieldName: "pipelines",
+            fieldValue: [
+              selectedPipelineId.isEmpty ? "11257490" : selectedPipelineId
+            ],
+          )
         ],
       );
 
@@ -85,7 +87,7 @@ class TicketClassificationTabBloc
           final pipelineId = await LocalStorage.getPipelineIds();
 
           emit(TicketClassificationSucssesState(
-              currentIndex: 0 ,
+              currentIndex: 0,
               model: ticketClassificationEntitieModel,
               pipelineId: pipelineId));
         }
