@@ -84,8 +84,8 @@ class _TicketClassificationActionRendererState
                       );
                     });
                   },
-                  child: Row(
-                    children: const [
+                  child: const Row(
+                    children: [
                       Icon(Icons.visibility),
                       SizedBox(width: 8),
                       Text(
@@ -101,8 +101,8 @@ class _TicketClassificationActionRendererState
                     value: "Revert",
                     child: InkWell(
                       onTap: () {},
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Icon(Icons.loop_rounded),
                           SizedBox(width: 8),
                           Text("Revert"),
@@ -442,11 +442,11 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Id : ",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                             text: '${currentRowData.id}',
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                            style: const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
@@ -455,11 +455,11 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                   SelectableText.rich(
                     TextSpan(
                       text: 'Description : ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${currentRowData.ticketDescription}',
-                          style: TextStyle(fontWeight: FontWeight.normal),
+                          style: const TextStyle(fontWeight: FontWeight.normal),
                         ),
                       ],
                     ),
@@ -468,12 +468,12 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Classification : ",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                             text:
                                 '${currentRowData.classification == "" ? "N/A" : currentRowData.classification}',
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                            style: const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
@@ -481,25 +481,25 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Reasoning : ",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                             text:
                                 '${currentRowData.reasoning == "" ? "N/A" : currentRowData.reasoning}',
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                            style: const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText.rich(
                     TextSpan(
-                      text: "BOPsState : ",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      text: "BOPS State : ",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                             text:
                                 '${currentRowData.bopsState == "null" ? "N/A" : currentRowData.bopsState}',
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                            style: const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
@@ -507,25 +507,25 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Validated By: ",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                             text:
                                 '${currentRowData.classificationValidatedBy == "" ? "N/A" : currentRowData.classificationValidatedBy}',
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                            style: const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
                   const SizedBox(height: 4),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Validated : ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      text: 'Validated Classification : ',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                           text:
-                              '${currentRowData.classificationValidatedBy == "" ? "N/A" : currentRowData.classificationValidatedBy}',
-                          style: TextStyle(fontWeight: FontWeight.normal),
+                              '${currentRowData.validatedClassification == "" ? "N/A" : currentRowData.validatedClassification}',
+                          style: const TextStyle(fontWeight: FontWeight.normal),
                         ),
                       ],
                     ),
@@ -534,13 +534,13 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                   SelectableText.rich(
                     TextSpan(
                       text: 'Status : ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                           text: currentRowData.isUpdatedToHubspot == true
                               ? 'Updated'
                               : 'Not Updated',
-                          style: TextStyle(fontWeight: FontWeight.normal),
+                          style: const TextStyle(fontWeight: FontWeight.normal),
                         ),
                       ],
                     ),

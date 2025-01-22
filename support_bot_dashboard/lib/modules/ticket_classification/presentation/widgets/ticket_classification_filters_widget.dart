@@ -25,7 +25,8 @@ class TicketClassificationFiltersWidget extends StatefulWidget {
 class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
-
+  final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
+  final TextEditingController _searchController = TextEditingController();
   String selectedClassification = '';
   List<DateTime?> selectedate = [];
   String selectedBOPsState = '';
@@ -108,6 +109,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildClearFilterButton(),
             UIHelpers.horizontalSpaceRegular,
+            _buildSearchWidget(),
             _buildExportButton(),
           ],
         ),
@@ -219,19 +221,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _bopsState() {
     return SizedBox(
-      width: 200,
+      width: 150,
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
           if (state is BopsStatesSucssesState) {
             return CustomMonthDropdown(
               items: state.model?.data ?? [],
               label:
-                  selectedBOPsState.isEmpty ? "BOps State" : selectedBOPsState,
+                  selectedBOPsState.isEmpty ? "BOPS State" : selectedBOPsState,
               onChanged: (value) async {
                 setState(() {
                   selectedBOPsState = value ?? '';
                 });
-                await _saveBopsStateLocalStorage(value);
               },
               selectedValue: selectedBOPsState,
             );
@@ -250,13 +251,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Future<void> _saveBopsStateLocalStorage(String? value) async {
-    await LocalStorage.saveBopsState(value);
-  }
-
   Widget _buildTicketClassificationDropdown() {
     return SizedBox(
-      width: 250,
+      width: 200,
       child: CustomMonthDropdown(
         label: selectedClassification.isEmpty
             ? "Classification"
@@ -266,7 +263,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           setState(() {
             selectedClassification = value ?? "";
           });
-          await LocalStorage.saveClassification(value);
         },
         items: const [
           "Spam/Marketing",
@@ -341,6 +337,86 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSearchWidget() {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _isSearchOpen,
+      builder: (context, isSearchOpen, child) {
+        return Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: IconButton(
+                icon: Icon(
+                  isSearchOpen ? Icons.close : Icons.search,
+                  size: 25,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  if (isSearchOpen) {
+                    if (_searchController.text.isNotEmpty) {
+                      _searchController.clear();
+                      final selectedPipelineValue =
+                          pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+                      BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                        TicketClassificationDataCallEvent(
+                          fieldValue: selectedPipelineValue,
+                          endDate: selectedate.lastOrNull,
+                          startDate: selectedate.firstOrNull,
+                          ticketId: _searchController.text,
+                          page: 1,
+                          pageSize: 10,
+                        ),
+                      );
+                    }
+                  }
+                  _isSearchOpen.value = !isSearchOpen;
+                },
+              ),
+            ),
+            if (isSearchOpen)
+              SizedBox(
+                width: UIHelpers.screenWidth(context) * 0.115,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    hintStyle: SupportBotTextstyle.medium.copyWith(
+                      color: SupportBotColors.gray.shade600,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: SupportBotColors.bluePrimary.shade500,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: SupportBotColors.bluePrimary.shade500,
+                      ),
+                    ),
+                    isDense: true,
+                  ),
+                  onSubmitted: (value) {
+                    final selectedPipelineValue =
+                        pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+                    BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                      TicketClassificationDataCallEvent(
+                        fieldValue: selectedPipelineValue,
+                        endDate: selectedate.lastOrNull,
+                        startDate: selectedate.firstOrNull,
+                        ticketId: _searchController.text,
+                        page: 1,
+                        pageSize: 10,
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 

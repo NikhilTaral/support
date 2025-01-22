@@ -1,6 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/data_module.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/pipeline_type_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
@@ -28,7 +29,8 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   final ValueNotifier<String?> classificationNotifier =
       ValueNotifier<String?>(null);
   String selectedItem = "Expert Care Level 1";
-  List<String> pipelineIds = [];
+  final DataModule dataModule = DataModule();
+  final List<String> pipelineIds = [];
 
   DateTime? endDate;
   DateTime? startDate;

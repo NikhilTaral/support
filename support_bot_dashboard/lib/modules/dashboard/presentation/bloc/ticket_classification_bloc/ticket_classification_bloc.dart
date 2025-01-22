@@ -21,8 +21,8 @@ class TicketClassificationBloc
   FutureOr<void> _onTickitClassification(TickiteClassificationEvent event,
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
-      final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 1));
+    final endDate = DateTime.now();
+    final startDate = endDate.subtract(const Duration(days: 1));
     final repository = serviceLocator<DashboardChartdataUsecase>();
     List<DateTime?> datesList = await getSelectedDates();
     final req = DashboardAnswerDataInitialRequestModel(

@@ -409,12 +409,11 @@ class Renderers {
                     UpdateClassificationValidationstateEvent(
                       id: rowData['id'],
                       pipeline: (piplineid).join(','),
-                      reason: "",
-                      validatedClassification: newValue?.toLowerCase() ?? '',
                       validation: newValue?.toLowerCase(),
                     ),
                   );
-                  Future.delayed(const Duration(microseconds: 500), () {
+
+                  Future.delayed(const Duration(microseconds: 2000000), () {
                     BlocProvider.of<TicketClassificationTabBloc>(context)
                         .add(TicketClassificationDataCallEvent(
                       startDate:

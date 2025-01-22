@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
@@ -16,7 +17,7 @@ class TicketClassificationTabBloc
   TicketClassificationEntitieModel ticketClassificationEntitieModel =
       TicketClassificationEntitieModel();
 
-  num page = 1;
+  int page = 1;
   num pageSize = 10;
   String selectedBOPsState = "";
   String selectedClassification = "";
@@ -35,15 +36,23 @@ class TicketClassificationTabBloc
 
     try {
       final repository = serviceLocator<TicketClassificationUsecses>();
+      final endDate = event.endDate
+          ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+      final startDate = event.startDate
+          ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+      final enddate = DateTime.now()
+          .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+      final startdate = DateTime.now()
+          .subtract(const Duration(days: 1))
+          .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
-      final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 1));
       page = event.page ?? 1;
       pageSize = event.pageSize ?? 10;
       final req = TicketClassificationRequestModel(
-        startDate: (event.startDate ?? startDate),
-        endDate: (event.endDate ?? DateTime.now()),
+        startDate: (startDate ?? startdate),
+        endDate: (endDate ?? enddate),
         page: event.page,
+        ticketId: event.ticketId,
         pageSize: event.pageSize,
         filter: [
           if (selectedBOPsState != "")
@@ -52,7 +61,7 @@ class TicketClassificationTabBloc
             Filter(
                 fieldName: "classifications",
                 fieldValue: [selectedClassification]),
-          if (selectedValidation != "")
+          if (selectedValidation != "" && selectedValidation == "Not Validated")
             Filter(
                 fieldName: "classificationValidations",
                 fieldValue: [selectedValidation]),
@@ -76,11 +85,12 @@ class TicketClassificationTabBloc
         if (model.data?.items?.isEmpty == true && model.success == true) {
           emit(TicketClassificationEmptyState());
         } else {
+          page = model.data?.currentPage ?? 1;
+
           ticketClassificationEntitieModel = TicketClassificationEntitieModel(
             data: model.data,
             failCode: model.failCode,
             message: model.message,
-            params: model.params,
             success: model.success,
           );
 
@@ -88,6 +98,8 @@ class TicketClassificationTabBloc
 
           emit(TicketClassificationSucssesState(
               currentIndex: 0,
+              endDate: endDate,
+              startDate: startDate,
               model: ticketClassificationEntitieModel,
               pipelineId: pipelineId));
         }
@@ -120,10 +132,4 @@ class TicketClassificationTabBloc
           model: ticketClassificationEntitieModel));
     }
   }
-}
-
-Future<List<DateTime?>> getSelectedDates() async {
-  final dates = await LocalStorage.getSelectedDates();
-
-  return dates;
 }

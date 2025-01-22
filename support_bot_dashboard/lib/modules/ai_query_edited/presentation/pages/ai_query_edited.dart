@@ -11,7 +11,9 @@ class AIQueryEditedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AiQueryBloc>().add(
-          AIQueryInitialEvent(),
+          AIQueryInitialEvent(
+              page: BlocProvider.of<AiQueryBloc>(context).page,
+              pageSize: BlocProvider.of<AiQueryBloc>(context).pageSize),
         );
     return Scaffold(
       body: Responsive(

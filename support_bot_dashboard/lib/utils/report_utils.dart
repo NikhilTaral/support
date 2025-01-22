@@ -58,7 +58,7 @@ class ReportUtils {
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'BOps State',
+        title: 'BOPS State',
         field: 'bops_state',
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
