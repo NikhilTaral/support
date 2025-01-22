@@ -727,7 +727,7 @@ class Renderers {
                       ),
                       UIHelpers.verticalSpaceRegular,
                       Text(
-                        "AI query answer: ",
+                        "AI Query Answer: ",
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       TextField(
@@ -752,14 +752,14 @@ class Renderers {
                                     BorderRadius.all(Radius.circular(6))),
                             labelStyle: SupportBotTextstyle.cellHeading),
                       ),
-                      Text(
-                        "AI Answer Validation Status: ",
-                        style: SupportBotTextstyle.columnHeading,
-                      ),
-                      Text(
-                        validationStatus,
-                        style: SupportBotTextstyle.cellHeading,
-                      ),
+                      // Text(
+                      //   "AI Answer Validation Status: ",
+                      //   style: SupportBotTextstyle.columnHeading,
+                      // ),
+                      // Text(
+                      //   validationStatus,
+                      //   style: SupportBotTextstyle.cellHeading,
+                      // ),
                       UIHelpers.verticalSpaceRegular,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
