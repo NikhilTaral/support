@@ -76,7 +76,7 @@ class _TicketClassificationActionRendererState
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return ZZZZDialog(
+                          return ViewDialogBox(
                             allRows: widget.allRows,
                             index: widget.index,
                           );
@@ -358,16 +358,16 @@ class _TicketClassificationActionRendererState
   }
 }
 
-class ZZZZDialog extends StatefulWidget {
+class ViewDialogBox extends StatefulWidget {
   final int index;
   final List<Item> allRows;
-  const ZZZZDialog({super.key, required this.index, required this.allRows});
+  const ViewDialogBox({super.key, required this.index, required this.allRows});
 
   @override
-  State<ZZZZDialog> createState() => _ZZZZDialogState();
+  State<ViewDialogBox> createState() => _ViewDialogBoxState();
 }
 
-class _ZZZZDialogState extends State<ZZZZDialog> {
+class _ViewDialogBoxState extends State<ViewDialogBox> {
   late int currentIndex;
   late Item currentRowData;
 
@@ -446,7 +446,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                       children: <TextSpan>[
                         TextSpan(
                             text: '${currentRowData.id}',
-                            style: const TextStyle(fontWeight: FontWeight.normal)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
@@ -473,7 +474,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                         TextSpan(
                             text:
                                 '${currentRowData.classification == "" ? "N/A" : currentRowData.classification}',
-                            style: const TextStyle(fontWeight: FontWeight.normal)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
@@ -486,7 +488,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                         TextSpan(
                             text:
                                 '${currentRowData.reasoning == "" ? "N/A" : currentRowData.reasoning}',
-                            style: const TextStyle(fontWeight: FontWeight.normal)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
@@ -499,7 +502,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                         TextSpan(
                             text:
                                 '${currentRowData.bopsState == "null" ? "N/A" : currentRowData.bopsState}',
-                            style: const TextStyle(fontWeight: FontWeight.normal)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
@@ -512,7 +516,8 @@ class _ZZZZDialogState extends State<ZZZZDialog> {
                         TextSpan(
                             text:
                                 '${currentRowData.classificationValidatedBy == "" ? "N/A" : currentRowData.classificationValidatedBy}',
-                            style: const TextStyle(fontWeight: FontWeight.normal)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   ),
