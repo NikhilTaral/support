@@ -35,6 +35,7 @@ class TicketClassificationTabBloc
     emit(TicketClassificationLoadingState());
 
     try {
+      print("selectedValidation:$selectedValidation");
       final repository = serviceLocator<TicketClassificationUsecses>();
       final endDate = event.endDate
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
@@ -61,7 +62,7 @@ class TicketClassificationTabBloc
             Filter(
                 fieldName: "classifications",
                 fieldValue: [selectedClassification]),
-          if (selectedValidation != "" && selectedValidation == "Not Validated")
+          if (selectedValidation != "")
             Filter(
                 fieldName: "classificationValidations",
                 fieldValue: [selectedValidation]),

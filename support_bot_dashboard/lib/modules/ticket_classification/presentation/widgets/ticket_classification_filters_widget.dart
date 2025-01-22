@@ -285,7 +285,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             selectedValidation = value?.toLowerCase() ?? "";
           });
 
-          await LocalStorage.saveValidation(value?.toLowerCase());
+          //await LocalStorage.saveValidation(value?.toLowerCase());
         },
         items: const ["Not Validated", "Correct", "Incorrect"],
       ),

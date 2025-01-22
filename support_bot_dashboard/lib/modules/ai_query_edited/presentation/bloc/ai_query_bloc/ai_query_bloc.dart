@@ -58,8 +58,8 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
         ],
         page: event.page ?? 1,
         pageSize: event.pageSize ?? 10,
-        startDate: startDate.toString(),
-        endDate: endDate.toString(),
+        startDate: startDate.toIso8601String(),
+        endDate: endDate.toIso8601String(),
       );
       final response = await repository.invoke(req);
       if (response.isLeft) {
@@ -116,9 +116,5 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
       failCode: response.failCode,
       message: response.message,
     );
-  }
-
-  Future<List<DateTime?>> getSelectedDates() async {
-    return await LocalStorage.getSelectedDates();
   }
 }
