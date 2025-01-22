@@ -144,27 +144,25 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton() {
-    return Container(
+    return SizedBox(
       height: 180,
       child: ElevatedButton.icon(
-        onPressed: pipelineIds.isEmpty ? null : _addEvents,
-        icon: Icon(
+        onPressed: _addEvents,
+        icon: const Icon(
           Icons.filter_alt_outlined,
-          color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+          color: Colors.white,
         ),
-        label: Text(
+        label: const Text(
           'Apply Filter',
           style: TextStyle(
-            color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+            color: Colors.white,
           ),
         ),
         style: ElevatedButton.styleFrom(
-          //    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-          backgroundColor: pipelineIds.isEmpty
-              ? SupportBotColors.bluePrimary.withOpacity(0.5)
-              : SupportBotColors.bluePrimary,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
         ),
       ),
     );

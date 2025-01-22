@@ -302,32 +302,39 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: Container(
         height: 180,
         child: ElevatedButton.icon(
-          onPressed: (selectedPipeline.isNotEmpty)
-              ? () {
-                  BlocProvider.of<TicketClassificationTabBloc>(context)
-                      .selectedPipelineId = pipelineIds.first;
-                  BlocProvider.of<TicketClassificationTabBloc>(context)
-                      .selectedBOPsState = selectedBOPsState;
-                  BlocProvider.of<TicketClassificationTabBloc>(context)
-                      .selectedClassification = selectedClassification;
-                  BlocProvider.of<TicketClassificationTabBloc>(context)
-                      .selectedValidation = selectedValidation;
-                  BlocProvider.of<TicketClassificationTabBloc>(context)
-                      .add(TicketClassificationDataCallEvent(
-                    fieldValue: pipelineIds,
-                    endDate: selectedate.lastOrNull,
-                    startDate: selectedate.firstOrNull,
-                    page: 1,
-                    pageSize: 10,
-                  ));
-                }
-              : null,
+          onPressed: () {
+            // Use default value if pipelineIds is empty
+            final selectedPipelineValue =
+                pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+
+            // Show a snackbar if no valid pipeline is selected
+            if (selectedPipelineValue.isEmpty) {
+              showSnackbar(
+                context,
+                'Please select a pipeline to apply filter',
+              );
+              return;
+            }
+
+            // Set values and trigger the event
+            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+            bloc.selectedPipelineId = selectedPipelineValue.first;
+            bloc.selectedBOPsState = selectedBOPsState;
+            bloc.selectedClassification = selectedClassification;
+            bloc.selectedValidation = selectedValidation;
+            bloc.add(TicketClassificationDataCallEvent(
+              fieldValue: selectedPipelineValue,
+              endDate: selectedate.lastOrNull,
+              startDate: selectedate.firstOrNull,
+              page: 1,
+              pageSize: 10,
+            ));
+          },
           icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
           label:
               const Text('Apply Filter', style: TextStyle(color: Colors.white)),
           style: ElevatedButton.styleFrom(
             elevation: 0,
-            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
             backgroundColor: SupportBotColors.bluePrimary,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
@@ -338,7 +345,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildClearFilterButton() {
-    return Container(
+    return SizedBox(
       height: 180,
       child: ElevatedButton.icon(
         onPressed: () async {
@@ -366,9 +373,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             endDate: selectedate.isNotEmpty
                 ? selectedate.lastOrNull
                 : DateTime.now(),
-            startDate: selectedate.isNotEmpty
-                ? selectedate.firstOrNull
-                : DateTime.now().subtract(const Duration(days: 1)),
+            startDate: DateTime.now().subtract(const Duration(days: 1)),
             page: 1,
             pageSize: 10,
           ));
@@ -378,8 +383,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             const Text('Clear Filters', style: TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-          backgroundColor: Colors.redAccent, // You can choose another color
+          backgroundColor: Colors.redAccent,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),
