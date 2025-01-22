@@ -20,6 +20,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/applications_pluto_helper_methods.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
+import 'package:support_bot_dashboard/utils/ticket_classification_renderer.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
@@ -27,6 +28,7 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
 
 class Renderers {
   static TextStyle frozenStyle(
@@ -59,7 +61,7 @@ class Renderers {
             .copyWith(fontSize: 14, color: SupportBotColors.gray.shade800));
 
     return Text(
-      text,
+      text.isEmpty ? "N/A" : text,
       textAlign: TextAlign.start,
       style: textStyle,
       overflow: TextOverflow.ellipsis,
@@ -115,480 +117,26 @@ class Renderers {
     required BuildContext context,
     void Function(String?)? onDelete,
   }) {
-    final TicketClassificationEntitieModel? ticketClassificationEntitieModel;
     final rowData =
         rendererContext.row.cells.map((key, cell) => MapEntry(key, cell.value));
+    final rowsData = [rowData];
     final actionData =
         rendererContext.row.cells["action"]?.value as Map<String, dynamic>? ??
             {};
     final isUpdatedToHubspot = actionData["isUpdatedToHubspot"] ?? "";
     final id = rowData['id'] ?? '';
     final classification = rowData['classification'] ?? 'N/A';
-    return BlocConsumer<TicketClassificationTabBloc, TicketClassificationState>(
-      listener: (context, state) {
-        if (state is TicketClassificationActionSucssesState) {
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .add(TicketClassificationDataCallEvent(
-            startDate: DateTime.now().subtract(const Duration(days: 7)),
-            endDate: DateTime.now(),
-            page: 1,
-            pageSize: 10,
-          ));
-        }
-      },
-      builder: (context, state) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: PopupMenuTheme(
-            data: const PopupMenuThemeData(
-              color: Colors.white,
-            ),
-            child: PopupMenuButton<String>(
-              tooltip: "",
-              icon: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: const Icon(
-                  Icons.more_vert_rounded,
-                ),
-              ),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: "View",
-                  onTap: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            backgroundColor: Colors.white,
-                            child: Container(
-                              constraints: const BoxConstraints(maxWidth: 500),
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Ticket details",
-                                        style: SupportBotTextstyle.columnHeading
-                                            .copyWith(fontSize: 20),
-                                      ),
-                                    ),
-                                    UIHelpers.verticalSpaceSmall,
-                                    const Divider(),
-                                    UIHelpers.verticalSpaceSmall,
-                                    ...rowData.entries.map((entry) {
-                                      if (entry.key.toLowerCase() == "action") {
-                                        return const SizedBox.shrink();
-                                      }
+    int index = rendererContext.cell.value?['index'] ?? 0;
+    final allRows = rendererContext.cell.value?['allRows'] ?? [];
 
-                                      String capitalizedKey = entry.key
-                                          .split('_')
-                                          .join(' ')
-                                          .split(' ')
-                                          .map((word) => word.isNotEmpty
-                                              ? '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}'
-                                              : '')
-                                          .join(' ');
-
-                                      bool isEmpty =
-                                          (entry.value?.toString() ?? '')
-                                              .isEmpty;
-                                      String value = isEmpty
-                                          ? 'N/A'
-                                          : entry.value.toString();
-
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "$capitalizedKey: ",
-                                            style: SupportBotTextstyle
-                                                .columnHeading,
-                                          ),
-                                          UIHelpers.verticalSpaceTiny,
-                                          Text(
-                                            value,
-                                            style: isEmpty
-                                                ? SupportBotTextstyle
-                                                    .cellHeading
-                                                    .copyWith(
-                                                        color: Colors.black54,
-                                                        fontStyle:
-                                                            FontStyle.italic)
-                                                : SupportBotTextstyle
-                                                    .cellHeading,
-                                          ),
-                                          UIHelpers.verticalSpaceRegular,
-                                        ],
-                                      );
-                                    }).toList(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton.icon(
-                                          icon: const Icon(Icons.cancel,
-                                              color:
-                                                  SupportBotColors.bluePrimary),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 30, vertical: 15),
-                                            backgroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              side: const BorderSide(
-                                                  color: SupportBotColors
-                                                      .bluePrimary),
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                            ),
-                                          ),
-                                          label: const Text(
-                                            "Close",
-                                            style: TextStyle(
-                                                color: SupportBotColors
-                                                    .bluePrimary),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    });
-                  },
-                  child: BlocProvider(
-                    create: (context) => TicketClassificationActionBloc(),
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.visibility,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "View",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                if (isUpdatedToHubspot == true)
-                  PopupMenuItem<String>(
-                    value: S.of(context).revert,
-                    child: InkWell(
-                      onTap: () {
-                        if (isUpdatedToHubspot) {
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .add(RevertClassificationEvent(
-                            ticketId: id,
-                          ));
-
-                          Future.delayed(const Duration(milliseconds: 1000),
-                              () {
-                            BlocProvider.of<TicketClassificationTabBloc>(
-                                    context)
-                                .add(
-                              TicketClassificationDataCallEvent(
-                                startDate: DateTime.now()
-                                    .subtract(const Duration(days: 7)),
-                                endDate: DateTime.now(),
-                                page: 1,
-                                pageSize: 10,
-                              ),
-                            );
-                          });
-                          Navigator.of(context).pop();
-                          // _showRevertToHubspotPopup(
-                          //     context, S.of(context).revertSuccess);
-                        } else {
-                          _showRevertToHubspotPopup(
-                              context, S.of(context).noRevert);
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.loop_rounded),
-                          UIHelpers.horizontalSpaceTiny,
-                          Text(S.of(context).revert),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (isUpdatedToHubspot == false)
-                  PopupMenuItem<String>(
-                    value: "Update",
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) {
-                          return BlocProvider.value(
-                            value: BlocProvider.of<TicketClassificationTabBloc>(
-                                context),
-                            child: AlertDialog(
-                              title: const Text("Update Ticket"),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Do you Want to Mark This Ticket as a Contact ${classification} in HubSpot",
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  style: TextButton.styleFrom(
-                                    backgroundColor:
-                                        SupportBotColors.bluePrimary,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 14.0, horizontal: 24.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    "No",
-                                    style: TextStyle(
-                                      color: SupportBotColors.white,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                BlocProvider(
-                                  create: (context) =>
-                                      TicketClassificationActionBloc(),
-                                  child: BlocBuilder<
-                                      TicketClassificationActionBloc,
-                                      TicketClassificationActionState>(
-                                    builder: (context, state) {
-                                      if (state
-                                          is TicketClassificationActionLoadingState) {
-                                        return const CircularProgressIndicator();
-                                      }
-                                      if (state
-                                          is TicketClassificationActionSucssesState) {
-                                        return TextButton(
-                                          onPressed: () {
-                                            final classification =
-                                                rowData['classification'] ?? '';
-
-                                            final ticketId =
-                                                rowData['id'] ?? '';
-
-                                            context
-                                                .read<
-                                                    TicketClassificationActionBloc>()
-                                                .add(
-                                                  TicketClassificationActionOnEvent(
-                                                    classification:
-                                                        classification,
-                                                    ticketId: ticketId,
-                                                  ),
-                                                );
-
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                                    TicketClassificationDataCallEvent(
-                                              startDate: DateTime.now()
-                                                  .subtract(
-                                                      const Duration(days: 7)),
-                                              endDate: DateTime.now(),
-                                              page: 1,
-                                              pageSize: 10,
-                                            ));
-
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                SupportBotColors.bluePrimary,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 14.0,
-                                                horizontal: 24.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            "Yes",
-                                            style: TextStyle(
-                                              color: SupportBotColors.white,
-                                              fontSize: 12.0,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return TextButton(
-                                        onPressed: () {
-                                          final classification =
-                                              rowData['classification'] ?? '';
-                                          final ticketId = rowData['id'] ?? '';
-
-                                          context
-                                              .read<
-                                                  TicketClassificationActionBloc>()
-                                              .add(
-                                                TicketClassificationActionOnEvent(
-                                                  classification:
-                                                      classification,
-                                                  ticketId: ticketId,
-                                                ),
-                                              );
-
-                                          Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () {
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                              TicketClassificationDataCallEvent(
-                                                startDate: DateTime.now()
-                                                    .subtract(const Duration(
-                                                        days: 7)),
-                                                endDate: DateTime.now(),
-                                                page: 1,
-                                                pageSize: 10,
-                                              ),
-                                            );
-                                            Navigator.of(context).pop();
-                                          });
-                                        },
-                                        style: TextButton.styleFrom(
-                                          backgroundColor:
-                                              SupportBotColors.bluePrimary,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 14.0, horizontal: 24.0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(4.0),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          "Yes",
-                                          style: TextStyle(
-                                            color: SupportBotColors.white,
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.update,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Update",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  static _showRevertToHubspotPopup(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).statusUpdated),
-          content: Text(message),
-          actions: <Widget>[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: SupportBotColors.bluePrimary,
-                foregroundColor: SupportBotColors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
-              ),
-              onPressed: () {
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                    TicketClassificationDataCallEvent(
-                      startDate:
-                          DateTime.now().subtract(const Duration(days: 7)),
-                      endDate: DateTime.now(),
-                      page: 1,
-                      pageSize: 10,
-                    ),
-                  );
-                  Navigator.of(context).pop();
-                });
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                S.of(context).ok,
-                style: SupportBotTextstyle.hint.copyWith(
-                  color: SupportBotColors.white,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    return TicketClassificationActionRenderer(
+      classification: classification,
+      id: id,
+      isUpdatedToHubspot: isUpdatedToHubspot,
+      rowsData: rowsData,
+      onDelete: onDelete,
+      index: index,
+      allRows: allRows,
     );
   }
 
@@ -861,16 +409,15 @@ class Renderers {
                     UpdateClassificationValidationstateEvent(
                       id: rowData['id'],
                       pipeline: (piplineid).join(','),
-                      reason: "",
-                      validatedClassification: newValue?.toLowerCase() ?? '',
                       validation: newValue?.toLowerCase(),
                     ),
                   );
-                  Future.delayed(const Duration(microseconds: 500), () {
+
+                  Future.delayed(const Duration(microseconds: 2000000), () {
                     BlocProvider.of<TicketClassificationTabBloc>(context)
                         .add(TicketClassificationDataCallEvent(
                       startDate:
-                          DateTime.now().subtract(const Duration(days: 7)),
+                          DateTime.now().subtract(const Duration(days: 1)),
                       endDate: DateTime.now(),
                       page:
                           BlocProvider.of<TicketClassificationTabBloc>(context)
@@ -1051,7 +598,7 @@ class Renderers {
                                       .add(
                                     TicketClassificationDataCallEvent(
                                       startDate: DateTime.now()
-                                          .subtract(const Duration(days: 7)),
+                                          .subtract(const Duration(days: 1)),
                                       endDate: DateTime.now(),
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(
@@ -1180,7 +727,7 @@ class Renderers {
                       ),
                       UIHelpers.verticalSpaceRegular,
                       Text(
-                        "AI query answer: ",
+                        "AI Query Answer: ",
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       TextField(
@@ -1205,14 +752,14 @@ class Renderers {
                                     BorderRadius.all(Radius.circular(6))),
                             labelStyle: SupportBotTextstyle.cellHeading),
                       ),
-                      Text(
-                        "AI Answer Validation Status: ",
-                        style: SupportBotTextstyle.columnHeading,
-                      ),
-                      Text(
-                        validationStatus,
-                        style: SupportBotTextstyle.cellHeading,
-                      ),
+                      // Text(
+                      //   "AI Answer Validation Status: ",
+                      //   style: SupportBotTextstyle.columnHeading,
+                      // ),
+                      // Text(
+                      //   validationStatus,
+                      //   style: SupportBotTextstyle.cellHeading,
+                      // ),
                       UIHelpers.verticalSpaceRegular,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

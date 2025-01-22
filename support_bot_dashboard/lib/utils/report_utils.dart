@@ -58,7 +58,7 @@ class ReportUtils {
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'BOps State',
+        title: 'BOPS State',
         field: 'bops_state',
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
@@ -93,6 +93,7 @@ class ReportUtils {
         enableContextMenu: false,
         enableFilterMenuItem: false,
         enableSorting: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
         enableDropToResize: false,
         renderer: (rendererContext) => Renderers.validationDropDown(
             rendererContext,
@@ -109,6 +110,7 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
         renderer: Renderers.statusRenderer,
       ),
       PlutoColumn(
@@ -133,36 +135,49 @@ class ReportUtils {
 
   List<PlutoRow> createTicketClassificationRow() {
     final s = serviceLocator<S>();
-    return ticketClassificationEntitieModel.data?.items
-            ?.map((e) => PlutoRow(cells: {
-                  "id": PlutoCell(
-                    value: e.id ?? "NA",
-                  ),
-                  "ticket_description": PlutoCell(
-                    value: e.ticketDescription ?? [],
-                  ),
-                  "bops_state": PlutoCell(
-                    value: e.bopsState ?? "N/A",
-                  ),
-                  "classification": PlutoCell(
-                    value: e.classification ?? "N/A",
-                  ),
-                  "validation": PlutoCell(
-                    value: capitalizeFirstLetter(
-                        e.classificationValidation ?? "-"),
-                  ),
-                  "status": PlutoCell(
-                    value: e.isUpdatedToHubspot ?? "N/A",
-                  ),
-                  "action": PlutoCell(
-                    value: {
-                      "validatedBy": e.classificationValidatedBy,
-                      "isUpdatedToHubspot": e.isUpdatedToHubspot
-                    },
-                  ),
-                }))
-            .toList() ??
-        [];
+    List<PlutoRow> rows = [];
+    for (int i = 0;
+        i < (ticketClassificationEntitieModel.data?.items ?? []).length;
+        i++) {
+      final e = ticketClassificationEntitieModel.data?.items?[i];
+      rows.add(PlutoRow(cells: {
+        "id": PlutoCell(
+          value: e?.id ?? "NA",
+        ),
+        'ticket_description':
+            PlutoCell(value: e?.ticketDescription?.replaceAll('\n', ' ') ?? ''),
+        "bops_state": PlutoCell(
+          value: e?.bopsState ?? "N/A",
+        ),
+        "classification": PlutoCell(
+          value: e?.classification ?? "N/A",
+        ),
+        "reasoning": PlutoCell(
+          value: e?.reasoning ?? "N/A",
+        ),
+        "validation": PlutoCell(
+          value: capitalizeFirstLetter(e?.classificationValidation ?? "-"),
+        ),
+        "status": PlutoCell(
+          value: e?.isUpdatedToHubspot ?? "N/A",
+        ),
+        "Validation Reason": PlutoCell(
+          value: e?.classificationValidationReason ?? "N/A",
+        ),
+        "action": PlutoCell(
+          value: {
+            "allRows": (ticketClassificationEntitieModel.data?.items ?? []),
+            "validatedBy": e?.classificationValidatedBy,
+            "isUpdatedToHubspot": e?.isUpdatedToHubspot,
+            "index": i,
+          },
+        ),
+        "validatedBy": PlutoCell(
+          value: e?.classificationValidatedBy ?? "N/A",
+        ),
+      }));
+    }
+    return rows;
   }
 
   String capitalizeFirstLetter(String input) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
@@ -16,6 +17,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashb
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/responsive.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 
 class Dashboard extends StatelessWidget {
   Dashboard({super.key});
@@ -30,15 +32,7 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => TicketClassificationTabBloc()
-              ..add(TicketClassificationDataCallEvent(
-                startDate: DateTime.now().subtract(const Duration(days: 7)),
-                endDate: DateTime.now(),
-                page: page,
-                pageSize: pageSize,
-              )),
-          ),
+          BlocProvider(create: (context) => TicketClassificationTabBloc()),
           BlocProvider(
             create: (context) => TabIndexBloc(),
           ),
@@ -70,13 +64,9 @@ class Dashboard extends StatelessWidget {
                 UserValidationBloc()..add(UserValidationsEvent()),
           ),
           BlocProvider<AiQueryBloc>(
-            create: (context) => AiQueryBloc()
-              ..add(AIQueryInitialEvent(
-                startDate: DateTime.now().subtract(const Duration(days: 7)),
-                endDate: DateTime.now(),
-                page: page,
-                pageSize: pageSize,
-              )),
+            create: (context) =>
+                serviceLocator<InstanceSharingService>().aiQueryBloc ??
+                AiQueryBloc(),
             child: const AIQueryFilterWidget(),
           ),
           BlocProvider<UpdateAiAnswerBloc>(

@@ -91,7 +91,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   Widget _buildDateRangeSelector() {
     if (selectedDatesNotifier.value == null) {
       final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 7));
+      final startDate = endDate.subtract(const Duration(days: 1));
       selectedDatesNotifier.value = [startDate, endDate];
     }
 
@@ -107,32 +107,35 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
             endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 7));
+            startDate = endDate.subtract(const Duration(days: 1));
           }
 
-          return OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: SupportBotColors.bluePrimary),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: () => _pickDateRange(),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.calendar_month_outlined,
-                    color: SupportBotColors.bluePrimary),
-                const SizedBox(width: 8),
-                Text(
-                  '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
-                  style: SupportBotTextstyle.normal.copyWith(
-                    fontSize: 14,
-                    color: SupportBotColors.bluePrimary,
-                    fontWeight: FontWeight.w500,
+          return Container(
+            height: 180,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: SupportBotColors.bluePrimary),
+                // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () => _pickDateRange(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.calendar_month_outlined,
+                      color: SupportBotColors.bluePrimary),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
+                    style: SupportBotTextstyle.normal.copyWith(
+                      fontSize: 14,
+                      color: SupportBotColors.bluePrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -141,24 +144,26 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton() {
-    return ElevatedButton.icon(
-      onPressed: pipelineIds.isEmpty ? null : _addEvents,
-      icon: Icon(
-        Icons.filter_alt_outlined,
-        color: pipelineIds.isEmpty ? Colors.black : Colors.white,
-      ),
-      label: Text(
-        'Apply Filter',
-        style: TextStyle(
-          color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+    return SizedBox(
+      height: 180,
+      child: ElevatedButton.icon(
+        onPressed: _addEvents,
+        icon: const Icon(
+          Icons.filter_alt_outlined,
+          color: Colors.white,
         ),
-      ),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-        backgroundColor: pipelineIds.isEmpty
-            ? SupportBotColors.bluePrimary.withOpacity(0.5)
-            : SupportBotColors.bluePrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        label: const Text(
+          'Apply Filter',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
@@ -198,7 +203,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   Future<void> _pickDateRange() async {
     final DateTime endDate = DateTime.now();
-    final DateTime startDate = endDate.subtract(const Duration(days: 7));
+    final DateTime startDate = endDate.subtract(const Duration(days: 1));
 
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
@@ -218,8 +223,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       config: config,
       dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
-      value: selectedDatesNotifier.value?.cast<DateTime>() ?? [],
-      //value: [startDate, endDate],
+      // value: selectedDatesNotifier.value?.cast<DateTime>() ?? [],
+      value: [startDate, endDate],
       dialogBackgroundColor: Colors.white,
     );
 

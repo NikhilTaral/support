@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/ai_query_answer_response_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/data_module.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/usecases/ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
@@ -15,6 +16,15 @@ part 'ai_query_state.dart';
 class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
   AiQueryAttributeModel? aiQueryAttributeModel;
   AiQueryEvent? lastEvent;
+  DataModule? dataModule;
+  List<String>? piplineID;
+  int page = 1;
+  num pageSize = 10;
+  DateTime endDate = DateTime.now()
+      .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+  DateTime startDate = DateTime.now()
+      .subtract(const Duration(days: 1))
+      .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
   AiQueryBloc() : super(AIQueryInitialState()) {
     on<AIQueryInitialEvent>(_aIQueryInitialEvent);
   }
@@ -23,15 +33,22 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
       AIQueryInitialEvent event, Emitter<AiQueryState> emit) async {
     emit(AIQueryLoadingState());
     try {
+      final enddate = event.endDate
+          ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+      final startdate = event.startDate
+              ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
+          endDate = enddate ??
+              DateTime.now()
+                  .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+      startDate = startdate ?? startDate;
+      piplineID = event.selectedPipelineValueList;
       final repository = serviceLocator<AiQueryUsecase>();
-      List<DateTime?> datesList = await getSelectedDates();
       serviceLocator<InstanceSharingService>().selectedPipelineValueList =
           event.selectedPipelineValueList;
+
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
-          Filter(
-              fieldValue: event.selectedPipelineValueList ?? ["11257490"],
-              fieldName: "pipelines"),
+          Filter(fieldValue: piplineID ?? ["11257490"], fieldName: "pipelines"),
           if (event.classificationFilterValue?.isNotEmpty == true ||
               event.classificationFilterValue != null)
             Filter(fieldValue: [
@@ -39,14 +56,10 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
                   .toString()
             ], fieldName: "answeredStatus"),
         ],
-        page: event.page,
-        pageSize: event.pageSize,
-        startDate: (datesList.firstOrNull ?? DateTime.now())
-            .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
-            .toIso8601String(),
-        endDate: (datesList.lastOrNull ?? DateTime.now())
-            .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
-            .toIso8601String(),
+        page: event.page ?? 1,
+        pageSize: event.pageSize ?? 10,
+        startDate: startDate.toIso8601String(),
+        endDate: endDate.toIso8601String(),
       );
       final response = await repository.invoke(req);
       if (response.isLeft) {
@@ -58,9 +71,14 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
           if (model.data?.items?.isEmpty == true) {
             emit(AIQueryEmptyState());
           } else {
+            page = model.data?.currentPage ?? 1;
             aiQueryAttributeModel = mapResponseToAttributeModel(model);
-            emit(
-                AIQuerySuccessState(dashboardDataModel: aiQueryAttributeModel));
+
+            emit(AIQuerySuccessState(
+                dashboardDataModel: aiQueryAttributeModel,
+                endDate: enddate,
+                startDate: startdate,
+                selectedPipelineValue: piplineID));
           }
         } else {
           emit(AIQueryEmptyState());
@@ -98,9 +116,5 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
       failCode: response.failCode,
       message: response.message,
     );
-  }
-
-  Future<List<DateTime?>> getSelectedDates() async {
-    return await LocalStorage.getSelectedDates();
   }
 }

@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 class TicketClassificationRequestModel {
-  DateTime startDate;
+  DateTime? startDate;
   DateTime endDate;
   List<Filter> filter;
+  final String? ticketId;
   final num? page;
   final num? pageSize;
 
   TicketClassificationRequestModel(
       {required this.startDate,
       required this.endDate,
+      this.ticketId,
       required this.filter,
       this.page,
       this.pageSize});
@@ -19,15 +21,16 @@ class TicketClassificationRequestModel {
     DateTime? endDate,
     List<Filter>? filter,
     final num? page,
+    final String? ticketId,
     final num? pageSize,
   }) =>
       TicketClassificationRequestModel(
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        filter: filter ?? this.filter,
-        page: page ?? this.page,
-        pageSize: page ?? this.pageSize
-      );
+          startDate: startDate ?? this.startDate,
+          endDate: endDate ?? this.endDate,
+          filter: filter ?? this.filter,
+          ticketId: ticketId ?? this.ticketId,
+          page: page ?? this.page,
+          pageSize: page ?? this.pageSize);
 
   factory TicketClassificationRequestModel.fromRawJson(String str) =>
       TicketClassificationRequestModel.fromJson(json.decode(str));
@@ -39,16 +42,18 @@ class TicketClassificationRequestModel {
       TicketClassificationRequestModel(
           startDate: DateTime.parse(json["startDate"]),
           endDate: DateTime.parse(json["endDate"]),
+          ticketId: json["ticketId"],
           filter:
               List<Filter>.from(json["filter"].map((x) => Filter.fromJson(x))),
           page: json['page'],
           pageSize: json['pageSize']);
 
   Map<String, dynamic> toJson() => {
-        "startDate": startDate.toIso8601String(),
+        "startDate": startDate?.toIso8601String(),
         "endDate": endDate.toIso8601String(),
         "filter": List<dynamic>.from(filter.map((x) => x.toJson())),
         'page': page,
+        'ticketId': ticketId,
         'pageSize': pageSize
       };
 }
