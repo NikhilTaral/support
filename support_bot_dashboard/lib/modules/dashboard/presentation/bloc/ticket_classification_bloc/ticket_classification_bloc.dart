@@ -23,7 +23,7 @@ class TicketClassificationBloc
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
     final endDate = DateTime.now();
-    final startDate = endDate.subtract(const Duration(days: 1));
+    final startDate = endDate.subtract(const Duration(days: 0));
     final repository = serviceLocator<DashboardChartdataUsecase>();
     List<DateTime?> datesList = await getSelectedDates();
     final req = DashboardAnswerDataInitialRequestModel(

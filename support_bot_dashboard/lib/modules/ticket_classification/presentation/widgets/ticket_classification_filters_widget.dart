@@ -177,7 +177,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
             endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 1));
+            startDate = endDate.subtract(const Duration(days: 0));
           }
 
           return Container(
@@ -449,7 +449,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             endDate: selectedate.isNotEmpty
                 ? selectedate.lastOrNull
                 : DateTime.now(),
-            startDate: DateTime.now().subtract(const Duration(days: 1)),
+            startDate: DateTime.now().subtract(const Duration(days: 0)),
             page: 1,
             pageSize: 10,
           ));
