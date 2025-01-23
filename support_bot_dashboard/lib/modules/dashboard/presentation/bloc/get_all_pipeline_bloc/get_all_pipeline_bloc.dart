@@ -11,6 +11,7 @@ part 'get_all_pipeline_state.dart';
 
 class GetAllPipelineBloc
     extends Bloc<GetAllPipelineEvent, GetAllPipelineState> {
+      
   GetAllPipelineBloc() : super(GetAllPipelineInitialState()) {
     on<GetAllPiplineInitialEvent>(_onGetAllPipline);
   }

@@ -5,11 +5,11 @@ abstract class TicketClassificationEvent {}
 class TickiteClassificationEvent extends TicketClassificationEvent {
   final List<String>? selectedPipelineValue;
   final String? fieldName;
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
+  final DateTime? startDate ;
+  final DateTime? endDate;
   TickiteClassificationEvent(
       {this.fieldName,
-      this.selectedDate,
-      this.selectedMonth,
+      this.startDate,
+      this.endDate,
       this.selectedPipelineValue});
 }

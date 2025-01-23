@@ -8,27 +8,18 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_pluto_table_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart'
     as ticketClassificationBloc;
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/get_validation_details_entitie_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/applications_pluto_helper_methods.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/ticket_classification_renderer.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
 
 class Renderers {
   static TextStyle frozenStyle(
@@ -145,9 +136,7 @@ class Renderers {
     required BuildContext context,
     void Function(String?)? onDelete,
   }) {
-    final actionData =
-        rendererContext.row.cells["Action"]?.value as Map<String, dynamic>? ??
-            {};
+        {};
     return Align(
       alignment: Alignment.topLeft,
       child: PopupMenuTheme(
@@ -288,7 +277,7 @@ class Renderers {
                         BlocProvider.of<AddAnswerValidationBloc>(context).add(
                             AddAnswerValidationInitialEvent(
                                 agentAnsValidation: validationStatus,
-                                ticketId: id.toString() ?? "",
+                                ticketId: id.toString() ,
                                 pipeline:
                                     serviceLocator<InstanceSharingService>()
                                             .selectedPipelineValueList
@@ -449,8 +438,7 @@ class Renderers {
                     );
                   }
                 } else if (newValue?.toLowerCase() == "incorrect") {
-                  final rowData = rendererContext.row.cells
-                      .map((key, cell) => MapEntry(key, cell.value));
+                
                   showDialog(
                     context: context,
                     builder: (BuildContext dialogContext) {
@@ -641,7 +629,7 @@ class Renderers {
         ),
       ));
     } else {
-      final validation = rowData['vadidation'] ?? "";
+      
       return Center(
         child: Text(rendererContext.cell.value),
       );
@@ -663,11 +651,10 @@ class Renderers {
         : 'N/A';
 
     final ticketDescription =
-        (rowData.cells['ticket_description']?.value).toString() ?? "";
+        (rowData.cells['ticket_description']?.value).toString() ;
     final answeredStatus =
-        (rowData.cells['classification']?.value).toString() ?? '';
-    final validationStatus =
-        rowData.cells['validation_status']?.value ?? "Not Validated";
+        (rowData.cells['classification']?.value).toString() ;
+    
 
     showDialog(
       context: context,
@@ -703,7 +690,7 @@ class Renderers {
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       UIHelpers.verticalSpaceTiny,
-                      Text(id.toString() ?? '',
+                      Text(id.toString() ,
                           style: SupportBotTextstyle.cellHeading),
                       UIHelpers.verticalSpaceRegular,
                       Text(

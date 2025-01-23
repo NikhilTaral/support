@@ -14,19 +14,12 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_v
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_mobile_view.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_desktop_view.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/responsive.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 
 class Dashboard extends StatelessWidget {
-  Dashboard({super.key});
-  String pipeline = '11257490';
-  String selectedPipelineId = '11257490';
-  bool isAIAnswer = true;
-  num page = 1;
-  num pageSize = 10;
-
+  Dashboard({super.key}); 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

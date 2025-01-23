@@ -13,6 +13,7 @@ part 'ticket_classification_state.dart';
 
 class TicketClassificationBloc
     extends Bloc<TickiteClassificationEvent, TicketClassificationState> {
+       List<String>? selectedPipelineId = ["11257490"];
   DashboardDataModel dashboardDataModel = DashboardDataModel();
   TicketClassificationBloc() : super(TicketClassificationInitialState()) {
     on<TickiteClassificationEvent>(_onTickitClassification);
@@ -28,13 +29,13 @@ class TicketClassificationBloc
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: event.selectedPipelineValue ?? ["11257490"],
+            fieldValue: selectedPipelineId?? ["11257490"],
             fieldName: event.fieldName ?? "pipelines")
       ],
-      startDate: (datesList.firstOrNull ?? DateTime.now())
+      startDate: (event.startDate ?? DateTime.now())
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
           .toIso8601String(),
-      endDate: (datesList.lastOrNull ?? DateTime.now())
+      endDate: (event.endDate ?? DateTime.now())
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
           .toIso8601String(),
     );
