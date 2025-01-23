@@ -15,10 +15,8 @@ class UserValidationSucssesState extends UservalidationState {
 
 class UserValidationFailureSate extends UservalidationState {
   final String message;
-  final DateTime selectedDate;
-  final DateTime selectedMonth;
-  UserValidationFailureSate(
-      {required this.message,
-      required this.selectedDate,
-      required this.selectedMonth});
+
+  UserValidationFailureSate({
+    required this.message,
+  });
 }

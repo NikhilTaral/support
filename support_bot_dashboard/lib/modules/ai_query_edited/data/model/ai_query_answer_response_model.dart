@@ -44,7 +44,7 @@ class AiQueryData {
   List<AiQueryItem>? items;
   num? pageSize;
   LastEvaluatedKey? lastEvaluatedKey;
-  num? currentPage;
+  int? currentPage;
 
   AiQueryData({
     this.totalRecords,

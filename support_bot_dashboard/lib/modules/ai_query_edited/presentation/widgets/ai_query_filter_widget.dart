@@ -1,6 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/data_module.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/pipeline_type_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
@@ -28,7 +29,11 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   final ValueNotifier<String?> classificationNotifier =
       ValueNotifier<String?>(null);
   String selectedItem = "Expert Care Level 1";
-  List<String> pipelineIds = [];
+  final DataModule dataModule = DataModule();
+  final List<String> pipelineIds = [];
+
+  DateTime? endDate;
+  DateTime? startDate;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +98,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   Widget _buildDateRangeSelector() {
     if (selectedDatesNotifier.value == null) {
       final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 7));
+      final startDate = endDate.subtract(const Duration(days: 0));
       selectedDatesNotifier.value = [startDate, endDate];
     }
 
@@ -109,32 +114,35 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
             endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 7));
+            startDate = endDate.subtract(const Duration(days: 0));
           }
 
-          return OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: SupportBotColors.bluePrimary),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: () => _pickDateRange(),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.calendar_month_outlined,
-                    color: SupportBotColors.bluePrimary),
-                const SizedBox(width: 8),
-                Text(
-                  '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
-                  style: SupportBotTextstyle.normal.copyWith(
-                    fontSize: 14,
-                    color: SupportBotColors.bluePrimary,
-                    fontWeight: FontWeight.w500,
+          return Container(
+            height: 180,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: SupportBotColors.bluePrimary),
+                //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () => _pickDateRange(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.calendar_month_outlined,
+                      color: SupportBotColors.bluePrimary),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
+                    style: SupportBotTextstyle.normal.copyWith(
+                      fontSize: 14,
+                      color: SupportBotColors.bluePrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -143,14 +151,19 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   }
 
   Widget _buildApplyFilterButton() {
-    return ElevatedButton.icon(
-      onPressed: _addEvents,
-      icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-      label: const Text('Apply Filter', style: TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-        backgroundColor: SupportBotColors.bluePrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+    return Container(
+      height: 180,
+      child: ElevatedButton.icon(
+        onPressed: _addEvents,
+        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+        label:
+            const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        ),
       ),
     );
   }
@@ -176,9 +189,6 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   }
 
   Future<void> _pickDateRange() async {
-    final DateTime endDate = DateTime.now();
-    final DateTime startDate = endDate.subtract(const Duration(days: 7));
-
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle:
@@ -203,10 +213,9 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
 
     if (pickedDates != null) {
       selectedDatesNotifier.value = pickedDates.cast<DateTime>();
-      final startDate = pickedDates.isNotEmpty ? pickedDates[0] : null;
-      final endDate = pickedDates.length > 1 ? pickedDates[1] : null;
-
-      await LocalStorage.saveSelectedDates(startDate, endDate);
+      startDate =
+          pickedDates.isNotEmpty ? (pickedDates[0] ?? startDate) : startDate;
+      endDate = pickedDates.length > 1 ? (pickedDates[1] ?? endDate) : endDate;
     }
   }
 
@@ -268,8 +277,6 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   void _addEvents() {
     final selectedPipelineValue =
         pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
-    DateTime startDate;
-    DateTime endDate;
 
     if (selectedPipelineValue.isEmpty) {
       showSnackbar(
@@ -278,9 +285,6 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
       );
       return;
     }
-
-    endDate = DateTime.now();
-    startDate = endDate.subtract(const Duration(days: 7));
 
     if (selectedItem.isNotEmpty) {
       BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent(

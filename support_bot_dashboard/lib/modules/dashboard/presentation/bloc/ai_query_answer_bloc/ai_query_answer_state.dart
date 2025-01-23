@@ -15,10 +15,8 @@ class AIQueryAnswerSucssesState extends AiQueryAnswerState {
 
 class AIQueryAnswerFailureState extends AiQueryAnswerState {
   final String message;
-  final DateTime selectedDate;
-  final DateTime selectedMonth;
+  
   AIQueryAnswerFailureState(
       {required this.message,
-      required this.selectedDate,
-      required this.selectedMonth});
+   });
 }

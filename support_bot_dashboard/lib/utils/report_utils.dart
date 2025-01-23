@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/renderers.dart';
-import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
-import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class ReportUtils {
   ReportUtils(
@@ -39,7 +31,9 @@ class ReportUtils {
         enableColumnDrag: false,
         enableContextMenu: false,
         enableFilterMenuItem: false,
+        readOnly: true,
         enableSorting: false,
+        enableEditingMode: false,
         enableDropToResize: false,
         renderer: Renderers.textRenderer,
       ),
@@ -53,18 +47,22 @@ class ReportUtils {
         enableColumnDrag: false,
         enableContextMenu: false,
         enableFilterMenuItem: false,
+        readOnly: true,
+        enableEditingMode: false,
         enableSorting: false,
         enableDropToResize: false,
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'BOps State',
+        title: 'BOPS State',
         field: 'bops_state',
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
         enableColumnDrag: false,
         enableContextMenu: false,
+        enableEditingMode: false,
         enableFilterMenuItem: false,
+        readOnly: true,
         enableSorting: false,
         enableDropToResize: false,
         renderer: Renderers.textRenderer,
@@ -78,6 +76,8 @@ class ReportUtils {
         enableColumnDrag: false,
         enableContextMenu: false,
         enableFilterMenuItem: false,
+        enableEditingMode: false,
+        readOnly: true,
         enableSorting: false,
         enableDropToResize: false,
         renderer: Renderers.textRenderer,
@@ -92,7 +92,9 @@ class ReportUtils {
         enableColumnDrag: false,
         enableContextMenu: false,
         enableFilterMenuItem: false,
+        readOnly: true,
         enableSorting: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
         enableDropToResize: false,
         renderer: (rendererContext) => Renderers.validationDropDown(
             rendererContext,
@@ -106,9 +108,12 @@ class ReportUtils {
         enableAutoEditing: false,
         enableColumnDrag: false,
         enableContextMenu: false,
+        readOnly: true,
         enableFilterMenuItem: false,
         enableSorting: false,
+        enableEditingMode: false,
         enableDropToResize: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
         renderer: Renderers.statusRenderer,
       ),
       PlutoColumn(
@@ -118,7 +123,9 @@ class ReportUtils {
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
         enableColumnDrag: false,
+        readOnly: true,
         enableContextMenu: false,
+        enableEditingMode: false,
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
@@ -132,37 +139,50 @@ class ReportUtils {
   }
 
   List<PlutoRow> createTicketClassificationRow() {
-    final s = serviceLocator<S>();
-    return ticketClassificationEntitieModel.data?.items
-            ?.map((e) => PlutoRow(cells: {
-                  "id": PlutoCell(
-                    value: e.id ?? "NA",
-                  ),
-                  "ticket_description": PlutoCell(
-                    value: e.ticketDescription ?? [],
-                  ),
-                  "bops_state": PlutoCell(
-                    value: e.bopsState ?? "N/A",
-                  ),
-                  "classification": PlutoCell(
-                    value: e.classification ?? "N/A",
-                  ),
-                  "validation": PlutoCell(
-                    value: capitalizeFirstLetter(
-                        e.classificationValidation ?? "-"),
-                  ),
-                  "status": PlutoCell(
-                    value: e.isUpdatedToHubspot ?? "N/A",
-                  ),
-                  "action": PlutoCell(
-                    value: {
-                      "validatedBy": e.classificationValidatedBy,
-                      "isUpdatedToHubspot": e.isUpdatedToHubspot
-                    },
-                  ),
-                }))
-            .toList() ??
-        [];
+    
+    List<PlutoRow> rows = [];
+    for (int i = 0;
+        i < (ticketClassificationEntitieModel.data?.items ?? []).length;
+        i++) {
+      final e = ticketClassificationEntitieModel.data?.items?[i];
+      rows.add(PlutoRow(cells: {
+        "id": PlutoCell(
+          value: e?.id ?? "NA",
+        ),
+        'ticket_description':
+            PlutoCell(value: e?.ticketDescription?.replaceAll('\n', ' ') ?? ''),
+        "bops_state": PlutoCell(
+          value: e?.bopsState ?? "N/A",
+        ),
+        "classification": PlutoCell(
+          value: e?.classification ?? "N/A",
+        ),
+        "reasoning": PlutoCell(
+          value: e?.reasoning ?? "N/A",
+        ),
+        "validation": PlutoCell(
+          value: capitalizeFirstLetter(e?.classificationValidation ?? "-"),
+        ),
+        "status": PlutoCell(
+          value: e?.isUpdatedToHubspot ?? "N/A",
+        ),
+        "Validation Reason": PlutoCell(
+          value: e?.classificationValidationReason ?? "N/A",
+        ),
+        "action": PlutoCell(
+          value: {
+            "allRows": (ticketClassificationEntitieModel.data?.items ?? []),
+            "validatedBy": e?.classificationValidatedBy,
+            "isUpdatedToHubspot": e?.isUpdatedToHubspot,
+            "index": i,
+          },
+        ),
+        "validatedBy": PlutoCell(
+          value: e?.classificationValidatedBy ?? "N/A",
+        ),
+      }));
+    }
+    return rows;
   }
 
   String capitalizeFirstLetter(String input) {

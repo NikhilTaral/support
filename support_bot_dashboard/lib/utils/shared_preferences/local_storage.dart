@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalStorage {
   static const _startDateKey = 'startDate';
   static const _endDateKey = 'endDate';
+  static const _statetDate = "stateDates";
+  static const _endDate = "endDate";
   Future<String?> getString(String localStorageKey) async {
     final prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(localStorageKey);
@@ -53,6 +55,38 @@ class LocalStorage {
     }
   }
 
+  static Future<void> saveSelectedDate(
+      DateTime? startDate, DateTime? endDate) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (startDate != null) {
+      await prefs.setString(_statetDate, startDate.toIso8601String());
+    } else {
+      await prefs.remove(_statetDate);
+    }
+
+    if (endDate != null) {
+      await prefs.setString(_endDate, endDate.toIso8601String());
+    } else {
+      await prefs.remove(_endDate);
+    }
+  }
+
+  static Future<List<DateTime?>>
+      setSelectedDatesforTicketClassification() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final startDateString = prefs.getString(_statetDate);
+    final endDateString = prefs.getString(_endDate);
+
+    final startDate =
+        startDateString != null ? DateTime.tryParse(startDateString) : null;
+    final endDate =
+        endDateString != null ? DateTime.tryParse(endDateString) : null;
+
+    return [startDate, endDate];
+  }
+
   static Future<List<DateTime?>> getSelectedDates() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -96,7 +130,20 @@ class LocalStorage {
     }
   }
 
+  static Future<List<String>> getPipelineId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getStringList(piplineid) ?? [];
+    } catch (e) {
+      return [];
+    }
+  }
+
   /// Clear pipeline IDs from local storage
+  ///
+  ///
+  ///
+  ///
   static Future<void> clearPipelineIds() async {
     try {
       final prefs = await SharedPreferences.getInstance();

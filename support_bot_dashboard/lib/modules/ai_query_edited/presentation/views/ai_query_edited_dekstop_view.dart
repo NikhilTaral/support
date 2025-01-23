@@ -18,12 +18,15 @@ class AIQueryEditedDesktopView extends StatelessWidget {
 
   final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
   final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
+  final AiQueryAttributeModel aiQueryAttributeModel = AiQueryAttributeModel();
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AiQueryBloc, AiQueryState>(
       builder: (context, state) {
+        currentPage.value = BlocProvider.of<AiQueryBloc>(context).page;
         if (state is AIQuerySuccessState) {
+          debugPrint("currentPage.value :${currentPage.value}");
           serviceLocator<InstanceSharingService>().aiQueryBloc =
               BlocProvider.of<AiQueryBloc>(context);
           final utils = ReportUtils(
@@ -64,18 +67,18 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                                   pageSize.value = value;
                                   currentPage.value = 1;
 
-                                  context.read<AiQueryBloc>().add(
-                                        AIQueryInitialEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          selectedPipelineValueList:
-                                              state.selectedPipelineValue,
-                                          classificationFilterValue:
-                                              state.classificationFilterValue,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
-                                      );
+                                  BlocProvider.of<AiQueryBloc>(context).add(
+                                    AIQueryInitialEvent(
+                                      startDate: state.startDate,
+                                      endDate: state.endDate,
+                                      selectedPipelineValueList:
+                                          state.selectedPipelineValue,
+                                      classificationFilterValue:
+                                          state.classificationFilterValue,
+                                      page: currentPage.value,
+                                      pageSize: pageSize.value,
+                                    ),
+                                  );
                                 }
                               },
                               width: 60,
@@ -102,18 +105,18 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                           onPressed: currentPage.value > 1
                               ? () {
                                   currentPage.value--;
-                                  context.read<AiQueryBloc>().add(
-                                        AIQueryInitialEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          selectedPipelineValueList:
-                                              state.selectedPipelineValue,
-                                          classificationFilterValue:
-                                              state.classificationFilterValue,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
-                                      );
+                                  BlocProvider.of<AiQueryBloc>(context).add(
+                                    AIQueryInitialEvent(
+                                      startDate: state.startDate,
+                                      endDate: state.endDate,
+                                      selectedPipelineValueList:
+                                          state.selectedPipelineValue,
+                                      classificationFilterValue:
+                                          state.classificationFilterValue,
+                                      page: currentPage.value,
+                                      pageSize: pageSize.value,
+                                    ),
+                                  );
                                 }
                               : null,
                           icon: const Icon(Icons.arrow_back_ios_new, size: 15),
@@ -122,7 +125,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(
-                              'Page $page',
+                              'Page ${currentPage.value}',
                               style: TextStyle(
                                   color:
                                       SupportBotColors.disablePrimary.shade700,
@@ -137,18 +140,18 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                                       0)
                               ? () {
                                   currentPage.value++;
-                                  context.read<AiQueryBloc>().add(
-                                        AIQueryInitialEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          selectedPipelineValueList:
-                                              state.selectedPipelineValue,
-                                          classificationFilterValue:
-                                              state.classificationFilterValue,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
-                                      );
+                                  BlocProvider.of<AiQueryBloc>(context).add(
+                                    AIQueryInitialEvent(
+                                      startDate: state.startDate,
+                                      endDate: state.endDate,
+                                      selectedPipelineValueList:
+                                          state.selectedPipelineValue,
+                                      classificationFilterValue:
+                                          state.classificationFilterValue,
+                                      page: currentPage.value,
+                                      pageSize: pageSize.value,
+                                    ),
+                                  );
                                 }
                               : null,
                           icon: const Icon(Icons.arrow_forward_ios, size: 15),

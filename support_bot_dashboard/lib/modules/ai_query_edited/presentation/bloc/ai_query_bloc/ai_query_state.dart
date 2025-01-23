@@ -10,12 +10,14 @@ class AIQueryEmptyState extends AiQueryState {}
 
 class AIQuerySuccessState extends AiQueryState {
   final AiQueryAttributeModel? dashboardDataModel;
+  final DataModule? dataModule;
   final DateTime? startDate;
   final DateTime? endDate;
   final List<String>? selectedPipelineValue;
   final String? classificationFilterValue;
   AIQuerySuccessState({
     this.dashboardDataModel,
+    this.dataModule,
     this.startDate,
     this.endDate,
     this.selectedPipelineValue,
