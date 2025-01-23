@@ -406,7 +406,7 @@ class Renderers {
                     BlocProvider.of<TicketClassificationTabBloc>(context)
                         .add(TicketClassificationDataCallEvent(
                       startDate:
-                          DateTime.now().subtract(const Duration(days: 1)),
+                          DateTime.now().subtract(const Duration(days: 0)),
                       endDate: DateTime.now(),
                       page:
                           BlocProvider.of<TicketClassificationTabBloc>(context)
@@ -586,7 +586,7 @@ class Renderers {
                                       .add(
                                     TicketClassificationDataCallEvent(
                                       startDate: DateTime.now()
-                                          .subtract(const Duration(days: 1)),
+                                          .subtract(const Duration(days: 0)),
                                       endDate: DateTime.now(),
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(
