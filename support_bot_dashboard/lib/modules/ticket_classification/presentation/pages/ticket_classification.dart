@@ -12,7 +12,7 @@ class TicketClassification extends StatelessWidget {
     final endDate = DateTime.now()
         .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
     final startDate = endDate
-        .subtract(const Duration(days: 1))
+        .subtract(const Duration(days: 0))
         .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
     context.read<TicketClassificationTabBloc>().add(

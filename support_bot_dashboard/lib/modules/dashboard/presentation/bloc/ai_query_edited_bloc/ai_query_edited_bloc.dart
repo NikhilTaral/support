@@ -24,7 +24,7 @@ class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
     final repository = serviceLocator.get<DashboardAiQueryEditedUsecase>();
     List<DateTime?> datesList = await getSelectedDates();
     final endDate = DateTime.now();
-    final startDate = endDate.subtract(const Duration(days: 1));
+    final startDate = endDate.subtract(const Duration(days: 0));
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
