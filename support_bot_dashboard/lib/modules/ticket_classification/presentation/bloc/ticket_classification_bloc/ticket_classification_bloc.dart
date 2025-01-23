@@ -35,7 +35,6 @@ class TicketClassificationTabBloc
     emit(TicketClassificationLoadingState());
 
     try {
-      print("selectedValidation:$selectedValidation");
       final repository = serviceLocator<TicketClassificationUsecses>();
       final endDate = event.endDate
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);

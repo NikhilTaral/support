@@ -13,6 +13,7 @@ part 'validation_status_state.dart';
 
 class ValidationStatusBloc
     extends Bloc<ValidationStatusEvent, ValidationStatusState> {
+  List<String>? selectedPipelineId = ["11257490"];
   DashboardAnswerDataInitialRequestModel requestBody =
       DashboardAnswerDataInitialRequestModel();
   ValidationStatusBloc() : super(ValidationStatusInitialState()) {
@@ -24,17 +25,17 @@ class ValidationStatusBloc
     emit(ValidationStatusLoadingState());
 
     final repository = serviceLocator<ValidationStatusUsecase>();
-    List<DateTime?> datesList = await getSelectedDates();
-    final startDate = (datesList.firstOrNull ?? DateTime.now())
+   
+    final startDate = (event.startDate ?? DateTime.now())
         .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
         .toIso8601String();
-    final endDate = (datesList.lastOrNull ?? DateTime.now())
+    final endDate = (event.endDate ?? DateTime.now())
         .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
         .toIso8601String();
 
     final List<Filter> filter = [
       Filter(
-        fieldValue: event.selectedPipelineValue ?? ["11257490"],
+        fieldValue: selectedPipelineId,
         fieldName: event.fildName ?? "pipelines",
       )
     ];

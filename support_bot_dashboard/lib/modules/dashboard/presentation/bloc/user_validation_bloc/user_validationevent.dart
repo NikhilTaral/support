@@ -5,11 +5,11 @@ abstract class UserValidationevent {}
 class UserValidationsEvent extends UserValidationevent {
   final List<String>? selectedPipelineValue;
   final String? fildName;
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
+  final DateTime? startDate;
+  final DateTime? endDate;
   UserValidationsEvent(
       {this.fildName,
-      this.selectedDate,
-      this.selectedMonth,
+      this.startDate,
+      this.endDate,
       this.selectedPipelineValue});
 }
