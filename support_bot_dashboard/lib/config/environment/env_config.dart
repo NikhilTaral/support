@@ -1,6 +1,5 @@
 class EnvConfig {
   static const String ENV = 'qa';
-
   static const String OKTA_AUTH_URL =
       'https://exprealty.oktapreview.com/oauth2/v1/authorize';
 

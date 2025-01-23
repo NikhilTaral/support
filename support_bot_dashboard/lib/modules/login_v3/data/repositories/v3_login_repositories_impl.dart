@@ -1,5 +1,3 @@
-
-
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
@@ -8,7 +6,7 @@ import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dar
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage_key.dart';
 
 class V3LoginRepositoryImpl implements V3LoginRepositories {
-    @override
+  @override
   Future<Either<Failure, dynamic>> saveOnboardingEmailAndName(
       String email, String name) async {
     final localStorage = serviceLocator<LocalStorage>();
@@ -27,4 +25,3 @@ class V3LoginRepositoryImpl implements V3LoginRepositories {
     }
   }
 }
-

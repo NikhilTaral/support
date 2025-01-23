@@ -1,65 +1,56 @@
 import 'package:get_it/get_it.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/data/repositories/ai_query_answer_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/repositories/ai_query_answer_repo.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/usecases/ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_chart_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_details_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_export_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_user_settings_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_ai_edited_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_by_count_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_pipeline_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_table_data_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_update_ai_query_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_validation_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/revert_classification_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/repositories/unrevert_classification_repo_impl.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_chart_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/get_all_pipelines_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/validation_status_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_answer_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_details_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_export_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_user_settings_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_ai_edited_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_pipeline_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_table_data_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_update_ai_query_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_validation_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/revert_classification_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/unrevert_classification_repository.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_chart_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/get_all_pipelines_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/validation_status_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_details_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_export_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_user_settings_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_count_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_pipeline_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_table_data_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_update_ai_query_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_validation_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/revert_classification_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/unrevert_classification_usecase.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer/ai_query_answer_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_chart_bloc/ai_query_chart_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/custom_button_bloc/custombutton_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/dashboard_pipeline/dashboard_pipeline_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/export_bloc/export_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pluto_table_bloc/plutotable_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/get_all_pipelines_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/validation_status_usecase.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/usecases/v3_login_usecases.dart';
 import 'package:support_bot_dashboard/modules/login_v3/presentation/bloc/v3_login_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/repositories/common_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/export_bloc/export_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_pipelines_bloc/get_all_pipelines_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/service/auth/auth_service.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/secure_storage.dart';
 
 final serviceLocator = GetIt.instance;
 
 Future<void> initServiceLocator() async {
+  serviceLocator.registerSingleton<S>(S());
+
   /// V3 Login
   serviceLocator.registerLazySingleton<ApiProvider>(() => ApiProvider());
   serviceLocator.registerFactory(() => SecureStorage());
@@ -78,76 +69,93 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerFactory<LocalStorage>(() => LocalStorage());
 
   // Dashboard repositories
-  serviceLocator.registerLazySingleton<DashboardTableDataRepository>(
-      () => DashboardTableDataRepoImpl());
+  serviceLocator.registerLazySingleton<ValidationStatusRepository>(
+      () => ValidationStatusRepoImpl());
+  serviceLocator.registerLazySingleton<GetAllPipelinesRepository>(
+      () => GetAllPipelinesRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardGetAiEditedRepository>(
+      () => DashboardGetAiEditedRepoImpl());
   serviceLocator.registerLazySingleton<DashboardChartDataRepository>(
       () => DashboardChartDataRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardValidationRepository>(
-      () => DashboardValidationRepoImpl());
-  // serviceLocator.registerLazySingleton<DashboardFilterClassificationDataRepository>(()=> DashboardFIlterClassificationRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardAiQueryRepository>(()=> DashboardAiQueryRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardAiQueryChartDataRepository>(()=> DashboardAiQueryChartRepoImpl());
+  serviceLocator.registerLazySingleton<DashboardAiQueryAnswerDataRepository>(
+      () => DashboardAiQueryAnswerRepoImpl());
 
   // Dashboard usecase
-  serviceLocator.registerLazySingleton<DashboardTableDatausecase>(
-      () => DashboardTableDatausecase());
   serviceLocator.registerLazySingleton<DashboardChartdataUsecase>(
       () => DashboardChartdataUsecase());
-  serviceLocator.registerLazySingleton<DashboardValidationUsecase>(
-      () => DashboardValidationUsecase());
-  // serviceLocator.registerLazySingleton<DashboardFilterClassificationDatausecase>(
-  //     () => DashboardFilterClassificationDatausecase());
-  // serviceLocator.registerLazySingleton<DashboardFilterClassificationValidationDatausecase>(()=> DashboardFilterClassificationValidationDatausecase());
-  serviceLocator.registerLazySingleton<DashboardAiQueryUsecase>(()=> DashboardAiQueryUsecase());
-  serviceLocator.registerLazySingleton<DashboardAiQueryChartUsecase>(()=>DashboardAiQueryChartUsecase());
+  serviceLocator.registerLazySingleton<ValidationStatusUsecase>(
+      () => ValidationStatusUsecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryAnswerUsecase>(
+      () => DashboardAiQueryAnswerUsecase());
+  serviceLocator.registerLazySingleton<DashboardAiQueryEditedUsecase>(
+      () => DashboardAiQueryEditedUsecase());
 
-  // Dashboard bloc
-  serviceLocator.registerFactory<DashboardBloc>(() => DashboardBloc());
-  serviceLocator.registerFactory<PlutotableBloc>(() => PlutotableBloc());
-  serviceLocator.registerFactory<CustombuttonBloc>(() => CustombuttonBloc());
-  serviceLocator.registerFactory<AiQueryAnswerBloc>(() => AiQueryAnswerBloc());
-  serviceLocator.registerFactory<AiQueryChartBloc>(() => AiQueryChartBloc());
+  // get validation count
+  serviceLocator.registerLazySingleton<GetValidationCountRepository>(
+      () => DashboardGetValidationRepoImpl());
 
-  //Revert Classification Bloc
-  serviceLocator.registerLazySingleton<RevertClassificationUsecase>(
-      () => RevertClassificationUsecase());
-  serviceLocator.registerLazySingleton<RevertClassificationRepository>(
-      () => RevertClassificationRepoImpl());
+  //get validation by count
+  serviceLocator.registerLazySingleton<DashboardGetValidationByCountUsecase>(
+      () => DashboardGetValidationByCountUsecase());
+  serviceLocator.registerLazySingleton<GetValidationByCountRepository>(
+      () => DashboardGetValidationByCountRepoImpl());
+
+  serviceLocator.registerLazySingleton<GetAllPipelinesUsecase>(
+      () => GetAllPipelinesUsecase());
+
+  // Ticket Classification
+  serviceLocator.registerLazySingleton<ActionUsecase>(() => ActionUsecase());
+  serviceLocator
+      .registerLazySingleton<ActionRepository>(() => ActionRepoImpl());
+  serviceLocator.registerFactory<TicketClassificationActionBloc>(
+      () => TicketClassificationActionBloc());
+
+  serviceLocator.registerLazySingleton<TicketClassificationUsecses>(
+      () => TicketClassificationUsecses());
+  serviceLocator.registerLazySingleton<TicketClassifiacationRepository>(
+      () => TicketClassificationRepoImpl());
+  serviceLocator.registerFactory<TicketClassificationTabBloc>(
+      () => TicketClassificationTabBloc());
+
+  serviceLocator.registerLazySingleton<BopsUsecases>(() => BopsUsecases());
+  serviceLocator.registerLazySingleton<BopsRepository>(() => BopsRepoImpl());
+  serviceLocator.registerFactory<BopsStatesBloc>(() => BopsStatesBloc());
+
+  serviceLocator
+      .registerFactory<GetAllPipelinesBloc>(() => GetAllPipelinesBloc());
 
   serviceLocator.registerLazySingleton<UpdateAiAnswerUsecase>(
       () => UpdateAiAnswerUsecase());
-  serviceLocator.registerLazySingleton<UpdateAiAnswerRepository>(
-      () => UpdateAiAnswerRepoImpl());
+  serviceLocator.registerLazySingleton<AiQueryDataRepository>(
+      () => AiQueryAnswerRepoImpl());
+  serviceLocator.registerLazySingleton<AiQueryUsecase>(() => AiQueryUsecase());
+  serviceLocator.registerLazySingleton<AddAnswerValidationUsecase>(
+      () => AddAnswerValidationUsecase());
 
-  //Dashboard Pipeline
-  serviceLocator.registerFactory<DashboardPipelineBloc>(()=> DashboardPipelineBloc());
-  serviceLocator.registerLazySingleton<DashboardPipelineRepository>(()=> DashboardPipelineRepoImpl());
-  serviceLocator.registerLazySingleton<DashboardPipelineUsecase>(()=> DashboardPipelineUsecase());
+  serviceLocator.registerLazySingleton<InstanceSharingService>(
+      () => InstanceSharingService());
+  serviceLocator.registerLazySingleton<GetValidationDetailsUsecase>(
+      () => GetValidationDetailsUsecase());
+  serviceLocator.registerLazySingleton<GetValidationDetailsRepository>(
+      () => GetValidationDetailsImpl());
 
-   //Un Revert Classification Bloc
-  serviceLocator.registerLazySingleton<UnRevertClassificationUsecase>(
-      () => UnRevertClassificationUsecase());
-  serviceLocator.registerLazySingleton<UnRevertClassificationRepository>(
-      () => UnRevertClassificationRepoImpl());
+  serviceLocator.registerLazySingleton<UpdateClassificationValidationUsecase>(
+      () => UpdateClassificationValidationUsecase());
+  serviceLocator
+      .registerLazySingleton<UpdateClassificationValidationRepository>(
+          () => UpdateClassificationValidationImpl());
+  serviceLocator.registerFactory<UpdateClassificationValidationBloc>(
+      () => UpdateClassificationValidationBloc());
 
-  //get Validation usecase
-  serviceLocator.registerLazySingleton<DashboardGetValidationDetailsUsecase>(()=> DashboardGetValidationDetailsUsecase());
-  serviceLocator.registerLazySingleton<DashboardGetValidationDetailsRepository>(()=>GetValidationDetailsRepositoryImpl());
-
-  // get validation count
-  serviceLocator.registerLazySingleton<DashboardGetValidationCountUsecase>(()=> DashboardGetValidationCountUsecase());
-  serviceLocator.registerLazySingleton<GetValidationCountRepository>(()=> DashboardGetValidationRepoImpl());
-
-  //get validation by count
-  serviceLocator.registerLazySingleton<DashboardGetValidationByCountUsecase>(()=> DashboardGetValidationByCountUsecase());
-  serviceLocator.registerLazySingleton<GetValidationByCountRepository>(()=> DashboardGetValidationByCountRepoImpl());
-
-  //get user settings
-  serviceLocator.registerLazySingleton<DashboardGetUserSettingsUsecase>(()=> DashboardGetUserSettingsUsecase());
-  serviceLocator.registerLazySingleton<GetUserSettingsRepository>(()=> DashboardGetUserSettingsRepoImpl());
+  serviceLocator.registerLazySingleton<RevertClassificationUsecase>(
+      () => RevertClassificationUsecase());
+  serviceLocator.registerLazySingleton<RevertClassificationRepository>(
+      () => RevertClassificationImpl());
 
   //export
-  serviceLocator.registerLazySingleton<DashboardExportusecase>(()=> DashboardExportusecase());
-  serviceLocator.registerLazySingleton<DashboardExportRepository>(()=> DashboardExportRepoImpl());
-  serviceLocator.registerFactory<ExportBloc>(()=> ExportBloc());
+  serviceLocator.registerLazySingleton<DashboardExportusecase>(
+      () => DashboardExportusecase());
+  serviceLocator.registerLazySingleton<DashboardExportRepository>(
+      () => DashboardExportRepoImpl());
+  serviceLocator.registerFactory<ExportBloc>(() => ExportBloc());
 }

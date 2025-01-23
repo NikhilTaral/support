@@ -1,38 +1,35 @@
+import 'dart:convert';
+
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_chart_repository.dart';
-import 'package:support_bot_dashboard/utils/service/failure.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_query_chart_response_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_answer_repository.dart';
+import 'package:support_bot_dashboard/core/error/failure.dart';
 
-class DashboardAiQueryChartRepoImpl
-    extends DashboardAiQueryChartDataRepository {
+class DashboardAiQueryAnswerRepoImpl
+    extends DashboardAiQueryAnswerDataRepository {
+  final s = serviceLocator<S>();
   @override
-  Future<Either<Failure, dynamic>> getAiQueryChartData(
-      DateTime? selectedDate, DateTime? selectedMonth, String? pipeline) async {
-    final ApiProvider _apiProvider = serviceLocator<ApiProvider>();
+  Future<Either<Failure, dynamic>> getAiQueryAnswerData(
+      DashboardAnswerDataInitialRequestModel?
+          dashboardAnswerDataInitialRequestModel) async {
+    try {
+      final dynamic response = await serviceLocator<ApiProvider>().getData(
+          url: 'dashboard/getAnswerCount',
+          body: dashboardAnswerDataInitialRequestModel?.toJson());
 
-    Map<String, dynamic> body = {};
+      final model =
+          dashboardAiQueryChartResponseModelFromJson(jsonEncode(response));
+      if (model is Left) {
+        return Left(ServerFailure(message: s.aPIErrorMsg));
+      }
 
-    if (selectedDate != null) {
-      body['day'] = selectedDate.toIso8601String().substring(0, 10);
+      return Right(model);
+    } catch (e) {
+      return Left(ServerFailure(message: s.aPIErrorMsg));
     }
-
-    if (selectedMonth != null) {
-      body['month'] =
-          '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
-    }
-    if (pipeline != null) {
-      body['pipeline'] = pipeline;
-    }
-
-    dynamic response;
-    response = await _apiProvider.getData(
-      url: 'dashboard/getAnswerCount',
-      body: body,
-    );
-    if (response == null) {
-      return Left(ServerFailure(message: 'No response from server'));
-    }
-    return Right(response);
   }
 }

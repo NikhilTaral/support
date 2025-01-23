@@ -29,8 +29,13 @@ class CustomSidebar extends StatelessWidget {
     final description =
         rowData.cells[TicketClassificationGridKey.ticketDescription]?.value ??
             'N/A';
+    final classification =
+        rowData.cells[TicketClassificationGridKey.classification]?.value ??
+            'N/A';
     final reasoning =
         rowData.cells[TicketClassificationGridKey.reasoning]?.value ?? 'N/A';
+    final bopsState =
+        rowData.cells[TicketClassificationGridKey.bopsState]?.value ?? 'N/A';
     final validation =
         rowData.cells[TicketClassificationGridKey.validation]?.value ?? 'N/A';
     final validationReason =
@@ -83,7 +88,9 @@ class CustomSidebar extends StatelessWidget {
                 children: [
                   _buildRow('ID:', id ?? ""),
                   _buildRow('Description:', description ?? ""),
+                  _buildRow('Classification:', classification ?? ""),
                   _buildRow('Reasoning:', reasoning ?? ""),
+                  _buildRow('Bops State:', bopsState ?? ""),
                   _buildRow(
                     'Validation:',
                     validation.isEmpty

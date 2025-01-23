@@ -4,20 +4,20 @@
 
 import 'dart:convert';
 
-DashboardChartResponseModel dashboardChartResponseModelFromJson(String str) =>
-    DashboardChartResponseModel.fromJson(json.decode(str));
+DashboardAnswerResponseModel dashboardAnswerResponseModelFromJson(String str) =>
+    DashboardAnswerResponseModel.fromJson(json.decode(str));
 
-String dashboardChartResponseModelToJson(DashboardChartResponseModel data) =>
+String dashboardAnswerResponseModelToJson(DashboardAnswerResponseModel data) =>
     json.encode(data.toJson());
 
-class DashboardChartResponseModel {
+class DashboardAnswerResponseModel {
   final Data? data;
   final bool? success;
   final int? failCode;
   final Params? params;
   final String? message;
 
-  DashboardChartResponseModel({
+  DashboardAnswerResponseModel({
     this.data,
     this.success,
     this.failCode,
@@ -25,8 +25,8 @@ class DashboardChartResponseModel {
     this.message,
   });
 
-  factory DashboardChartResponseModel.fromJson(Map<String, dynamic> json) =>
-      DashboardChartResponseModel(
+  factory DashboardAnswerResponseModel.fromJson(Map<String, dynamic> json) =>
+      DashboardAnswerResponseModel(
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
         success: json["success"],
         failCode: json["failCode"],

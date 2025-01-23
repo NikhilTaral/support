@@ -90,6 +90,7 @@ class Item {
   final CreatedAt hsPipelineStage;
   final CreatedAt id;
   final CreatedAt reasoning;
+  final CreatedAt bopsState;
   final CreatedAt createdAt;
   final CreatedAt ticketDescription;
   final CreatedAt classificationValidation;
@@ -103,6 +104,7 @@ class Item {
       required this.hsPipelineStage,
       required this.id,
       required this.reasoning,
+      required this.bopsState,
       required this.createdAt,
       required this.ticketDescription,
       required this.classificationValidation,
@@ -121,6 +123,9 @@ class Item {
           : CreatedAt(s: ''),
       id: json.containsKey("id")
           ? CreatedAt.fromJson(json["id"])
+          : CreatedAt(s: ''),
+      bopsState: json.containsKey("BOPS_State")
+          ? CreatedAt.fromJson(json["BOPS_State"])
           : CreatedAt(s: ''),
       reasoning: json.containsKey("reasoning")
           ? CreatedAt.fromJson(json["reasoning"])
@@ -154,11 +159,13 @@ class Item {
         "classification": classification.toJson(),
         "hSPipelineStage": hsPipelineStage.toJson(),
         "id": id.toJson(),
+        "bopsState": bopsState.toJson(),
         "reasoning": reasoning.toJson(),
         "CreatedAt": createdAt.toJson(),
         "ticketDescription": ticketDescription.toJson(),
         "classificationValidation": classificationValidation.toJson(),
-        "classificationValidationReason": classificationValidationReason.toJson(),
+        "classificationValidationReason":
+            classificationValidationReason.toJson(),
         "isUpdatedToHubspot": isUpdatedToHubspot?.toJson(),
         'validatedClassification': validatedClassification.toJson(),
         'classificationValidatedBy': classificationValidatedBy.toJson()

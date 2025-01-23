@@ -1,38 +1,32 @@
+import 'dart:convert';
+
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
-import 'package:support_bot_dashboard/utils/service/failure.dart';
+import 'package:support_bot_dashboard/core/error/failure.dart';
 
 class DashboardChartDataRepoImpl extends DashboardChartDataRepository {
+  final s = serviceLocator<S>();
   @override
-  Future<Either<Failure, dynamic>> getDashboardChartData(
-      DateTime? selectedDate, DateTime? selectedMonth, String? pipeline) async {
-    final ApiProvider _apiProvider = serviceLocator<ApiProvider>();
-
-    Map<String, dynamic> body = {};
-
-    if (selectedDate != null) {
-      body['day'] = selectedDate.toIso8601String().substring(0, 10);
+  Future<Either<Failure, dynamic>> getDashboardAnswerData(
+      DashboardAnswerDataInitialRequestModel?
+          dashboardChartDataInitialRequestModel) async {
+    try {
+      final dynamic response = await serviceLocator<ApiProvider>().getData(
+        url: 'dashboard/getCategoryCounts',
+        body: dashboardChartDataInitialRequestModel?.toJson(),
+      );
+      final model = dashboardAnswerResponseModelFromJson(jsonEncode(response));
+      if (model is Left) {
+        return Left(ServerFailure(message: s.aPIErrorMsg));
+      }
+      return Right(model);
+    } catch (e) {
+      return Left(ServerFailure(message: s.aPIErrorMsg));
     }
-
-    if (selectedMonth != null) {
-      body['month'] =
-          '${selectedMonth.year}-${selectedMonth.month.toString().padLeft(2, '0')}';
-    }
-
-    if(pipeline != null){
-      body['pipeline'] = pipeline;
-    }
-
-    dynamic response;
-    response = await _apiProvider.getData(
-      url: 'dashboard/getCategoryCounts',
-      body: body,
-    );
-    if (response == null) {
-      return Left(ServerFailure(message: 'No response from server'));
-    }
-    return Right(response);
   }
 }
