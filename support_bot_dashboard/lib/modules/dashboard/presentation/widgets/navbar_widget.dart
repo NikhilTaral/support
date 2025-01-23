@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
@@ -74,6 +80,23 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
               if (value != selectedIndex) {
                 BlocProvider.of<TabIndexBloc>(context)
                     .add(TabIndexChangedEvent(currentIndex: value));
+                if (value == 0) {
+                  context
+                      .read<TicketClassificationBloc>()
+                      .add(TickiteClassificationEvent());
+                  context
+                      .read<UserValidationBloc>()
+                      .add(UserValidationsEvent());
+                  context
+                      .read<AiQueryAnswerBloc>()
+                      .add(AIQueryAnswerInitialEvent());
+                  context
+                      .read<AiQueryEditedBloc>()
+                      .add(AIQueryEditedInitialEvent());
+                  context
+                      .read<ValidationStatusBloc>()
+                      .add(ValidationStatuseCallEvent());
+                }
               }
             },
             labelPadding: const EdgeInsets.only(left: 30),

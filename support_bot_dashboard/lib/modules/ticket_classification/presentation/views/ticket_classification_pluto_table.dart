@@ -20,6 +20,8 @@ class TicketClassificationPlutoTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TicketClassificationTabBloc, TicketClassificationState>(
       builder: (context, state) {
+        currentPage.value =
+            BlocProvider.of<TicketClassificationTabBloc>(context).page;
         if (state is TicketClassificationLoadingState) {
           return Center(
               child: LoadingWidget(
@@ -116,7 +118,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(
-                              'Page $page',
+                              'Page ${currentPage.value}',
                               style: TextStyle(
                                   color:
                                       SupportBotColors.disablePrimary.shade700,

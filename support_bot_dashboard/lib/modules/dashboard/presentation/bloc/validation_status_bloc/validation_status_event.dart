@@ -3,13 +3,13 @@ part of 'validation_status_bloc.dart';
 abstract class ValidationStatusEvent {}
 
 class ValidationStatuseCallEvent extends ValidationStatusEvent {
-  final DateTime? selectedDate;
-  final DateTime? selectedMonth;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final List<String>? selectedPipelineValue;
   final String? fildName;
   ValidationStatuseCallEvent(
-      {this.selectedDate,
-      this.selectedMonth,
+      {this.startDate,
+      this.endDate,
       this.selectedPipelineValue,
       this.fildName});
 }

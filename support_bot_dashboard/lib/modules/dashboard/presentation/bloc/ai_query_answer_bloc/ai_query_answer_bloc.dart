@@ -15,6 +15,7 @@ part 'ai_query_answer_state.dart';
 DashboardDataModel dashboardDataModel = DashboardDataModel();
 
 class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
+  List<String>? selectedPipelineId = ["11257490"];
   AiQueryAnswerBloc() : super(AIQueryAnswerIntialState()) {
     on<AIQueryAnswerInitialEvent>(_aIQueryAnswerInitialEvent);
   }
@@ -28,18 +29,17 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
 
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
-          if (event.selectedDate != null)
-            Filter(
-                fieldValue: event.selectedPipelineValue ?? ["11257490"],
-                fieldName: "StartDate"),
           Filter(
-              fieldValue: event.selectedPipelineValue ?? ["11257490"],
+              fieldValue: selectedPipelineId ?? ["11257490"],
+              fieldName: "StartDate"),
+          Filter(
+              fieldValue: selectedPipelineId ?? ["11257490"],
               fieldName: event.fieldName ?? "pipelines")
         ],
-        startDate: (datesList.firstOrNull ?? DateTime.now())
+        startDate: (event.startDate ?? DateTime.now())
             .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
             .toIso8601String(),
-        endDate: (datesList.lastOrNull ?? DateTime.now())
+        endDate: (event.endDate ?? DateTime.now())
             .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
             .toIso8601String(),
       );
@@ -47,8 +47,6 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
       if (response.isLeft) {
         emit(AIQueryAnswerFailureState(
           message: response.toString(),
-          selectedDate: event.selectedDate ?? DateTime.now(),
-          selectedMonth: event.selectedMonth ?? DateTime.now(),
         ));
       } else {
         final DashboardAiQueryChartResponseModel model = response.right;
@@ -94,16 +92,14 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
           }
         } else {
           emit(AIQueryAnswerFailureState(
-              message: 'Exception: ',
-              selectedDate: event.selectedDate ?? DateTime.now(),
-              selectedMonth: event.selectedMonth ?? DateTime.now()));
+            message: 'Exception: ',
+          ));
         }
       }
     } catch (e) {
       emit(AIQueryAnswerFailureState(
-          message: 'Exception: $e',
-          selectedDate: event.selectedDate ?? DateTime.now(),
-          selectedMonth: event.selectedMonth ?? DateTime.now()));
+        message: 'Exception: $e',
+      ));
     }
   }
 

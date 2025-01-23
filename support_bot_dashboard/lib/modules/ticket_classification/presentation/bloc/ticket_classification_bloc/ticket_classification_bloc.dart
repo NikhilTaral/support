@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:either_dart/either.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
@@ -18,8 +17,12 @@ class TicketClassificationTabBloc
   TicketClassificationEntitieModel ticketClassificationEntitieModel =
       TicketClassificationEntitieModel();
 
-  num page = 1;
+  int page = 1;
   num pageSize = 10;
+  String selectedBOPsState = "";
+  String selectedClassification = "";
+  String selectedValidation = "";
+  String selectedPipelineId = "11257490";
 
   TicketClassificationTabBloc() : super(TicketClassificationIntialState()) {
     on<TicketClassificationDataCallEvent>(_onTicketClassification);
@@ -33,35 +36,41 @@ class TicketClassificationTabBloc
 
     try {
       final repository = serviceLocator<TicketClassificationUsecses>();
-      List<DateTime?> datesList = await getSelectedDates();
-      final bopsState = await LocalStorage.getBopsState();
-      final classification = await LocalStorage.getClassification();
-      String? validation = await LocalStorage.getValidation();
-      final piplineid = await LocalStorage.getPipeline();
-      if (validation?.replaceAll(" ", "").toLowerCase() == "notvalidated") {
-        validation = "";
-      }
+      final endDate = event.endDate
+          ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+      final startDate = event.startDate
+          ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+      final enddate = DateTime.now()
+          .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+      final startdate = DateTime.now()
+          .subtract(const Duration(days: 0))
+          .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+
       page = event.page ?? 1;
       pageSize = event.pageSize ?? 10;
       final req = TicketClassificationRequestModel(
-        startDate: (datesList.firstOrNull ?? DateTime.parse("2024-10-23")),
-        endDate: (datesList.lastOrNull ?? DateTime.now()),
+        startDate: (startDate ?? startdate),
+        endDate: (endDate ?? enddate),
         page: event.page,
+        ticketId: event.ticketId,
         pageSize: event.pageSize,
         filter: [
-          if (event.fieldValue?.isNotEmpty == true && event.fieldValue != null)
+          if (selectedBOPsState != "")
+            Filter(fieldName: "BOPS_States", fieldValue: [selectedBOPsState]),
+          if (selectedClassification != "")
             Filter(
-                fieldName: "BOPS_States",
-                fieldValue: bopsState != null ? [bopsState] : []),
+                fieldName: "classifications",
+                fieldValue: [selectedClassification]),
+          if (selectedValidation != "")
+            Filter(
+                fieldName: "classificationValidations",
+                fieldValue: [selectedValidation]),
           Filter(
-              fieldName: "classifications",
-              fieldValue: classification != null ? [classification] : []),
-          Filter(
-              fieldName: "classificationValidations",
-              fieldValue: validation != null ? [validation] : []),
-          Filter(
-              fieldValue: event.fieldValue ?? ["11257490"],
-              fieldName: event.fieldName ?? "pipelines")
+            fieldName: "pipelines",
+            fieldValue: [
+              selectedPipelineId.isEmpty ? "11257490" : selectedPipelineId
+            ],
+          )
         ],
       );
 
@@ -76,18 +85,23 @@ class TicketClassificationTabBloc
         if (model.data?.items?.isEmpty == true && model.success == true) {
           emit(TicketClassificationEmptyState());
         } else {
+          page = model.data?.currentPage ?? 1;
+
           ticketClassificationEntitieModel = TicketClassificationEntitieModel(
             data: model.data,
             failCode: model.failCode,
             message: model.message,
-            params: model.params,
             success: model.success,
           );
 
           final pipelineId = await LocalStorage.getPipelineIds();
 
           emit(TicketClassificationSucssesState(
-              model: ticketClassificationEntitieModel, pipelineId: pipelineId));
+              currentIndex: 0,
+              endDate: endDate,
+              startDate: startDate,
+              model: ticketClassificationEntitieModel,
+              pipelineId: pipelineId));
         }
       }
     } catch (e) {
@@ -118,10 +132,4 @@ class TicketClassificationTabBloc
           model: ticketClassificationEntitieModel));
     }
   }
-}
-
-Future<List<DateTime?>> getSelectedDates() async {
-  final dates = await LocalStorage.getSelectedDates();
-
-  return dates;
 }

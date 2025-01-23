@@ -18,7 +18,6 @@ class UpdateClassificationValidationBloc extends Bloc<
       : super(UpdateClassificationValidationIntialState()) {
     on<UpdateClassificationValidationstateEvent>(
         _UpdateClassificationValidationstateEvent);
-        
   }
   Future<void> _UpdateClassificationValidationstateEvent(
       UpdateClassificationValidationstateEvent event,
@@ -27,10 +26,10 @@ class UpdateClassificationValidationBloc extends Bloc<
       final repository =
           serviceLocator<UpdateClassificationValidationUsecase>();
       final req = UpdateClassificationValidationRequestModel(
+          reason: event.reason ?? null,
+          validatedClassification: event.validatedClassification ?? null,
           id: event.id,
           pipeline: event.pipeline,
-          reason: event.reason ?? "",
-          validatedClassification: event.validatedClassification ?? "",
           validation: event.validation ?? "");
       final response = await repository.invoke(req);
       if (response.isLeft) {

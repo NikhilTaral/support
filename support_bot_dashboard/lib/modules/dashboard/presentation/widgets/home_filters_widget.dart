@@ -28,6 +28,7 @@ class HomeFiltersWidget extends StatefulWidget {
 class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
+  List<DateTime?> selectedate = [];
   List<String> selectedItems = ['Expert Care Level 1'];
   List<String> pipelineIds = [];
 
@@ -89,10 +90,10 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildDateRangeSelector() {
-    if (selectedDatesNotifier.value == null) {
-      final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 7));
-      selectedDatesNotifier.value = [startDate, endDate];
+    if (selectedate.isNotEmpty) {
+      final endDate = selectedate.lastOrNull;
+      final startDate = selectedate.firstOrNull;
+      selectedate = [startDate, endDate];
     }
 
     return Center(
@@ -107,32 +108,41 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
             endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 7));
+            startDate = endDate.subtract(const Duration(days: 0));
           }
 
-          return OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: SupportBotColors.bluePrimary),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: () => _pickDateRange(),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.calendar_month_outlined,
-                    color: SupportBotColors.bluePrimary),
-                const SizedBox(width: 8),
-                Text(
-                  '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
-                  style: SupportBotTextstyle.normal.copyWith(
-                    fontSize: 14,
-                    color: SupportBotColors.bluePrimary,
-                    fontWeight: FontWeight.w500,
-                  ),
+          return Container(
+            height: 180,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: SupportBotColors.bluePrimary),
+                padding: const EdgeInsets.only(
+                  right: 6,
+                  left: 6,
                 ),
-              ],
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () => _pickDateRange(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.calendar_month_outlined,
+                    color: SupportBotColors.bluePrimary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
+                    style: SupportBotTextstyle.normal.copyWith(
+                      fontSize: 14,
+                      color: SupportBotColors.bluePrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.clip,
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -141,40 +151,29 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton() {
-    return ElevatedButton.icon(
-      onPressed: pipelineIds.isEmpty ? null : _addEvents,
-      icon: Icon(
-        Icons.filter_alt_outlined,
-        color: pipelineIds.isEmpty ? Colors.black : Colors.white,
-      ),
-      label: Text(
-        'Apply Filter',
-        style: TextStyle(
-          color: pipelineIds.isEmpty ? Colors.black : Colors.white,
+    return SizedBox(
+      height: 180,
+      child: ElevatedButton.icon(
+        onPressed: _addEvents,
+        icon: const Icon(
+          Icons.filter_alt_outlined,
+          color: Colors.white,
         ),
-      ),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-        backgroundColor: pipelineIds.isEmpty
-            ? SupportBotColors.bluePrimary.withOpacity(0.5)
-            : SupportBotColors.bluePrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        label: const Text(
+          'Apply Filter',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
       ),
     );
   }
-
-  // Widget _buildClearFilterButton() {
-  //   return ElevatedButton.icon(
-  //     onPressed: _addEvents,
-  //     icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-  //     label: const Text('Clear Filter', style: TextStyle(color: Colors.white)),
-  //     style: ElevatedButton.styleFrom(
-  //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
-  //       backgroundColor: SupportBotColors.bluePrimary,
-  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-  //     ),
-  //   );
-  // }
 
   Widget _buildLoadingState() {
     return const Row(
@@ -197,9 +196,6 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Future<void> _pickDateRange() async {
-    final DateTime endDate = DateTime.now();
-    final DateTime startDate = endDate.subtract(const Duration(days: 7));
-
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle:
@@ -218,17 +214,13 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       config: config,
       dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
-      value: selectedDatesNotifier.value?.cast<DateTime>() ?? [],
-      //value: [startDate, endDate],
+      value: selectedDatesNotifier.value?.cast<DateTime?>() ?? [],
       dialogBackgroundColor: Colors.white,
     );
 
     if (pickedDates != null) {
       selectedDatesNotifier.value = pickedDates.cast<DateTime>();
-      final startDate = pickedDates.isNotEmpty ? pickedDates[0] : null;
-      final endDate = pickedDates.length > 1 ? pickedDates[1] : null;
-
-      await LocalStorage.saveSelectedDates(startDate, endDate);
+      selectedate = pickedDates;
     }
   }
 
@@ -303,21 +295,51 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     }
 
     if (selectedItems.isNotEmpty) {
-      BlocProvider.of<ValidationStatusBloc>(context).add(
-          ValidationStatuseCallEvent(
-              selectedPipelineValue: selectedPipelineValue));
+      BlocProvider.of<ValidationStatusBloc>(context).selectedPipelineId =
+          selectedPipelineValue;
+      BlocProvider.of<ValidationStatusBloc>(context)
+          .add(ValidationStatuseCallEvent(
+        endDate: selectedate.lastOrNull,
+        startDate: selectedate.firstOrNull,
+        selectedPipelineValue: selectedPipelineValue,
+      ));
+
+      BlocProvider.of<AiQueryAnswerBloc>(context).selectedPipelineId =
+          selectedPipelineValue;
       BlocProvider.of<AiQueryAnswerBloc>(context).add(AIQueryAnswerInitialEvent(
-          selectedPipelineValue: selectedPipelineValue));
+        endDate: selectedate.lastOrNull,
+        startDate: selectedate.firstOrNull,
+        selectedPipelineValue: selectedPipelineValue,
+      ));
+
+      BlocProvider.of<AiQueryEditedBloc>(context).selectedPipelineId =
+          selectedPipelineValue;
       BlocProvider.of<AiQueryEditedBloc>(context).add(AIQueryEditedInitialEvent(
-          selectedPipelineValue: selectedPipelineValue));
+        endDate: selectedate.lastOrNull,
+        startDate: selectedate.firstOrNull,
+        selectedPipelineValue: selectedPipelineValue,
+      ));
+
       BlocProvider.of<GetAllPipelineBloc>(context).add(
           GetAllPiplineInitialEvent(
               selectedPipelineValue: selectedPipelineValue));
-      BlocProvider.of<TicketClassificationBloc>(context).add(
-          TickiteClassificationEvent(
-              selectedPipelineValue: selectedPipelineValue));
-      BlocProvider.of<UserValidationBloc>(context).add(
-          UserValidationsEvent(selectedPipelineValue: selectedPipelineValue));
+
+      BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId =
+          selectedPipelineValue;
+      BlocProvider.of<TicketClassificationBloc>(context)
+          .add(TickiteClassificationEvent(
+        endDate: selectedate.lastOrNull,
+        startDate: selectedate.firstOrNull,
+        selectedPipelineValue: selectedPipelineValue,
+      ));
+
+      BlocProvider.of<UserValidationBloc>(context).selectedPipelineId =
+          selectedPipelineValue;
+      BlocProvider.of<UserValidationBloc>(context).add(UserValidationsEvent(
+        endDate: selectedate.lastOrNull,
+        startDate: selectedate.firstOrNull,
+        selectedPipelineValue: selectedPipelineValue,
+      ));
     }
   }
 

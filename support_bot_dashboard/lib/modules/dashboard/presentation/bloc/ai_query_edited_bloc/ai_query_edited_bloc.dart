@@ -13,6 +13,7 @@ part 'ai_query_edited_event.dart';
 part 'ai_query_edited_state.dart';
 
 class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
+  List<String>? selectedPipelineId = ["11257490"];
   AiQueryEditedBloc() : super(AIQueryEditedIntialState()) {
     on<AIQueryEditedInitialEvent>(_aIQueryEditedInitialEvent);
   }
@@ -22,20 +23,21 @@ class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
     emit(AIQueryEditedLoadingState());
     final repository = serviceLocator.get<DashboardAiQueryEditedUsecase>();
     List<DateTime?> datesList = await getSelectedDates();
+    final endDate = DateTime.now();
+    final startDate = endDate.subtract(const Duration(days: 0));
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
-        if (event.selectedDate != null)
-          Filter(
-              fieldValue: event.selectedPipelineValue ?? ["11257490"],
-              fieldName: "StartDate"),
+        Filter(
+            fieldValue: selectedPipelineId ?? ["11257490"],
+            fieldName: "StartDate"),
         Filter(
             fieldValue: event.selectedPipelineValue ?? ["11257490"],
             fieldName: event.fieldName ?? "pipelines")
       ],
-      startDate: (datesList.firstOrNull ?? DateTime.now())
+      startDate: (event.startDate ?? DateTime.now())
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
           .toIso8601String(),
-      endDate: (datesList.lastOrNull ?? DateTime.now())
+      endDate: (event.endDate ?? DateTime.now())
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
           .toIso8601String(),
     );

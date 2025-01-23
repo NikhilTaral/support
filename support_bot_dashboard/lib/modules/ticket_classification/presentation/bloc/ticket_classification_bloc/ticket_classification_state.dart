@@ -11,12 +11,16 @@ class TicketClassificationSucssesState extends TicketClassificationState {
   final DateTime? startDate;
   final DateTime? endDate;
   final List<String> pipelineId;
+    final num? currentIndex;
+  final Map<String, dynamic>? currentRowData;
 
   TicketClassificationSucssesState({
     this.model,
     this.startDate,
     this.endDate,
     this.pipelineId = const [],
+    this.currentIndex,
+    this.currentRowData,
   });
 }
 
