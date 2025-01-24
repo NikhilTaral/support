@@ -441,7 +441,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                 children: [
                   SelectableText.rich(
                     TextSpan(
-                      text: "Id : ",
+                      text: "Id : \n",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -451,11 +451,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Description : ',
+                      text: "Description : \n",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -465,10 +464,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Classification : ",
+                      text: "AI Classification : \n",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -479,10 +478,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Reasoning : ",
+                      text: "Reasoning : \n",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -493,10 +492,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "BOPS State : ",
+                      text: "BOPS State : \n",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -507,10 +506,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Validated By: ",
+                      text: "Validated By: \n",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -521,10 +520,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Validated Classification : ',
+                      text: 'Validated Classification : \n',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -535,10 +534,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Status : ',
+                      text: 'Status : \n',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(

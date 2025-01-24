@@ -8,7 +8,6 @@ import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/da
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/usecases/ai_query_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ai_query_event.dart';
 part 'ai_query_state.dart';

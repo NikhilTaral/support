@@ -284,8 +284,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           setState(() {
             selectedValidation = value?.toLowerCase() ?? "";
           });
-
-          //await LocalStorage.saveValidation(value?.toLowerCase());
         },
         items: const ["Not Validated", "Correct", "Incorrect"],
       ),
@@ -299,11 +297,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         height: 180,
         child: ElevatedButton.icon(
           onPressed: () {
-            // Use default value if pipelineIds is empty
             final selectedPipelineValue =
                 pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
 
-            // Show a snackbar if no valid pipeline is selected
             if (selectedPipelineValue.isEmpty) {
               showSnackbar(
                 context,
@@ -312,7 +308,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
               return;
             }
 
-            // Set values and trigger the event
             final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
             bloc.selectedPipelineId = selectedPipelineValue.first;
             bloc.selectedBOPsState = selectedBOPsState;
@@ -434,17 +429,20 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             pipelineIds.clear();
             selectedPipeline = "";
           });
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedPipelineId = "11257490";
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedBOPsState = selectedBOPsState;
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedClassification = selectedClassification;
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedValidation = selectedValidation;
+          // BlocProvider.of<TicketClassificationTabBloc>(context)
+          //     .selectedPipelineId = "11257490";
+          // BlocProvider.of<TicketClassificationTabBloc>(context)
+          //     .selectedBOPsState = selectedBOPsState;
+          // BlocProvider.of<TicketClassificationTabBloc>(context)
+          //     .selectedClassification = selectedClassification ?? "";
+          // BlocProvider.of<TicketClassificationTabBloc>(context)
+          //     .selectedValidation = selectedValidation ?? "";
 
           BlocProvider.of<TicketClassificationTabBloc>(context)
               .add(TicketClassificationDataCallEvent(
+            selectedBOPsState: selectedBOPsState,
+            selectedClassification: selectedClassification,
+            selectedValidation: selectedValidation,
             fieldValue: ['11257490'],
             endDate: selectedate.isNotEmpty
                 ? selectedate.lastOrNull

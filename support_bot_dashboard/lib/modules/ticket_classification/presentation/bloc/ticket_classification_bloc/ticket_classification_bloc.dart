@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
@@ -43,7 +42,7 @@ class TicketClassificationTabBloc
       final enddate = DateTime.now()
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
       final startdate = DateTime.now()
-          .subtract(const Duration(days: 0))
+          .subtract(const Duration(days: 1))
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
       page = event.page ?? 1;

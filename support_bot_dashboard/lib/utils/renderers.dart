@@ -136,7 +136,9 @@ class Renderers {
     required BuildContext context,
     void Function(String?)? onDelete,
   }) {
-        {};
+    final actionData =
+        rendererContext.row.cells["Action"]?.value as Map<String, dynamic>? ??
+            {};
     return Align(
       alignment: Alignment.topLeft,
       child: PopupMenuTheme(
@@ -277,7 +279,7 @@ class Renderers {
                         BlocProvider.of<AddAnswerValidationBloc>(context).add(
                             AddAnswerValidationInitialEvent(
                                 agentAnsValidation: validationStatus,
-                                ticketId: id.toString() ,
+                                ticketId: id.toString() ?? "",
                                 pipeline:
                                     serviceLocator<InstanceSharingService>()
                                             .selectedPipelineValueList
@@ -438,7 +440,8 @@ class Renderers {
                     );
                   }
                 } else if (newValue?.toLowerCase() == "incorrect") {
-                
+                  final rowData = rendererContext.row.cells
+                      .map((key, cell) => MapEntry(key, cell.value));
                   showDialog(
                     context: context,
                     builder: (BuildContext dialogContext) {
@@ -629,7 +632,7 @@ class Renderers {
         ),
       ));
     } else {
-      
+      final validation = rowData['vadidation'] ?? "";
       return Center(
         child: Text(rendererContext.cell.value),
       );
@@ -651,10 +654,11 @@ class Renderers {
         : 'N/A';
 
     final ticketDescription =
-        (rowData.cells['ticket_description']?.value).toString() ;
+        (rowData.cells['ticket_description']?.value).toString() ?? "";
     final answeredStatus =
-        (rowData.cells['classification']?.value).toString() ;
-    
+        (rowData.cells['classification']?.value).toString() ?? '';
+    final validationStatus =
+        rowData.cells['validation_status']?.value ?? "Not Validated";
 
     showDialog(
       context: context,
@@ -690,7 +694,7 @@ class Renderers {
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       UIHelpers.verticalSpaceTiny,
-                      Text(id.toString() ,
+                      Text(id.toString() ?? '',
                           style: SupportBotTextstyle.cellHeading),
                       UIHelpers.verticalSpaceRegular,
                       Text(

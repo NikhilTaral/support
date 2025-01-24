@@ -91,8 +91,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   Widget _buildDateRangeSelector() {
     if (selectedate.isNotEmpty) {
-      final endDate = selectedate.lastOrNull;
-      final startDate = selectedate.firstOrNull;
+      final endDate = selectedate.lastOrNull ?? DateTime.now();
+      final startDate = selectedate.firstOrNull ?? DateTime.now();
       selectedate = [startDate, endDate];
     }
 

@@ -18,147 +18,173 @@ class TicketClassificationPlutoTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TicketClassificationTabBloc, TicketClassificationState>(
-      builder: (context, state) {
-        currentPage.value =
-            BlocProvider.of<TicketClassificationTabBloc>(context).page;
-        if (state is TicketClassificationLoadingState) {
-          return Center(
-              child: LoadingWidget(
-            height: UIHelpers.screenHeight(context),
-            width: UIHelpers.screenWidth(context),
-          ));
-        }
-        if (state is TicketClassificationSucssesState) {
-          return Column(
-            children: [
-              Expanded(
-                child: TicketClassificationPlutoGrideWidget(
-                  plutoKey: UniqueKey(),
-                  ticketClassificationEntitieModel:
-                      state.model ?? TicketClassificationEntitieModel(),
-                  piplineId: state.pipelineId,
+     final endDate = DateTime.now()
+        .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+    final startDate = endDate
+        .subtract(const Duration(days: 0))
+        .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+    String selectedBOPsState = "";
+    String selectedClassification = "";
+    String selectedValidation = "";
+    String selectedPipelineId = "11257490";
+    return BlocProvider(
+      create: (context) => TicketClassificationTabBloc()..add(
+          TicketClassificationDataCallEvent(
+            startDate: startDate,
+            selectedBOPsState: selectedBOPsState,
+            selectedClassification: selectedClassification,
+            selectedValidation: selectedValidation,
+            selectedPipelineId: selectedPipelineId,
+            endDate: endDate,
+            page: BlocProvider.of<TicketClassificationTabBloc>(context).page,
+            pageSize:
+                BlocProvider.of<TicketClassificationTabBloc>(context).pageSize,
+          ),
+        ),
+      child:
+          BlocBuilder<TicketClassificationTabBloc, TicketClassificationState>(
+        builder: (context, state) {
+          currentPage.value =
+              BlocProvider.of<TicketClassificationTabBloc>(context).page;
+          if (state is TicketClassificationLoadingState) {
+            return Center(
+                child: LoadingWidget(
+              height: UIHelpers.screenHeight(context),
+              width: UIHelpers.screenWidth(context),
+            ));
+          }
+          if (state is TicketClassificationSucssesState) {
+            return Column(
+              children: [
+                Expanded(
+                  child: TicketClassificationPlutoGrideWidget(
+                    plutoKey: UniqueKey(),
+                    ticketClassificationEntitieModel:
+                        state.model ?? TicketClassificationEntitieModel(),
+                    piplineId: state.pipelineId,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Items per page:   ",
-                          style: TextStyle(
-                              color: SupportBotColors.disablePrimary.shade700,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        ValueListenableBuilder<int>(
-                          valueListenable: pageSize,
-                          builder: (context, value, child) {
-                            return CustomPaginationDropdown(
-                              selectedValue: value,
-                              items: const [10, 25, 50],
-                              onChanged: (value) {
-                                if (value != null) {
-                                  pageSize.value = value;
-                                  currentPage.value = 1;
-
-                                  context
-                                      .read<TicketClassificationTabBloc>()
-                                      .add(
-                                        TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
-                                      );
-                                }
-                              },
-                              width: 60,
-                              height: 40,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    UIHelpers.horizontalSpaceRegular,
-                    Row(
-                      children: [
-                        Text(
-                          "${(currentPage.value - 1) * pageSize.value + 1} - "
-                          "${(currentPage.value * pageSize.value > (state.model?.data?.totalRecords ?? 0)) ? state.model?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
-                          "${state.model?.data?.totalRecords ?? 0}",
-                          style: TextStyle(
-                            color: SupportBotColors.disablePrimary.shade500,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Items per page:   ",
+                            style: TextStyle(
+                                color: SupportBotColors.disablePrimary.shade700,
+                                fontWeight: FontWeight.w500),
                           ),
-                        ),
-                        IconButton(
-                          onPressed: currentPage.value > 1
-                              ? () {
-                                  currentPage.value--;
-                                  context
-                                      .read<TicketClassificationTabBloc>()
-                                      .add(
-                                        TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
-                                      );
-                                }
-                              : null,
-                          icon: const Icon(Icons.arrow_back_ios_new, size: 15),
-                        ),
-                        ValueListenableBuilder<int>(
-                          valueListenable: currentPage,
-                          builder: (context, page, _) {
-                            return Text(
-                              'Page ${currentPage.value}',
-                              style: TextStyle(
-                                  color:
-                                      SupportBotColors.disablePrimary.shade700,
-                                  fontWeight: FontWeight.w500),
-                            );
-                          },
-                        ),
-                        IconButton(
-                          onPressed: (currentPage.value * pageSize.value) <
-                                  (state.model?.data?.totalRecords ?? 0)
-                              ? () {
-                                  currentPage.value++;
-                                  context
-                                      .read<TicketClassificationTabBloc>()
-                                      .add(
-                                        TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
-                                      );
-                                }
-                              : null,
-                          icon: const Icon(Icons.arrow_forward_ios, size: 15),
-                        ),
-                      ],
-                    ),
-                  ],
+                          ValueListenableBuilder<int>(
+                            valueListenable: pageSize,
+                            builder: (context, value, child) {
+                              return CustomPaginationDropdown(
+                                selectedValue: value,
+                                items: const [10, 25, 50],
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    pageSize.value = value;
+                                    currentPage.value = 1;
+
+                                    context
+                                        .read<TicketClassificationTabBloc>()
+                                        .add(
+                                          TicketClassificationDataCallEvent(
+                                            startDate: state.startDate,
+                                            endDate: state.endDate,
+                                            page: currentPage.value,
+                                            pageSize: pageSize.value,
+                                          ),
+                                        );
+                                  }
+                                },
+                                width: 60,
+                                height: 40,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      UIHelpers.horizontalSpaceRegular,
+                      Row(
+                        children: [
+                          Text(
+                            "${(currentPage.value - 1) * pageSize.value + 1} - "
+                            "${(currentPage.value * pageSize.value > (state.model?.data?.totalRecords ?? 0)) ? state.model?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                            "${state.model?.data?.totalRecords ?? 0}",
+                            style: TextStyle(
+                              color: SupportBotColors.disablePrimary.shade500,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: currentPage.value > 1
+                                ? () {
+                                    currentPage.value--;
+                                    context
+                                        .read<TicketClassificationTabBloc>()
+                                        .add(
+                                          TicketClassificationDataCallEvent(
+                                            startDate: state.startDate,
+                                            endDate: state.endDate,
+                                            page: currentPage.value,
+                                            pageSize: pageSize.value,
+                                          ),
+                                        );
+                                  }
+                                : null,
+                            icon:
+                                const Icon(Icons.arrow_back_ios_new, size: 15),
+                          ),
+                          ValueListenableBuilder<int>(
+                            valueListenable: currentPage,
+                            builder: (context, page, _) {
+                              return Text(
+                                'Page ${currentPage.value}',
+                                style: TextStyle(
+                                    color: SupportBotColors
+                                        .disablePrimary.shade700,
+                                    fontWeight: FontWeight.w500),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            onPressed: (currentPage.value * pageSize.value) <
+                                    (state.model?.data?.totalRecords ?? 0)
+                                ? () {
+                                    currentPage.value++;
+                                    context
+                                        .read<TicketClassificationTabBloc>()
+                                        .add(
+                                          TicketClassificationDataCallEvent(
+                                            startDate: state.startDate,
+                                            endDate: state.endDate,
+                                            page: currentPage.value,
+                                            pageSize: pageSize.value,
+                                          ),
+                                        );
+                                  }
+                                : null,
+                            icon: const Icon(Icons.arrow_forward_ios, size: 15),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        } else if (state is TicketClassificationFailureState) {
-          return const FailureWidget();
-        } else if (state is TicketClassificationEmptyState) {
-          return Center(child: const EmptyWidget());
-        }
-        return const SizedBox.shrink();
-      },
+              ],
+            );
+          } else if (state is TicketClassificationFailureState) {
+            return const FailureWidget();
+          } else if (state is TicketClassificationEmptyState) {
+            return Center(child: const EmptyWidget());
+          }
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 }

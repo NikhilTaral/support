@@ -3,7 +3,6 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_responce_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/_update_Classification_validation_entitie_module.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/get_validation_details_entitie_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 
 part 'update_classification_validation_event.dart';
