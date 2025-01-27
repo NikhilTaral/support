@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
@@ -136,6 +137,8 @@ class Renderers {
     required BuildContext context,
     void Function(String?)? onDelete,
   }) {
+    int index = rendererContext.cell.value?['index'] ?? 0;
+    final allRows = rendererContext.cell.value?['allRows'] ?? [];
     final actionData =
         rendererContext.row.cells["Action"]?.value as Map<String, dynamic>? ??
             {};
@@ -160,7 +163,10 @@ class Renderers {
               PopupMenuItem<String>(
                 value: "view",
                 onTap: () {
-                  showTicketDetailsDialog(context,
+                  showTicketDetailsDialog(
+                      allRows: allRows,
+                      initialIndex: index,
+                      context,
                       rowData: rendererContext.row);
                 },
                 child: Row(
@@ -642,29 +648,29 @@ class Renderers {
   static void showTicketDetailsDialog(
     BuildContext context, {
     required PlutoRow rowData,
+    required List<AiQueryAttributeItem> allRows,
+    required int initialIndex,
   }) {
     TextEditingController aiQueryController = TextEditingController(
-        text:
-            rowData.cells['ai_query_answer']?.value ?? "Answer not generated");
+      text: rowData.cells['ai_query_answer']?.value ?? "Answer not generated",
+    );
     bool isEditing = false;
 
-    final idMap = rowData.cells['id']?.value;
-    final id = idMap != null && idMap is Map<String, dynamic>
-        ? idMap['id']?.toString() ?? 'N/A'
-        : 'N/A';
-
-    final ticketDescription =
-        (rowData.cells['ticket_description']?.value).toString() ?? "";
-    final answeredStatus =
-        (rowData.cells['classification']?.value).toString() ?? '';
-    final validationStatus =
-        rowData.cells['validation_status']?.value ?? "Not Validated";
+    int currentIndex = initialIndex;
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
+            final rowData = allRows[currentIndex];
+            final id = rowData.id?.toString() ?? '';
+            final ticketDescription =
+                rowData.ticketDescription?.toString() ?? '';
+            final answeredStatus = rowData.agentAnsValidation?.toString() ?? '';
+            final validationStatus =
+                rowData.agentAnsValidation?.toString() ?? "Not Validated";
+
             return Dialog(
               backgroundColor: SupportBotColors.white,
               shape: RoundedRectangleBorder(
@@ -680,25 +686,52 @@ class Renderers {
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          "Ticket Details",
-                          style: SupportBotTextstyle.columnHeading
-                              .copyWith(fontSize: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (currentIndex > 0) {
+                                  setState(() {
+                                    currentIndex--;
+                                  });
+                                }
+                              },
+                              icon:
+                                  const Icon(Icons.arrow_circle_left_outlined),
+                            ),
+                            Text(
+                              "Ticket Details",
+                              style: SupportBotTextstyle.columnHeading
+                                  .copyWith(fontSize: 20),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                if (currentIndex < allRows.length - 1) {
+                                  setState(() {
+                                    currentIndex++;
+                                  });
+                                }
+                              },
+                              icon:
+                                  const Icon(Icons.arrow_circle_right_outlined),
+                            ),
+                          ],
                         ),
                       ),
                       UIHelpers.verticalSpaceSmall,
                       const Divider(),
                       UIHelpers.verticalSpaceSmall,
                       Text(
-                        "Ticket ID: ",
+                        "Ticket ID:",
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       UIHelpers.verticalSpaceTiny,
-                      Text(id.toString() ?? '',
-                          style: SupportBotTextstyle.cellHeading),
+                      Text(id, style: SupportBotTextstyle.cellHeading),
                       UIHelpers.verticalSpaceRegular,
                       Text(
-                        "Ticket Description: ",
+                        "Ticket Description:",
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       UIHelpers.verticalSpaceTiny,
@@ -708,7 +741,7 @@ class Renderers {
                       ),
                       UIHelpers.verticalSpaceMedium,
                       Text(
-                        "Answer Status: ",
+                        "Answer Status:",
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       UIHelpers.verticalSpaceTiny,
@@ -718,7 +751,7 @@ class Renderers {
                       ),
                       UIHelpers.verticalSpaceRegular,
                       Text(
-                        "AI Query Answer: ",
+                        "AI Query Answer:",
                         style: SupportBotTextstyle.columnHeading,
                       ),
                       TextField(
@@ -743,18 +776,9 @@ class Renderers {
                                     BorderRadius.all(Radius.circular(6))),
                             labelStyle: SupportBotTextstyle.cellHeading),
                       ),
-                      // Text(
-                      //   "AI Answer Validation Status: ",
-                      //   style: SupportBotTextstyle.columnHeading,
-                      // ),
-                      // Text(
-                      //   validationStatus,
-                      //   style: SupportBotTextstyle.cellHeading,
-                      // ),
                       UIHelpers.verticalSpaceRegular,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 40,
                         children: [
                           ElevatedButton.icon(
                             icon: const Icon(Icons.cancel,
@@ -776,6 +800,7 @@ class Renderers {
                                   color: SupportBotColors.bluePrimary),
                             ),
                           ),
+                          UIHelpers.horizontalSpaceRegular,
                           BlocProvider(
                             create: (context) => UpdateAiAnswerBloc(),
                             child: BlocConsumer<UpdateAiAnswerBloc,
@@ -798,48 +823,6 @@ class Renderers {
                                 }
                               },
                               builder: (context, state) {
-                                if (state is UpdateAiAnswerSuccessState) {
-                                  return ElevatedButton.icon(
-                                    icon: Icon(
-                                      isEditing ? Icons.save : Icons.edit,
-                                      color: SupportBotColors.white,
-                                    ),
-                                    onPressed: () {
-                                      if (isEditing) {
-                                        context.read<UpdateAiAnswerBloc>().add(
-                                              UpdateAiAnswerInitialEvent(
-                                                ticketId: id.toString() ?? '',
-                                                updatedAnswer:
-                                                    aiQueryController.text,
-                                                selectedPipelineValue:
-                                                    serviceLocator<
-                                                            InstanceSharingService>()
-                                                        .selectedPipelineValue,
-                                              ),
-                                            );
-                                      }
-                                      setState(() {
-                                        isEditing = !isEditing;
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 30, vertical: 15),
-                                      backgroundColor:
-                                          SupportBotColors.bluePrimary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                    ),
-                                    label: Text(
-                                      isEditing ? "Save" : "Edit",
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  );
-                                }
-
                                 return ElevatedButton.icon(
                                   icon: Icon(
                                     isEditing ? Icons.save : Icons.edit,
@@ -847,14 +830,17 @@ class Renderers {
                                   ),
                                   onPressed: () {
                                     if (isEditing) {
-                                      BlocProvider.of<UpdateAiAnswerBloc>(
-                                              context)
-                                          .add(
-                                        UpdateAiAnswerInitialEvent(
-                                          ticketId: id.toString() ?? '',
-                                          updatedAnswer: aiQueryController.text,
-                                        ),
-                                      );
+                                      context.read<UpdateAiAnswerBloc>().add(
+                                            UpdateAiAnswerInitialEvent(
+                                              ticketId: id,
+                                              updatedAnswer:
+                                                  aiQueryController.text,
+                                              selectedPipelineValue:
+                                                  serviceLocator<
+                                                          InstanceSharingService>()
+                                                      .selectedPipelineValue,
+                                            ),
+                                          );
                                     }
                                     setState(() {
                                       isEditing = !isEditing;
@@ -876,7 +862,7 @@ class Renderers {
                                 );
                               },
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ],

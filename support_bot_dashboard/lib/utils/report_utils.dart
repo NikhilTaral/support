@@ -139,7 +139,6 @@ class ReportUtils {
   }
 
   List<PlutoRow> createTicketClassificationRow() {
-    
     List<PlutoRow> rows = [];
     for (int i = 0;
         i < (ticketClassificationEntitieModel.data?.items ?? []).length;
@@ -325,36 +324,53 @@ class ReportUtils {
     ];
   }
 
-  List<PlutoRow> createAIQueryEditedRow(
-      {required AiQueryAttributeModel aiQueryAttributeModel}) {
+  List<PlutoRow> createAIQueryEditedRow({
+    required AiQueryAttributeModel aiQueryAttributeModel,
+  }) {
+    List<PlutoRow> rows = [];
+
     if (aiQueryAttributeModel.data == null ||
         aiQueryAttributeModel.data!.items == null) {
-      return [];
+      return rows;
     }
 
-    return aiQueryAttributeModel.data?.items?.map((item) {
-          return PlutoRow(
-            cells: {
-              'id': PlutoCell(value: {
-                'id': item.id ?? "N/A",
-                'isAnswerEdited':
-                    item.isAnswerEdited == true ? "Edited" : "Not Edited",
-              }),
-              'ticket_description': PlutoCell(
-                  value: item.ticketDescription?.replaceAll('\n', ' ') ?? ''),
-              'classification': PlutoCell(
-                  value: item.answeredStatus == "true"
-                      ? 'Answered'
-                      : 'Not Answered'),
-              'validation_status': PlutoCell(
-                  value: item.answeredStatus == true
-                      ? "Validated"
-                      : "Not Validated"),
-              'ai_query_answer': PlutoCell(value: item.aiResponse ?? ''),
-              'action': PlutoCell(value: '...')
-            },
-          );
-        }).toList() ??
-        [];
+    for (int i = 0; i < aiQueryAttributeModel.data!.items!.length; i++) {
+      final e = aiQueryAttributeModel.data!.items![i];
+
+      rows.add(
+        PlutoRow(
+          cells: {
+            "id": PlutoCell(
+              value: e.id ?? "N/A",
+            ),
+            "is_answer_edited": PlutoCell(
+              value: e.isAnswerEdited == true ? "Edited" : "Not Edited",
+            ),
+            "ticket_description": PlutoCell(
+              value: e.ticketDescription?.replaceAll('\n', ' ') ?? "",
+            ),
+            "classification": PlutoCell(
+              value: e.answeredStatus == "true" ? "Answered" : "Not Answered",
+            ),
+            "validation_status": PlutoCell(
+              value: e.answeredStatus == "true" ? "Validated" : "Not Validated",
+            ),
+            "ai_query_answer": PlutoCell(
+              value: e.aiResponse ?? "N/A",
+            ),
+            "action": PlutoCell(
+              value: {
+                "allRows": aiQueryAttributeModel.data!.items!,
+                "index": i,
+                "isAnswerEdited": e.isAnswerEdited,
+                "answeredStatus": e.answeredStatus,
+              },
+            ),
+          },
+        ),
+      );
+    }
+
+    return rows;
   }
 }
