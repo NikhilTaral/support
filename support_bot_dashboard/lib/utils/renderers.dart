@@ -667,6 +667,7 @@ class Renderers {
             final id = rowData.id?.toString() ?? '';
             final ticketDescription =
                 rowData.ticketDescription?.toString() ?? '';
+            final aiResponse = rowData.ticketDescription?.toString() ?? '';
             final answeredStatus = rowData.agentAnsValidation?.toString() ?? '';
             final validationStatus =
                 rowData.agentAnsValidation?.toString() ?? "Not Validated";
@@ -737,6 +738,16 @@ class Renderers {
                       UIHelpers.verticalSpaceTiny,
                       Text(
                         ticketDescription,
+                        style: SupportBotTextstyle.cellHeading,
+                      ),
+                      UIHelpers.verticalSpaceTiny,
+                      Text(
+                        "AI Response:",
+                        style: SupportBotTextstyle.columnHeading,
+                      ),
+                      UIHelpers.verticalSpaceTiny,
+                      Text(
+                        aiResponse,
                         style: SupportBotTextstyle.cellHeading,
                       ),
                       UIHelpers.verticalSpaceMedium,

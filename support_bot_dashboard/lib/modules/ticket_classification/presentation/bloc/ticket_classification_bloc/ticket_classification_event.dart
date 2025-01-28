@@ -17,8 +17,8 @@ class TicketClassificationDataCallEvent extends TicketClassificationEvent {
 
   TicketClassificationDataCallEvent(
       {this.fieldName,
-      required this.startDate,
-      required this.endDate,
+      this.startDate,
+      this.endDate,
       this.ticketId,
       this.selectedBOPsState,
       this.selectedClassification,

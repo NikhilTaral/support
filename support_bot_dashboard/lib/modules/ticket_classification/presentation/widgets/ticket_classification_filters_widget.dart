@@ -105,12 +105,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildValidationDropdown(),
             UIHelpers.horizontalSpaceRegular,
-            _buildApplyFilterButton(),
+            _buildApplyFilterButton(
+              context,
+            ),
             UIHelpers.horizontalSpaceRegular,
             _buildClearFilterButton(),
             UIHelpers.horizontalSpaceRegular,
             _buildSearchWidget(),
-            _buildExportButton(),
+            // _buildExportButton(),
           ],
         ),
       ),
@@ -290,46 +292,43 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _buildApplyFilterButton() {
-    return BlocProvider(
-      create: (context) => TicketClassificationTabBloc(),
-      child: Container(
-        height: 180,
-        child: ElevatedButton.icon(
-          onPressed: () {
-            final selectedPipelineValue =
-                pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+  Widget _buildApplyFilterButton(BuildContext context) {
+    return Container(
+      height: 180,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          final selectedPipelineValue =
+              pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
 
-            if (selectedPipelineValue.isEmpty) {
-              showSnackbar(
-                context,
-                'Please select a pipeline to apply filter',
-              );
-              return;
-            }
+          if (selectedPipelineValue.isEmpty) {
+            showSnackbar(
+              context,
+              'Please select a pipeline to apply filter',
+            );
+            return;
+          }
 
-            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
-            bloc.selectedPipelineId = selectedPipelineValue.first;
-            bloc.selectedBOPsState = selectedBOPsState;
-            bloc.selectedClassification = selectedClassification;
-            bloc.selectedValidation = selectedValidation;
-            bloc.add(TicketClassificationDataCallEvent(
-              fieldValue: selectedPipelineValue,
-              endDate: selectedate.lastOrNull,
-              startDate: selectedate.firstOrNull,
-              page: 1,
-              pageSize: 10,
-            ));
-          },
-          icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-          label:
-              const Text('Apply Filter', style: TextStyle(color: Colors.white)),
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            backgroundColor: SupportBotColors.bluePrimary,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0)),
-          ),
+          final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+          bloc.selectedPipelineId = selectedPipelineValue.first;
+          bloc.selectedBOPsState = selectedBOPsState;
+          bloc.selectedClassification = selectedClassification;
+          bloc.selectedValidation = selectedValidation;
+          bloc.add(TicketClassificationDataCallEvent(
+            fieldValue: selectedPipelineValue,
+            endDate: selectedate.lastOrNull,
+            startDate: selectedate.firstOrNull,
+            page: 1,
+            pageSize: 10,
+          ));
+        },
+        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+        label:
+            const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),
       ),
     );
@@ -429,15 +428,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             pipelineIds.clear();
             selectedPipeline = "";
           });
-          // BlocProvider.of<TicketClassificationTabBloc>(context)
-          //     .selectedPipelineId = "11257490";
-          // BlocProvider.of<TicketClassificationTabBloc>(context)
-          //     .selectedBOPsState = selectedBOPsState;
-          // BlocProvider.of<TicketClassificationTabBloc>(context)
-          //     .selectedClassification = selectedClassification ?? "";
-          // BlocProvider.of<TicketClassificationTabBloc>(context)
-          //     .selectedValidation = selectedValidation ?? "";
-
           BlocProvider.of<TicketClassificationTabBloc>(context)
               .add(TicketClassificationDataCallEvent(
             selectedBOPsState: selectedBOPsState,
@@ -535,25 +525,25 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Widget _buildExportButton() {
-    String getPipelineId() {
-      if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
-        return pipelineIds.first;
-      }
-      return '';
-    }
+  // Widget _buildExportButton() {
+  //   String getPipelineId() {
+  //     if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
+  //       return pipelineIds.first ?? "11257490";
+  //     }
+  //     return '11257490';
+  //   }
 
-    return Tooltip(
-      message: 'Export CSV File',
-      child: ExportButton(
-          icon: 'assets/icons/Export.svg',
-          selectedButtonText: "Ticket Classification",
-          startDate: selectedDatesNotifier.value?.first,
-          endDate: selectedDatesNotifier.value?.last,
-          bopsState: selectedBOPsState,
-          selectedClassification: selectedClassification,
-          selectedClassificationValidation: selectedValidation,
-          selectedPipeline: getPipelineId()),
-    );
-  }
+  //   return Tooltip(
+  //     message: 'Export CSV File',
+  //     child: ExportButton(
+  //         icon: 'assets/icons/Export.svg',
+  //         selectedButtonText: "Ticket Classification",
+  //         startDate: selectedDatesNotifier.value?.first ?? DateTime.now(),
+  //         endDate: selectedDatesNotifier.value?.last ?? DateTime.now(),
+  //         bopsState: selectedBOPsState,
+  //         selectedClassification: selectedClassification,
+  //         selectedClassificationValidation: selectedValidation,
+  //         selectedPipeline: getPipelineId()),
+  //   );
+  // }
 }
