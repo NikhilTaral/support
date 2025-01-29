@@ -95,11 +95,9 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
 
   Widget _buildDateRangeSelector() {
     if (selectedDatesNotifier.value == null) {
-      final endDate = DateTime.now();
-      final startDate = endDate
-          .subtract(const Duration(days: 0))
-          .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-      ;
+      final endDate = selectedDatesNotifier.value?.lastOrNull ?? DateTime.now();
+      final startDate =
+          selectedDatesNotifier.value?.firstOrNull ?? DateTime.now();
       selectedDatesNotifier.value = [startDate, endDate];
     }
 
