@@ -54,7 +54,7 @@ class ReportUtils {
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'BOPS State',
+        title: 'BOPS State/ Province ',
         field: 'bops_state',
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
@@ -85,7 +85,7 @@ class ReportUtils {
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'Classification',
+        title: 'Validated Classification',
         field: "classification",
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
