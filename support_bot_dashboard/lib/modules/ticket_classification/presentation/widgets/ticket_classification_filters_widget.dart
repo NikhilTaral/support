@@ -224,14 +224,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _bopsState() {
     return SizedBox(
-      width: 150,
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
           if (state is BopsStatesSucssesState) {
             return CustomMonthDropdown(
               items: state.model?.data ?? [],
-              label:
-                  selectedBOPsState.isEmpty ? "BOPS State" : selectedBOPsState,
+              label: selectedBOPsState.isEmpty
+                  ? " BOPS State/ Province "
+                  : selectedBOPsState,
               onChanged: (value) async {
                 setState(() {
                   selectedBOPsState = value ?? '';
@@ -256,7 +256,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildTicketClassificationDropdown() {
     return SizedBox(
-      width: 200,
       child: CustomMonthDropdown(
         label: selectedClassification.isEmpty
             ? "Classification"
@@ -436,10 +435,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             selectedClassification: selectedClassification,
             selectedValidation: selectedValidation,
             fieldValue: ['11257490'],
-            endDate: selectedate.isNotEmpty
-                ? selectedate.lastOrNull
-                : DateTime.now(),
-            startDate: DateTime.now().subtract(const Duration(days: 0)),
+            endDate: DateTime.now()
+                ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
+            startDate: DateTime.now()
+                ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
             page: 1,
             pageSize: 10,
           ));
