@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/revert_bloc/revert_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
@@ -37,18 +38,9 @@ class _TicketClassificationActionRendererState
     extends State<TicketClassificationActionRenderer> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TicketClassificationTabBloc, TicketClassificationState>(
+    return BlocConsumer<RevertBloc, RevertState>(
       listener: (context, state) {
-        if (state is TicketClassificationSucssesState) {
-          BlocProvider.of<TicketClassificationTabBloc>(context).add(
-            TicketClassificationDataCallEvent(
-              startDate: DateTime.now().subtract(const Duration(days: 0)),
-              endDate: DateTime.now(),
-              page: 1,
-              pageSize: 10,
-            ),
-          );
-        }
+        if (state is RevertClassificationSucessState) {}
       },
       builder: (context, state) {
         return Align(
@@ -96,38 +88,35 @@ class _TicketClassificationActionRendererState
                     ],
                   ),
                 ),
-                  if (widget.isUpdatedToHubspot == true)
+                if (widget.isUpdatedToHubspot == true)
                   PopupMenuItem<String>(
                     value: S.of(context).revert,
                     child: InkWell(
                       onTap: () {
+                        final bloc = BlocProvider.of<RevertBloc>(context);
                         if (widget.isUpdatedToHubspot) {
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .add(RevertClassificationEvent(
+                          bloc.add(RevertClassificationEvent(
                             ticketId: widget.id,
                           ));
-
-                          Future.delayed(const Duration(milliseconds: 1000),
-                              () {
-                            BlocProvider.of<TicketClassificationTabBloc>(
-                                    context)
-                                .add(
-                              TicketClassificationDataCallEvent(
-                                startDate: DateTime.now()
-                                    .subtract(const Duration(days: 0)),
-                                endDate: DateTime.now(),
-                                page: 1,
-                                pageSize: 10,
-                              ),
-                            );
-                          });
                           Navigator.of(context).pop();
                           // _showRevertToHubspotPopup(
                           //     context, S.of(context).revertSuccess);
                         } else {
-                          _showRevertToHubspotPopup(
-                              context, S.of(context).noRevert);
+                          // _showRevertToHubspotPopup(
+                          //     context, S.of(context).noRevert);
                         }
+                        Future.delayed(const Duration(seconds: 2), () {
+                          BlocProvider.of<TicketClassificationTabBloc>(context)
+                              .add(
+                            TicketClassificationDataCallEvent(
+                              startDate: DateTime.now()
+                                  .subtract(const Duration(days: 0)),
+                              endDate: DateTime.now(),
+                              page: 1,
+                              pageSize: 10,
+                            ),
+                          );
+                        });
                       },
                       child: Row(
                         children: [
@@ -273,8 +262,7 @@ class _TicketClassificationActionRendererState
                                               );
 
                                           Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () {
+                                              const Duration(seconds: 2), () {
                                             BlocProvider.of<
                                                         TicketClassificationTabBloc>(
                                                     context)
@@ -458,7 +446,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       children: <TextSpan>[
                         TextSpan(
                             text:
-                                '${currentRowData.classification == "" ? "N/A" : currentRowData.classification}',
+                                '${currentRowData.aiclassification == "" ? "N/A" : currentRowData.aiclassification}',
                             style:
                                 const TextStyle(fontWeight: FontWeight.normal)),
                       ],
@@ -481,7 +469,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "BOPS State : \n",
+                      text: "BOPS State/ Province : \n",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
@@ -571,48 +559,4 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
       ),
     );
   }
-}
-
-_showRevertToHubspotPopup(BuildContext context, String message) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(S.of(context).statusUpdated),
-        content: Text(message),
-        actions: <Widget>[
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: SupportBotColors.bluePrimary,
-              foregroundColor: SupportBotColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
-            ),
-            onPressed: () {
-              Future.delayed(const Duration(milliseconds: 500), () {
-                // BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                //   TicketClassificationDataCallEvent(
-                //     startDate: DateTime.now().subtract(const Duration(days: 0)),
-                //     endDate: DateTime.now(),
-                //     page: 1,
-                //     pageSize: 10,
-                //   ),
-                // );
-                Navigator.of(context).pop();
-              });
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              S.of(context).ok,
-              style: SupportBotTextstyle.hint.copyWith(
-                color: SupportBotColors.white,
-              ),
-            ),
-          ),
-        ],
-      );
-    },
-  );
 }

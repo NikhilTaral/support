@@ -24,8 +24,7 @@ class TicketClassificationTabBloc
 
   TicketClassificationTabBloc() : super(TicketClassificationIntialState()) {
     on<TicketClassificationDataCallEvent>(_onTicketClassification);
-    // on<FetchExportDataEvent>(_onFetchExportDataEvent);
-  }
+     }
 
   FutureOr<void> _onTicketClassification(
       TicketClassificationDataCallEvent event,

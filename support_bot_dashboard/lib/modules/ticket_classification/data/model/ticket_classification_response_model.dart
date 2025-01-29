@@ -173,7 +173,7 @@ class Item {
         createdAt: json["CreatedAt"] == null
             ? null
             : DateTime.parse(json["CreatedAt"]),
-            aiclassification: json["aiclassification"],
+        aiclassification: json["AIClassification"],
         classification: json["classification"],
         isUpdatedToHubspot: json["isUpdatedToHubspot"],
         reasoning: json["reasoning"],

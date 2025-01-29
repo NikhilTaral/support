@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+
 class DashboardExportRequestModel {
     final DateTime? startDate;
     final DateTime? endDate;
@@ -49,37 +51,5 @@ class DashboardExportRequestModel {
         "page": page,
         "pageSize": pageSize,
     };
-}
 
-class Filter {
-    final String? fieldName;
-    final List<String>? fieldValue;
-
-    Filter({
-        this.fieldName,
-        this.fieldValue,
-    });
-
-    Filter copyWith({
-        String? fieldName,
-        List<String>? fieldValue,
-    }) => 
-        Filter(
-            fieldName: fieldName ?? this.fieldName,
-            fieldValue: fieldValue ?? this.fieldValue,
-        );
-
-    factory Filter.fromRawJson(String str) => Filter.fromJson(json.decode(str));
-
-    String toRawJson() => json.encode(toJson());
-
-    factory Filter.fromJson(Map<String, dynamic> json) => Filter(
-        fieldName: json["fieldName"],
-        fieldValue: json["fieldValue"] == null ? [] : List<String>.from(json["fieldValue"]!.map((x) => x)),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "fieldName": fieldName,
-        "fieldValue": fieldValue == null ? [] : List<dynamic>.from(fieldValue!.map((x) => x)),
-    };
 }

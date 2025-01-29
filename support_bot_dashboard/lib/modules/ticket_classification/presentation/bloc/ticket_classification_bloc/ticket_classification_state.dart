@@ -27,4 +27,3 @@ class TicketClassificationSucssesState extends TicketClassificationState {
 class TicketClassificationFailureState extends TicketClassificationState {}
 
 class TicketClassificationEmptyState extends TicketClassificationState {}
-
