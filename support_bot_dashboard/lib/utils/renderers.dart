@@ -668,9 +668,14 @@ class Renderers {
             final ticketDescription =
                 rowData.ticketDescription?.toString() ?? '';
             final aiResponse = rowData.ticketDescription?.toString() ?? '';
-            final answeredStatus = rowData.agentAnsValidation?.toString() ?? '';
+            final answeredStatus =
+                rowData.agentAnsValidation?.toString() == true
+                    ? "Validated"
+                    : "Not Validated";
             final validationStatus =
-                rowData.agentAnsValidation?.toString() ?? "Not Validated";
+                rowData.agentAnsValidation?.toString() == true
+                    ? "Validated"
+                    : "Not Validated";
 
             return Dialog(
               backgroundColor: SupportBotColors.white,

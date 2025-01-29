@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:support_bot_dashboard/config/environment/env_config.dart';
 import 'package:support_bot_dashboard/core/error/exceptions.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
@@ -14,6 +15,38 @@ class ApiProvider {
   final _authService = serviceLocator<AuthService>();
   final _apiBaseUrl = EnvConfig.EXP_API_URL;
 
+  Future<Uint8List?> downloadCsv({
+    required String url,
+    Map<String, dynamic>? body,
+  }) async {
+    var headers = <String, String>{};
+    headers["Content-Type"] = "application/json";
+    final token = await serviceLocator<AuthService>().getAccessToken();
+    headers["Authorization"] = "Bearer $token";
+
+    try {
+      final response = await http.post(
+        Uri.parse("$_apiBaseUrl/$url"),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+       final bytes = response.bodyBytes;
+        return bytes;
+      } else {
+        return null;
+      }
+    } on TimeoutException catch (_) {
+      Log.error("downloadCsv failed with timeout");
+      return null;
+    } catch (e) {
+      Log.error("downloadCsv failed with error $e");
+      return null;
+    }
+  }
+
+ 
 
   Future<dynamic> getData({
     required String url,
@@ -27,15 +60,14 @@ class ApiProvider {
     try {
       dynamic responseJson;
 
-        final response = await http.post(
-          Uri.parse("$_apiBaseUrl/$url"),
-          headers: headers,
-          body: json.encode(body),
-        );
+      final response = await http.post(
+        Uri.parse("$_apiBaseUrl/$url"),
+        headers: headers,
+        body: json.encode(body),
+      );
 
-        if (response.statusCode != 200) return null;
-        responseJson = _response(response);
-      
+      if (response.statusCode != 200) return null;
+      responseJson = _response(response);
 
       if (responseJson == null) return null;
 
@@ -81,12 +113,12 @@ class ApiProvider {
     }
   }
 
-    Future<String?> getUserUuid() async {
+  Future<String?> getUserUuid() async {
     final profile = await _authService.getUserProfile();
     return profile?.agentUuid;
   }
 
-   Future<String?> getUserEmail() async {
+  Future<String?> getUserEmail() async {
     final profile = await _authService.getUserProfile();
     return profile?.email;
   }
@@ -191,46 +223,7 @@ class ApiProvider {
     }
   }
 
-  // Future<dynamic> getData({
-  //   required String subUrl,
-  //   BuildContext? context,
-  //   Map<String, dynamic>? body,
-  // }) async {
-  //   var headers = <String, String>{};
-  //   headers["Content-Type"] = "application/json";
-  //   // headers["Authorization"] =
-  //   //     "Bearer ${serviceLocator<SharedPreferencesService>().authToken}";
-
-  //   try {
-  //     dynamic responseJson;
-
-  //     final response = await http.post(
-  //       Uri.parse("$_apiBaseUrl$subUrl"),
-  //       headers: headers,
-  //       body: json.encode(body),
-  //     );
-
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       responseJson = _response(response);
-
-  //       if (responseJson == null) return null;
-  //       return responseJson;
-  //     } else if (response.statusCode == 401 ||
-  //         response.statusCode == 402 ||
-  //         response.statusCode == 403 ||
-  //         response.statusCode == 404) {
-  //       // serviceLocator<SharedPreferencesService>().isLogged = false;
-  //     } else {
-  //       return null;
-  //     }
-  //   } on TimeoutException catch (_) {
-  //     Log.error("ApiProvider get  failed with timeout");
-  //     return null;
-  //   } catch (e) {
-  //     Log.error("ApiProvider get failed with error $e");
-  //     return null;
-  //   }
-  // }
+  
 
   Future<dynamic> putData({
     BuildContext? context,
@@ -270,9 +263,6 @@ class ApiProvider {
       return null;
     }
   }
-
- 
-
 
   dynamic _response(http.Response response) {
     switch (response.statusCode) {

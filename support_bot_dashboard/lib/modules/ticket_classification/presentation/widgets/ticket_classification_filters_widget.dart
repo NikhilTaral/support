@@ -420,6 +420,15 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       height: 180,
       child: ElevatedButton.icon(
         onPressed: () async {
+          setState(() {
+            selectedItem = '';
+            selectedClassification = '';
+            selectedBOPsState = '';
+            selectedValidation = '';
+            selectedDatesNotifier.value = null;
+            pipelineIds.clear();
+            selectedPipeline = "";
+          });
           BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
           BlocProvider.of<TicketClassificationTabBloc>(context)
               .add(TicketClassificationDataCallEvent(
