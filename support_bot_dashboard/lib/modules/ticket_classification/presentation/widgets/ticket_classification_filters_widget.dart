@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
@@ -112,7 +113,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             _buildClearFilterButton(),
             UIHelpers.horizontalSpaceRegular,
             _buildSearchWidget(),
-            // _buildExportButton(),
+            _buildExportButton(),
           ],
         ),
       ),
@@ -419,15 +420,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       height: 180,
       child: ElevatedButton.icon(
         onPressed: () async {
-          setState(() {
-            selectedItem = '';
-            selectedClassification = '';
-            selectedBOPsState = '';
-            selectedValidation = '';
-            selectedDatesNotifier.value = null;
-            pipelineIds.clear();
-            selectedPipeline = "";
-          });
+          BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
           BlocProvider.of<TicketClassificationTabBloc>(context)
               .add(TicketClassificationDataCallEvent(
             selectedBOPsState: selectedBOPsState,
@@ -525,25 +518,25 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  // Widget _buildExportButton() {
-  //   String getPipelineId() {
-  //     if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
-  //       return pipelineIds.first ?? "11257490";
-  //     }
-  //     return '11257490';
-  //   }
+  Widget _buildExportButton() {
+    String getPipelineId() {
+      if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
+        return pipelineIds.first ?? "11257490";
+      }
+      return '11257490';
+    }
 
-  //   return Tooltip(
-  //     message: 'Export CSV File',
-  //     child: ExportButton(
-  //         icon: 'assets/icons/Export.svg',
-  //         selectedButtonText: "Ticket Classification",
-  //         startDate: selectedDatesNotifier.value?.first ?? DateTime.now(),
-  //         endDate: selectedDatesNotifier.value?.last ?? DateTime.now(),
-  //         bopsState: selectedBOPsState,
-  //         selectedClassification: selectedClassification,
-  //         selectedClassificationValidation: selectedValidation,
-  //         selectedPipeline: getPipelineId()),
-  //   );
-  // }
+    return Tooltip(
+      message: 'Export CSV File',
+      child: ExportButton(
+          icon: 'assets/icons/Export.svg',
+          selectedButtonText: "Ticket Classification",
+          startDate: selectedDatesNotifier.value?.first ?? DateTime.now(),
+          endDate: selectedDatesNotifier.value?.last ?? DateTime.now(),
+          bopsState: selectedBOPsState,
+          selectedClassification: selectedClassification,
+          selectedClassificationValidation: selectedValidation,
+          selectedPipeline: getPipelineId()),
+    );
+  }
 }
