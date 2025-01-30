@@ -26,6 +26,7 @@ class ReportUtils {
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'ID',
         field: "id",
+        width: 157,
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
         enableColumnDrag: false,
@@ -41,6 +42,7 @@ class ReportUtils {
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Ticket Description',
         field: "ticket_description",
+        width: 400,
         type: PlutoColumnType.text(),
         renderer: Renderers.tooltip,
         enableAutoEditing: false,
@@ -54,8 +56,9 @@ class ReportUtils {
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'BOPS State',
+        title: 'BOPS State/ Province ',
         field: 'bops_state',
+        width: 160,
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
         enableColumnDrag: false,
@@ -69,8 +72,25 @@ class ReportUtils {
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
-        title: 'Classification',
+        title: 'AI Classification',
+        field: "aIclassification",
+        width: 184,
+        type: PlutoColumnType.text(),
+        titleTextAlign: PlutoColumnTextAlign.start,
+        enableEditingMode: false,
+        enableAutoEditing: false,
+        enableColumnDrag: false,
+        enableContextMenu: false,
+        enableFilterMenuItem: false,
+        enableSorting: false,
+        enableDropToResize: false,
+        renderer: Renderers.textRenderer,
+      ),
+      PlutoColumn(
+        backgroundColor: SupportBotColors.disablePrimary.shade100,
+        title: 'Validated Classification',
         field: "classification",
+        width: 178,
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
         enableColumnDrag: false,
@@ -86,6 +106,7 @@ class ReportUtils {
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Validation',
         field: 'validation',
+        // width: 150,
         type: PlutoColumnType.text(),
         enableEditingMode: false,
         enableAutoEditing: false,
@@ -104,6 +125,7 @@ class ReportUtils {
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Status',
         field: 'status',
+        width: 150,
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
         enableColumnDrag: false,
@@ -120,6 +142,7 @@ class ReportUtils {
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Action',
         field: 'action',
+        width: 60,
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
         enableColumnDrag: false,
@@ -139,7 +162,6 @@ class ReportUtils {
   }
 
   List<PlutoRow> createTicketClassificationRow() {
-    
     List<PlutoRow> rows = [];
     for (int i = 0;
         i < (ticketClassificationEntitieModel.data?.items ?? []).length;
@@ -156,6 +178,9 @@ class ReportUtils {
         ),
         "classification": PlutoCell(
           value: e?.classification ?? "N/A",
+        ),
+        "aIclassification": PlutoCell(
+          value: e?.aiclassification ?? "N/A",
         ),
         "reasoning": PlutoCell(
           value: e?.reasoning ?? "N/A",
@@ -195,49 +220,51 @@ class ReportUtils {
   List<PlutoColumn> createAIQueryEditedColumn({required BuildContext context}) {
     return [
       PlutoColumn(
-          backgroundColor: SupportBotColors.disablePrimary.shade100,
-          title: 'ID',
-          field: "id",
-          width: 211,
-          type: PlutoColumnType.text(),
-          titleTextAlign: PlutoColumnTextAlign.start,
-          enableAutoEditing: false,
-          enableEditingMode: false,
-          enableColumnDrag: false,
-          enableContextMenu: false,
-          enableFilterMenuItem: false,
-          enableSorting: false,
-          enableDropToResize: false,
-          renderer: (rendererContext) {
-            final value = rendererContext.cell.value;
+        backgroundColor: SupportBotColors.disablePrimary.shade100,
+        title: 'ID',
+        field: "id",
+        width: 211,
+        type: PlutoColumnType.text(),
+        titleTextAlign: PlutoColumnTextAlign.start,
+        enableAutoEditing: false,
+        enableEditingMode: false,
+        enableColumnDrag: false,
+        enableContextMenu: false,
+        enableFilterMenuItem: false,
+        enableSorting: false,
+        enableDropToResize: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if (value is Map<String, Object>) {
+            final id = value['id']?.toString() ?? 'N/A';
+            final isAnswerEdited = value['isAnswerEdited']?.toString() ?? 'N/A';
 
-            if (value is Map<String, Object>) {
-              final id = value['id']?.toString() ?? 'N/A';
-              final isAnswerEdited =
-                  value['isAnswerEdited']?.toString() ?? 'N/A';
-
-              return Wrap(
-                spacing: 10,
-                children: [
-                  Text(id),
-                  if (isAnswerEdited == 'Edited')
-                    Container(
-                        constraints: const BoxConstraints(maxWidth: 70),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 8),
-                        decoration: BoxDecoration(
-                            color: SupportBotColors.bluePrimary.shade500,
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Center(
-                          child: Text(isAnswerEdited,
-                              style: const TextStyle(
-                                  color: SupportBotColors.white)),
-                        )),
-                ],
-              );
-            }
-            return Text(value?.toString() ?? 'N/A');
-          }),
+            return Wrap(
+              spacing: 10,
+              children: [
+                Text(id),
+                if (isAnswerEdited == "Edited")
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 70),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: SupportBotColors.bluePrimary.shade500,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        isAnswerEdited,
+                        style: const TextStyle(color: SupportBotColors.white),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }
+          return Text(value?.toString() ?? 'N/A');
+        },
+      ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Ticket Description',
@@ -301,7 +328,7 @@ class ReportUtils {
           enableFilterMenuItem: false,
           enableSorting: false,
           enableDropToResize: false,
-          renderer: Renderers.textRenderer),
+          renderer: Renderers.tooltip),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Action',
@@ -325,36 +352,55 @@ class ReportUtils {
     ];
   }
 
-  List<PlutoRow> createAIQueryEditedRow(
-      {required AiQueryAttributeModel aiQueryAttributeModel}) {
+  List<PlutoRow> createAIQueryEditedRow({
+    required AiQueryAttributeModel aiQueryAttributeModel,
+  }) {
+    List<PlutoRow> rows = [];
+
     if (aiQueryAttributeModel.data == null ||
         aiQueryAttributeModel.data!.items == null) {
-      return [];
+      return rows;
     }
 
-    return aiQueryAttributeModel.data?.items?.map((item) {
-          return PlutoRow(
-            cells: {
-              'id': PlutoCell(value: {
-                'id': item.id ?? "N/A",
-                'isAnswerEdited':
-                    item.isAnswerEdited == true ? "Edited" : "Not Edited",
-              }),
-              'ticket_description': PlutoCell(
-                  value: item.ticketDescription?.replaceAll('\n', ' ') ?? ''),
-              'classification': PlutoCell(
-                  value: item.answeredStatus == "true"
-                      ? 'Answered'
-                      : 'Not Answered'),
-              'validation_status': PlutoCell(
-                  value: item.answeredStatus == true
-                      ? "Validated"
-                      : "Not Validated"),
-              'ai_query_answer': PlutoCell(value: item.aiResponse ?? ''),
-              'action': PlutoCell(value: '...')
-            },
-          );
-        }).toList() ??
-        [];
+    for (int i = 0; i < aiQueryAttributeModel.data!.items!.length; i++) {
+      final e = aiQueryAttributeModel.data!.items![i];
+
+      rows.add(
+        PlutoRow(
+          cells: {
+            "id": PlutoCell(
+              value: {
+                "id": e.id ?? "N/A",
+                "isAnswerEdited":
+                    e.isAnswerEdited == true ? "Edited" : "Not Edited",
+              },
+            ),
+            "ticket_description": PlutoCell(
+              value: e.ticketDescription?.replaceAll('\n', ' ') ?? "",
+            ),
+            "classification": PlutoCell(
+              value: e.answeredStatus == "true" ? "Answered" : "Not Answered",
+            ),
+            "validation_status": PlutoCell(
+              value:
+                  e.agentAnsValidation == true ? "Validated" : "Not Validated",
+            ),
+            "ai_query_answer": PlutoCell(
+              value: e.aiResponse ?? "N/A",
+            ),
+            "action": PlutoCell(
+              value: {
+                "allRows": aiQueryAttributeModel.data!.items!,
+                "index": i,
+                "isAnswerEdited": e.isAnswerEdited,
+                "answeredStatus": e.answeredStatus,
+              },
+            ),
+          },
+        ),
+      );
+    }
+
+    return rows;
   }
 }

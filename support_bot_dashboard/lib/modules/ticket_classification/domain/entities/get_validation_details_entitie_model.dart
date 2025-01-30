@@ -1,7 +1,7 @@
 class GetValidationDetailsAttributeModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final String? message;
 
   GetValidationDetailsAttributeModel({
@@ -14,7 +14,7 @@ class GetValidationDetailsAttributeModel {
   GetValidationDetailsAttributeModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
       GetValidationDetailsAttributeModel(

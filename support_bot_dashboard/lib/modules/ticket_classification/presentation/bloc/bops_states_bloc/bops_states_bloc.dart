@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/bops_state_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/bops_state_entitie_model.dart';

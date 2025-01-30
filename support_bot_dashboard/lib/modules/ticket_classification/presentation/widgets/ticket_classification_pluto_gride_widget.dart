@@ -8,12 +8,10 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 class TicketClassificationPlutoGrideWidget extends StatefulWidget {
   const TicketClassificationPlutoGrideWidget({
     super.key,
-    required this.plutoKey,
     required this.ticketClassificationEntitieModel,
     required this.piplineId,
   });
 
-  final UniqueKey plutoKey;
   final TicketClassificationEntitieModel ticketClassificationEntitieModel;
   final List<String> piplineId;
 
@@ -64,7 +62,6 @@ class _TicketClassificationPlutoGrideWidgetState
   @override
   void initState() {
     super.initState();
-
     try {
       reportUtils = ReportUtils(
         context: context,
@@ -73,8 +70,9 @@ class _TicketClassificationPlutoGrideWidgetState
       );
 
       _rows = reportUtils.createTicketClassificationRow();
-      _columns = reportUtils.createTicketClassificationColumn(context: context, pipelineId: widget.piplineId);
-    } catch (e, stackTrace) {
+      _columns = reportUtils.createTicketClassificationColumn(
+          context: context, pipelineId: widget.piplineId);
+      } catch (e, stackTrace) {
       _rows = [];
       _columns = [];
     }
@@ -82,19 +80,9 @@ class _TicketClassificationPlutoGrideWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return PlutoTableWidget(
+   return PlutoTableWidget(
       columns: _columns,
       rows: _rows,
     );
-    //     PlutoGrid(
-    //   key: widget.plutoKey,
-    //   mode: PlutoGridMode.selectWithOneTap,
-    //   configuration: plutoGridConfiguration,
-    //   onLoaded: (event) {
-    //     stateManager = event.stateManager;
-    //   },
-    //   columns: _columns,
-    //   rows: _rows,
-    // );
   }
 }

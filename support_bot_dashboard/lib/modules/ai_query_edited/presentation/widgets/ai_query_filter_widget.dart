@@ -9,9 +9,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_al
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
@@ -26,8 +24,7 @@ class AIQueryFilterWidget extends StatefulWidget {
 class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
-  final ValueNotifier<String?> classificationNotifier =
-      ValueNotifier<String?>(null);
+  ValueNotifier<String?> classificationNotifier = ValueNotifier<String?>(null);
   String selectedItem = "Expert Care Level 1";
   final DataModule dataModule = DataModule();
   final List<String> pipelineIds = [];
@@ -73,6 +70,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
                 _buildDateRangeSelector(),
                 _buildClassificationDropdown(),
                 _buildApplyFilterButton(),
+                _buildClearFilterButton()
               ],
             ),
           ),
@@ -97,8 +95,9 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
 
   Widget _buildDateRangeSelector() {
     if (selectedDatesNotifier.value == null) {
-      final endDate = DateTime.now();
-      final startDate = endDate.subtract(const Duration(days: 0));
+      final endDate = selectedDatesNotifier.value?.lastOrNull ?? DateTime.now();
+      final startDate =
+          selectedDatesNotifier.value?.firstOrNull ?? DateTime.now();
       selectedDatesNotifier.value = [startDate, endDate];
     }
 
@@ -117,12 +116,11 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
             startDate = endDate.subtract(const Duration(days: 0));
           }
 
-          return Container(
+          return SizedBox(
             height: 180,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: SupportBotColors.bluePrimary),
-                //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
@@ -151,7 +149,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   }
 
   Widget _buildApplyFilterButton() {
-    return Container(
+    return SizedBox(
       height: 180,
       child: ElevatedButton.icon(
         onPressed: _addEvents,
@@ -159,8 +157,41 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
         label:
             const Text('Apply Filter', style: TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
-          //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
           backgroundColor: SupportBotColors.bluePrimary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClearFilterButton() {
+    return SizedBox(
+      height: 180,
+      child: ElevatedButton.icon(
+        onPressed: () async {
+          setState(() {
+            classificationNotifier = ValueNotifier<String?>(null);
+            selectedItem = "Expert Care Level 1";
+
+            selectedDatesNotifier.value = null;
+            pipelineIds.clear();
+          });
+          BlocProvider.of<AiQueryBloc>(context).piplineID = ["11257490"];
+          BlocProvider.of<AiQueryBloc>(context).endDate = DateTime.now()
+              .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+          BlocProvider.of<AiQueryBloc>(context).startDate = DateTime.now()
+              .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+          ;
+
+          BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent());
+        },
+        icon: const Icon(Icons.clear_all, color: Colors.white),
+        label:
+            const Text('Clear Filters', style: TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: Colors.redAccent,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),

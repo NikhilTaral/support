@@ -11,7 +11,7 @@ String bOpsResponseModelToJson(BOpsResponseModel data) => json.encode(data.toJso
 class BOpsResponseModel {
     final List<String>? data;
     final bool? success;
-    final int? failCode;
+    final num? failCode;
     final Params? params;
     final String? message;
 
@@ -26,7 +26,7 @@ class BOpsResponseModel {
     BOpsResponseModel copyWith({
         List<String>? data,
         bool? success,
-        int? failCode,
+        num? failCode,
         Params? params,
         String? message,
     }) => 

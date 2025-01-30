@@ -1,17 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/dashboard_export_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/revert_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/bops_state_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_responce_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
@@ -133,11 +134,34 @@ class RevertClassificationImpl extends RevertClassificationRepository {
       final dynamic response = await serviceLocator<ApiProvider>().getData(
           url: 'hubspot/revertTicketUpdate', body: {'ticketId': ticketId});
 
-      if (response is Left) {
+      final model = revertResponseModelFromJson(jsonEncode(response));
+      if (model is Left) {
         return Left(ServerFailure(message: s.aPIErrorMsg));
       }
+      return Right(model);
+    } catch (e) {
+      return Left(ServerFailure(message: s.aPIErrorMsg));
+    }
+  }
+}
 
-      return Right(response);
+class DashboardExportImpl extends DashboardExportRepository {
+  @override
+  Future<Either<Failure, File>> getExportData(
+      DashboardExportRequestModel? dashboardExportRequestModel) async {
+    try {
+      final Uint8List? response = await serviceLocator<ApiProvider>()
+          .downloadCsv(
+              url: 'dashboard/getExportRecordsDynamoDB',
+              body: dashboardExportRequestModel?.toJson());
+
+      if (response == null) {
+        return Left(ServerFailure(message: s.aPIErrorMsg));
+      } else {
+        return Right(response.length == 0
+            ? File('')
+            : File.fromRawPath(Uint8List.fromList(response)));
+      }
     } catch (e) {
       return Left(ServerFailure(message: s.aPIErrorMsg));
     }

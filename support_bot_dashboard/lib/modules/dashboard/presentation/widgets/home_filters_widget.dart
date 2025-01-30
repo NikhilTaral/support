@@ -12,7 +12,6 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/valida
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/multipal_pipeline_Widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -91,8 +90,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   Widget _buildDateRangeSelector() {
     if (selectedate.isNotEmpty) {
-      final endDate = selectedate.lastOrNull;
-      final startDate = selectedate.firstOrNull;
+      final endDate = selectedate.lastOrNull ?? DateTime.now();
+      final startDate = selectedate.firstOrNull ?? DateTime.now();
       selectedate = [startDate, endDate];
     }
 
@@ -162,7 +161,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         label: const Text(
           'Apply Filter',
           style: TextStyle(
-            color: Colors.white,
+            color: SupportBotColors.white,
           ),
         ),
         style: ElevatedButton.styleFrom(
@@ -198,14 +197,14 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   Future<void> _pickDateRange() async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.hint
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.w700),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle:
-          const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.hint
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.bold),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 

@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class ChartData {
   final String label;
@@ -46,8 +47,7 @@ class FlCircularChart extends StatelessWidget {
             title: '${data.percentage?.toStringAsFixed(1)}%',
             color: color,
             radius: 120,
-            titleStyle: const TextStyle(
-              fontSize: 12,
+            titleStyle: SupportBotTextstyle.mediumHint.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -65,7 +65,7 @@ class FlCircularChart extends StatelessWidget {
   Color _getColorForLabel(String label) {
     switch (label) {
       case 'Genuine Query':
-        return  const Color(0xFFB6C5DF);
+        return const Color(0xFFB6C5DF);
       case 'No Action Required':
         return const Color(0xFF8099C7);
       case 'Spam/Marketing':

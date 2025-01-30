@@ -3,7 +3,7 @@ import 'dart:convert';
 class GetAllPipelinesAttributeModel {
   final List<Datums>? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 
@@ -18,7 +18,7 @@ class GetAllPipelinesAttributeModel {
   GetAllPipelinesAttributeModel copyWith({
     List<Datums>? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     Params? params,
     String? message,
   }) =>
@@ -29,8 +29,6 @@ class GetAllPipelinesAttributeModel {
         params: params ?? this.params,
         message: message ?? this.message,
       );
-
-
 }
 
 class Datums {
@@ -64,7 +62,6 @@ class Datums {
       );
 
   toLowerCase() {}
-
 }
 
 class Params {
