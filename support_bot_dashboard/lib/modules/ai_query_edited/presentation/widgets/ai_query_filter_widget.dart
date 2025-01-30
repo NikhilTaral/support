@@ -116,12 +116,11 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
             startDate = endDate.subtract(const Duration(days: 0));
           }
 
-          return Container(
+          return SizedBox(
             height: 180,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: SupportBotColors.bluePrimary),
-                //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
@@ -150,7 +149,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   }
 
   Widget _buildApplyFilterButton() {
-    return Container(
+    return SizedBox(
       height: 180,
       child: ElevatedButton.icon(
         onPressed: _addEvents,
@@ -158,7 +157,6 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
         label:
             const Text('Apply Filter', style: TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
-          //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 19),
           backgroundColor: SupportBotColors.bluePrimary,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -173,8 +171,6 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
       child: ElevatedButton.icon(
         onPressed: () async {
           setState(() {
-            endDate;
-            startDate;
             classificationNotifier = ValueNotifier<String?>(null);
             selectedItem = "Expert Care Level 1";
 
@@ -188,22 +184,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
               .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
           ;
 
-          BlocProvider.of<AiQueryBloc>(context)..add(AIQueryInitialEvent());
-          // BlocProvider.of<TicketClassificationTabBloc>(context)
-          //     .selectedClassification = selectedClassification;
-          // BlocProvider.of<TicketClassificationTabBloc>(context)
-          //     .selectedValidation = selectedValidation;
-
-          // BlocProvider.of<TicketClassificationTabBloc>(context)
-          //     .add(TicketClassificationDataCallEvent(
-          //   fieldValue: ['11257490'],
-          //   endDate: selectedate.isNotEmpty
-          //       ? selectedate.lastOrNull
-          //       : DateTime.now(),
-          //   startDate: DateTime.now().subtract(const Duration(days: 1)),
-          //   page: 1,
-          //   pageSize: 10,
-          // ));
+          BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent());
         },
         icon: const Icon(Icons.clear_all, color: Colors.white),
         label:

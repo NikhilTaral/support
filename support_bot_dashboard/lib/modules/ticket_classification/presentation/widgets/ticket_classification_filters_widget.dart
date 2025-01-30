@@ -322,8 +322,12 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           ));
         },
         icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-        label:
-            const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+        label: Text(
+          'Apply Filter',
+          style: SupportBotTextstyle.hint.copyWith(
+            color: SupportBotColors.white,
+          ),
+        ),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: SupportBotColors.bluePrimary,
@@ -444,8 +448,12 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           ));
         },
         icon: const Icon(Icons.clear_all, color: Colors.white),
-        label:
-            const Text('Clear Filters', style: TextStyle(color: Colors.white)),
+        label: Text(
+          'Clear Filters',
+          style: SupportBotTextstyle.hint.copyWith(
+            color: SupportBotColors.white,
+          ),
+        ),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: Colors.redAccent,
@@ -459,14 +467,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Future<void> _pickDateRange() async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.mediumHint.copyWith(
+        color: SupportBotColors.black,
+        fontWeight: FontWeight.w700,
+      ),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle:
-          const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.mediumHint.copyWith(
+        color: SupportBotColors.black,
+        fontWeight: FontWeight.bold,
+      ),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 

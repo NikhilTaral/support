@@ -52,9 +52,11 @@ class ValidateAnswerDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          child: const Text(
+          child: Text(
             'No',
-            style: TextStyle(color: SupportBotColors.white),
+            style: SupportBotTextstyle.mediumHint.copyWith(
+              color: SupportBotColors.white,
+            ),
           ),
         ),
         BlocProvider(
@@ -99,9 +101,11 @@ class ValidateAnswerDialog extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text(
+                child: Text(
                   'Yes',
-                  style: TextStyle(color: SupportBotColors.white),
+                  style: SupportBotTextstyle.mediumHint.copyWith(
+                    color: SupportBotColors.white,
+                  ),
                 ),
               );
             },
@@ -280,9 +284,11 @@ class TicketDetailsDialog extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        label: const Text("Cancel",
-                            style:
-                                TextStyle(color: SupportBotColors.bluePrimary)),
+                        label: Text(
+                          "Cancel",
+                          style: SupportBotTextstyle.mediumHint
+                              .copyWith(color: SupportBotColors.bluePrimary),
+                        ),
                       ),
                       UIHelpers.horizontalSpaceRegular,
                       BlocProvider(
@@ -334,8 +340,11 @@ class TicketDetailsDialog extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                               ),
-                              label: Text(isEditing ? "Save" : "Edit",
-                                  style: const TextStyle(color: Colors.white)),
+                              label: Text(
+                                isEditing ? "Save" : "Edit",
+                                style: SupportBotTextstyle.hint
+                                    .copyWith(color: Colors.white),
+                              ),
                             );
                           },
                         ),

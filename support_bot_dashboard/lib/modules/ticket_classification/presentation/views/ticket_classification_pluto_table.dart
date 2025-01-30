@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationPlutoTable extends StatelessWidget {
@@ -48,9 +49,9 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                       children: [
                         Text(
                           "Items per page:   ",
-                          style: TextStyle(
-                              color: SupportBotColors.disablePrimary.shade700,
-                              fontWeight: FontWeight.w500),
+                          style: SupportBotTextstyle.hint.copyWith(
+                            color: SupportBotColors.disablePrimary.shade400,
+                          ),
                         ),
                         ValueListenableBuilder<num>(
                           valueListenable: pageSize,
@@ -89,9 +90,8 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                           "${(currentPage.value - 1) * pageSize.value + 1} - "
                           "${(currentPage.value * pageSize.value > (state.model?.data?.totalRecords ?? 0)) ? state.model?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
                           "${state.model?.data?.totalRecords ?? 0}",
-                          style: TextStyle(
+                          style: SupportBotTextstyle.hint.copyWith(
                             color: SupportBotColors.disablePrimary.shade500,
-                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -118,10 +118,9 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                           builder: (context, page, _) {
                             return Text(
                               'Page ${currentPage.value}',
-                              style: TextStyle(
-                                  color:
-                                      SupportBotColors.disablePrimary.shade700,
-                                  fontWeight: FontWeight.w500),
+                              style: SupportBotTextstyle.hint.copyWith(
+                                color: SupportBotColors.disablePrimary.shade400,
+                              ),
                             );
                           },
                         ),

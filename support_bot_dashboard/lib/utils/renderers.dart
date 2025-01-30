@@ -241,9 +241,10 @@ class Renderers {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   cellValue.toString(),
-                  style: const TextStyle(
+                  style: SupportBotTextstyle.hint.copyWith(
                     color: SupportBotColors.disablePrimary,
                   ),
+                 
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

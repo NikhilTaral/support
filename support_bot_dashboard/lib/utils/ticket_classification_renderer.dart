@@ -76,13 +76,13 @@ class _TicketClassificationActionRendererState
                       );
                     });
                   },
-                  child: const Row(
+                  child: Row(
                     children: [
                       Icon(Icons.visibility),
                       SizedBox(width: 8),
                       Text(
                         "View",
-                        style: TextStyle(
+                        style: SupportBotTextstyle.hint.copyWith(
                             color: Colors.black, fontWeight: FontWeight.w400),
                       ),
                     ],
@@ -148,9 +148,9 @@ class _TicketClassificationActionRendererState
                                   children: [
                                     Text(
                                       "Do you Want to Mark This Ticket as a Contact ${widget.classification} in HubSpot",
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
+                                      style: SupportBotTextstyle.hint.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     const SizedBox(height: 16),
                                   ],
@@ -170,11 +170,11 @@ class _TicketClassificationActionRendererState
                                       borderRadius: BorderRadius.circular(4.0),
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     "No",
-                                    style: TextStyle(
+                                    style:
+                                        SupportBotTextstyle.mediumHint.copyWith(
                                       color: SupportBotColors.white,
-                                      fontSize: 12.0,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -237,11 +237,12 @@ class _TicketClassificationActionRendererState
                                                   BorderRadius.circular(4.0),
                                             ),
                                           ),
-                                          child: const Text(
+                                          child: Text(
                                             "Yes",
-                                            style: TextStyle(
+                                            style: SupportBotTextstyle
+                                                .mediumHint
+                                                .copyWith(
                                               color: SupportBotColors.white,
-                                              fontSize: 12.0,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -293,11 +294,11 @@ class _TicketClassificationActionRendererState
                                                 BorderRadius.circular(4.0),
                                           ),
                                         ),
-                                        child: const Text(
+                                        child: Text(
                                           "Yes",
-                                          style: TextStyle(
+                                          style: SupportBotTextstyle.mediumHint
+                                              .copyWith(
                                             color: SupportBotColors.white,
-                                            fontSize: 12.0,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -311,7 +312,7 @@ class _TicketClassificationActionRendererState
                         },
                       );
                     },
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(
                           Icons.update,
@@ -319,7 +320,7 @@ class _TicketClassificationActionRendererState
                         SizedBox(width: 8),
                         Text(
                           "Update",
-                          style: TextStyle(
+                          style: SupportBotTextstyle.hint.copyWith(
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
                           ),
@@ -401,9 +402,11 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                     onPressed: currentIndex > 0 ? _showPreviousData : null,
                     icon: const Icon(Icons.arrow_circle_left_outlined),
                   ),
-                  const Text(
+                  Text(
                     "Ticket Details",
-                    style: TextStyle(fontSize: 20),
+                    style: SupportBotTextstyle.small.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: SupportBotColors.black),
                   ),
                   IconButton(
                     onPressed: currentIndex < widget.allRows.length - 1
@@ -420,12 +423,16 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Id : \n",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
-                            text: '${currentRowData.id}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.normal)),
+                          text: '${currentRowData.id}',
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -433,11 +440,15 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Description : \n",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${currentRowData.ticketDescription}',
-                          style: const TextStyle(fontWeight: FontWeight.normal),
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
@@ -446,13 +457,17 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: "AI Classification : \n",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
-                            text:
-                                '${currentRowData.aiclassification == "" ? "N/A" : currentRowData.aiclassification}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.normal)),
+                          text:
+                              '${currentRowData.aiclassification == "" ? "N/A" : currentRowData.aiclassification}',
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -460,13 +475,17 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Reasoning : \n",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
-                            text:
-                                '${currentRowData.reasoning == "" ? "N/A" : currentRowData.reasoning}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.normal)),
+                          text:
+                              '${currentRowData.reasoning == "" ? "N/A" : currentRowData.reasoning}',
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -474,13 +493,17 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: "BOPS State/ Province : \n",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
-                            text:
-                                '${currentRowData.bopsState == "null" ? "N/A" : currentRowData.bopsState}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.normal)),
+                          text:
+                              '${currentRowData.bopsState == "null" ? "N/A" : currentRowData.bopsState}',
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -488,13 +511,35 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: "Validated By: \n",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
-                            text:
-                                '${currentRowData.classificationValidatedBy == "" ? "N/A" : currentRowData.classificationValidatedBy}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.normal)),
+                          text:
+                              '${currentRowData.classificationValidatedBy == "" ? "N/A" : currentRowData.classificationValidatedBy}',
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SelectableText.rich(
+                    TextSpan(
+                      text: "Classification Validation Reason: \n",
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text:
+                              '${currentRowData.classificationValidationReason == "" ? "N/A" : currentRowData.classificationValidationReason}',
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -502,12 +547,16 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: 'Validated Classification : \n',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
                           text:
                               '${currentRowData.validatedClassification == "" ? "N/A" : currentRowData.validatedClassification}',
-                          style: const TextStyle(fontWeight: FontWeight.normal),
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
@@ -516,13 +565,17 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   SelectableText.rich(
                     TextSpan(
                       text: 'Status : \n',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: SupportBotTextstyle.small.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: SupportBotColors.black),
                       children: <TextSpan>[
                         TextSpan(
                           text: currentRowData.isUpdatedToHubspot == true
                               ? 'Updated'
                               : 'Not Updated',
-                          style: const TextStyle(fontWeight: FontWeight.normal),
+                          style: SupportBotTextstyle.small.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
@@ -550,9 +603,10 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    label: const Text(
+                    label: Text(
                       "Close",
-                      style: TextStyle(color: SupportBotColors.bluePrimary),
+                      style: SupportBotTextstyle.small
+                          .copyWith(color: SupportBotColors.bluePrimary),
                     ),
                   ),
                 ],

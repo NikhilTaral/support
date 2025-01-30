@@ -55,9 +55,8 @@ class PipelineTypeWidget extends StatelessWidget {
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
                                 hintText,
-                                style: const TextStyle(
+                                style: SupportBotTextstyle.small.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
                                 ),
                               ),
                             ),

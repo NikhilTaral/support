@@ -161,7 +161,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         label: const Text(
           'Apply Filter',
           style: TextStyle(
-            color: Colors.white,
+            color: SupportBotColors.white,
           ),
         ),
         style: ElevatedButton.styleFrom(
@@ -197,14 +197,14 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   Future<void> _pickDateRange() async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.hint
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.w700),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle:
-          const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.hint
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.bold),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 
