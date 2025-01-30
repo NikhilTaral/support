@@ -25,7 +25,7 @@ class ValidationStatusBloc
     emit(ValidationStatusLoadingState());
 
     final repository = serviceLocator<ValidationStatusUsecase>();
-   
+
     final startDate = (event.startDate ?? DateTime.now())
         .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
         .toIso8601String();
@@ -35,7 +35,7 @@ class ValidationStatusBloc
 
     final List<Filter> filter = [
       Filter(
-        fieldValue: selectedPipelineId,
+        fieldValue: event.selectedPipelineValue ?? ["11257490"],
         fieldName: event.fildName ?? "pipelines",
       )
     ];

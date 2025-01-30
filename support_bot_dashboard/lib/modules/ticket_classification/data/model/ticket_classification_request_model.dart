@@ -2,15 +2,15 @@ import 'dart:convert';
 
 class TicketClassificationRequestModel {
   DateTime? startDate;
-  DateTime endDate;
+  DateTime? endDate;
   List<Filter> filter;
   final String? ticketId;
   final num? page;
   final num? pageSize;
 
   TicketClassificationRequestModel(
-      {required this.startDate,
-      required this.endDate,
+      { this.startDate,
+       this.endDate,
       this.ticketId,
       required this.filter,
       this.page,
@@ -50,7 +50,7 @@ class TicketClassificationRequestModel {
 
   Map<String, dynamic> toJson() => {
         "startDate": startDate?.toIso8601String(),
-        "endDate": endDate.toIso8601String(),
+        "endDate": endDate?.toIso8601String(),
         "filter": List<dynamic>.from(filter.map((x) => x.toJson())),
         'page': page,
         'ticketId': ticketId,

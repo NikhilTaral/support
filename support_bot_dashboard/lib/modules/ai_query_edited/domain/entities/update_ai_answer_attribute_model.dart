@@ -1,7 +1,7 @@
 class UpdateAiAnswerAttributeModel {
   Data? data;
   bool? success;
-  int? failCode;
+  num? failCode;
   Params? params;
   String? message;
 

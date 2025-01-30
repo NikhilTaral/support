@@ -1,7 +1,7 @@
 class DashboardAiQueryEditedAttributeModel {
   AiQueryEditedData? data;
   bool? success;
-  int? failCode;
+  num? failCode;
   Params? params;
   String? message;
 

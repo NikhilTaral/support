@@ -9,7 +9,7 @@ String updateAiAnswerResponseModelToJson(UpdateAiAnswerResponseModel data) =>
 class UpdateAiAnswerResponseModel {
   Data? data;
   bool? success;
-  int? failCode;
+  num? failCode;
   Params? params;
   String? message;
 

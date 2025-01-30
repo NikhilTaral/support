@@ -1,7 +1,7 @@
 class BOpsResponseEntitieModel {
   final List<String>? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 
@@ -16,7 +16,7 @@ class BOpsResponseEntitieModel {
   BOpsResponseEntitieModel copyWith({
     List<String>? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     Params? params,
     String? message,
   }) =>

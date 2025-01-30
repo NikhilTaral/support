@@ -3,7 +3,7 @@ import 'dart:convert';
 class TicketClassificationActionEntitietModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 
@@ -18,7 +18,7 @@ class TicketClassificationActionEntitietModel {
   TicketClassificationActionEntitietModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     Params? params,
     String? message,
   }) =>
