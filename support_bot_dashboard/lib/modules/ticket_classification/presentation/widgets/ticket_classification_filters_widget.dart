@@ -230,7 +230,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             return CustomMonthDropdown(
               items: state.model?.data ?? [],
               label: selectedBOPsState.isEmpty
-                  ? " BOPS State/ Province "
+                  ? "BOPS State/ Province"
                   : selectedBOPsState,
               onChanged: (value) async {
                 setState(() {
@@ -245,7 +245,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           }
           return CustomMonthDropdown(
             items: [],
-            label: "BOps State",
+            label: "BOPS State/ Province",
             onChanged: (value) {},
             selectedValue: selectedBOPsState,
           );

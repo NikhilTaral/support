@@ -28,7 +28,7 @@ class TicketClassificationBloc
    final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: selectedPipelineId?? ["11257490"],
+            fieldValue: event.selectedPipelineValue?? ["11257490"],
             fieldName: event.fieldName ?? "pipelines")
       ],
       startDate: (event.startDate ?? DateTime.now())
