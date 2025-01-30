@@ -7,31 +7,23 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ai_query_answer_event.dart';
 part 'ai_query_answer_state.dart';
-
-DashboardDataModel dashboardDataModel = DashboardDataModel();
 
 class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
   List<String>? selectedPipelineId = ["11257490"];
   AiQueryAnswerBloc() : super(AIQueryAnswerIntialState()) {
     on<AIQueryAnswerInitialEvent>(_aIQueryAnswerInitialEvent);
   }
-
   FutureOr<void> _aIQueryAnswerInitialEvent(
       AIQueryAnswerInitialEvent event, Emitter<AiQueryAnswerState> emit) async {
     emit(AIQueryAnswerLoadingState());
     try {
+      DashboardDataModel dashboardDataModel = DashboardDataModel();
       final repository = serviceLocator<DashboardAiQueryAnswerUsecase>();
-      List<DateTime?> datesList = await getSelectedDates();
-
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
-          Filter(
-              fieldValue: selectedPipelineId ?? ["11257490"],
-              fieldName: "StartDate"),
           Filter(
               fieldValue: selectedPipelineId ?? ["11257490"],
               fieldName: event.fieldName ?? "pipelines")
@@ -50,34 +42,32 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         ));
       } else {
         final DashboardAiQueryChartResponseModel model = response.right;
-
         if (model.success == true && model.data != null) {
-          dashboardDataModel = (dashboardDataModel ?? DashboardDataModel())
-              .copyWith(
-                  dashboardAiQueryChartAttributeModel:
-                      (dashboardDataModel.dashboardAiQueryChartAttributeModel ??
-                              DashboardAiQueryChartAttributeModel())
-                          .copyWith(
-                              data: (dashboardDataModel
-                                          .dashboardAiQueryChartAttributeModel
-                                          ?.data ??
-                                      AiQueryData())
-                                  .copyWith(
-            counts: (dashboardDataModel
-                        .dashboardAiQueryChartAttributeModel?.data?.counts ??
-                    AiQueryDataCounts())
-                .copyWith(
-              answered: model.data?.counts?.answeredCount,
-              notAnswered: model.data?.counts?.notAnsweredCount,
+          dashboardDataModel = DashboardDataModel(
+            dashboardAiQueryChartAttributeModel:
+                DashboardAiQueryChartAttributeModel(
+              data: model.data != null
+                  ? AiQueryData(
+                      counts: model.data?.counts != null
+                          ? AiQueryDataCounts(
+                              answered: model.data?.counts?.answeredCount ?? 0,
+                              notAnswered:
+                                  model.data?.counts?.notAnsweredCount ?? 0,
+                            )
+                          : null,
+                      percentages: model.data?.percentages != null
+                          ? AiQueryDataCounts(
+                              answered:
+                                  model.data?.percentages?.answeredCount ?? 0,
+                              notAnswered:
+                                  model.data?.percentages?.notAnsweredCount ??
+                                      0,
+                            )
+                          : null,
+                    )
+                  : null,
             ),
-            percentages: (dashboardDataModel.dashboardAiQueryChartAttributeModel
-                        ?.data?.percentages ??
-                    AiQueryDataCounts())
-                .copyWith(
-              answered: model.data?.percentages?.answeredCount,
-              notAnswered: model.data?.percentages?.notAnsweredCount,
-            ),
-          )));
+          );
           bool isEmpty = dashboardDataModel
                       .dashboardAiQueryChartAttributeModel?.data?.counts ==
                   null &&
@@ -101,9 +91,5 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
         message: 'Exception: $e',
       ));
     }
-  }
-
-  Future<List<DateTime?>> getSelectedDates() async {
-    return await LocalStorage.getSelectedDates();
   }
 }
