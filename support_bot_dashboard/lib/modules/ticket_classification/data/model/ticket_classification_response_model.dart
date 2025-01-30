@@ -15,7 +15,7 @@ String ticketClassificationResponseModelToJson(
 class TicketClassificationResponseModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final String? message;
 
   TicketClassificationResponseModel({
@@ -28,7 +28,7 @@ class TicketClassificationResponseModel {
   TicketClassificationResponseModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
       TicketClassificationResponseModel(
@@ -56,11 +56,11 @@ class TicketClassificationResponseModel {
 }
 
 class Data {
-  final int? totalRecords;
+  final num? totalRecords;
   final List<Item>? items;
-  final int? pageSize;
+  final num? pageSize;
   final dynamic lastEvaluatedKey;
-  final int? currentPage;
+  final num? currentPage;
 
   Data({
     this.totalRecords,
@@ -71,11 +71,11 @@ class Data {
   });
 
   Data copyWith({
-    int? totalRecords,
+    num? totalRecords,
     List<Item>? items,
-    int? pageSize,
+    num? pageSize,
     dynamic lastEvaluatedKey,
-    int? currentPage,
+    num? currentPage,
   }) =>
       Data(
         totalRecords: totalRecords ?? this.totalRecords,
