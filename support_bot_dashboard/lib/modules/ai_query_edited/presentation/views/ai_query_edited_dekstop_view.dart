@@ -16,8 +16,8 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 class AIQueryEditedDesktopView extends StatelessWidget {
   AIQueryEditedDesktopView({super.key});
 
-  final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
-  final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
+  final ValueNotifier<num> currentPage = ValueNotifier<num>(1);
+  final ValueNotifier<num> pageSize = ValueNotifier<num>(10);
   final AiQueryAttributeModel aiQueryAttributeModel = AiQueryAttributeModel();
 
   @override
@@ -55,7 +55,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                               color: SupportBotColors.disablePrimary.shade700,
                               fontWeight: FontWeight.w500),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: pageSize,
                           builder: (context, value, child) {
                             return CustomPaginationDropdown(
@@ -120,7 +120,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                               : null,
                           icon: const Icon(Icons.arrow_back_ios_new, size: 15),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(

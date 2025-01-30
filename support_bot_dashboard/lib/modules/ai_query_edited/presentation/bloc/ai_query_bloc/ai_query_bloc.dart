@@ -17,7 +17,7 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
   AiQueryEvent? lastEvent;
   DataModule? dataModule;
   List<String>? piplineID;
-  int page = 1;
+  num page = 1;
   num pageSize = 10;
   DateTime endDate = DateTime.now()
       .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);

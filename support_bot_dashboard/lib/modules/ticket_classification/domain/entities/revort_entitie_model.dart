@@ -1,7 +1,7 @@
 class RevortEntitieModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final String? message;
 
   RevortEntitieModel({
@@ -14,7 +14,7 @@ class RevortEntitieModel {
   RevortEntitieModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
       RevortEntitieModel(

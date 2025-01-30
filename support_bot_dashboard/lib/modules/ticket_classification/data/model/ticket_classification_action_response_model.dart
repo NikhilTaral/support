@@ -11,7 +11,7 @@ String ticketClassificationActionResponsetModelToJson(
 class TicketClassificationActionResponsetModel {
   Data? data;
   bool? success;
-  int? failCode;
+  num? failCode;
   String? message;
 
   TicketClassificationActionResponsetModel({

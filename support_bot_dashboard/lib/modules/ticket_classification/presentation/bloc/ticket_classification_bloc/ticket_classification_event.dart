@@ -6,7 +6,7 @@ class TicketClassificationDataCallEvent extends TicketClassificationEvent {
   final String? fieldName;
   final DateTime? startDate;
   final DateTime? endDate;
-  final int? page;
+  final num? page;
   final String? ticketId;
   final num? pageSize;
   final List<String>? fieldValue;

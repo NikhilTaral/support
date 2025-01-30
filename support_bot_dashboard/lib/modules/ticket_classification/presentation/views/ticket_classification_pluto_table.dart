@@ -13,8 +13,8 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 class TicketClassificationPlutoTable extends StatelessWidget {
   TicketClassificationPlutoTable({super.key});
 
-  final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
-  final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
+  final ValueNotifier<num> currentPage = ValueNotifier<int>(1);
+  final ValueNotifier<num> pageSize = ValueNotifier<int>(10);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
           ));
         }
         if (state is TicketClassificationSucssesState) {
-         return Column(
+          return Column(
             children: [
               Expanded(
                 child: TicketClassificationPlutoGrideWidget(
@@ -52,7 +52,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                               color: SupportBotColors.disablePrimary.shade700,
                               fontWeight: FontWeight.w500),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: pageSize,
                           builder: (context, value, child) {
                             return CustomPaginationDropdown(
@@ -113,7 +113,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                               : null,
                           icon: const Icon(Icons.arrow_back_ios_new, size: 15),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(

@@ -15,7 +15,7 @@ class TicketClassificationTabBloc
   TicketClassificationEntitieModel ticketClassificationEntitieModel =
       TicketClassificationEntitieModel();
 
-  int page = 1;
+  num page = 1;
   num pageSize = 10;
   String selectedBOPsState = "";
   String selectedClassification = "";

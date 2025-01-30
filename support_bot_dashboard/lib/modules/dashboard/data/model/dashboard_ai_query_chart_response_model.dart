@@ -15,7 +15,7 @@ String dashboardAiQueryChartResponseModelToJson(
 class DashboardAiQueryChartResponseModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 

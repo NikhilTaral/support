@@ -9,7 +9,7 @@ String revertResponseModelToJson(RevertResponseModel data) =>
 class RevertResponseModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final String? message;
 
   RevertResponseModel({
@@ -22,7 +22,7 @@ class RevertResponseModel {
   RevertResponseModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
       RevertResponseModel(

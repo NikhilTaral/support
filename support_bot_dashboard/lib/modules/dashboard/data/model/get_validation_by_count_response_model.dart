@@ -11,7 +11,7 @@ String getValidationByCountResponseModelToJson(
 class GetValidationByCountResponseModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 
@@ -44,7 +44,7 @@ class GetValidationByCountResponseModel {
   GetValidationByCountResponseModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     Params? params,
     String? message,
   }) {

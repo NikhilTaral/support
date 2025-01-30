@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
 class CustomPaginationDropdown extends StatelessWidget {
-  final int selectedValue;
+  final num selectedValue;
   final List<int> items;
   final ValueChanged<int?> onChanged;
   final double width;
@@ -70,7 +69,8 @@ class CustomPaginationDropdown extends StatelessWidget {
           children: [
             Positioned(
               left: offset.dx,
-              top: offset.dy - (height * items.length) - 25, // Positioning above
+              top:
+                  offset.dy - (height * items.length) - 25, // Positioning above
               child: Material(
                 color: Colors.transparent,
                 child: Container(
