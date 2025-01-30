@@ -106,12 +106,14 @@ class _TicketClassificationActionRendererState
                           //     context, S.of(context).noRevert);
                         }
                         Future.delayed(const Duration(seconds: 2), () {
+                          final bloc =
+                              BlocProvider.of<TicketClassificationTabBloc>(
+                                  context);
                           BlocProvider.of<TicketClassificationTabBloc>(context)
                               .add(
                             TicketClassificationDataCallEvent(
-                              startDate: DateTime.now()
-                                  .subtract(const Duration(days: 0)),
-                              endDate: DateTime.now(),
+                              startDate: bloc.startDate,
+                              endDate: bloc.endDate,
                               page: 1,
                               pageSize: 10,
                             ),
@@ -192,6 +194,9 @@ class _TicketClassificationActionRendererState
                                           is TicketClassificationActionSucssesState) {
                                         return TextButton(
                                           onPressed: () {
+                                            final bloc = BlocProvider.of<
+                                                    TicketClassificationTabBloc>(
+                                                context);
                                             final classification =
                                                 widget.classification;
 
@@ -213,10 +218,8 @@ class _TicketClassificationActionRendererState
                                                     context)
                                                 .add(
                                                     TicketClassificationDataCallEvent(
-                                              startDate: DateTime.now()
-                                                  .subtract(
-                                                      const Duration(days: 0)),
-                                              endDate: DateTime.now(),
+                                              startDate: bloc.startDate,
+                                              endDate: bloc.endDate,
                                               page: 1,
                                               pageSize: 10,
                                             ));
@@ -263,15 +266,16 @@ class _TicketClassificationActionRendererState
 
                                           Future.delayed(
                                               const Duration(seconds: 2), () {
+                                            final bloc = BlocProvider.of<
+                                                    TicketClassificationTabBloc>(
+                                                context);
                                             BlocProvider.of<
                                                         TicketClassificationTabBloc>(
                                                     context)
                                                 .add(
                                               TicketClassificationDataCallEvent(
-                                                startDate: DateTime.now()
-                                                    .subtract(const Duration(
-                                                        days: 0)),
-                                                endDate: DateTime.now(),
+                                                startDate: bloc.startDate,
+                                                endDate: bloc.endDate,
                                                 page: 1,
                                                 pageSize: 10,
                                               ),

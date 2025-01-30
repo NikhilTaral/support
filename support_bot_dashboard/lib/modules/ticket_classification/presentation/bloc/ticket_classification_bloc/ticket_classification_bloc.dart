@@ -21,10 +21,14 @@ class TicketClassificationTabBloc
   String selectedClassification = "";
   String selectedValidation = "";
   String selectedPipelineId = "11257490";
+  DateTime? endDate = DateTime.now()
+      .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+  DateTime? startDate =
+      DateTime.now().copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
   TicketClassificationTabBloc() : super(TicketClassificationIntialState()) {
     on<TicketClassificationDataCallEvent>(_onTicketClassification);
-     }
+  }
 
   FutureOr<void> _onTicketClassification(
       TicketClassificationDataCallEvent event,
@@ -32,10 +36,10 @@ class TicketClassificationTabBloc
     emit(TicketClassificationLoadingState());
     try {
       final repository = serviceLocator<TicketClassificationUsecses>();
-      final endDate = event.endDate
+      endDate = event.endDate
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-      final startDate = event.startDate
-          ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+      startDate = event.startDate;
+      ;
       final enddate = DateTime.now()
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
       final startdate = DateTime.now()

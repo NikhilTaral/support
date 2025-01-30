@@ -120,7 +120,6 @@ class Renderers {
     final classification = rowData['classification'] ?? 'N/A';
     int index = rendererContext.cell.value?['index'] ?? 0;
     final allRows = rendererContext.cell.value?['allRows'] ?? [];
-
     return TicketClassificationActionRenderer(
       classification: classification,
       id: id,
@@ -411,11 +410,12 @@ class Renderers {
                   );
 
                   Future.delayed(const Duration(microseconds: 2000000), () {
+                    final bloc =
+                        BlocProvider.of<TicketClassificationTabBloc>(context);
                     BlocProvider.of<TicketClassificationTabBloc>(context)
                         .add(TicketClassificationDataCallEvent(
-                      startDate:
-                          DateTime.now().subtract(const Duration(days: 0)),
-                      endDate: DateTime.now(),
+                      startDate: bloc.startDate,
+                      endDate: bloc.endDate,
                       page:
                           BlocProvider.of<TicketClassificationTabBloc>(context)
                               .page,
@@ -590,13 +590,14 @@ class Renderers {
                                 );
                                 Future.delayed(
                                     const Duration(microseconds: 200000), () {
+                                  final bloc = BlocProvider.of<
+                                      TicketClassificationTabBloc>(context);
                                   BlocProvider.of<TicketClassificationTabBloc>(
                                           context)
                                       .add(
                                     TicketClassificationDataCallEvent(
-                                      startDate: DateTime.now()
-                                          .subtract(const Duration(days: 0)),
-                                      endDate: DateTime.now(),
+                                      startDate: bloc.startDate,
+                                      endDate: bloc.endDate,
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(
                                               context)
