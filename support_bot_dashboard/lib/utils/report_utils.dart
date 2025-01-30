@@ -321,7 +321,7 @@ class ReportUtils {
           enableFilterMenuItem: false,
           enableSorting: false,
           enableDropToResize: false,
-          renderer: Renderers.textRenderer),
+          renderer: Renderers.tooltip),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Action',
