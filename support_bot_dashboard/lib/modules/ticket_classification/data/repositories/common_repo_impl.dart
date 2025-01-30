@@ -134,11 +134,11 @@ class RevertClassificationImpl extends RevertClassificationRepository {
       final dynamic response = await serviceLocator<ApiProvider>().getData(
           url: 'hubspot/revertTicketUpdate', body: {'ticketId': ticketId});
 
-      if (response is Left) {
+      final model = revertResponseModelFromJson(jsonEncode(response));
+      if (model is Left) {
         return Left(ServerFailure(message: s.aPIErrorMsg));
       }
-
-      return Right(response);
+      return Right(model);
     } catch (e) {
       return Left(ServerFailure(message: s.aPIErrorMsg));
     }
@@ -158,9 +158,9 @@ class DashboardExportImpl extends DashboardExportRepository {
       if (response == null) {
         return Left(ServerFailure(message: s.aPIErrorMsg));
       } else {
-         return Right(response.length == 0
+        return Right(response.length == 0
             ? File('')
-            : File.fromRawPath(Uint8List.fromList(response)));  
+            : File.fromRawPath(Uint8List.fromList(response)));
       }
     } catch (e) {
       return Left(ServerFailure(message: s.aPIErrorMsg));
