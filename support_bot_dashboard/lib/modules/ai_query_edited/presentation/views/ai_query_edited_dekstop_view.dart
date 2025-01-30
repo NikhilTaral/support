@@ -11,13 +11,14 @@ import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.da
 import 'package:support_bot_dashboard/utils/report_utils.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AIQueryEditedDesktopView extends StatelessWidget {
   AIQueryEditedDesktopView({super.key});
 
-  final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
-  final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
+  final ValueNotifier<num> currentPage = ValueNotifier<num>(1);
+  final ValueNotifier<num> pageSize = ValueNotifier<num>(10);
   final AiQueryAttributeModel aiQueryAttributeModel = AiQueryAttributeModel();
 
   @override
@@ -26,7 +27,6 @@ class AIQueryEditedDesktopView extends StatelessWidget {
       builder: (context, state) {
         currentPage.value = BlocProvider.of<AiQueryBloc>(context).page;
         if (state is AIQuerySuccessState) {
-          debugPrint("currentPage.value :${currentPage.value}");
           serviceLocator<InstanceSharingService>().aiQueryBloc =
               BlocProvider.of<AiQueryBloc>(context);
           final utils = ReportUtils(
@@ -52,11 +52,11 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                       children: [
                         Text(
                           "Items per page:   ",
-                          style: TextStyle(
-                              color: SupportBotColors.disablePrimary.shade700,
-                              fontWeight: FontWeight.w500),
+                          style: SupportBotTextstyle.hint.copyWith(
+                            color: SupportBotColors.disablePrimary.shade400,
+                          ),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: pageSize,
                           builder: (context, value, child) {
                             return CustomPaginationDropdown(
@@ -95,9 +95,8 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                           "${(currentPage.value - 1) * pageSize.value + 1} - "
                           "${(currentPage.value * pageSize.value > (state.dashboardDataModel?.data?.totalRecords ?? 0)) ? state.dashboardDataModel?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
                           "${state.dashboardDataModel?.data?.totalRecords ?? 0}",
-                          style: TextStyle(
+                          style: SupportBotTextstyle.hint.copyWith(
                             color: SupportBotColors.disablePrimary.shade500,
-                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -121,15 +120,14 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                               : null,
                           icon: const Icon(Icons.arrow_back_ios_new, size: 15),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(
                               'Page ${currentPage.value}',
-                              style: TextStyle(
-                                  color:
-                                      SupportBotColors.disablePrimary.shade700,
-                                  fontWeight: FontWeight.w500),
+                              style: SupportBotTextstyle.hint.copyWith(
+                                color: SupportBotColors.disablePrimary.shade400,
+                              ),
                             );
                           },
                         ),

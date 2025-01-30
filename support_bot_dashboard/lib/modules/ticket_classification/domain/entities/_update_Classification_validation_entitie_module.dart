@@ -1,7 +1,7 @@
 class UpdateClassificationValidationEntitieModule {
     final Data? data;
     final bool? success;
-    final int? failCode;
+    final num? failCode;
     final String? message;
 
     UpdateClassificationValidationEntitieModule({
@@ -14,7 +14,7 @@ class UpdateClassificationValidationEntitieModule {
     UpdateClassificationValidationEntitieModule copyWith({
         Data? data,
         bool? success,
-        int? failCode,
+        num? failCode,
         String? message,
     }) => 
         UpdateClassificationValidationEntitieModule(

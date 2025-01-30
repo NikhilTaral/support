@@ -15,7 +15,7 @@ String dashboardAiQueryEditedResponseModelToJson(
 class DashboardAiQueryEditedResponseModel {
   AIQueryEditedData? data;
   bool? success;
-  int? failCode;
+  num? failCode;
   Params? params;
   String? message;
 

@@ -54,10 +54,11 @@ class ExportButton extends StatelessWidget {
                               startDate: startDate,
                               endDate: endDate,
                               selectedPipeline: selectedPipeline,
-                              bopsState:bopsState,
-                              selectedClassification: selectedClassification,
+                              bopsState: bopsState ?? "",
+                              selectedClassification:
+                                  selectedClassification ?? "",
                               selectedClassificationValidation:
-                                  selectedClassificationValidation,
+                                  selectedClassificationValidation ?? "",
                             ),
                           );
                     },

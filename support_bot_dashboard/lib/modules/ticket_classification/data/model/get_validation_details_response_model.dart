@@ -12,7 +12,7 @@ String getValidationDetailsResponsrModelToJson(GetValidationDetailsResponsrModel
 class GetValidationDetailsResponsrModel {
     final Data data;
     final bool success;
-    final int failCode;
+    final num failCode;
     final String message;
 
     GetValidationDetailsResponsrModel({
@@ -25,7 +25,7 @@ class GetValidationDetailsResponsrModel {
     GetValidationDetailsResponsrModel copyWith({
         Data? data,
         bool? success,
-        int? failCode,
+        num? failCode,
         String? message,
     }) => 
         GetValidationDetailsResponsrModel(

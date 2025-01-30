@@ -10,6 +10,9 @@ class FetchExportDataEvent extends ExportEvent {
   final String? selectedClassificationValidation;
   final String? selectedPipeline;
   final String? ticketId;
+  final List<String>? selectedPipelineId;
+  final num? page;
+  final num? pageSize;
 
   FetchExportDataEvent(
       {this.startDate,
@@ -18,5 +21,8 @@ class FetchExportDataEvent extends ExportEvent {
       this.bopsState,
       this.selectedClassificationValidation,
       this.selectedPipeline,
-      this.ticketId});
+      this.ticketId,
+      this.selectedPipelineId,
+      this.page,
+      this.pageSize});
 }

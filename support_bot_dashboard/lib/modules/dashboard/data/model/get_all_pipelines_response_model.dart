@@ -9,7 +9,7 @@ String getAllPipelinesToJson(GetAllPipelinesResponsetModel data) =>
 class GetAllPipelinesResponsetModel {
   final List<Datum>? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 
@@ -24,7 +24,7 @@ class GetAllPipelinesResponsetModel {
   GetAllPipelinesResponsetModel copyWith({
     List<Datum>? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     Params? params,
     String? message,
   }) =>

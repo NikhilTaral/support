@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
 class Renderer {
   static Widget textRenderer(PlutoColumnRendererContext rendererContext) {

@@ -25,11 +25,10 @@ class TicketClassificationBloc
     final endDate = DateTime.now();
     final startDate = endDate.subtract(const Duration(days: 0));
     final repository = serviceLocator<DashboardChartdataUsecase>();
-    List<DateTime?> datesList = await getSelectedDates();
-    final req = DashboardAnswerDataInitialRequestModel(
+   final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: selectedPipelineId?? ["11257490"],
+            fieldValue: event.selectedPipelineValue?? ["11257490"],
             fieldName: event.fieldName ?? "pipelines")
       ],
       startDate: (event.startDate ?? DateTime.now())
@@ -96,7 +95,5 @@ class TicketClassificationBloc
     }
   }
 
-  Future<List<DateTime?>> getSelectedDates() async {
-    return await LocalStorage.getSelectedDates();
-  }
+ 
 }

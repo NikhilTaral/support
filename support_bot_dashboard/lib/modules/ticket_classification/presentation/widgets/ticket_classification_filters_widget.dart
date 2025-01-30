@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
@@ -105,7 +106,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildValidationDropdown(),
             UIHelpers.horizontalSpaceRegular,
-            _buildApplyFilterButton(),
+            _buildApplyFilterButton(
+              context,
+            ),
             UIHelpers.horizontalSpaceRegular,
             _buildClearFilterButton(),
             UIHelpers.horizontalSpaceRegular,
@@ -221,14 +224,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _bopsState() {
     return SizedBox(
-      width: 150,
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
           if (state is BopsStatesSucssesState) {
             return CustomMonthDropdown(
               items: state.model?.data ?? [],
-              label:
-                  selectedBOPsState.isEmpty ? "BOPS State" : selectedBOPsState,
+              label: selectedBOPsState.isEmpty
+                  ? "BOPS State/ Province"
+                  : selectedBOPsState,
               onChanged: (value) async {
                 setState(() {
                   selectedBOPsState = value ?? '';
@@ -242,7 +245,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           }
           return CustomMonthDropdown(
             items: [],
-            label: "BOps State",
+            label: "BOPS State/ Province",
             onChanged: (value) {},
             selectedValue: selectedBOPsState,
           );
@@ -253,7 +256,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildTicketClassificationDropdown() {
     return SizedBox(
-      width: 200,
       child: CustomMonthDropdown(
         label: selectedClassification.isEmpty
             ? "Classification"
@@ -284,57 +286,53 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           setState(() {
             selectedValidation = value?.toLowerCase() ?? "";
           });
-
-          //await LocalStorage.saveValidation(value?.toLowerCase());
         },
         items: const ["Not Validated", "Correct", "Incorrect"],
       ),
     );
   }
 
-  Widget _buildApplyFilterButton() {
-    return BlocProvider(
-      create: (context) => TicketClassificationTabBloc(),
-      child: Container(
-        height: 180,
-        child: ElevatedButton.icon(
-          onPressed: () {
-            // Use default value if pipelineIds is empty
-            final selectedPipelineValue =
-                pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+  Widget _buildApplyFilterButton(BuildContext context) {
+    return Container(
+      height: 180,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          final selectedPipelineValue =
+              pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
 
-            // Show a snackbar if no valid pipeline is selected
-            if (selectedPipelineValue.isEmpty) {
-              showSnackbar(
-                context,
-                'Please select a pipeline to apply filter',
-              );
-              return;
-            }
+          if (selectedPipelineValue.isEmpty) {
+            showSnackbar(
+              context,
+              'Please select a pipeline to apply filter',
+            );
+            return;
+          }
 
-            // Set values and trigger the event
-            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
-            bloc.selectedPipelineId = selectedPipelineValue.first;
-            bloc.selectedBOPsState = selectedBOPsState;
-            bloc.selectedClassification = selectedClassification;
-            bloc.selectedValidation = selectedValidation;
-            bloc.add(TicketClassificationDataCallEvent(
-              fieldValue: selectedPipelineValue,
-              endDate: selectedate.lastOrNull,
-              startDate: selectedate.firstOrNull,
-              page: 1,
-              pageSize: 10,
-            ));
-          },
-          icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-          label:
-              const Text('Apply Filter', style: TextStyle(color: Colors.white)),
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            backgroundColor: SupportBotColors.bluePrimary,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0)),
+          final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+          bloc.selectedPipelineId = selectedPipelineValue.first;
+          bloc.selectedBOPsState = selectedBOPsState;
+          bloc.selectedClassification = selectedClassification;
+          bloc.selectedValidation = selectedValidation;
+          bloc.add(TicketClassificationDataCallEvent(
+            fieldValue: selectedPipelineValue,
+            endDate: selectedate.lastOrNull,
+            startDate: selectedate.firstOrNull,
+            page: 1,
+            pageSize: 10,
+          ));
+        },
+        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+        label: Text(
+          'Apply Filter',
+          style: SupportBotTextstyle.hint.copyWith(
+            color: SupportBotColors.white,
           ),
+        ),
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),
       ),
     );
@@ -434,29 +432,28 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             pipelineIds.clear();
             selectedPipeline = "";
           });
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedPipelineId = "11257490";
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedBOPsState = selectedBOPsState;
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedClassification = selectedClassification;
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedValidation = selectedValidation;
-
+          BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
           BlocProvider.of<TicketClassificationTabBloc>(context)
               .add(TicketClassificationDataCallEvent(
+            selectedBOPsState: selectedBOPsState,
+            selectedClassification: selectedClassification,
+            selectedValidation: selectedValidation,
             fieldValue: ['11257490'],
-            endDate: selectedate.isNotEmpty
-                ? selectedate.lastOrNull
-                : DateTime.now(),
-            startDate: DateTime.now().subtract(const Duration(days: 0)),
+            endDate: DateTime.now()
+                ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
+            startDate: DateTime.now()
+                ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
             page: 1,
             pageSize: 10,
           ));
         },
         icon: const Icon(Icons.clear_all, color: Colors.white),
-        label:
-            const Text('Clear Filters', style: TextStyle(color: Colors.white)),
+        label: Text(
+          'Clear Filters',
+          style: SupportBotTextstyle.hint.copyWith(
+            color: SupportBotColors.white,
+          ),
+        ),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: Colors.redAccent,
@@ -470,14 +467,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Future<void> _pickDateRange() async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.mediumHint.copyWith(
+        color: SupportBotColors.black,
+        fontWeight: FontWeight.w700,
+      ),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle:
-          const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.mediumHint.copyWith(
+        color: SupportBotColors.black,
+        fontWeight: FontWeight.bold,
+      ),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 
@@ -540,9 +541,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Widget _buildExportButton() {
     String getPipelineId() {
       if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
-        return pipelineIds.first;
+        return pipelineIds.first ?? "11257490";
       }
-      return '';
+      return '11257490';
     }
 
     return Tooltip(
@@ -550,8 +551,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: ExportButton(
           icon: 'assets/icons/Export.svg',
           selectedButtonText: "Ticket Classification",
-          startDate: selectedDatesNotifier.value?.first,
-          endDate: selectedDatesNotifier.value?.last,
+          startDate: selectedDatesNotifier.value?.first ?? DateTime.now(),
+          endDate: selectedDatesNotifier.value?.last ?? DateTime.now(),
           bopsState: selectedBOPsState,
           selectedClassification: selectedClassification,
           selectedClassificationValidation: selectedValidation,
