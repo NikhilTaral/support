@@ -139,7 +139,11 @@ class TicketDetailsDialog extends StatelessWidget {
         final id = rowData.id?.toString() ?? '';
         final ticketDescription = rowData.ticketDescription?.toString() ?? '';
         final answeredStatus =
+            rowData.answeredStatus == "true" ? "Answered" : "Not Answered";
+        final validationStatus =
             rowData.agentAnsValidation == true ? "Validated" : "Not Validated";
+        final answerEditedStatus =
+            rowData.isAnswerEdited == true ? "Edited" : "Not Edited";
 
         return Dialog(
           backgroundColor: SupportBotColors.white,
@@ -212,6 +216,22 @@ class TicketDetailsDialog extends StatelessWidget {
                   ),
                   UIHelpers.verticalSpaceTiny,
                   Text(answeredStatus, style: SupportBotTextstyle.cellHeading),
+                  UIHelpers.verticalSpaceRegular,
+                  Text(
+                    "Validation Status:",
+                    style: SupportBotTextstyle.columnHeading,
+                  ),
+                  UIHelpers.verticalSpaceTiny,
+                  Text(validationStatus,
+                      style: SupportBotTextstyle.cellHeading),
+                  UIHelpers.verticalSpaceRegular,
+                  Text(
+                    "Answer Edited Status:",
+                    style: SupportBotTextstyle.columnHeading,
+                  ),
+                  UIHelpers.verticalSpaceTiny,
+                  Text(answerEditedStatus,
+                      style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
                     "AI Query Answer:",
