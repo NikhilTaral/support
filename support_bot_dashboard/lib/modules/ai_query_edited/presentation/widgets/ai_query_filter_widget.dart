@@ -182,9 +182,9 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
             pipelineIds.clear();
           });
           BlocProvider.of<AiQueryBloc>(context).piplineID = ["11257490"];
-          BlocProvider.of<AiQueryBloc>(context).startDate = DateTime.now()
-              .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
           BlocProvider.of<AiQueryBloc>(context).endDate = DateTime.now()
+              .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+          BlocProvider.of<AiQueryBloc>(context).startDate = DateTime.now()
               .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
           ;
 
