@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final bOpsResponseModel = bOpsResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 BOpsResponseModel bOpsResponseModelFromJson(String str) => BOpsResponseModel.fromJson(json.decode(str));

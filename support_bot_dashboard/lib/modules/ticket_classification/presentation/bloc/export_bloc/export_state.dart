@@ -12,10 +12,5 @@ class ExportLoadingState extends ExportState {}
 class ExportSuccessState extends ExportState {}
 
 class ExportFailureState extends ExportState {
-  final String message;
   
-  ExportFailureState({required this.message});
-  
-  @override
-  List<Object?> get props => [message];
 }

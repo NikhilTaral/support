@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
@@ -16,7 +18,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
 
   final ValueNotifier<num> currentPage = ValueNotifier<int>(1);
   final ValueNotifier<num> pageSize = ValueNotifier<int>(10);
-
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TicketClassificationTabBloc, TicketClassificationState>(
@@ -48,7 +50,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "Items per page:   ",
+                         s.itemsPerPageText,
                           style: SupportBotTextstyle.hint.copyWith(
                             color: SupportBotColors.disablePrimary.shade400,
                           ),
@@ -117,7 +119,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(
-                              'Page ${currentPage.value}',
+                              '${s.pageText} ${currentPage.value}',
                               style: SupportBotTextstyle.hint.copyWith(
                                 color: SupportBotColors.disablePrimary.shade400,
                               ),

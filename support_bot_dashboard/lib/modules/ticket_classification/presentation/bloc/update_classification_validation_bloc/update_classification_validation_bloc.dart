@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_request_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_responce_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/_update_Classification_validation_entitie_module.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_response_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/update_classification_validation_entity_module.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 
 part 'update_classification_validation_event.dart';

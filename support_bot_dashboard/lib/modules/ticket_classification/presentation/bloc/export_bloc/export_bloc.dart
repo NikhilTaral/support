@@ -23,7 +23,7 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
 
   FutureOr<void> _onFetchExportDataEvent(
       FetchExportDataEvent event, Emitter<ExportState> emit) async {
-   emit(ExportLoadingState());
+    emit(ExportLoadingState());
     selectedValidation = event.selectedClassificationValidation;
     bopsState = event.bopsState;
     selectedClassifications = event.selectedClassification;
@@ -62,12 +62,12 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
     final response = await repository.invoke(req);
     response.fold(
       (failure) {
-        emit(ExportFailureState(message: 'Failed to load data'));
+        emit(ExportFailureState());
       },
       (bytes) async {
         try {
           if (bytes == null) {
-            emit(ExportFailureState(message: 'No data to export'));
+            emit(ExportFailureState());
             return;
           }
 
@@ -85,8 +85,7 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
 
           emit(ExportSuccessState());
         } catch (e) {
-          emit(ExportFailureState(
-              message: 'Failed to process export: ${e.toString()}'));
+          emit(ExportFailureState());
         }
       },
     );

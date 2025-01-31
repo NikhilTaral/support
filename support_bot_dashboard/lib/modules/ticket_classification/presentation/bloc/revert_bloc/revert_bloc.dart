@@ -24,7 +24,7 @@ class RevertBloc extends Bloc<RevertEvent, RevertState> {
       final response = await repository.invoke(req);
        if (response.isLeft) {
         emit(RevertClassificationFailureState(
-          errorMsg: "Failed To revert classification",
+         
         ));
        } else {
         final model = response.right;
@@ -35,7 +35,7 @@ class RevertBloc extends Bloc<RevertEvent, RevertState> {
          }
     } catch (e) {
       emit(RevertClassificationFailureState(
-        errorMsg: "Failed To revert classification",
+       
       ));
         }
   }

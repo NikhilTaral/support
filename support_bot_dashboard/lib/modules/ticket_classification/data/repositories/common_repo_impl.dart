@@ -14,7 +14,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/data/model/g
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_request_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_responce_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
 
 final s = serviceLocator<S>();
