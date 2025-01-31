@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/pages/ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_page_widget.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/pages/ticket_classification.dart';
@@ -26,6 +28,7 @@ class TabBarWidget {
   });
 
   static List<TabBarWidget> organizationItemList(BuildContext context) {
+    final s = serviceLocator<S>();
     List<TabBarWidget> tabBarList = [];
 
     tabBarList.add(
@@ -40,9 +43,9 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-      const TabBarWidget(
-        title: "Ticket Classification",
-        view: SizedBox(
+       TabBarWidget(
+        title:s.ticketClassification,
+        view: const SizedBox(
           width: double.infinity,
           child: TicketClassification(),
         ),
@@ -51,9 +54,9 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-      const TabBarWidget(
-        title: "AI Query Answer",
-        view: SizedBox(
+       TabBarWidget(
+        title:s.aiQueryAnswer,
+        view: const SizedBox(
           width: double.infinity,
           child: AIQueryEditedScreen(),
         ),

@@ -12,7 +12,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
 class MyOrganizationNavBar extends StatefulWidget {
-  final int index;
+  final num index;
   const MyOrganizationNavBar({
     super.key,
     required this.index,

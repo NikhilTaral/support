@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getUserSettingsAttributeModel = getUserSettingsAttributeModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GetUserSettingsResponseModel getUserSettingsResponseModelFromJson(String str) => GetUserSettingsResponseModel.fromJson(json.decode(str));

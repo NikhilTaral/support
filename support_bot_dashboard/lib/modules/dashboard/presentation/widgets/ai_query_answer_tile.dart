@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
@@ -10,8 +12,8 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AiQueryAnswerTile extends StatelessWidget {
-  const AiQueryAnswerTile({super.key});
-
+   AiQueryAnswerTile({super.key});
+final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +28,7 @@ class AiQueryAnswerTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'AI Tickets Answer',
+           s.aiTicketsAnswerText,
             style: SupportBotTextstyle.normal.copyWith(
               fontWeight: FontWeight.w600,
               color: SupportBotColors.black,
@@ -61,9 +63,9 @@ class AiQueryAnswerTile extends StatelessWidget {
   Widget _content(AIQueryAnswerSucssesState state) {
     return _buildInfoCard(
       editedText:
-          'Tickets Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.answered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.answered}%)',
+        '${s.ticketsAnswerText}${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.answered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.answered}%)',
       nonEditedText:
-          'Tickets Not Answer: ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.notAnswered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.notAnswered}%)',
+          '${s.ticketsNotAnswerText} ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.notAnswered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.notAnswered}%)',
     );
   }
 

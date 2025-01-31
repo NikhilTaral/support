@@ -69,10 +69,10 @@ class Dashboard extends StatelessWidget {
             child: const AIQueryFilterWidget(),
           ),
         ],
-        child: const Responsive(
-          mobile: DashboardMobileView(),
+        child: Responsive(
+          mobile: const DashboardMobileView(),
           tablet: DashboardDesktopView(),
-          desktop: DashboardDesktopView(),
+          desktop:  DashboardDesktopView(),
         ),
       ),
     );
