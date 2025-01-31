@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_event.dart';
@@ -13,6 +15,7 @@ class PipelineTypeWidget extends StatelessWidget {
   final List<Datums> items;
   final String? selectedItem;
   final ValueChanged<String?> onChanged;
+  
 
   const PipelineTypeWidget({
     Key? key,
@@ -24,6 +27,7 @@ class PipelineTypeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = serviceLocator<S>();
     return GestureDetector(
       onTap: () {
         final dropdownBloc = PipelineDropdownBloc()
@@ -65,7 +69,7 @@ class PipelineTypeWidget extends StatelessWidget {
                                   const EdgeInsets.symmetric(horizontal: 16.0),
                               child: TextFormField(
                                 decoration: InputDecoration(
-                                  hintText: 'Search...',
+                                  hintText: s.searchText,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),

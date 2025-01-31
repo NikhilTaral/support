@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
@@ -20,7 +21,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
   final ValueNotifier<num> currentPage = ValueNotifier<num>(1);
   final ValueNotifier<num> pageSize = ValueNotifier<num>(10);
   final AiQueryAttributeModel aiQueryAttributeModel = AiQueryAttributeModel();
-
+final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AiQueryBloc, AiQueryState>(
@@ -51,7 +52,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "Items per page:   ",
+                          s.itemsPerPageText,
                           style: SupportBotTextstyle.hint.copyWith(
                             color: SupportBotColors.disablePrimary.shade400,
                           ),
@@ -124,7 +125,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(
-                              'Page ${currentPage.value}',
+                              '${s.pageText} ${currentPage.value}',
                               style: SupportBotTextstyle.hint.copyWith(
                                 color: SupportBotColors.disablePrimary.shade400,
                               ),

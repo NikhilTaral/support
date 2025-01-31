@@ -1,6 +1,8 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/data_module.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/pipeline_type_widget.dart';
@@ -10,6 +12,7 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +31,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
   String selectedItem = "Expert Care Level 1";
   final DataModule dataModule = DataModule();
   final List<String> pipelineIds = [];
-
+  final s = serviceLocator<S>();
   DateTime? endDate;
   DateTime? startDate;
 
@@ -86,7 +89,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
       constraints: const BoxConstraints(maxWidth: 420),
       child: PipelineTypeWidget(
         selectedItem: selectedItem,
-        hintText: "Pipeline",
+        hintText: s.piplineText,
         items: items,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? "", items),
       ),
@@ -153,9 +156,10 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
       height: 180,
       child: ElevatedButton.icon(
         onPressed: _addEvents,
-        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-        label:
-            const Text('Apply Filter', style: TextStyle(color: Colors.white)),
+        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
+        label: Text(s.filterApplyText,
+            style: SupportBotTextstyle.countLabel
+                .copyWith(color: SupportBotColors.white)),
         style: ElevatedButton.styleFrom(
           backgroundColor: SupportBotColors.bluePrimary,
           shape:
@@ -187,8 +191,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
           BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent());
         },
         icon: const Icon(Icons.clear_all, color: Colors.white),
-        label:
-            const Text('Clear Filters', style: TextStyle(color: Colors.white)),
+        label: Text(s.filterClearText, style: TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: Colors.redAccent,
@@ -312,7 +315,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
     if (selectedPipelineValue.isEmpty) {
       showSnackbar(
         context,
-        'Please select a pipeline to apply filter',
+        s.filterApplySnackBarText,
       );
       return;
     }
@@ -384,7 +387,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
         valueListenable: classificationNotifier,
         builder: (context, value, child) {
           return CustomMonthDropdown(
-            label: classificationNotifier.value ?? "Classification",
+            label: classificationNotifier.value ?? s.classification,
             selectedValue: "",
             onChanged: (value) {
               classificationNotifier.value = value;
