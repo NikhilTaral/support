@@ -279,7 +279,7 @@ class Renderers {
         child:
             BlocConsumer<GetValidationDetailsBloc, GetValidationDetailsState>(
           listener: (context, state) {
-            if (state is UpdateClassificationValidationSucssesState) {
+            if (state is UpdateClassificationValidationSuccessState) {
               serviceLocator<InstanceSharingService>()
                   .ticketClassificationBloc
                   ?.add(ticketClassificationBloc.TickiteClassificationEvent());
@@ -339,7 +339,7 @@ class Renderers {
                     ));
                   });
 
-                  if (state is GetValidationDetailsSucssesState &&
+                  if (state is GetValidationDetailsSuccessState &&
                       state.getValidationDetailsAttributeModel?.data?.status ==
                           false) {
                     Navigator.pop(context);
@@ -524,7 +524,7 @@ class Renderers {
                                   );
                                 });
 
-                                if (state is GetValidationDetailsSucssesState &&
+                                if (state is GetValidationDetailsSuccessState &&
                                     state.getValidationDetailsAttributeModel
                                             ?.data?.status ==
                                         false) {

@@ -8,10 +8,10 @@ class UpdateClassificationValidationIntialState
 class UpdateClassificationValidationLoadingState
     extends UpdateClassificationValidationState {}
 
-class UpdateClassificationValidationSucssesState
+class UpdateClassificationValidationSuccessState
     extends UpdateClassificationValidationState {
-  UpdateClassificationValidationEntitieModule? model;
-  UpdateClassificationValidationSucssesState({this.model});
+  UpdateClassificationValidationAttributeModule? updateClassificationValidationAttributeModule;
+  UpdateClassificationValidationSuccessState({this.updateClassificationValidationAttributeModule});
 }
 
 class UpdateClassificationValidationFailureState

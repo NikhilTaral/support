@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_clssification_pipeline_dropdown_bloc/ticket_clssification_pipeline_dropdown_bloc.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -22,6 +24,7 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = serviceLocator<S>();
     return GestureDetector(
       onTap: () {
         final dropdownBloc = TicketClssificationPipelineDropdownBloc()
@@ -70,7 +73,7 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                                   const EdgeInsets.symmetric(horizontal: 16.0),
                               child: TextFormField(
                                 decoration: InputDecoration(
-                                  hintText: 'Search...',
+                                  hintText: s.searchText,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
@@ -94,11 +97,11 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
 
                                   return ListTile(
                                     title: Text(item.pipelineName ??
-                                        "Unknown Pipeline"),
+                                       s.unknownPipelineText),
                                     selected: isSelected,
                                     onTap: () {
                                       onChanged(item.pipelineName ??
-                                          "Unknown Pipeline");
+                                         s.unknownPipelineText);
                                       Navigator.of(context).pop();
                                     },
                                   );

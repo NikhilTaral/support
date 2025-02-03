@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/revert_bloc/revert_bloc.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
@@ -38,217 +38,226 @@ class _TicketClassificationActionRendererState
     extends State<TicketClassificationActionRenderer> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RevertBloc, RevertState>(
-      listener: (context, state) {
-        if (state is RevertClassificationSucessState) {}
-      },
-      builder: (context, state) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: PopupMenuTheme(
-            data: const PopupMenuThemeData(
-              color: Colors.white,
-            ),
-            child: PopupMenuButton<String>(
-              tooltip: "",
-              icon: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
+    final s = serviceLocator<S>();
+    return BlocProvider(
+      create: (context) => TicketClassificationActionBloc(),
+      child: BlocConsumer<TicketClassificationActionBloc,
+          TicketClassificationActionState>(
+        listener: (context, state) {
+          if (state is UpdateClassificationSuccessState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context)
+                      .uId) {
+            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+            BlocProvider.of<TicketClassificationTabBloc>(context)
+                .add(TicketClassificationDataCallEvent(
+              startDate: bloc.startDate,
+              endDate: bloc.endDate,
+              page: 1,
+              pageSize: 10,
+            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: SupportBotColors.bluePrimary,
+                content: Text(
+                  "Update Successfully ",
+                  style: SupportBotTextstyle.hint
+                      .copyWith(color: SupportBotColors.white),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: const Icon(
-                  Icons.more_vert_rounded,
-                ),
+                duration: Duration(seconds: 2),
               ),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: "View",
-                  onTap: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ViewDialogBox(
-                            allRows: widget.allRows,
-                            index: widget.index,
-                          );
-                        },
-                      );
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.visibility),
-                      SizedBox(width: 8),
-                      Text(
-                        "View",
-                        style: SupportBotTextstyle.hint.copyWith(
-                            color: Colors.black, fontWeight: FontWeight.w400),
-                      ),
-                    ],
+            );
+          } else if (state is UpdateClassificationFailureState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context)
+                      .uId) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: SupportBotColors.danger,
+                content: Text(
+                  "Update Failure",
+                  style: SupportBotTextstyle.hint
+                      .copyWith(color: SupportBotColors.white),
+                ),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+          if (state is RevertClassificationSuccessState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context).id) {
+            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+            BlocProvider.of<TicketClassificationTabBloc>(context).add(
+              TicketClassificationDataCallEvent(
+                startDate: bloc.startDate,
+                endDate: bloc.endDate,
+                page: 1,
+                pageSize: 10,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: SupportBotColors.bluePrimary,
+                content: Text(
+                  "Reverted Successfully ",
+                  style: SupportBotTextstyle.hint
+                      .copyWith(color: SupportBotColors.white),
+                ),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+          if (state is RevertClassificationFailureState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context).id) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: SupportBotColors.danger,
+                content: Text(
+                  "Reverted Failure",
+                  style: SupportBotTextstyle.hint
+                      .copyWith(color: SupportBotColors.white),
+                ),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: PopupMenuTheme(
+              data: const PopupMenuThemeData(
+                color: Colors.white,
+              ),
+              child: PopupMenuButton<String>(
+                tooltip: "",
+                icon: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  child: const Icon(
+                    Icons.more_vert_rounded,
                   ),
                 ),
-                if (widget.isUpdatedToHubspot == true)
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    value: S.of(context).revert,
-                    child: InkWell(
-                      onTap: () {
-                        final bloc = BlocProvider.of<RevertBloc>(context);
-                        if (widget.isUpdatedToHubspot) {
-                          bloc.add(RevertClassificationEvent(
-                            ticketId: widget.id,
-                          ));
-                          Navigator.of(context).pop();
-                          // _showRevertToHubspotPopup(
-                          //     context, S.of(context).revertSuccess);
-                        } else {
-                          // _showRevertToHubspotPopup(
-                          //     context, S.of(context).noRevert);
-                        }
-                        Future.delayed(const Duration(seconds: 2), () {
-                          final bloc =
-                              BlocProvider.of<TicketClassificationTabBloc>(
-                                  context);
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .add(
-                            TicketClassificationDataCallEvent(
-                              startDate: bloc.startDate,
-                              endDate: bloc.endDate,
-                              page: 1,
-                              pageSize: 10,
-                            ),
-                          );
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.loop_rounded),
-                          UIHelpers.horizontalSpaceTiny,
-                          Text(S.of(context).revert),
-                        ],
-                      ),
+                    value: s.view,
+                    onTap: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ViewDialogBox(
+                              allRows: widget.allRows,
+                              index: widget.index,
+                            );
+                          },
+                        );
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.visibility),
+                        SizedBox(width: 8),
+                        Text(
+                          s.view,
+                          style: SupportBotTextstyle.hint.copyWith(
+                              color: Colors.black, fontWeight: FontWeight.w400),
+                        ),
+                      ],
                     ),
                   ),
-                if (widget.isUpdatedToHubspot == false)
-                  PopupMenuItem<String>(
-                    value: "Update",
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) {
-                          return BlocProvider.value(
-                            value: BlocProvider.of<TicketClassificationTabBloc>(
-                                context),
-                            child: AlertDialog(
-                              title: const Text("Update Ticket"),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Do you Want to Mark This Ticket as a Contact ${widget.classification} in HubSpot",
-                                      style: SupportBotTextstyle.hint.copyWith(
-                                        fontWeight: FontWeight.w600,
+                  if (widget.isUpdatedToHubspot == true)
+                    PopupMenuItem<String>(
+                      value: S.of(context).revert,
+                      child: InkWell(
+                        onTap: () {
+                          final bloc =
+                              BlocProvider.of<TicketClassificationActionBloc>(
+                                  context);
+                          if (widget.isUpdatedToHubspot) {
+                            bloc.add(RevertClassificationEvent(
+                              ticketId: widget.id,
+                            ));
+                            Navigator.of(context).pop();
+                            // _showRevertToHubspotPopup(
+                            //     context, S.of(context).revertSuccess);
+                          } else {
+                            // _showRevertToHubspotPopup(
+                            //     context, S.of(context).noRevert);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.loop_rounded),
+                            UIHelpers.horizontalSpaceTiny,
+                            Text(S.of(context).revert),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (widget.isUpdatedToHubspot == false)
+                    PopupMenuItem<String>(
+                      value: "Update",
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return BlocProvider.value(
+                              value: BlocProvider.of<
+                                  TicketClassificationActionBloc>(context),
+                              child: AlertDialog(
+                                title: const Text("Update Ticket"),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Do you Want to Mark This Ticket as a Contact ${widget.classification} in HubSpot",
+                                        style:
+                                            SupportBotTextstyle.hint.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  style: TextButton.styleFrom(
-                                    backgroundColor:
-                                        SupportBotColors.bluePrimary,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 14.0, horizontal: 24.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "No",
-                                    style:
-                                        SupportBotTextstyle.mediumHint.copyWith(
-                                      color: SupportBotColors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                      const SizedBox(height: 16),
+                                    ],
                                   ),
                                 ),
-                                BlocProvider(
-                                  create: (context) =>
-                                      TicketClassificationActionBloc(),
-                                  child: BlocBuilder<
-                                      TicketClassificationActionBloc,
-                                      TicketClassificationActionState>(
-                                    builder: (context, state) {
-                                      if (state
-                                          is TicketClassificationActionLoadingState) {
-                                        return const CircularProgressIndicator();
-                                      }
-                                      if (state
-                                          is TicketClassificationActionSucssesState) {
-                                        return TextButton(
-                                          onPressed: () {
-                                            final bloc = BlocProvider.of<
-                                                    TicketClassificationTabBloc>(
-                                                context);
-                                            final classification =
-                                                widget.classification;
-
-                                            final ticketId = widget.id;
-
-                                            context
-                                                .read<
-                                                    TicketClassificationActionBloc>()
-                                                .add(
-                                                  TicketClassificationActionOnEvent(
-                                                    classification:
-                                                        classification,
-                                                    ticketId: ticketId,
-                                                  ),
-                                                );
-
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                                    TicketClassificationDataCallEvent(
-                                              startDate: bloc.startDate,
-                                              endDate: bloc.endDate,
-                                              page: 1,
-                                              pageSize: 10,
-                                            ));
-
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                SupportBotColors.bluePrimary,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 14.0,
-                                                horizontal: 24.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                            ),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: TextButton.styleFrom(
+                                          backgroundColor:
+                                              SupportBotColors.bluePrimary,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 14.0, horizontal: 24.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4.0),
                                           ),
-                                          child: Text(
-                                            "Yes",
-                                            style: SupportBotTextstyle
-                                                .mediumHint
-                                                .copyWith(
-                                              color: SupportBotColors.white,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                        ),
+                                        child: Text(
+                                          "No",
+                                          style: SupportBotTextstyle.mediumHint
+                                              .copyWith(
+                                            color: SupportBotColors.white,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                        );
-                                      }
-                                      return TextButton(
+                                        ),
+                                      ),
+                                      UIHelpers.horizontalSpaceSmallRegular,
+                                      TextButton(
                                         onPressed: () {
                                           final classification =
                                               widget.classification;
@@ -258,31 +267,16 @@ class _TicketClassificationActionRendererState
                                               .read<
                                                   TicketClassificationActionBloc>()
                                               .add(
-                                                TicketClassificationActionOnEvent(
-                                                  classification:
-                                                      classification,
-                                                  ticketId: ticketId,
-                                                ),
+                                                UpdateClassificationEvent(
+                                                    classification:
+                                                        classification,
+                                                    ticketId: ticketId,
+                                                    pipelineId: BlocProvider.of<
+                                                                TicketClassificationTabBloc>(
+                                                            context)
+                                                        .selectedPipelineId),
                                               );
-
-                                          Future.delayed(
-                                              const Duration(seconds: 2), () {
-                                            final bloc = BlocProvider.of<
-                                                    TicketClassificationTabBloc>(
-                                                context);
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                              TicketClassificationDataCallEvent(
-                                                startDate: bloc.startDate,
-                                                endDate: bloc.endDate,
-                                                page: 1,
-                                                pageSize: 10,
-                                              ),
-                                            );
-                                            Navigator.of(context).pop();
-                                          });
+                                          Navigator.of(context).pop();
                                         },
                                         style: TextButton.styleFrom(
                                           backgroundColor:
@@ -302,37 +296,37 @@ class _TicketClassificationActionRendererState
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                      );
-                                    },
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.update,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Update",
-                          style: SupportBotTextstyle.hint.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.update,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 8),
+                          Text(
+                            "Update",
+                            style: SupportBotTextstyle.hint.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

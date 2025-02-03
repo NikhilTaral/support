@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 
 part 'ticket_classification_event.dart';
@@ -12,8 +12,8 @@ part 'ticket_classification_state.dart';
 
 class TicketClassificationTabBloc
     extends Bloc<TicketClassificationEvent, TicketClassificationState> {
-  TicketClassificationEntitieModel ticketClassificationEntitieModel =
-      TicketClassificationEntitieModel();
+  TicketClassificationAttributeModel ticketClassificationAttributeModel =
+      TicketClassificationAttributeModel();
 
   num page = 1;
   num pageSize = 10;
@@ -81,18 +81,18 @@ class TicketClassificationTabBloc
         } else {
           page = model.data?.currentPage ?? 1;
 
-          ticketClassificationEntitieModel = TicketClassificationEntitieModel(
+          ticketClassificationAttributeModel = TicketClassificationAttributeModel(
             data: model.data,
             failCode: model.failCode,
             message: model.message,
             success: model.success,
           );
 
-          emit(TicketClassificationSucssesState(
+          emit(TicketClassificationSuccessState(
               currentIndex: 0,
               endDate: endDate,
               startDate: startDate,
-              model: ticketClassificationEntitieModel,
+              ticketClassificationAttributeModel: ticketClassificationAttributeModel,
               pipelineId: [selectedPipelineId]));
         }
       }

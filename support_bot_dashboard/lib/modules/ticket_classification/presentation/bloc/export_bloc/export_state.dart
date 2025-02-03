@@ -11,6 +11,4 @@ class ExportLoadingState extends ExportState {}
 
 class ExportSuccessState extends ExportState {}
 
-class ExportFailureState extends ExportState {
-  
-}
+class ExportFailureState extends ExportState {}

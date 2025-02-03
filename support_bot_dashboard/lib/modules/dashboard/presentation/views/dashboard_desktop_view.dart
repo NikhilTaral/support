@@ -75,7 +75,7 @@ final s = serviceLocator<S>();
             if (selectedIndex == 1) ...{
               Padding(
                 padding: padding,
-                child: const TicketClassificationFiltersWidget(),
+                child:  TicketClassificationFiltersWidget(),
               )
             },
             if (selectedIndex == 2) ...{

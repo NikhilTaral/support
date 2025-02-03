@@ -1,23 +1,23 @@
-class UpdateClassificationValidationEntitieModule {
+class UpdateClassificationValidationAttributeModule {
     final Data? data;
     final bool? success;
     final num? failCode;
     final String? message;
 
-    UpdateClassificationValidationEntitieModule({
+    UpdateClassificationValidationAttributeModule({
         this.data,
         this.success,
         this.failCode,
         this.message,
     });
 
-    UpdateClassificationValidationEntitieModule copyWith({
+    UpdateClassificationValidationAttributeModule copyWith({
         Data? data,
         bool? success,
         num? failCode,
         String? message,
     }) => 
-        UpdateClassificationValidationEntitieModule(
+        UpdateClassificationValidationAttributeModule(
             data: data ?? this.data,
             success: success ?? this.success,
             failCode: failCode ?? this.failCode,

@@ -1,23 +1,23 @@
-class RevortEntitieModel {
+class RevertAttributeModel {
   final Data? data;
   final bool? success;
   final num? failCode;
   final String? message;
 
-  RevortEntitieModel({
+  RevertAttributeModel({
     this.data,
     this.success,
     this.failCode,
     this.message,
   });
 
-  RevortEntitieModel copyWith({
+  RevertAttributeModel copyWith({
     Data? data,
     bool? success,
     num? failCode,
     String? message,
   }) =>
-      RevortEntitieModel(
+      RevertAttributeModel(
         data: data ?? this.data,
         success: success ?? this.success,
         failCode: failCode ?? this.failCode,

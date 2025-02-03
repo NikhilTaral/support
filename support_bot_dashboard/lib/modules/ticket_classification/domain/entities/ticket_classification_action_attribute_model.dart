@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-class TicketClassificationActionEntitietModel {
+class TicketClassificationActionAttributeModel {
   final Data? data;
   final bool? success;
   final num? failCode;
   final Params? params;
   final String? message;
 
-  TicketClassificationActionEntitietModel({
+  TicketClassificationActionAttributeModel({
     this.data,
     this.success,
     this.failCode,
@@ -15,14 +15,14 @@ class TicketClassificationActionEntitietModel {
     this.message,
   });
 
-  TicketClassificationActionEntitietModel copyWith({
+  TicketClassificationActionAttributeModel copyWith({
     Data? data,
     bool? success,
     num? failCode,
     Params? params,
     String? message,
   }) =>
-      TicketClassificationActionEntitietModel(
+      TicketClassificationActionAttributeModel(
         data: data ?? this.data,
         success: success ?? this.success,
         failCode: failCode ?? this.failCode,
