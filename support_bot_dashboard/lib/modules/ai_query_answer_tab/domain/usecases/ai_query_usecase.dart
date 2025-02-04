@@ -1,9 +1,9 @@
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/add_answer_validation_request_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/update_ai_answer_request_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/domain/repositories/ai_query_answer_repo.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/model/add_answer_validation_request_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/model/update_ai_answer_request_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/repositories/ai_query_answer_repo.dart';
 
 class AiQueryUsecase {
   Future<Either<Failure, dynamic>> invoke(

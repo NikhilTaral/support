@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/add_answer_validation_request_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/data/model/add_answer_validation_response_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/add_answer_validation_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/domain/usecases/ai_query_usecase.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/model/add_answer_validation_request_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/model/add_answer_validation_response_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/add_answer_validation_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/usecases/ai_query_usecase.dart';
 
 part 'add_answer_validation_event.dart';
 part 'add_answer_validation_state.dart';

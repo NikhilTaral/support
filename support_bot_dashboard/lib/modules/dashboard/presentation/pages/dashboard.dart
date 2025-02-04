@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/update_ai_answer_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/widgets/ai_query_tab_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
@@ -26,7 +26,6 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
-        
           BlocProvider(create: (context) => TicketClassificationTabBloc()),
           BlocProvider(
             create: (context) => TabIndexBloc(),
@@ -62,11 +61,11 @@ class Dashboard extends StatelessWidget {
             create: (context) =>
                 serviceLocator<InstanceSharingService>().aiQueryBloc ??
                 AiQueryBloc(),
-            child: const AIQueryFilterWidget(),
+            child: const AIQueryTabFilterWidget(),
           ),
           BlocProvider<UpdateAiAnswerBloc>(
             create: (context) => UpdateAiAnswerBloc(),
-            child: const AIQueryFilterWidget(),
+            child: const AIQueryTabFilterWidget(),
           ),
         ],
         child: Responsive(

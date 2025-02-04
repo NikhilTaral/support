@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/pages/ai_query_edited.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/pages/ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_page_widget.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/pages/ticket_classification.dart';
 

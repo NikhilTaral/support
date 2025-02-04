@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/data_module.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/pipeline_type_widget.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/data_module.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/widgets/pipeline_type_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
@@ -17,14 +17,14 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
 
-class AIQueryFilterWidget extends StatefulWidget {
-  const AIQueryFilterWidget({super.key});
+class AIQueryTabFilterWidget extends StatefulWidget {
+  const AIQueryTabFilterWidget({super.key});
 
   @override
   _AIQueryFilterWidgetState createState() => _AIQueryFilterWidgetState();
 }
 
-class _AIQueryFilterWidgetState extends State<AIQueryFilterWidget> {
+class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
   ValueNotifier<String?> classificationNotifier = ValueNotifier<String?>(null);

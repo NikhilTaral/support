@@ -76,36 +76,7 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
             indicatorColor: Colors.transparent,
             labelStyle:
                 const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-            onTap: (value) {
-              if (value != selectedIndex) {
-                BlocProvider.of<TabIndexBloc>(context)
-                    .add(TabIndexChangedEvent(currentIndex: value));
-                if (value == 0) {
-                  context
-                      .read<TicketClassificationBloc>()
-                      .add(TickiteClassificationEvent());
-                  context
-                      .read<UserValidationBloc>()
-                      .add(UserValidationsEvent());
-                  context
-                      .read<AiQueryAnswerBloc>()
-                      .add(AIQueryAnswerInitialEvent());
-                  context
-                      .read<AiQueryEditedBloc>()
-                      .add(AIQueryEditedInitialEvent());
-                  context
-                      .read<ValidationStatusBloc>()
-                      .add(ValidationStatuseCallEvent());
-                }
-                if (value == 1) {
-                  BlocProvider.of<TicketClassificationTabBloc>(context)
-                      .clearFilters();
-                  context.read<TicketClassificationTabBloc>().add(
-                        TicketClassificationDataCallEvent(),
-                      );
-                }
-              }
-            },
+            onTap: (value) => onTap(context, value, selectedIndex),
             labelPadding: const EdgeInsets.only(left: 30),
             indicatorPadding: EdgeInsets.zero,
             tabs: List.generate(
@@ -116,6 +87,27 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
         },
       ),
     );
+  }
+
+  void onTap(BuildContext context, int value, int selectedIndex) {
+    if (value != selectedIndex) {
+      BlocProvider.of<TabIndexBloc>(context)
+          .add(TabIndexChangedEvent(currentIndex: value));
+      if (value == 0) {
+        context
+            .read<TicketClassificationBloc>()
+            .add(TickiteClassificationEvent());
+        context.read<UserValidationBloc>().add(UserValidationsEvent());
+        context.read<AiQueryAnswerBloc>().add(AIQueryAnswerInitialEvent());
+        context.read<AiQueryEditedBloc>().add(AIQueryEditedInitialEvent());
+        context.read<ValidationStatusBloc>().add(ValidationStatuseCallEvent());
+      } else if (value == 1) {
+        BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
+        context.read<TicketClassificationTabBloc>().add(
+              TicketClassificationDataCallEvent(),
+            );
+      }
+    }
   }
 
   Widget _buildTabItem(int index, int selectedIndex) {
