@@ -3,7 +3,7 @@ FROM debian:latest AS build-env
 
 # install all needed stuff
 RUN apt-get update
-RUN apt-get install -y curl git unzip
+RUN apt-get install -y curl git unzip ruby
 
 # define variables
 ARG FLUTTER_SDK=/usr/local/flutter
