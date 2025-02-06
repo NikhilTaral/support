@@ -13,20 +13,20 @@ import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
 
 class TicketClassificationFiltersWidget extends StatefulWidget {
-
-   TicketClassificationFiltersWidget({super.key});
+  TicketClassificationFiltersWidget({super.key});
 
   @override
   _HomeFiltersWidgetState createState() => _HomeFiltersWidgetState();
 }
 
 class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
-    final s = serviceLocator<S>();
+  final s = serviceLocator<S>();
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
@@ -283,7 +283,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       width: 200,
       child: CustomMonthDropdown(
-        label: selectedValidation.isEmpty ?s.validation : selectedValidation,
+        label: selectedValidation.isEmpty ? s.validation : selectedValidation,
         selectedValue: selectedValidation,
         onChanged: (value) async {
           setState(() {
@@ -306,11 +306,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (selectedPipelineValue.isEmpty) {
             showSnackbar(
               context,
-             s.filterApplySnackBarText ,
+              s.filterApplySnackBarText,
             );
             return;
           }
-
           final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
           bloc.selectedPipelineId = selectedPipelineValue.first;
           bloc.selectedBOPsState = selectedBOPsState;
@@ -324,7 +323,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             pageSize: 10,
           ));
         },
-        icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
         label: Text(
           s.filterApplyText,
           style: SupportBotTextstyle.hint.copyWith(
@@ -422,7 +421,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildClearFilterButton() {
-
     return SizedBox(
       height: 180,
       child: ElevatedButton.icon(

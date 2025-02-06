@@ -60,11 +60,11 @@ class _TicketClassificationActionRendererState
               SnackBar(
                 backgroundColor: SupportBotColors.bluePrimary,
                 content: Text(
-                  "Update Successfully ",
+                  s.updateSuccessfullyText,
                   style: SupportBotTextstyle.hint
                       .copyWith(color: SupportBotColors.white),
                 ),
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
               ),
             );
           } else if (state is UpdateClassificationFailureState &&
@@ -75,7 +75,7 @@ class _TicketClassificationActionRendererState
               SnackBar(
                 backgroundColor: SupportBotColors.danger,
                 content: Text(
-                  "Update Failure",
+                  s.updateFailureText,
                   style: SupportBotTextstyle.hint
                       .copyWith(color: SupportBotColors.white),
                 ),
@@ -99,11 +99,11 @@ class _TicketClassificationActionRendererState
               SnackBar(
                 backgroundColor: SupportBotColors.bluePrimary,
                 content: Text(
-                  "Reverted Successfully ",
+                  s.revertedSuccessfullyText,
                   style: SupportBotTextstyle.hint
                       .copyWith(color: SupportBotColors.white),
                 ),
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
               ),
             );
           }
@@ -114,11 +114,11 @@ class _TicketClassificationActionRendererState
               SnackBar(
                 backgroundColor: SupportBotColors.danger,
                 content: Text(
-                  "Reverted Failure",
+                  s.revertedFailureText,
                   style: SupportBotTextstyle.hint
                       .copyWith(color: SupportBotColors.white),
                 ),
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
               ),
             );
           }
@@ -160,8 +160,8 @@ class _TicketClassificationActionRendererState
                     },
                     child: Row(
                       children: [
-                        Icon(Icons.visibility),
-                        SizedBox(width: 8),
+                        const Icon(Icons.visibility),
+                        const SizedBox(width: 8),
                         Text(
                           s.view,
                           style: SupportBotTextstyle.hint.copyWith(
@@ -201,7 +201,7 @@ class _TicketClassificationActionRendererState
                     ),
                   if (widget.isUpdatedToHubspot == false)
                     PopupMenuItem<String>(
-                      value: "Update",
+                      value: s.updateText,
                       onTap: () {
                         showDialog(
                           context: context,
@@ -210,7 +210,7 @@ class _TicketClassificationActionRendererState
                               value: BlocProvider.of<
                                   TicketClassificationActionBloc>(context),
                               child: AlertDialog(
-                                title: const Text("Update Ticket"),
+                                title: Text(s.updateTicketText),
                                 content: SingleChildScrollView(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -218,7 +218,7 @@ class _TicketClassificationActionRendererState
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Do you Want to Mark This Ticket as a Contact ${widget.classification} in HubSpot",
+                                        s.requestMsgText(widget.classification),
                                         style:
                                             SupportBotTextstyle.hint.copyWith(
                                           fontWeight: FontWeight.w600,
@@ -248,7 +248,7 @@ class _TicketClassificationActionRendererState
                                           ),
                                         ),
                                         child: Text(
-                                          "No",
+                                          s.noText,
                                           style: SupportBotTextstyle.mediumHint
                                               .copyWith(
                                             color: SupportBotColors.white,
@@ -289,7 +289,7 @@ class _TicketClassificationActionRendererState
                                           ),
                                         ),
                                         child: Text(
-                                          "Yes",
+                                          s.yesText,
                                           style: SupportBotTextstyle.mediumHint
                                               .copyWith(
                                             color: SupportBotColors.white,
@@ -307,12 +307,12 @@ class _TicketClassificationActionRendererState
                       },
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.update,
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
-                            "Update",
+                            s.updateText,
                             style: SupportBotTextstyle.hint.copyWith(
                               color: Colors.black,
                               fontWeight: FontWeight.w400,
@@ -339,6 +339,8 @@ class ViewDialogBox extends StatefulWidget {
   @override
   State<ViewDialogBox> createState() => _ViewDialogBoxState();
 }
+
+final s = serviceLocator<S>();
 
 class _ViewDialogBoxState extends State<ViewDialogBox> {
   late int currentIndex;
@@ -397,7 +399,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                     icon: const Icon(Icons.arrow_circle_left_outlined),
                   ),
                   Text(
-                    "Ticket Details",
+                    s.ticketDetailsText,
                     style: SupportBotTextstyle.small.copyWith(
                         fontWeight: FontWeight.w500,
                         color: SupportBotColors.black),
@@ -416,7 +418,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                 children: [
                   SelectableText.rich(
                     TextSpan(
-                      text: "Id : \n",
+                      text: "${s.id} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -433,7 +435,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Description : \n",
+                      text: "${s.descriptionText} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -450,7 +452,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "AI Classification : \n",
+                      text: "${s.aIClassification} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -468,7 +470,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Reasoning : \n",
+                      text: "${s.reasoningText} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -486,7 +488,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "BOPS State/ Province : \n",
+                      text: "${s.bobStateText} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -504,7 +506,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Validated By: \n",
+                      text: "${s.validatedByText}: \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -522,7 +524,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Classification Validation Reason: \n",
+                      text: "${s.classificationValidationReasonText}: \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -540,7 +542,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Validated Classification : \n',
+                      text: '${s.classificationValidationReasonText} : \n',
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -558,7 +560,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Status : \n',
+                      text: '${s.status} : \n',
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -598,7 +600,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ),
                     ),
                     label: Text(
-                      "Close",
+                      s.closeText,
                       style: SupportBotTextstyle.small
                           .copyWith(color: SupportBotColors.bluePrimary),
                     ),
