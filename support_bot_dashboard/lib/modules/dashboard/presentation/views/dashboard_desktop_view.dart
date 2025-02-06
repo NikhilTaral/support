@@ -2,30 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
 import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_filters_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
-
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_filters_widget.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-import '../bloc/validation_status_bloc/validation_status_bloc.dart';
-
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
-
-  const DashboardDesktopView({
-    super.key,
-    this.index,
-  });
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  const DashboardDesktopView(
+      {super.key,
+      this.pipelineName,
+      this.index,
+      this.piplineId,
+      this.endDate,
+      this.startDate});
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +72,21 @@ class DashboardDesktopView extends StatelessWidget {
             if (selectedIndex == 0) ...{
               Padding(
                 padding: padding,
-                child: const HomeFiltersWidget(),
+                child: HomeFiltersWidget(
+                    pipelineName: pipelineName,
+                    piplineId: piplineId,
+                    endDate: endDate,
+                    startDate: startDate),
               )
             },
             if (selectedIndex == 1) ...{
               Padding(
                 padding: padding,
-                child: const TicketClassificationFiltersWidget(),
+                child: TicketClassificationFiltersWidget(
+                    pipelineName: pipelineName,
+                    piplineId: piplineId,
+                    endDate: endDate,
+                    startDate: startDate),
               )
             },
             if (selectedIndex == 2) ...{
@@ -91,7 +95,11 @@ class DashboardDesktopView extends StatelessWidget {
                 child: const AIQueryFilterWidget(),
               ),
             },
-            MyOrganizationNavBar(index: selectedIndex),
+            MyOrganizationNavBar(
+                index: selectedIndex,
+                piplineId: piplineId,
+                endDate: endDate,
+                startDate: startDate),
             UIHelpers.verticalSpaceSmall,
             Expanded(
               child: ScrollbarTheme(

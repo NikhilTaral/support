@@ -28,9 +28,6 @@ class AiQueryEditedBloc extends Bloc<AiQueryEditedEvent, AiQueryEditedState> {
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: selectedPipelineId ?? ["11257490"],
-            fieldName: "StartDate"),
-        Filter(
             fieldValue: event.selectedPipelineValue ?? ["11257490"],
             fieldName: event.fieldName ?? "pipelines")
       ],

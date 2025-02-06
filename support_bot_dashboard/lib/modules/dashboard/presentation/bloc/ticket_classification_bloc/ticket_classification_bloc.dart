@@ -13,7 +13,7 @@ part 'ticket_classification_state.dart';
 
 class TicketClassificationBloc
     extends Bloc<TickiteClassificationEvent, TicketClassificationState> {
-       List<String>? selectedPipelineId = ["11257490"];
+  List<String>? selectedPipelineId = [""];
   DashboardDataModel dashboardDataModel = DashboardDataModel();
   TicketClassificationBloc() : super(TicketClassificationInitialState()) {
     on<TickiteClassificationEvent>(_onTickitClassification);
@@ -22,6 +22,7 @@ class TicketClassificationBloc
   FutureOr<void> _onTickitClassification(TickiteClassificationEvent event,
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
+    selectedPipelineId = event.selectedPipelineValue;
     final endDate = DateTime.now();
     final startDate = endDate.subtract(const Duration(days: 0));
     final repository = serviceLocator<DashboardChartdataUsecase>();
@@ -29,7 +30,7 @@ class TicketClassificationBloc
     final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: selectedPipelineId?? ["11257490"],
+            fieldValue: selectedPipelineId ?? [""],
             fieldName: event.fieldName ?? "pipelines")
       ],
       startDate: (event.startDate ?? DateTime.now())

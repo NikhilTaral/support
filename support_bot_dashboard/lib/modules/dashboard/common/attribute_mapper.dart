@@ -33,11 +33,16 @@ class AttributeMapper {
   static GetAllPipelinesAttributeModel mapGetAllPipelinesAttributeModel(
       GetAllPipelinesResponsetModel? model) {
     return GetAllPipelinesAttributeModel(
-        data: mapData(model?.data));
+        data: model?.data
+                ?.map((e) => Datums(
+                    aiAnswerPerm: e.aiAnswerPerm ?? true,
+                    hubspotUpdateEnv: e.hubspotUpdateEnv ?? "",
+                    hubspotUpdatepPerm: e.hubspotUpdatepPerm ?? true,
+                    pipelineId: e.pipelineId ?? "",
+                    pipelineName: e.pipelineName ?? ""))
+                .toList() ??
+            []);
   }
-
-
-
 
   static List<Datums>? mapData(List<Datum>? data) {
     return data

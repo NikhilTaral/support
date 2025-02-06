@@ -15,20 +15,20 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Support Bot',
       debugShowCheckedModeBanner: false,
-      routeInformationParser: MyAppRoutes().router.routeInformationParser,
-      routerDelegate: MyAppRoutes().router.routerDelegate,
+      routeInformationParser: MyAppRoutes.router.routeInformationParser,
+      routerDelegate: MyAppRoutes.router.routerDelegate,
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Roboto',
         scaffoldBackgroundColor: SupportBotColors.white,
       ),
-       localizationsDelegates: const [
+      localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -38,4 +38,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

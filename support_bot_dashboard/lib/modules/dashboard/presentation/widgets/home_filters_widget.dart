@@ -12,14 +12,22 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/valida
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/multipal_pipeline_Widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class HomeFiltersWidget extends StatefulWidget {
-  const HomeFiltersWidget({super.key});
+  const HomeFiltersWidget(
+      {super.key,
+      this.pipelineName,
+      this.endDate,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   @override
   _HomeFiltersWidgetState createState() => _HomeFiltersWidgetState();
@@ -31,6 +39,16 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   List<DateTime?> selectedate = [];
   List<String> selectedItems = ['Expert Care Level 1'];
   List<String> pipelineIds = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.pipelineName != null) {
+      selectedItems.clear();
+      selectedItems.add(widget.pipelineName ?? "");
+    }
+    pipelineIds = widget.piplineId ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +125,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             startDate = selectedDates![0];
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
-            endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 0));
+            endDate = widget.endDate ?? DateTime.now();
+            startDate = widget.startDate ?? DateTime.now();
           }
 
           return Container(

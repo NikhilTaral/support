@@ -15,7 +15,7 @@ part 'ai_query_answer_state.dart';
 DashboardDataModel dashboardDataModel = DashboardDataModel();
 
 class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
-  List<String>? selectedPipelineId = ["11257490"];
+  List<String>? selectedPipelineId = [""];
   AiQueryAnswerBloc() : super(AIQueryAnswerIntialState()) {
     on<AIQueryAnswerInitialEvent>(_aIQueryAnswerInitialEvent);
   }
@@ -24,16 +24,14 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
       AIQueryAnswerInitialEvent event, Emitter<AiQueryAnswerState> emit) async {
     emit(AIQueryAnswerLoadingState());
     try {
+      selectedPipelineId = event.selectedPipelineValue ?? [""];
       final repository = serviceLocator<DashboardAiQueryAnswerUsecase>();
       List<DateTime?> datesList = await getSelectedDates();
 
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
           Filter(
-              fieldValue: selectedPipelineId ?? ["11257490"],
-              fieldName: "StartDate"),
-          Filter(
-              fieldValue: selectedPipelineId ?? ["11257490"],
+              fieldValue: selectedPipelineId ?? [""],
               fieldName: event.fieldName ?? "pipelines")
         ],
         startDate: (event.startDate ?? DateTime.now())

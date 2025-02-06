@@ -7,7 +7,6 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_dat
 import 'package:support_bot_dashboard/modules/dashboard/data/model/get_validation_by_count_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'user_validationevent.dart';
 part 'uservalidation_state.dart';
@@ -16,7 +15,7 @@ DashboardDataModel dashboardDataModel = DashboardDataModel();
 
 class UserValidationBloc
     extends Bloc<UserValidationevent, UservalidationState> {
-  List<String>? selectedPipelineId = ["11257490"];
+  List<String>? selectedPipelineId = [""];
   DashboardAnswerDataInitialRequestModel requestBody =
       DashboardAnswerDataInitialRequestModel();
   UserValidationBloc() : super(UserValidationIntialState()) {
@@ -28,6 +27,7 @@ class UserValidationBloc
     emit(UserValidationLoadingState());
 
     try {
+      selectedPipelineId = event.selectedPipelineValue;
       final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
 
       final startDate = (event.startDate ?? DateTime.now())

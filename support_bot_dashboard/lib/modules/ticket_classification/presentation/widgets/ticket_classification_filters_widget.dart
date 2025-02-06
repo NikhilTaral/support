@@ -16,8 +16,16 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
 
 class TicketClassificationFiltersWidget extends StatefulWidget {
-  const TicketClassificationFiltersWidget({super.key});
-
+  const TicketClassificationFiltersWidget(
+      {super.key,
+      this.endDate,
+      this.pipelineName,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
   @override
   _HomeFiltersWidgetState createState() => _HomeFiltersWidgetState();
 }
@@ -130,7 +138,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             selectedPipeline = selectedName;
           });
 
-          await _savePipelineToLocalStorage(selectedName);
+          //await _savePipelineToLocalStorage(selectedName);
 
           _onPipelineSelectionChanged([selectedName], items);
         },
@@ -154,9 +162,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     await LocalStorage.savePipelineIds(pipelineIds);
   }
 
-  Future<void> _savePipelineToLocalStorage(String selectedName) async {
-    await LocalStorage.savePipeline(selectedName);
-  }
 
   Widget _buildDateRangeSelector() {
     if (selectedate.isNotEmpty) {
@@ -176,8 +181,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             startDate = selectedDates![0];
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
-            endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 0));
+            endDate = widget.endDate ?? DateTime.now();
+            startDate = widget.startDate ?? DateTime.now();
           }
 
           return Container(
