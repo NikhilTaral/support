@@ -58,13 +58,34 @@ class _TicketClassificationActionRendererState
             ));
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: SupportBotColors.bluePrimary,
-                content: Text(
-                  s.updateSuccessfullyText,
-                  style: SupportBotTextstyle.hint
-                      .copyWith(color: SupportBotColors.white),
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.successPrimary.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side:
+                      const BorderSide(color: SupportBotColors.successPrimary),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle,
+                        color: SupportBotColors.successPrimary),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.updateSuccessfullyText,
+                      style: const TextStyle(
+                        color: SupportBotColors.successPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.successPrimary,
+                  onPressed: () {},
+                ),
               ),
             );
           } else if (state is UpdateClassificationFailureState &&
@@ -73,13 +94,38 @@ class _TicketClassificationActionRendererState
                       .uId) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: SupportBotColors.danger,
-                content: Text(
-                  s.updateFailureText,
-                  style: SupportBotTextstyle.hint
-                      .copyWith(color: SupportBotColors.white),
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.danger.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(color: SupportBotColors.danger),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                content: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                          color: SupportBotColors.danger,
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      child: const Icon(Icons.close_rounded,
+                          color: SupportBotColors.white),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.updateFailureText,
+                      style: const TextStyle(
+                        color: SupportBotColors.danger,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.danger,
+                  onPressed: () {},
+                ),
               ),
             );
           }
@@ -97,30 +143,98 @@ class _TicketClassificationActionRendererState
             );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: SupportBotColors.bluePrimary,
-                content: Text(
-                  s.revertedSuccessfullyText,
-                  style: SupportBotTextstyle.hint
-                      .copyWith(color: SupportBotColors.white),
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.successPrimary.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side:
+                      const BorderSide(color: SupportBotColors.successPrimary),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle,
+                        color: SupportBotColors.successPrimary),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.revertedSuccessfullyText,
+                      style: const TextStyle(
+                        color: SupportBotColors.successPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.successPrimary,
+                  onPressed: () {},
+                ),
               ),
             );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     backgroundColor: SupportBotColors.bluePrimary,
+            //     content: Text(
+            //       s.revertedSuccessfullyText,
+            //       style: SupportBotTextstyle.hint
+            //           .copyWith(color: SupportBotColors.white),
+            //     ),
+            //     duration: const Duration(seconds: 2),
+            //   ),
+            // );
           }
           if (state is RevertClassificationFailureState &&
               widget.id ==
                   BlocProvider.of<TicketClassificationActionBloc>(context).id) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: SupportBotColors.danger,
-                content: Text(
-                  s.revertedFailureText,
-                  style: SupportBotTextstyle.hint
-                      .copyWith(color: SupportBotColors.white),
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.danger.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(color: SupportBotColors.danger),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                content: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                          color: SupportBotColors.danger,
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      child: const Icon(Icons.close_rounded,
+                          color: SupportBotColors.white),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.revertedFailureText,
+                      style: const TextStyle(
+                        color: SupportBotColors.danger,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.danger,
+                  onPressed: () {},
+                ),
               ),
             );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     backgroundColor: SupportBotColors.danger,
+            //     content: Text(
+            //       s.revertedFailureText,
+            //       style: SupportBotTextstyle.hint
+            //           .copyWith(color: SupportBotColors.white),
+            //     ),
+            //     duration: const Duration(seconds: 2),
+            //   ),
+            // );
           }
         },
         builder: (context, state) {
@@ -210,7 +324,11 @@ class _TicketClassificationActionRendererState
                               value: BlocProvider.of<
                                   TicketClassificationActionBloc>(context),
                               child: AlertDialog(
-                                title: Text(s.updateTicketText),
+                                title: Text(
+                                  s.updateTicketText,
+                                  style: SupportBotTextstyle.subheadingH4
+                                      .copyWith(),
+                                ),
                                 content: SingleChildScrollView(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -219,10 +337,10 @@ class _TicketClassificationActionRendererState
                                     children: [
                                       Text(
                                         s.requestMsgText(widget.classification),
-                                        style:
-                                            SupportBotTextstyle.hint.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: SupportBotTextstyle.small
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                color: SupportBotColors.black),
                                       ),
                                       const SizedBox(height: 16),
                                     ],
