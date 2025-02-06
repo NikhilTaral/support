@@ -660,7 +660,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: '${s.classificationValidationReasonText} : \n',
+                      text: '${s.validatedClassificationText} : \n',
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),

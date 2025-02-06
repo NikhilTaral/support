@@ -73,5 +73,9 @@
     "closeText":  "Close",
     "@closeText": {
       "description": "Close Text"
+    },
+    "validatedClassificationText":  "Validated Classification",
+    "@validatedClassificationText": {
+      "description": "Validated Classification Text"
     }
 }
