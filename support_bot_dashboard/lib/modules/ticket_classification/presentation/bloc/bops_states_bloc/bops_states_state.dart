@@ -7,9 +7,9 @@ class BopsStatesIntialState extends BopsStatesState {}
 
 class BopsStatesLoadingState extends BopsStatesState {}
 
-class BopsStatesSucssesState extends BopsStatesState {
-  final BOpsResponseEntitieModel? model;
-  BopsStatesSucssesState({this.model});
+class BopsStatesSuccessState extends BopsStatesState {
+  final BOpsResponseAttributeModel? bOpsResponseAttributeModel;
+  BopsStatesSuccessState({this.bOpsResponseAttributeModel});
 }
 
 class BopsStatesFailureState extends BopsStatesState {}

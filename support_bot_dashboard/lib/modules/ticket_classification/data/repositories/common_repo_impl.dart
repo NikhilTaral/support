@@ -14,7 +14,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/data/model/g
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_request_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_responce_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/repositories/common_ticket_classification_repository.dart';
 
 final s = serviceLocator<S>();
@@ -32,12 +32,12 @@ class TicketClassificationRepoImpl extends TicketClassifiacationRepository {
           url: 'dashboard/getRecordsDynamoDB',
           body: ticketClassificationRequestModel?.toJson());
       if (response is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
 
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }
@@ -50,12 +50,12 @@ class BopsRepoImpl extends BopsRepository {
           .getData(url: 'dashboard/getAllBOPSStates', body: {});
       final model = bOpsResponseModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
 
       return Right(model);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }
@@ -72,11 +72,11 @@ class ActionRepoImpl extends ActionRepository {
       final model = revertResponseModelFromJson(jsonEncode(response));
 
       if (model is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
       return Right(model);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }
@@ -95,11 +95,11 @@ class UpdateClassificationValidationImpl
       final model = updateClassificationValidationResponseModelFromJson(
           jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
       return Right(model);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }
@@ -117,11 +117,11 @@ class GetValidationDetailsImpl extends GetValidationDetailsRepository {
       final model = updateClassificationValidationResponseModelFromJson(
           jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
       return Right(model);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }
@@ -136,11 +136,11 @@ class RevertClassificationImpl extends RevertClassificationRepository {
 
       final model = revertResponseModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
       return Right(model);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }
@@ -156,14 +156,14 @@ class DashboardExportImpl extends DashboardExportRepository {
               body: dashboardExportRequestModel?.toJson());
 
       if (response == null) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       } else {
         return Right(response.length == 0
             ? File('')
             : File.fromRawPath(Uint8List.fromList(response)));
       }
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }

@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/update_ai_answer_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart'
     as ticketClassificationBloc;
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
@@ -279,7 +279,7 @@ class Renderers {
         child:
             BlocConsumer<GetValidationDetailsBloc, GetValidationDetailsState>(
           listener: (context, state) {
-            if (state is UpdateClassificationValidationSucssesState) {
+            if (state is UpdateClassificationValidationSuccessState) {
               serviceLocator<InstanceSharingService>()
                   .ticketClassificationBloc
                   ?.add(ticketClassificationBloc.TickiteClassificationEvent());
@@ -339,7 +339,7 @@ class Renderers {
                     ));
                   });
 
-                  if (state is GetValidationDetailsSucssesState &&
+                  if (state is GetValidationDetailsSuccessState &&
                       state.getValidationDetailsAttributeModel?.data?.status ==
                           false) {
                     Navigator.pop(context);
@@ -524,7 +524,7 @@ class Renderers {
                                   );
                                 });
 
-                                if (state is GetValidationDetailsSucssesState &&
+                                if (state is GetValidationDetailsSuccessState &&
                                     state.getValidationDetailsAttributeModel
                                             ?.data?.status ==
                                         false) {

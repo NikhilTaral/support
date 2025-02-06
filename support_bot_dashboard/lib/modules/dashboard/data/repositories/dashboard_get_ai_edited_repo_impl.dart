@@ -17,11 +17,11 @@ class DashboardGetAiEditedRepoImpl extends DashboardGetAiEditedRepository {
           url: 'dashboard/getAnsEditedCount',
           body: dashboardAnswerDataInitialRequestModel?.toJson());
       if (response is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }

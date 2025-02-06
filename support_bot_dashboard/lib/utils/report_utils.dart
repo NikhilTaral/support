@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/domain/entities/ai_query_answer_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_attribute_model.dart';
 import 'package:support_bot_dashboard/utils/renderers.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
 class ReportUtils {
   ReportUtils(
       {this.context,
-      TicketClassificationEntitieModel? ticketClassificationEntitieModel,
+      TicketClassificationAttributeModel? ticketClassificationAttributeModel,
       AiQueryAttributeModel? aiQueryAttributeModel}) {
-    this.ticketClassificationEntitieModel =
-        ticketClassificationEntitieModel ?? TicketClassificationEntitieModel();
+    this.ticketClassificationAttributeModel =
+        ticketClassificationAttributeModel ??
+            TicketClassificationAttributeModel();
   }
   final s = serviceLocator<S>();
-  late TicketClassificationEntitieModel ticketClassificationEntitieModel;
+  late TicketClassificationAttributeModel ticketClassificationAttributeModel;
   BuildContext? context;
 
   List<PlutoColumn> createTicketClassificationColumn(
@@ -164,9 +165,9 @@ class ReportUtils {
   List<PlutoRow> createTicketClassificationRow() {
     List<PlutoRow> rows = [];
     for (int i = 0;
-        i < (ticketClassificationEntitieModel.data?.items ?? []).length;
+        i < (ticketClassificationAttributeModel.data?.items ?? []).length;
         i++) {
-      final e = ticketClassificationEntitieModel.data?.items?[i];
+      final e = ticketClassificationAttributeModel.data?.items?[i];
       rows.add(PlutoRow(cells: {
         "id": PlutoCell(
           value: e?.id ?? "NA",
@@ -196,7 +197,7 @@ class ReportUtils {
         ),
         "action": PlutoCell(
           value: {
-            "allRows": (ticketClassificationEntitieModel.data?.items ?? []),
+            "allRows": (ticketClassificationAttributeModel.data?.items ?? []),
             "validatedBy": e?.classificationValidatedBy,
             "isUpdatedToHubspot": e?.isUpdatedToHubspot,
             "index": i,

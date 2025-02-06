@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_response_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/get_validation_details_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/get_validation_details_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 
 part 'get_validation_details_event.dart';
@@ -36,7 +36,7 @@ class GetValidationDetailsBloc
         getValidationDetailsEntiterModel = GetValidationDetailsAttributeModel(
             data: getValidationDetailsEntiterModel.data?.copyWith(
                 message: model.data.message, status: model.data.status));
-        emit(GetValidationDetailsSucssesState());
+        emit(GetValidationDetailsSuccessState());
       }
     } catch (e) {
       emit(GetValidationDetailsFailureState());

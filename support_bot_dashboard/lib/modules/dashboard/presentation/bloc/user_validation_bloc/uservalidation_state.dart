@@ -14,9 +14,5 @@ class UserValidationSucssesState extends UservalidationState {
 }
 
 class UserValidationFailureSate extends UservalidationState {
-  final String message;
-
-  UserValidationFailureSate({
-    required this.message,
-  });
+  
 }

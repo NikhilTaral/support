@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/widgets/ai_query_tab_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_filters_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
@@ -11,8 +13,8 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
-
-  const DashboardDesktopView({
+  final s = serviceLocator<S>();
+  DashboardDesktopView({
     super.key,
     this.index,
   });
@@ -46,7 +48,7 @@ class DashboardDesktopView extends StatelessWidget {
     var incomeItems = TabBarWidget.organizationItemList(context);
 
     if (incomeItems.isEmpty) {
-      return const Center(child: Text('No items available.'));
+      return Center(child: Text(s.noItemsText));
     }
 
     if (selectedIndex < 0 || selectedIndex >= incomeItems.length) {
@@ -72,13 +74,13 @@ class DashboardDesktopView extends StatelessWidget {
             if (selectedIndex == 1) ...{
               Padding(
                 padding: padding,
-                child: const TicketClassificationFiltersWidget(),
+                child: TicketClassificationFiltersWidget(),
               )
             },
             if (selectedIndex == 2) ...{
               Padding(
                 padding: padding,
-                child: const AIQueryFilterWidget(),
+                child: const AIQueryTabFilterWidget(),
               ),
             },
             MyOrganizationNavBar(index: selectedIndex),

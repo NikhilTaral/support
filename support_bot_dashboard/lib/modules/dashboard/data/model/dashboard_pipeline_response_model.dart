@@ -11,7 +11,7 @@ String dashboardPipelineResponseModelToJson(
 class DashboardPipelineResponseModel {
   final List<Datum> data;
   final bool success;
-  final int failCode;
+  final num failCode;
   final Params params;
   final String message;
 

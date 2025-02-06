@@ -52,9 +52,7 @@ class UserValidationBloc
       final response = await repository.invoke(requestBody);
 
       if (response.isLeft) {
-        emit(UserValidationFailureSate(
-          message: response.left.toString(),
-        ));
+        emit(UserValidationFailureSate());
       } else {
         final GetValidationByCountResponseModel model = response.right;
 
@@ -88,9 +86,7 @@ class UserValidationBloc
         }
       }
     } catch (e) {
-      emit(UserValidationFailureSate(
-        message: 'Exception: $e',
-      ));
+      emit(UserValidationFailureSate());
     }
   }
 }

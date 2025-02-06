@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final dashboardAiQueryChartResponseModel = dashboardAiQueryChartResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 DashboardAiQueryChartResponseModel dashboardAiQueryChartResponseModelFromJson(
