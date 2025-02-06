@@ -24,12 +24,12 @@ class DashboardAiQueryAnswerRepoImpl
       final model =
           dashboardAiQueryChartResponseModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       }
 
       return Right(model);
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }

@@ -38,7 +38,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
       final response = await repository.invoke(req);
       if (response.isLeft) {
         emit(AIQueryAnswerFailureState(
-          message: response.toString(),
+        
         ));
       } else {
         final DashboardAiQueryChartResponseModel model = response.right;
@@ -82,13 +82,13 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
           }
         } else {
           emit(AIQueryAnswerFailureState(
-            message: 'Exception: ',
+         
           ));
         }
       }
     } catch (e) {
       emit(AIQueryAnswerFailureState(
-        message: 'Exception: $e',
+       
       ));
     }
   }

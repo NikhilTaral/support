@@ -6,7 +6,6 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ticket_classification_event.dart';
 part 'ticket_classification_state.dart';

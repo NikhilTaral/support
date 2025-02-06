@@ -56,7 +56,7 @@ class HomePageWidget extends StatelessWidget {
               },
             ),
             UIHelpers.verticalSpaceRegular,
-            const Charts(),
+             Charts(),
           ],
         )),
       ],

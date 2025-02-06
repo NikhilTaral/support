@@ -1,4 +1,6 @@
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/common/renderer_value_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/validation_status_attribute_model.dart';
 
@@ -68,11 +70,12 @@ class ValidationStatusReportUtils {
   }) {
     List<PlutoRow> rows = [];
     final model = attributeModel?.data;
+    final s = serviceLocator<S>();
 
     rows.add(
       PlutoRow(cells: {
         RequestMentorReportKeys.aIClassification:
-            PlutoCell(value: "Genuine Query"),
+            PlutoCell(value: s.genuineQueryText),
         RequestMentorReportKeys.genuineQuery: PlutoCell(
           value: model?.genuineQuery?.genuineQuery ?? 0,
         ),
@@ -87,7 +90,7 @@ class ValidationStatusReportUtils {
     rows.add(
       PlutoRow(cells: {
         RequestMentorReportKeys.aIClassification:
-            PlutoCell(value: 'Acknowledge Required'),
+            PlutoCell(value: s.acknowledgeRequiredText),
         RequestMentorReportKeys.genuineQuery:
             PlutoCell(value: model?.acknowledgementRequired?.genuineQuery ?? 0),
         RequestMentorReportKeys.ackRequired: PlutoCell(
@@ -102,7 +105,7 @@ class ValidationStatusReportUtils {
     rows.add(
       PlutoRow(cells: {
         RequestMentorReportKeys.aIClassification:
-            PlutoCell(value: 'No Action Required'),
+            PlutoCell(value: s.noActionRequired),
         RequestMentorReportKeys.genuineQuery:
             PlutoCell(value: model?.noActionRequired?.genuineQuery ?? 0),
         RequestMentorReportKeys.ackRequired: PlutoCell(
@@ -115,7 +118,8 @@ class ValidationStatusReportUtils {
     );
     rows.add(
       PlutoRow(cells: {
-        RequestMentorReportKeys.aIClassification: PlutoCell(value: "Spam/Marketing"),
+        RequestMentorReportKeys.aIClassification:
+            PlutoCell(value: s.spamMarketing),
         RequestMentorReportKeys.genuineQuery:
             PlutoCell(value: model?.spamMarketing?.genuineQuery ?? 0),
         RequestMentorReportKeys.ackRequired: PlutoCell(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
@@ -10,8 +12,8 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AiQueryEditedTile extends StatelessWidget {
-  const AiQueryEditedTile({super.key});
-
+   AiQueryEditedTile({super.key});
+final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +28,7 @@ class AiQueryEditedTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'AI Tickets Edited',
+            s.aiTicketsEditedText,
             style: SupportBotTextstyle.normal.copyWith(
               fontWeight: FontWeight.w600,
               color: SupportBotColors.black,
@@ -61,9 +63,9 @@ class AiQueryEditedTile extends StatelessWidget {
   Widget _content(AIQueryEditedSucssesState state) {
     return _buildInfoCard(
       editedText:
-          'Ticket Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.editedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%)',
+         ' ${s.ticketEditedText} ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.editedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%)',
       nonEditedText:
-          'Ticket Not Edited: ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.unEditedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.unEditedCount}%)',
+          '${s.ticketNotEditedText} ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.unEditedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.unEditedCount}%)',
     );
   }
 

@@ -34,7 +34,7 @@ class DashboardAiQueryResponseModel {
 }
 
 class Data {
-  final int? totalRecords;
+  final num? totalRecords;
   final List<Items>? items;
   final num? pageSize;
   final num? currentPage;

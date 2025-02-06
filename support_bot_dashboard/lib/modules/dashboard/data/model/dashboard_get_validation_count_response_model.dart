@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getValidationCountResponseModel = getValidationCountResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GetValidationCountResponseModel getValidationCountResponseModelFromJson(
@@ -15,7 +11,7 @@ String getValidationCountResponseModelToJson(
 class GetValidationCountResponseModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 

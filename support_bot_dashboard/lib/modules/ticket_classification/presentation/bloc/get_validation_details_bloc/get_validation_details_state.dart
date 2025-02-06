@@ -4,9 +4,9 @@ abstract class GetValidationDetailsState {}
 
 class GetValidationDetailsIntialState extends GetValidationDetailsState {}
 
-class GetValidationDetailsSucssesState extends GetValidationDetailsState {
+class GetValidationDetailsSuccessState extends GetValidationDetailsState {
   final GetValidationDetailsAttributeModel? getValidationDetailsAttributeModel;
-  GetValidationDetailsSucssesState({this.getValidationDetailsAttributeModel});
+  GetValidationDetailsSuccessState({this.getValidationDetailsAttributeModel});
 }
 
 class GetValidationDetailsFailureState extends GetValidationDetailsState {}

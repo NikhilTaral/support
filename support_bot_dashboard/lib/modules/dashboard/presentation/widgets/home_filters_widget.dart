@@ -2,6 +2,8 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
@@ -77,10 +79,11 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildPipelineDropdown(List<Datums> items) {
+    final s = serviceLocator<S>();
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: DropdownWithCheckbox(
-        hintText: "Pipeline",
+        hintText:s.piplineText,
         items: items,
         selectedItems: selectedItems,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? [], items),
@@ -150,6 +153,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton() {
+    final s = serviceLocator<S>();
     return SizedBox(
       height: 180,
       child: ElevatedButton.icon(
@@ -158,8 +162,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
           Icons.filter_alt_outlined,
           color: Colors.white,
         ),
-        label: const Text(
-          'Apply Filter',
+        label:  Text(
+          s.filterApplyText,
           style: TextStyle(
             color: SupportBotColors.white,
           ),
@@ -282,13 +286,14 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   void _addEvents() {
+    final s = serviceLocator<S>();
     final selectedPipelineValue =
         pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
 
     if (selectedPipelineValue.isEmpty) {
       showSnackbar(
         context,
-        'Please select a pipeline to apply filter',
+       s.filterApplySnackBarText,
       );
       return;
     }
@@ -343,6 +348,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   Widget _buildChips(BuildContext context) {
+    final s = serviceLocator<S>();
     return Wrap(
       alignment: WrapAlignment.start,
       spacing: 8,
@@ -370,7 +376,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                   }
                   if (selectedItems.isEmpty) {
                     showSnackbar(
-                        context, 'Please select a pipeline to apply filter');
+                        context,  s.filterApplySnackBarText );
                     pipelineIds.clear();
                   }
                 });

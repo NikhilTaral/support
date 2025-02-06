@@ -6,16 +6,16 @@ class TicketClassificationIntialState extends TicketClassificationState {}
 
 class TicketClassificationLoadingState extends TicketClassificationState {}
 
-class TicketClassificationSucssesState extends TicketClassificationState {
-  final TicketClassificationEntitieModel? model;
+class TicketClassificationSuccessState extends TicketClassificationState {
+  final TicketClassificationAttributeModel? ticketClassificationAttributeModel;
   final DateTime? startDate;
   final DateTime? endDate;
   final List<String> pipelineId;
   final num? currentIndex;
   final Map<String, dynamic>? currentRowData;
 
-  TicketClassificationSucssesState({
-    this.model,
+  TicketClassificationSuccessState({
+    this.ticketClassificationAttributeModel,
     this.startDate,
     this.endDate,
     this.pipelineId = const [],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/common/validation_status_report_utils.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
@@ -12,9 +14,10 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class ValidationStatusWidget extends StatelessWidget {
   ValidationStatusWidget({super.key});
+  final s = serviceLocator<S>();
   final List<PlutoColumnGroup> columnGroups = [
     PlutoColumnGroup(
-      title: 'Actual Classification',
+      title: serviceLocator<S>().actualClassification,
       fields: ['genuine_query', 'ack_required', 'no_action_required', 'spam'],
     ),
   ];
@@ -34,7 +37,7 @@ class ValidationStatusWidget extends StatelessWidget {
         spacing: 10,
         children: [
           Text(
-            "Validation Status",
+            s.validationStatusText,
             style: SupportBotTextstyle.normal.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
