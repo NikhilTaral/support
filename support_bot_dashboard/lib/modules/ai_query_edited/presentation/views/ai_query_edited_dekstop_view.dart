@@ -26,7 +26,6 @@ class AIQueryEditedDesktopView extends StatelessWidget {
       builder: (context, state) {
         currentPage.value = BlocProvider.of<AiQueryBloc>(context).page;
         if (state is AIQuerySuccessState) {
-          debugPrint("currentPage.value :${currentPage.value}");
           serviceLocator<InstanceSharingService>().aiQueryBloc =
               BlocProvider.of<AiQueryBloc>(context);
           final utils = ReportUtils(

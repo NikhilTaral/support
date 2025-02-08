@@ -37,7 +37,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
   List<DateTime?> selectedate = [];
-  List<String> selectedItems = ['Expert Care Level 1'];
+  List<String> selectedItems = [];
   List<String> pipelineIds = [];
 
   @override
@@ -47,7 +47,6 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       selectedItems.clear();
       selectedItems.add(widget.pipelineName ?? "");
     }
-    pipelineIds = widget.piplineId ?? [];
   }
 
   @override
@@ -337,11 +336,6 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         startDate: selectedate.firstOrNull,
         selectedPipelineValue: selectedPipelineValue,
       ));
-
-      BlocProvider.of<GetAllPipelineBloc>(context).add(
-          GetAllPiplineInitialEvent(
-              selectedPipelineValue: selectedPipelineValue));
-
       BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId =
           selectedPipelineValue;
       BlocProvider.of<TicketClassificationBloc>(context)

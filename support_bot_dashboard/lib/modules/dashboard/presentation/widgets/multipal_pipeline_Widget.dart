@@ -86,6 +86,7 @@ class DropdownWithCheckbox extends StatelessWidget {
                                   final isSelected = state.selectedItems
                                       .contains(item.pipelineName);
                                   return CheckboxListTile(
+                                    activeColor: SupportBotColors.bluePrimary,
                                     value: isSelected,
                                     title: Text(item.pipelineName ?? ""),
                                     onChanged: (bool? isChecked) {

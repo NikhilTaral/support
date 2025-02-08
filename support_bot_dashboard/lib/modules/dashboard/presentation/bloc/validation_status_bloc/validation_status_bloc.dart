@@ -13,7 +13,7 @@ part 'validation_status_state.dart';
 
 class ValidationStatusBloc
     extends Bloc<ValidationStatusEvent, ValidationStatusState> {
-  List<String>? selectedPipelineId = [""];
+  List<String>? selectedPipelineId = [];
   DashboardAnswerDataInitialRequestModel requestBody =
       DashboardAnswerDataInitialRequestModel();
   ValidationStatusBloc() : super(ValidationStatusInitialState()) {
