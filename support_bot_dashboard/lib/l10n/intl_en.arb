@@ -60,6 +60,10 @@
   "@acknowledgementRequired": {
     "description": "Acknowledgement Required"
   },
+  "ticketNotClassified": "Not Classified",
+  "@ticketNotClassified": {
+    "description": "Not Classified"
+  },
   "total": "Total",
   "@total": {
     "description": "Total"
