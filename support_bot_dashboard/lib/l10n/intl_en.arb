@@ -283,11 +283,11 @@
   "@unknownPipelineText": {
     "description": "Unknown Pipeline Text"
   },
-  "updateSuccessfullyText": "Update Successfully",
+  "updateSuccessfullyText": "Update Successfully!",
   "@updateSuccessfullyText": {
     "description": "Update Successfully Text"
   },
-  "updateFailureText": "Update Failure",
+  "updateFailureText": "Update Failure!",
   "@updateFailureText": {
     "description": "Update Failure Text"
   },
@@ -345,5 +345,9 @@
   "closeText": "Close",
   "@closeText": {
     "description": "Close Text"
+  },
+  "validatedClassificationText": "Validated Classification",
+  "@validatedClassificationText": {
+    "description": "Validated Classification Text"
   }
 }
