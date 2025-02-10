@@ -4,7 +4,7 @@ abstract class TicketClssificationPipelineDropdownEvent {}
 
 class TicketClssificationLoadPipelineTypesEvent
     extends TicketClssificationPipelineDropdownEvent {
-  final List<Datums> items;
+  final List<GetAllPipelineData> items;
   final List<String> selectedItems;
 
   TicketClssificationLoadPipelineTypesEvent(this.items, this.selectedItems);
@@ -15,7 +15,9 @@ class TicketClssificationFilterItemsEvent
   final String query;
 
   TicketClssificationFilterItemsEvent(this.query);
-}class FiltersItemsEvent extends TicketClssificationPipelineDropdownEvent {
+}
+
+class FiltersItemsEvent extends TicketClssificationPipelineDropdownEvent {
   final String query;
 
   FiltersItemsEvent(this.query);

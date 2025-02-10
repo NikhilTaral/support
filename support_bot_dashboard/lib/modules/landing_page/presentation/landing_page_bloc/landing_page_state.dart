@@ -7,14 +7,14 @@ class LandingPageIntialState extends LandingPageState {}
 class LandingPageLoadingState extends LandingPageState {}
 
 class LandingPageSuccessState extends LandingPageState {
-  final List<Datums>? filteredItems;
+  final List<GetAllPipelineData>? filteredItems;
   final List<String>? selectedItems;
 
   final GetAllPipelinesAttributeModel? getAllPipelinesAttributeModel;
   LandingPageSuccessState({
     this.getAllPipelinesAttributeModel,
-     this.filteredItems,
-     this.selectedItems,
+    this.filteredItems,
+    this.selectedItems,
   });
 }
 

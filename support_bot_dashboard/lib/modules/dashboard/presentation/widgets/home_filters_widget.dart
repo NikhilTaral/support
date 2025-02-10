@@ -56,7 +56,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     return BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
       builder: (context, state) {
         if (state is GetAllAllPipelineSuccessState) {
-          List<Datums> items = state.attributeModel?.data ?? [];
+          List<GetAllPipelineData> items = state.attributeModel?.data ?? [];
           return _buildFiltersRow(items);
         } else if (state is GetAllPipelineLoadingState) {
           return _buildLoadingState();
@@ -73,7 +73,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     );
   }
 
-  Widget _buildFiltersRow(List<Datums> items) {
+  Widget _buildFiltersRow(List<GetAllPipelineData> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -96,12 +96,12 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     );
   }
 
-  Widget _buildPipelineDropdown(List<Datums> items) {
+  Widget _buildPipelineDropdown(List<GetAllPipelineData> items) {
     final s = serviceLocator<S>();
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: DropdownWithCheckbox(
-        hintText:s.piplineText,
+        hintText: s.piplineText,
         items: items,
         selectedItems: selectedItems,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? [], items),
@@ -180,7 +180,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
           Icons.filter_alt_outlined,
           color: Colors.white,
         ),
-        label:  Text(
+        label: Text(
           s.filterApplyText,
           style: TextStyle(
             color: SupportBotColors.white,
@@ -246,12 +246,12 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   void _onPipelineSelectionChanged(
-      List<String> selectedNames, List<Datums> items) {
+      List<String> selectedNames, List<GetAllPipelineData> items) {
     pipelineIds.clear();
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
-        orElse: () => Datums(pipelineName: '', pipelineId: ''),
+        orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
       );
       if (matchingItem.pipelineId?.isNotEmpty == true) {
         pipelineIds.add(matchingItem.pipelineId ?? "");
@@ -311,7 +311,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     if (selectedPipelineValue.isEmpty) {
       showSnackbar(
         context,
-       s.filterApplySnackBarText,
+        s.filterApplySnackBarText,
       );
       return;
     }
@@ -388,8 +388,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                     selectedItems.removeAt(index);
                   }
                   if (selectedItems.isEmpty) {
-                    showSnackbar(
-                        context,  s.filterApplySnackBarText );
+                    showSnackbar(context, s.filterApplySnackBarText);
                     pipelineIds.clear();
                   }
                 });

@@ -33,7 +33,7 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
 
   @override
   Widget build(BuildContext context) {
-    List<Datums> items = getAllPipelinesAttributeModel.data ?? [];
+    List<GetAllPipelineData> items = getAllPipelinesAttributeModel.data ?? [];
     return BlocProvider(
       create: (context) => LandingPageBloc()..add(LandingPageInitialEvent()),
       child: Column(
@@ -129,7 +129,7 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
             );
           }
           if (state is LandingPageSuccessState) {
-            List<Datums> items =
+            List<GetAllPipelineData> items =
                 state.getAllPipelinesAttributeModel?.data ?? [];
             return Container(
               height: 40,
@@ -161,13 +161,13 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
   }
 
   void _onPipelineSelectionChanged(
-      List<String> selectedNames, List<Datums> items) async {
+      List<String> selectedNames, List<GetAllPipelineData> items) async {
     pipelineIds = [];
     ;
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
-        orElse: () => Datums(pipelineName: '', pipelineId: ''),
+        orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
       );
       if (matchingItem.pipelineId?.isNotEmpty == true) {
         pipelineIds?.add(matchingItem.pipelineId ?? "");
@@ -301,6 +301,7 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
     GoRouter.of(context).push(
       '/dashboard?pipelineName=$selectedPipeline&pipelineId=$cleanedId&startDate=${selectedate.firstOrNull}&endDate=${selectedate.lastOrNull}',
     );
+    //To DO ===> Uase This code on page to call API when Intial Use
     // final selectedPipelineValue =
     //     pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
 

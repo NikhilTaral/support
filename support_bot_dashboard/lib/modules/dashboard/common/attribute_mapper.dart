@@ -34,7 +34,7 @@ class AttributeMapper {
       GetAllPipelinesResponsetModel? model) {
     return GetAllPipelinesAttributeModel(
         data: model?.data
-                ?.map((e) => Datums(
+                ?.map((e) => GetAllPipelineData(
                     aiAnswerPerm: e.aiAnswerPerm ?? true,
                     hubspotUpdateEnv: e.hubspotUpdateEnv ?? "",
                     hubspotUpdatepPerm: e.hubspotUpdatepPerm ?? true,
@@ -44,9 +44,9 @@ class AttributeMapper {
             []);
   }
 
-  static List<Datums>? mapData(List<Datum>? data) {
+  static List<GetAllPipelineData>? mapData(List<Datum>? data) {
     return data
-        ?.map((datum) => Datums(
+        ?.map((datum) => GetAllPipelineData(
               aiAnswerPerm: datum.aiAnswerPerm,
               hubspotUpdateEnv: datum.hubspotUpdateEnv ?? "",
               hubspotUpdatepPerm: datum.hubspotUpdatepPerm,

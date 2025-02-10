@@ -12,11 +12,11 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class DropdownWithCheckbox extends StatelessWidget {
   final String hintText;
-  final List<Datums> items;
+  final List<GetAllPipelineData> items;
   final List<String> selectedItems;
   final ValueChanged<List<String>> onChanged;
-final s = serviceLocator<S>();
-   DropdownWithCheckbox({
+  final s = serviceLocator<S>();
+  DropdownWithCheckbox({
     Key? key,
     required this.hintText,
     required this.items,
@@ -123,7 +123,7 @@ final s = serviceLocator<S>();
                                   onChanged(state.selectedItems);
                                   Navigator.of(context).pop();
                                 },
-                                child:  Text(
+                                child: Text(
                                   s.oKText,
                                   style:
                                       TextStyle(color: SupportBotColors.white),

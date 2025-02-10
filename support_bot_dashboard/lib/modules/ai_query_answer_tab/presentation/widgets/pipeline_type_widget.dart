@@ -12,10 +12,9 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class PipelineTypeWidget extends StatelessWidget {
   final String hintText;
-  final List<Datums> items;
+  final List<GetAllPipelineData> items;
   final String? selectedItem;
   final ValueChanged<String?> onChanged;
-  
 
   const PipelineTypeWidget({
     Key? key,
