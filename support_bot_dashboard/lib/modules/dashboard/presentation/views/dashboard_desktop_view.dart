@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/widgets/ai_query_filter_widget.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/widgets/ai_query_tab_filter_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_filters_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/navbar_widget.dart';
@@ -16,13 +17,15 @@ class DashboardDesktopView extends StatelessWidget {
   final List<String>? piplineId;
   final DateTime? startDate;
   final DateTime? endDate;
-  const DashboardDesktopView(
+  DashboardDesktopView(
       {super.key,
       this.pipelineName,
       this.index,
       this.piplineId,
       this.endDate,
       this.startDate});
+
+  final s = serviceLocator<S>();
 
   @override
   Widget build(BuildContext context) {

@@ -14,7 +14,6 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_v
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_mobile_view.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_desktop_view.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/responsive.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
