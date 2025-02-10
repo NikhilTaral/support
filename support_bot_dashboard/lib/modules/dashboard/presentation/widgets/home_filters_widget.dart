@@ -158,10 +158,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       height: 180,
       child: ElevatedButton.icon(
         onPressed: _addEvents,
-        icon: const Icon(
-          Icons.filter_alt_outlined,
-          color: Colors.white,
-        ),
+       icon: const Icon(SupportBotIcons.filter, color: Colors.white),
         label:  Text(
           s.filterApplyText,
           style: TextStyle(

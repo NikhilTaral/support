@@ -323,10 +323,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             pageSize: 10,
           ));
         },
-        icon: const Icon(
-          Icons.filter_alt_outlined,
-          color: Colors.white,
-        ),
+        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
         label: Text(
           s.filterApplyText,
           style: SupportBotTextstyle.hint.copyWith(

@@ -156,10 +156,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
       height: 180,
       child: ElevatedButton.icon(
         onPressed: _addEvents,
-        icon: const Icon(
-          Icons.filter_alt_outlined,
-          color: Colors.white,
-        ),
+        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
         label: Text(s.filterApplyText,
             style: SupportBotTextstyle.countLabel
                 .copyWith(color: SupportBotColors.white)),

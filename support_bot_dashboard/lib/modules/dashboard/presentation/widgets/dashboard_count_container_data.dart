@@ -37,8 +37,13 @@ List<CountContainerData> getCountContainerData(BuildContext context,
     ),
     CountContainerData(
       text: S.of(context).acknowledgementRequired,
-      icon: SupportBotIcons.star1,
+      icon: SupportBotIcons.list,
       count: model?.pieChartData?.data?.counts?.acknowledgementRequired,
+    ),
+        CountContainerData(
+      text: S.of(context).notClassified,
+      icon: SupportBotIcons.star1,
+      count: model?.pieChartData?.data?.counts?.notClassified,
     ),
     CountContainerData(
       text: S.of(context).total,
