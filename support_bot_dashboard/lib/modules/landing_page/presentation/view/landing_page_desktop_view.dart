@@ -138,13 +138,9 @@ class LandingPageDesktopView extends StatelessWidget {
                       selectedPipelineNotifier.value = selectedName;
                       BlocProvider.of<LandingPageBloc>(context).selectedName =
                           selectedName;
-                      selectedPipeline = selectedName;
-
                       pipelineId = BlocProvider.of<LandingPageBloc>(context)
                           .selectedPipelineId;
                       _onPipelineSelectionChanged([selectedName], items);
-
-                      selectedPipeline = selectedName;
                       selectedPipelineName =
                           BlocProvider.of<LandingPageBloc>(context)
                                   .selectedName ??
