@@ -11,10 +11,15 @@ part 'landing_page_state.dart';
 class LandingPageBloc extends Bloc<LandingPageEvent, LandingPageState> {
   GetAllPipelinesAttributeModel attributeModel =
       GetAllPipelinesAttributeModel();
-  List<String> selectedPipelineId = [];
+  String? selectedPipelineId ;
+  String? selectedName;
+
   LandingPageBloc() : super(LandingPageIntialState()) {
     on<LandingPageInitialEvent>(_onLandingPageStartEvent);
+    on<PipelineSelectionChangedEvent>(
+        _onPipelineSelectionChangedEvent); // Add this line
   }
+
   FutureOr<void> _onLandingPageStartEvent(
       LandingPageInitialEvent event, Emitter<LandingPageState> emit) async {
     emit(LandingPageLoadingState());
@@ -33,5 +38,13 @@ class LandingPageBloc extends Bloc<LandingPageEvent, LandingPageState> {
     } catch (e) {
       emit(LandingPageFailureState());
     }
+  }
+
+  FutureOr<void> _onPipelineSelectionChangedEvent(
+      PipelineSelectionChangedEvent event, Emitter<LandingPageState> emit) {
+    selectedPipelineId = event.items
+        .firstWhere((item) => item.pipelineName == event.selectedName)
+        .pipelineId;
+    emit(PipelineSelectionChangedState(event.selectedName, event.items));
   }
 }

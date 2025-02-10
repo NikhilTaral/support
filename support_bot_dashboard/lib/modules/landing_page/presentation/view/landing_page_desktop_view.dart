@@ -1,6 +1,5 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
@@ -14,45 +13,38 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-class LandingPageDesktopView extends StatefulWidget {
+class LandingPageDesktopView extends StatelessWidget {
   LandingPageDesktopView({super.key});
 
-  @override
-  _LandingPageDesktopViewState createState() => _LandingPageDesktopViewState();
-}
-
-class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
+  final ValueNotifier<String> selectedPipelineNotifier = ValueNotifier("");
   final GetAllPipelinesAttributeModel getAllPipelinesAttributeModel =
       GetAllPipelinesAttributeModel();
-  String selectedPipeline = "";
-  List<String> selectedItems = [];
-  List<String>? pipelineIds;
+  List<String>? pipelineIds = [];
   List<DateTime?> selectedate = [];
+  String? selectedPipelineName = "";
+  List<String> selectedItems = [];
+  String? pipelineId;
 
   @override
   Widget build(BuildContext context) {
-    List<GetAllPipelineData> items = getAllPipelinesAttributeModel.data ?? [];
-    return BlocProvider(
-      create: (context) => LandingPageBloc()..add(LandingPageInitialEvent()),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          NavBar(
-            showPopArrow: false,
-            navigateTo: () {},
-            text: "",
-          ),
-          UIHelpers.verticalSpaceRegular,
-          Container(alignment: Alignment.center, child: _filter()),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        NavBar(
+          showPopArrow: false,
+          navigateTo: () {},
+          text: "",
+        ),
+        UIHelpers.verticalSpaceRegular,
+        Container(alignment: Alignment.center, child: _filter(context)),
+      ],
     );
   }
 
-  Widget _filter() {
+  Widget _filter(BuildContext context) {
     return Container(
       width: 698,
       constraints: const BoxConstraints(
@@ -68,15 +60,15 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildImg(),
-          _buildHederText(),
+          _buildHeaderText(),
           UIHelpers.verticalSpace(32),
           _buildTitle(),
           UIHelpers.verticalSpaceRegular,
-          _buildPipelineDropdown(),
+          _buildPipelineDropdown(context),
           UIHelpers.verticalSpace(28),
-          _buildDateRangeSelector(),
+          _buildDateRangeSelector(context),
           UIHelpers.verticalSpace(54),
-          _buildApplyFilterButton(),
+          _buildApplyFilterButton(context),
         ],
       ),
     );
@@ -85,33 +77,31 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
   Widget _buildImg() {
     return Container(
       padding: EdgeInsets.all(8),
-      child: Image.asset(
-        'assets/images/group.jpg',
-      ),
+      child: Image.asset('assets/images/group.jpg'),
     );
   }
 
-  Widget _buildHederText() {
-    return Container(
-      child: Text(
-        "Welcome Aboard!",
-        style: SupportBotTextstyle.subheadingH3.copyWith(
-          fontWeight: FontWeight.w500,
-          color: SupportBotColors.black,
-        ),
+  Widget _buildHeaderText() {
+    return Text(
+      "Welcome Aboard!",
+      style: SupportBotTextstyle.subheadingH3.copyWith(
+        fontWeight: FontWeight.w500,
+        color: SupportBotColors.black,
       ),
     );
   }
 
   Widget _buildTitle() {
-    return Text("Select Pipline/Piplines to view dashboard",
-        style: SupportBotTextstyle.sidebarTitle.copyWith(
-          color: SupportBotColors.black,
-          fontWeight: FontWeight.w400,
-        ));
+    return Text(
+      "Select Pipeline/Pipelines to view dashboard",
+      style: SupportBotTextstyle.sidebarTitle.copyWith(
+        color: SupportBotColors.black,
+        fontWeight: FontWeight.w400,
+      ),
+    );
   }
 
-  Widget _buildPipelineDropdown() {
+  Widget _buildPipelineDropdown(BuildContext context) {
     return BlocProvider(
       create: (context) => LandingPageBloc()..add(LandingPageInitialEvent()),
       child: BlocBuilder<LandingPageBloc, LandingPageState>(
@@ -131,23 +121,38 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
           if (state is LandingPageSuccessState) {
             List<GetAllPipelineData> items =
                 state.getAllPipelinesAttributeModel?.data ?? [];
-            return Container(
-              height: 40,
-              width: UIHelpers.screenHeight(context) * 0.5,
-              child: TicketClassificationPipelineWidget(
-                hintText: selectedPipeline.isEmpty
-                    ? "Pipline Type"
-                    : selectedPipeline,
-                items: items,
-                selectedItem: selectedPipeline,
-                onChanged: (selectedName) async {
-                  setState(() {
-                    selectedPipeline = selectedName;
-                  });
 
-                  _onPipelineSelectionChanged([selectedName], items);
-                },
-              ),
+            return ValueListenableBuilder<String>(
+              valueListenable: selectedPipelineNotifier,
+              builder: (context, selectedPipeline, child) {
+                return Container(
+                  height: 40,
+                  width: UIHelpers.screenHeight(context) * 0.5,
+                  child: TicketClassificationPipelineWidget(
+                    hintText: selectedPipeline.isEmpty
+                        ? "Pipeline Type"
+                        : selectedPipeline,
+                    items: items,
+                    selectedItem: selectedPipeline,
+                    onChanged: (selectedName) async {
+                      selectedPipelineNotifier.value = selectedName;
+                      BlocProvider.of<LandingPageBloc>(context).selectedName =
+                          selectedName;
+                      selectedPipeline = selectedName;
+
+                      pipelineId = BlocProvider.of<LandingPageBloc>(context)
+                          .selectedPipelineId;
+                      _onPipelineSelectionChanged([selectedName], items);
+
+                      selectedPipeline = selectedName;
+                      selectedPipelineName =
+                          BlocProvider.of<LandingPageBloc>(context)
+                                  .selectedName ??
+                              "";
+                    },
+                  ),
+                );
+              },
             );
           }
           return LoadingWidget(
@@ -163,7 +168,6 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
   void _onPipelineSelectionChanged(
       List<String> selectedNames, List<GetAllPipelineData> items) async {
     pipelineIds = [];
-    ;
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
@@ -175,7 +179,7 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
     }
   }
 
-  Widget _buildDateRangeSelector() {
+  Widget _buildDateRangeSelector(BuildContext context) {
     if (selectedate.isNotEmpty) {
       final endDate = selectedate.lastOrNull;
       final startDate = selectedate.firstOrNull;
@@ -210,7 +214,7 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
-              onPressed: () => _pickDateRange(),
+              onPressed: () => _pickDateRange(context),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -238,7 +242,7 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
     );
   }
 
-  Future<void> _pickDateRange() async {
+  Future<void> _pickDateRange(BuildContext context) async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle:
@@ -267,139 +271,27 @@ class _LandingPageDesktopViewState extends State<LandingPageDesktopView> {
     }
   }
 
-  Widget _buildApplyFilterButton() {
-    return SizedBox(
-      height: 48,
-      width: UIHelpers.screenHeight(context) * 0.5,
-      child: ElevatedButton.icon(
-        onPressed: _addEvents,
-        iconAlignment: IconAlignment.end,
-        label: const Text(
-          'Get Started',
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: SupportBotColors.bluePrimary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        ),
-        icon: const Icon(
-          Icons.arrow_forward,
-          color: Colors.white,
+  Widget _buildApplyFilterButton(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => _addEvents(context),
+      iconAlignment: IconAlignment.end,
+      label: const Text('Get Started', style: TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: SupportBotColors.bluePrimary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
         ),
       ),
+      icon: const Icon(Icons.arrow_forward, color: Colors.white),
     );
   }
 
-  void _addEvents() {
+  void _addEvents(BuildContext context) async {
     String cleanedId = pipelineIds != null && pipelineIds!.isNotEmpty
         ? pipelineIds![0].replaceAll("[]", "")
         : "";
-    GoRouter.of(context).push(
-      '/dashboard?pipelineName=$selectedPipeline&pipelineId=$cleanedId&startDate=${selectedate.firstOrNull}&endDate=${selectedate.lastOrNull}',
+    await GoRouter.of(context).push(
+      '/dashboard?pipelineName=$selectedPipelineName&pipelineId=$cleanedId&startDate=${selectedate.firstOrNull}&endDate=${selectedate.lastOrNull}',
     );
-    //To DO ===> Uase This code on page to call API when Intial Use
-    // final selectedPipelineValue =
-    //     pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
-
-    // if (selectedPipelineValue.isEmpty) {
-    //   showSnackbar(
-    //     context,
-    //     'Please select a pipeline to apply filter',
-    //   );
-    //   return;
-    // }
-
-    // if (selectedItems.isNotEmpty) {
-    //   BlocProvider.of<ValidationStatusBloc>(context).selectedPipelineId =
-    //       selectedPipelineValue;
-    //   BlocProvider.of<ValidationStatusBloc>(context)
-    //       .add(ValidationStatuseCallEvent(
-    //     endDate: selectedate.lastOrNull,
-    //     startDate: selectedate.firstOrNull,
-    //     selectedPipelineValue: selectedPipelineValue,
-    //   ));
-
-    //   BlocProvider.of<AiQueryAnswerBloc>(context).selectedPipelineId =
-    //       selectedPipelineValue;
-    //   BlocProvider.of<AiQueryAnswerBloc>(context).add(AIQueryAnswerInitialEvent(
-    //     endDate: selectedate.lastOrNull,
-    //     startDate: selectedate.firstOrNull,
-    //     selectedPipelineValue: selectedPipelineValue,
-    //   ));
-
-    //   BlocProvider.of<AiQueryEditedBloc>(context).selectedPipelineId =
-    //       selectedPipelineValue;
-    //   BlocProvider.of<AiQueryEditedBloc>(context).add(AIQueryEditedInitialEvent(
-    //     endDate: selectedate.lastOrNull,
-    //     startDate: selectedate.firstOrNull,
-    //     selectedPipelineValue: selectedPipelineValue,
-    //   ));
-
-    //   BlocProvider.of<GetAllPipelineBloc>(context).add(
-    //       GetAllPiplineInitialEvent(
-    //           selectedPipelineValue: selectedPipelineValue));
-
-    //   BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId =
-    //       selectedPipelineValue;
-    //   BlocProvider.of<TicketClassificationBloc>(context)
-    //       .add(TickiteClassificationEvent(
-    //     endDate: selectedate.lastOrNull,
-    //     startDate: selectedate.firstOrNull,
-    //     selectedPipelineValue: selectedPipelineValue,
-    //   ));
-
-    //   BlocProvider.of<UserValidationBloc>(context).selectedPipelineId =
-    //       selectedPipelineValue;
-    //   BlocProvider.of<UserValidationBloc>(context).add(UserValidationsEvent(
-    //     endDate: selectedate.lastOrNull,
-    //     startDate: selectedate.firstOrNull,
-    //     selectedPipelineValue: selectedPipelineValue,
-    //   ));
-    // }
-  }
-
-  Future<void> showSnackbar(BuildContext context, String text) async {
-    final snackBar = SnackBar(
-      backgroundColor: SupportBotColors.blueSecondary.shade100,
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.notifications_active,
-                color: SupportBotColors.bluePrimary.shade400,
-              ),
-              UIHelpers.horizontalSpaceSmall,
-              Text(
-                text,
-                textAlign: TextAlign.center,
-                style: SupportBotTextstyle.small,
-              ),
-            ],
-          ),
-          SnackBarAction(
-            label: 'X',
-            textColor: SupportBotColors.blueSecondary.shade500,
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ],
-      ),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 300, vertical: 20),
-      duration: const Duration(seconds: 5),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

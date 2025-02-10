@@ -21,3 +21,10 @@ class LandingPageSuccessState extends LandingPageState {
 class LandingPageEmptyState extends LandingPageState {}
 
 class LandingPageFailureState extends LandingPageState {}
+
+class PipelineSelectionChangedState extends LandingPageState {
+  final String selectedName;
+  final List<GetAllPipelineData> items;
+
+  PipelineSelectionChangedState(this.selectedName, this.items);
+}
