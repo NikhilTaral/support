@@ -2,18 +2,17 @@ import 'dart:async';
 
 import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/bops_state_response_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/bops_state_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/bops_state_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 
 part 'bops_states__event.dart';
 part 'bops_states_state.dart';
 
 class BopsStatesBloc extends Bloc<BopsStateEvent, BopsStatesState> {
-  BOpsResponseEntitieModel bOpsResponseEntitieModel =
-      BOpsResponseEntitieModel();
+  BOpsResponseAttributeModel bOpsResponseAttributeModel =
+      BOpsResponseAttributeModel();
 
   BopsStatesBloc() : super(BopsStatesIntialState()) {
     on<BopsStateDataEvent>(_onBopsStateDataEvent);
@@ -30,13 +29,13 @@ class BopsStatesBloc extends Bloc<BopsStateEvent, BopsStatesState> {
       } else {
         final BOpsResponseModel model = response.right;
 
-        bOpsResponseEntitieModel = BOpsResponseEntitieModel(
+        bOpsResponseAttributeModel = BOpsResponseAttributeModel(
           data: model.data,
           failCode: model.failCode,
           message: model.message,
         );
 
-        emit(BopsStatesSucssesState(model: bOpsResponseEntitieModel));
+        emit(BopsStatesSuccessState(bOpsResponseAttributeModel: bOpsResponseAttributeModel));
       }
     } catch (e) {
       emit(BopsStatesFailureState());

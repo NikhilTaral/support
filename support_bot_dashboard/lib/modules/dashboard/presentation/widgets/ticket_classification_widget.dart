@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pi_chart.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
@@ -10,8 +12,8 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationWidget extends StatelessWidget {
-  const TicketClassificationWidget({super.key});
-
+  TicketClassificationWidget({super.key});
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,7 +30,7 @@ class TicketClassificationWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Ticket Classification",
+              s.ticketClassification,
               style: SupportBotTextstyle.normal.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
@@ -59,28 +61,28 @@ class TicketClassificationWidget extends StatelessWidget {
                             _buildClassificationRow(
                               context,
                               color: SupportBotColors.bluePrimary.shade400,
-                              title: "Spam/Marketing",
+                              title: s.spamMarketing,
                               percentage:
                                   "${state.dashboardDataModel?.pieChartData?.data?.percentages?.spamMarketing}%",
                             ),
                             _buildClassificationRow(
                               context,
                               color: const Color(0xFF8099C7),
-                              title: "No Action Required",
+                              title: s.noActionRequired,
                               percentage:
                                   "${state.dashboardDataModel?.pieChartData?.data?.percentages?.noActionRequired}%",
                             ),
                             _buildClassificationRow(
                               context,
-                               color: const Color(0xFFB6C5DF),
-                              title: "Genuine Query",
+                              color: const Color(0xFFB6C5DF),
+                              title: s.genuineQuery,
                               percentage:
                                   "${state.dashboardDataModel?.pieChartData?.data?.percentages?.genuineQuery}%",
                             ),
                             _buildClassificationRow(
                               context,
                               color: const Color(0xFFDBE2EF),
-                              title: "Acknowledgement Required",
+                             title: s.acknowledgeRequiredText,
                               percentage:
                                   "${state.dashboardDataModel?.pieChartData?.data?.percentages?.acknowledgementRequired}%",
                             ),

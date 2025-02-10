@@ -9,6 +9,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_v
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/tab_bar_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
 class MyOrganizationNavBar extends StatefulWidget {
@@ -141,6 +142,27 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
         },
       ),
     );
+  }
+
+  void onTap(BuildContext context, int value, int selectedIndex) {
+    if (value != selectedIndex) {
+      BlocProvider.of<TabIndexBloc>(context)
+          .add(TabIndexChangedEvent(currentIndex: value));
+      if (value == 0) {
+        context
+            .read<TicketClassificationBloc>()
+            .add(TickiteClassificationEvent());
+        context.read<UserValidationBloc>().add(UserValidationsEvent());
+        context.read<AiQueryAnswerBloc>().add(AIQueryAnswerInitialEvent());
+        context.read<AiQueryEditedBloc>().add(AIQueryEditedInitialEvent());
+        context.read<ValidationStatusBloc>().add(ValidationStatuseCallEvent());
+      } else if (value == 1) {
+        BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
+        context.read<TicketClassificationTabBloc>().add(
+              TicketClassificationDataCallEvent(),
+            );
+      }
+    }
   }
 
   Widget _buildTabItem(int index, int selectedIndex) {

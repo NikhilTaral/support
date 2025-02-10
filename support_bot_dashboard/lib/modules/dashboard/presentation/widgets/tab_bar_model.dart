@@ -34,6 +34,7 @@ class TabBarWidget {
   });
 
   static List<TabBarWidget> organizationItemList(BuildContext context) {
+    final s = serviceLocator<S>();
     List<TabBarWidget> tabBarList = [];
     
 
@@ -49,9 +50,9 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-      const TabBarWidget(
-        title: "Ticket Classification",
-        view: SizedBox(
+       TabBarWidget(
+        title:s.ticketClassification,
+        view: const SizedBox(
           width: double.infinity,
           child: TicketClassification(),
         ),
@@ -60,9 +61,9 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-      const TabBarWidget(
-        title: "AI Query Answer",
-        view: SizedBox(
+       TabBarWidget(
+        title:s.aiQueryAnswer,
+        view: const SizedBox(
           width: double.infinity,
           child: AIQueryEditedScreen(),
         ),

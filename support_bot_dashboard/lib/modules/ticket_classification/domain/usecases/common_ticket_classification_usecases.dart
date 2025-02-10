@@ -55,3 +55,10 @@ class RevertClassificationUsecase implements UseCaseOneInput<String, dynamic> {
         .revertClassification(ticketId: ticketId);
   }
 }
+class DashboardExportusecase {
+  Future<Either<Failure, dynamic>> invoke(
+      dashboardExportRequestModel) async {
+    return await serviceLocator<DashboardExportRepository>()
+        .getExportData(dashboardExportRequestModel);
+  }
+}

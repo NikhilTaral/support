@@ -17,13 +17,13 @@ class GetAllPipelinesRepoImpl extends GetAllPipelinesRepository {
       final dynamic response = await serviceLocator<ApiProvider>()
           .getData(url: "dashboard/getAllPipelines", body: {});
       if (response is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       } else {
         final model = getAllPipelinesFromJson(jsonEncode(response));
         return Right(model);
       }
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }

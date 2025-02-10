@@ -13,10 +13,4 @@ class AIQueryAnswerSucssesState extends AiQueryAnswerState {
   AIQueryAnswerSucssesState({this.dashboardDataModel});
 }
 
-class AIQueryAnswerFailureState extends AiQueryAnswerState {
-  final String message;
-  
-  AIQueryAnswerFailureState(
-      {required this.message,
-   });
-}
+class AIQueryAnswerFailureState extends AiQueryAnswerState {}

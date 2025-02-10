@@ -6,7 +6,6 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'ticket_classification_event.dart';
 part 'ticket_classification_state.dart';
@@ -26,8 +25,7 @@ class TicketClassificationBloc
     final endDate = DateTime.now();
     final startDate = endDate.subtract(const Duration(days: 0));
     final repository = serviceLocator<DashboardChartdataUsecase>();
-    List<DateTime?> datesList = await getSelectedDates();
-    final req = DashboardAnswerDataInitialRequestModel(
+   final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
             fieldValue: selectedPipelineId ?? [""],
@@ -97,7 +95,5 @@ class TicketClassificationBloc
     }
   }
 
-  Future<List<DateTime?>> getSelectedDates() async {
-    return await LocalStorage.getSelectedDates();
-  }
+ 
 }

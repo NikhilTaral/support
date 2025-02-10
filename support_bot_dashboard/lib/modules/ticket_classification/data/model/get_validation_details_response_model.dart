@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getValidationDetailsResponsrModel = getValidationDetailsResponsrModelFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 GetValidationDetailsResponsrModel getValidationDetailsResponsrModelFromJson(String str) => GetValidationDetailsResponsrModel.fromJson(json.decode(str));
@@ -12,7 +7,7 @@ String getValidationDetailsResponsrModelToJson(GetValidationDetailsResponsrModel
 class GetValidationDetailsResponsrModel {
     final Data data;
     final bool success;
-    final int failCode;
+    final num failCode;
     final String message;
 
     GetValidationDetailsResponsrModel({
@@ -25,7 +20,7 @@ class GetValidationDetailsResponsrModel {
     GetValidationDetailsResponsrModel copyWith({
         Data? data,
         bool? success,
-        int? failCode,
+        num? failCode,
         String? message,
     }) => 
         GetValidationDetailsResponsrModel(

@@ -1,4 +1,3 @@
-// Define the RequestModel class
 class DashboardAnswerDataInitialRequestModel {
   final String? startDate;
   final String? endDate;
@@ -8,8 +7,6 @@ class DashboardAnswerDataInitialRequestModel {
 
   DashboardAnswerDataInitialRequestModel(
       {this.startDate, this.endDate, this.filter, this.page, this.pageSize});
-
-  // From JSON
   factory DashboardAnswerDataInitialRequestModel.fromJson(
       Map<String, dynamic> json) {
     return DashboardAnswerDataInitialRequestModel(
@@ -20,8 +17,6 @@ class DashboardAnswerDataInitialRequestModel {
       pageSize: json['pageSize'],
     );
   }
-
-  // To JSON
   Map<String, dynamic> toJson() {
     return {
       'startDate': startDate,

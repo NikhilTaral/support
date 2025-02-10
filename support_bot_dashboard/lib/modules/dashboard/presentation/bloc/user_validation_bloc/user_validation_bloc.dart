@@ -39,7 +39,7 @@ class UserValidationBloc
 
       final List<Filter> filter = [
         Filter(
-          fieldValue: selectedPipelineId ?? ["11257490"],
+          fieldValue: event.selectedPipelineValue ?? ["11257490"],
           fieldName: event.fildName ?? "pipelines",
         )
       ];
@@ -53,9 +53,7 @@ class UserValidationBloc
       final response = await repository.invoke(requestBody);
 
       if (response.isLeft) {
-        emit(UserValidationFailureSate(
-          message: response.left.toString(),
-        ));
+        emit(UserValidationFailureSate());
       } else {
         final GetValidationByCountResponseModel model = response.right;
 
@@ -89,9 +87,7 @@ class UserValidationBloc
         }
       }
     } catch (e) {
-      emit(UserValidationFailureSate(
-        message: 'Exception: $e',
-      ));
+      emit(UserValidationFailureSate());
     }
   }
 }

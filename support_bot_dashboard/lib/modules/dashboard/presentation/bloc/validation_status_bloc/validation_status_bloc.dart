@@ -35,7 +35,7 @@ class ValidationStatusBloc
     selectedPipelineId = event.selectedPipelineValue;
     final List<Filter> filter = [
       Filter(
-        fieldValue: selectedPipelineId,
+        fieldValue: event.selectedPipelineValue ?? ["11257490"],
         fieldName: event.fildName ?? "pipelines",
       )
     ];

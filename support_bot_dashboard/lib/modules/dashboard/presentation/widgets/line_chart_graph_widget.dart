@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class LineChartGraphWidget extends StatelessWidget {
   LineChartGraphWidget({super.key, required this.dashboardDataModel});
@@ -99,7 +100,7 @@ class LineChartGraphWidget extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
                         name,
-                        style: const TextStyle(fontSize: 12),
+                        style: SupportBotTextstyle.mediumHint.copyWith(),
                         textAlign: TextAlign.center,
                       ),
                     );

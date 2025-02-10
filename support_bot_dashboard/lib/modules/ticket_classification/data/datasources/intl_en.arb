@@ -1,0 +1,81 @@
+{
+  "intialpiplineText": "Expert Care Level 1",
+  "@intialpiplineText": {
+    "description": "Inital PipLine Text"
+  },
+  "bobStateText": "BOPS State/ Province",
+  "@bobStateText": {
+    "description": "BOPS State/ Province Text"
+  }, 
+   "unknownPipelineText":  "Unknown Pipeline",
+  "@unknownPipelineText": {
+    "description": "Unknown Pipeline Text"
+  },
+  "updateSuccessfullyText":  "Update Successfully!",
+  "@updateSuccessfullyText": {
+    "description": "Update Successfully Text"
+  },
+  "updateFailureText":  "Update Failure!",
+  "@updateFailureText": {
+    "description": "Update Failure Text"
+  },
+  "revertedSuccessfullyText":  "Reverted Successfully",
+  "@revertedSuccessfullyText": {
+    "description": "Reverted Successfully Text"
+  },
+  "revertedFailureText":  "Reverted Failure",
+  "@revertedFailureText": {
+    "description": "Reverted Failure Text"
+  },
+  "updateText":  "Update",
+  "@updateText": {
+    "description": "Update Text"
+  },
+  "updateTicketText":  "Update Ticket",
+  "@updateTicketText": {
+    "description": "Update Ticket Text"
+  },
+  "requestMsgText": "Do you Want to Mark This Ticket as a Contact {value} in HubSpot",
+    "@requestMsgText": {
+        "description": "request Msg Text",
+        "placeholders": {
+            "value": {}
+        }
+    },
+    "noText":  "No",
+    "@noText": {
+      "description": "NO Text"
+    },
+    "yesText":  "Yes",
+    "@yesText": {
+      "description": "Yes Text"
+    },
+    "ticketDetailsText":  "Ticket Details",
+    "@ticketDetailsText": {
+      "description": "Ticket Details Text"
+    },
+    "descriptionText":  "Description",
+    "@descriptionText": {
+      "description": "Description Text"
+    },
+    "reasoningText":  "Reasoning",
+    "@reasoningText": {
+      "description": "Reasoning Text"
+    },
+    "validatedByText":  "Validated By",
+    "@validatedByText": {
+      "description": "Validated By Text"
+    },
+    "classificationValidationReasonText":  "Classification Validation Reason",
+    "@classificationValidationReasonText": {
+      "description": "Classification Validation Reason Text"
+    },
+    "closeText":  "Close",
+    "@closeText": {
+      "description": "Close Text"
+    },
+    "validatedClassificationText":  "Validated Classification",
+    "@validatedClassificationText": {
+      "description": "Validated Classification Text"
+    }
+}
