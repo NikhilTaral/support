@@ -27,7 +27,7 @@ class DashboardPipelineChart extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Pipeline",
+                      S.of(context).piplineText,
                       style: SupportBotTextstyle.normal.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,

@@ -206,5 +206,9 @@
   "totalTicketsText": "Total Tickets",
     "@totalTicketsText": {
       "description":"Total Tickets Text"
+  },
+  "pipelineText": "Pipeline",
+    "@pipelineText": {
+      "description":"Pipeline Text"
   }
 }
