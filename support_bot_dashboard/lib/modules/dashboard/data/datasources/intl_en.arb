@@ -190,6 +190,10 @@
 "validationStatusText": "Validation Status",
   "@validationStatusText": {
     "description":"Validation Status Text"
-}
+}, 
+"ticketNotClassified": "Not Classified",
+  "@ticketNotClassified": {
+    "description": "Not Classified"
+  }
  
 }
