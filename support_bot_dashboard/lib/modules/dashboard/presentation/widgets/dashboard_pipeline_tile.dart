@@ -240,7 +240,7 @@ class CustomPipelineChart extends StatelessWidget {
               rotateAngle: 270,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
-                  'Validated: ${pipleineData?[groupIndex].validatedTickets?.toInt()} / Total: ${pipleineData?[groupIndex].totalTickets?.toInt()}',
+                  'Validated: ${pipleineData?[groupIndex].validatedTickets?.toInt() ?? 0} / Total: ${pipleineData?[groupIndex].totalTickets?.toInt() ?? 0}',
                   const TextStyle(color: Colors.white),
                 );
               },

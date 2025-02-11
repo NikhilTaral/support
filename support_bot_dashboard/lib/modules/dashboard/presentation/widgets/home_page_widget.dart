@@ -60,43 +60,7 @@ class HomePageWidget extends StatelessWidget {
               },
             ),
             UIHelpers.verticalSpaceRegular,
-            BlocBuilder<PipelineTileBloc, PipelineTileState>(
-              builder: (context, state) {
-                double containerHeight = 0;
-                if (state is PipelineTileSuccessState) {
-                  final a =
-                      BlocProvider.of<PipelineTileBloc>(context).isVisible ??
-                          false;
-                  containerHeight = a ? 400 : 65;
-                  return Container(
-                    height: containerHeight,
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: SupportBotColors.gray),
-                      borderRadius: BorderRadius.circular(8),
-                      color: SupportBotColors.white,
-                    ),
-                    child: DashboardPipelineChart(),
-                  );
-                } else if (state is PipelineTileLoadingState) {
-                  return LoadingWidget(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      width: UIHelpers.screenWidth(context),
-                      height: 65);
-                } else if (state is PipelineTileFailureState) {
-                  return FailureWidget(
-                    onTap: () {
-                      context
-                          .read<PipelineTileBloc>()
-                          .add(PipelineTileInitialEvent());
-                    },
-                  );
-                } else if (state is PipelineTileEmptyState) {
-                  return const EmptyWidget();
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+            _buildPipelineTile(),
             UIHelpers.verticalSpaceRegular,
             Charts(),
           ],
@@ -104,4 +68,40 @@ class HomePageWidget extends StatelessWidget {
       ],
     ));
   }
+}
+
+Widget _buildPipelineTile() {
+  return BlocBuilder<PipelineTileBloc, PipelineTileState>(
+    builder: (context, state) {
+      double containerHeight = 0;
+      if (state is PipelineTileSuccessState) {
+        final a = BlocProvider.of<PipelineTileBloc>(context).isVisible ?? false;
+        containerHeight = a ? 400 : 65;
+        return Container(
+          height: containerHeight,
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            border: Border.all(color: SupportBotColors.gray),
+            borderRadius: BorderRadius.circular(8),
+            color: SupportBotColors.white,
+          ),
+          child: DashboardPipelineChart(),
+        );
+      } else if (state is PipelineTileLoadingState) {
+        return LoadingWidget(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            width: UIHelpers.screenWidth(context),
+            height: 65);
+      } else if (state is PipelineTileFailureState) {
+        return FailureWidget(
+          onTap: () {
+            context.read<PipelineTileBloc>().add(PipelineTileInitialEvent());
+          },
+        );
+      } else if (state is PipelineTileEmptyState) {
+        return const EmptyWidget();
+      }
+      return const SizedBox.shrink();
+    },
+  );
 }
