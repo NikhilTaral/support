@@ -21,7 +21,7 @@ class AIQueryEditedDesktopView extends StatelessWidget {
   final ValueNotifier<num> currentPage = ValueNotifier<num>(1);
   final ValueNotifier<num> pageSize = ValueNotifier<num>(10);
   final AiQueryAttributeModel aiQueryAttributeModel = AiQueryAttributeModel();
-final s = serviceLocator<S>();
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AiQueryBloc, AiQueryState>(
@@ -65,17 +65,18 @@ final s = serviceLocator<S>();
                               items: const [10, 25, 50],
                               onChanged: (value) {
                                 if (value != null) {
-                                  pageSize.value = value;
+                                 pageSize.value = value;
                                   currentPage.value = 1;
-
+                                  final bloc =
+                                      BlocProvider.of<AiQueryBloc>(context);
                                   BlocProvider.of<AiQueryBloc>(context).add(
                                     AIQueryInitialEvent(
-                                      startDate: state.startDate,
-                                      endDate: state.endDate,
+                                      startDate: state.endDate,
+                                      endDate: state.startDate,
                                       selectedPipelineValueList:
                                           state.selectedPipelineValue,
                                       classificationFilterValue:
-                                          state.classificationFilterValue,
+                                          bloc.piplineID.toString(),
                                       page: currentPage.value,
                                       pageSize: pageSize.value,
                                     ),
@@ -107,8 +108,8 @@ final s = serviceLocator<S>();
                                   currentPage.value--;
                                   BlocProvider.of<AiQueryBloc>(context).add(
                                     AIQueryInitialEvent(
-                                      startDate: state.startDate,
-                                      endDate: state.endDate,
+                                      startDate: state.endDate,
+                                      endDate: state.startDate,
                                       selectedPipelineValueList:
                                           state.selectedPipelineValue,
                                       classificationFilterValue:
@@ -141,8 +142,8 @@ final s = serviceLocator<S>();
                                   currentPage.value++;
                                   BlocProvider.of<AiQueryBloc>(context).add(
                                     AIQueryInitialEvent(
-                                      startDate: state.startDate,
-                                      endDate: state.endDate,
+                                      startDate: state.endDate,
+                                      endDate: state.startDate,
                                       selectedPipelineValueList:
                                           state.selectedPipelineValue,
                                       classificationFilterValue:

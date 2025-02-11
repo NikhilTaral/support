@@ -6,12 +6,24 @@ import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/v
 import 'package:support_bot_dashboard/responsive.dart';
 
 class AIQueryEditedScreen extends StatelessWidget {
-  const AIQueryEditedScreen({super.key});
+  const AIQueryEditedScreen(
+      {super.key,
+      this.endDate,
+      this.pipelineName,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   @override
   Widget build(BuildContext context) {
-    context.read<AiQueryBloc>().add(
+   context.read<AiQueryBloc>().add(
           AIQueryInitialEvent(
+              endDate: endDate,
+              startDate: startDate,
+              selectedPipelineValueList: piplineId,
               page: BlocProvider.of<AiQueryBloc>(context).page,
               pageSize: BlocProvider.of<AiQueryBloc>(context).pageSize),
         );

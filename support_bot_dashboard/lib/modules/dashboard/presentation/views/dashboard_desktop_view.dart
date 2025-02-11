@@ -53,7 +53,11 @@ class DashboardDesktopView extends StatelessWidget {
         ? index!
         : BlocProvider.of<TabIndexBloc>(context).currentIndex;
 
-    var incomeItems = TabBarWidget.organizationItemList(context);
+    var incomeItems = TabBarWidget.organizationItemList(context,
+        endDate: endDate,
+        pipelineName: pipelineName,
+        piplineId: piplineId,
+        startDate: startDate);
 
     if (incomeItems.isEmpty) {
       return Center(child: Text(s.noItemsText));
@@ -96,7 +100,11 @@ class DashboardDesktopView extends StatelessWidget {
             if (selectedIndex == 2) ...{
               Padding(
                 padding: padding,
-                child: const AIQueryTabFilterWidget(),
+                child: AIQueryTabFilterWidget(
+                    pipelineName: pipelineName,
+                    piplineId: piplineId,
+                    endDate: endDate,
+                    startDate: startDate),
               ),
             },
             MyOrganizationNavBar(

@@ -74,6 +74,9 @@ class ValidateAnswerDialog extends StatelessWidget {
                       selectedPipelineValueList:
                           serviceLocator<InstanceSharingService>()
                               .selectedPipelineValueList,
+                      startDate:
+                          serviceLocator<InstanceSharingService>().startDate,
+                      endDate: serviceLocator<InstanceSharingService>().endDate,
                     ));
                 Navigator.pop(context);
               }
@@ -306,6 +309,12 @@ class TicketDetailsDialog extends StatelessWidget {
                                     selectedPipelineValueList:
                                         serviceLocator<InstanceSharingService>()
                                             .selectedPipelineValueList,
+                                    startDate:
+                                        serviceLocator<InstanceSharingService>()
+                                            .startDate,
+                                    endDate:
+                                        serviceLocator<InstanceSharingService>()
+                                            .endDate,
                                   ));
                               Navigator.pop(context);
                             }
