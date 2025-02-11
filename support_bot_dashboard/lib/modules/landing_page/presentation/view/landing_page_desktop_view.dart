@@ -163,7 +163,7 @@ class LandingPageDesktopView extends StatelessWidget {
 
   void _onPipelineSelectionChanged(
       List<String> selectedNames, List<GetAllPipelineData> items) async {
-    pipelineIds = [];
+    pipelineIds = []; 
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
@@ -173,6 +173,8 @@ class LandingPageDesktopView extends StatelessWidget {
         pipelineIds?.add(matchingItem.pipelineId ?? "");
       }
     }
+
+    selectedPipelineNotifier.value = selectedNames.join(", ");
   }
 
   Widget _buildDateRangeSelector(BuildContext context) {
@@ -268,17 +270,27 @@ class LandingPageDesktopView extends StatelessWidget {
   }
 
   Widget _buildApplyFilterButton(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () => _addEvents(context),
-      iconAlignment: IconAlignment.end,
-      label: const Text('Get Started', style: TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: SupportBotColors.bluePrimary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-      ),
-      icon: const Icon(Icons.arrow_forward, color: Colors.white),
+    return ValueListenableBuilder<String>(
+      valueListenable: selectedPipelineNotifier,
+      builder: (context, selectedPipeline, child) {
+        bool isPipelineSelected = pipelineIds?.isNotEmpty ?? false;
+
+        return ElevatedButton.icon(
+          onPressed: isPipelineSelected ? () => _addEvents(context) : null,
+          iconAlignment: IconAlignment.end,
+          label:
+              const Text('Get Started', style: TextStyle(color: Colors.white)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isPipelineSelected
+                ? SupportBotColors.bluePrimary
+                : SupportBotColors.gray,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          icon: const Icon(Icons.arrow_forward, color: Colors.white),
+        );
+      },
     );
   }
 
