@@ -12,21 +12,24 @@ class PipelineTileFailureState extends PipelineTileState {}
 
 class PipelineTileSuccessState extends PipelineTileState {
   final PipelineTileAttributeModel? pipelineTileAttributeModel;
-  final bool isChartVisible;
 
   PipelineTileSuccessState({
     this.pipelineTileAttributeModel,
-    this.isChartVisible = false,
   });
 
   PipelineTileSuccessState copyWith({
     PipelineTileAttributeModel? pipelineTileAttributeModel,
-    bool? isChartVisible,
   }) {
     return PipelineTileSuccessState(
       pipelineTileAttributeModel:
           pipelineTileAttributeModel ?? this.pipelineTileAttributeModel,
-      isChartVisible: isChartVisible ?? this.isChartVisible,
     );
   }
+}
+
+class TogglePipelineChartVisibilityState extends PipelineTileSuccessState {
+  final bool isVisible;
+
+  TogglePipelineChartVisibilityState(
+      {this.isVisible = false, super.pipelineTileAttributeModel});
 }

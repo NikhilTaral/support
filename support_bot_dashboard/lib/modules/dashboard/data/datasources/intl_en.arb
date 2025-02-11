@@ -198,6 +198,13 @@
   "somethingWentWrongText": "Something Went Wrong",
     "@somethingWentWrongText": {
       "description":"Something Went Wrong Text"
+  },
+  "validatedTicketsText": "Validated Tickets",
+    "@validatedTicketsText": {
+      "description":"Validated Tickets Text"
+  },
+  "totalTicketsText": "Total Tickets",
+    "@totalTicketsText": {
+      "description":"Total Tickets Text"
   }
- 
 }

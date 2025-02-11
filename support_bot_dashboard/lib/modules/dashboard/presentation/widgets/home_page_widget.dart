@@ -64,7 +64,9 @@ class HomePageWidget extends StatelessWidget {
               builder: (context, state) {
                 double containerHeight = 0;
                 if (state is PipelineTileSuccessState) {
-                  final a = state.isChartVisible ?? false;
+                  final a =
+                      BlocProvider.of<PipelineTileBloc>(context).isVisible ??
+                          false;
                   containerHeight = a ? 400 : 65;
                   return Container(
                     height: containerHeight,

@@ -1,44 +1,17 @@
 class PipelineTileAttributeModel {
-  final AttributeData? data;
-  final bool? success;
-  final num? failCode;
-  final String? message;
-
-  PipelineTileAttributeModel({
-    this.data,
-    this.success,
-    this.failCode,
-    this.message,
-  });
-
-  PipelineTileAttributeModel copyWith({
-    AttributeData? data,
-    bool? success,
-    num? failCode,
-    String? message,
-  }) =>
-      PipelineTileAttributeModel(
-        data: data ?? this.data,
-        success: success ?? this.success,
-        failCode: failCode ?? this.failCode,
-        message: message ?? this.message,
-      );
-}
-
-class AttributeData {
   final num? totalRecords;
   final List<AttributeItem>? items;
 
-  AttributeData({
+  PipelineTileAttributeModel({
     this.totalRecords,
     this.items,
   });
 
-  AttributeData copyWith({
+  PipelineTileAttributeModel copyWith({
     num? totalRecords,
     List<AttributeItem>? items,
   }) =>
-      AttributeData(
+      PipelineTileAttributeModel(
         totalRecords: totalRecords ?? this.totalRecords,
         items: items ?? this.items,
       );

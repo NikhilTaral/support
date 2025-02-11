@@ -12,4 +12,8 @@ class PipelineTileInitialEvent extends PipelineTileEvent {
   });
 }
 
-class TogglePipelineChartVisibilityEvent extends PipelineTileEvent {}
+class TogglePipelineChartVisibilityEvent extends PipelineTileEvent {
+  final bool isVisible;
+
+  TogglePipelineChartVisibilityEvent({required this.isVisible});
+}

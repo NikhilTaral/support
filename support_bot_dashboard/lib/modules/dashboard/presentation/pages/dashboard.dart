@@ -93,8 +93,9 @@ class Dashboard extends StatelessWidget {
             child: const AIQueryTabFilterWidget(),
           ),
           BlocProvider<PipelineTileBloc>(
-            create: (context) =>
-                PipelineTileBloc()..add(PipelineTileInitialEvent()),
+            create: (context) => PipelineTileBloc()
+              ..add(PipelineTileInitialEvent(
+                  endDate: endDate, startDate: startDate)),
           ),
         ],
         child: Responsive(

@@ -11,6 +11,7 @@ part 'pipeline_tile_state.dart';
 
 class PipelineTileBloc extends Bloc<PipelineTileEvent, PipelineTileState> {
   PipelineTileAttributeModel? pipelineTileAttributeModel;
+  bool? isVisible;
 
   PipelineTileBloc() : super(PipelineTileInitialState()) {
     on<PipelineTileInitialEvent>(_onPipelineTileInitialEvent);
@@ -45,8 +46,8 @@ class PipelineTileBloc extends Bloc<PipelineTileEvent, PipelineTileState> {
         pipelineTileAttributeModel =
             mapResponseToAttributeModel(pipelineTileResponseModel);
         bool isEmpty = pipelineTileAttributeModel == null ||
-            pipelineTileAttributeModel?.data?.items == null ||
-            pipelineTileAttributeModel?.data?.items?.isEmpty == true;
+            pipelineTileAttributeModel?.items == null ||
+            pipelineTileAttributeModel?.items?.isEmpty == true;
         if (isEmpty) {
           emit(PipelineTileEmptyState());
         }
@@ -61,34 +62,27 @@ class PipelineTileBloc extends Bloc<PipelineTileEvent, PipelineTileState> {
 
   void _onToggleVisibilityEvent(TogglePipelineChartVisibilityEvent event,
       Emitter<PipelineTileState> emit) {
-    if (state is PipelineTileSuccessState) {
-      final currentState = state as PipelineTileSuccessState;
-      emit(currentState.copyWith(isChartVisible: !currentState.isChartVisible));
-    }
+    isVisible = !event.isVisible;
+    emit(TogglePipelineChartVisibilityState(
+        isVisible: isVisible ?? false,
+        pipelineTileAttributeModel: pipelineTileAttributeModel));
   }
 
   PipelineTileAttributeModel mapResponseToAttributeModel(
       PipelineTileResponseModel response) {
     return PipelineTileAttributeModel(
-      data: response.data != null
-          ? AttributeData(
-              totalRecords: response.data?.totalRecords ?? 0,
-              items: response.data?.items
-                      ?.map((item) => AttributeItem(
-                            pipelineId: item.pipelineId ?? "",
-                            pipelineName: item.pipelineName ?? "",
-                            totalTickets: item.totalTickets ?? 0,
-                            correctTickets: item.correctTickets ?? 0,
-                            incorrectTickets: item.incorrectTickets ?? 0,
-                            validatedTickets: item.validatedTickets ?? 0,
-                          ))
-                      .toList() ??
-                  [],
-            )
-          : null,
-      success: response.success ?? false,
-      failCode: response.failCode ?? 0,
-      message: response.message ?? "No message",
+      totalRecords: response.data?.totalRecords ?? 0,
+      items: response.data?.items
+              ?.map((item) => AttributeItem(
+                    pipelineId: item.pipelineId ?? "",
+                    pipelineName: item.pipelineName ?? "",
+                    totalTickets: item.totalTickets ?? 0,
+                    correctTickets: item.correctTickets ?? 0,
+                    incorrectTickets: item.incorrectTickets ?? 0,
+                    validatedTickets: item.validatedTickets ?? 0,
+                  ))
+              .toList() ??
+          [],
     );
   }
 }

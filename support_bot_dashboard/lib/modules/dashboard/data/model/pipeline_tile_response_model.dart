@@ -70,14 +70,14 @@ class Data {
         totalRecords: json["totalRecords"],
         items: json["items"] == null
             ? []
-            : List<Item>.from(json["items"]!.map((x) => Item.fromJson(x))),
+            : List<Item>.from(json["items"]?.map((x) => Item.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "totalRecords": totalRecords,
         "items": items == null
             ? []
-            : List<dynamic>.from(items!.map((x) => x.toJson())),
+            : List<dynamic>.from(items?.map((x) => x.toJson()) ?? []),
       };
 }
 

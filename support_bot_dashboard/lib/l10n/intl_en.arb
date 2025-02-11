@@ -232,6 +232,14 @@
   "@somethingWentWrongText": {
     "description": "Something Went Wrong Text"
   },
+  "validatedTicketsText": "Validated Tickets",
+  "@validatedTicketsText": {
+    "description": "Validated Tickets Text"
+  },
+  "totalTicketsText": "Total Tickets",
+  "@totalTicketsText": {
+    "description": "Total Tickets Text"
+  },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
     "description": "By clicking “GET STARTED” you are agreeing to our "

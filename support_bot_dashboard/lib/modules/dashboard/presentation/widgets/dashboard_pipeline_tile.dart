@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/pipeline_tile_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -16,7 +17,7 @@ class DashboardPipelineChart extends StatelessWidget {
     return BlocBuilder<PipelineTileBloc, PipelineTileState>(
       builder: (context, state) {
         if (state is PipelineTileSuccessState) {
-          final data = state.pipelineTileAttributeModel?.data?.items;
+          final data = state.pipelineTileAttributeModel?.items;
 
           return Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
@@ -36,12 +37,16 @@ class DashboardPipelineChart extends StatelessWidget {
                     Spacer(),
                     GestureDetector(
                       onTap: () {
-                        context
-                            .read<PipelineTileBloc>()
-                            .add(TogglePipelineChartVisibilityEvent());
+                        context.read<PipelineTileBloc>().add(
+                            TogglePipelineChartVisibilityEvent(
+                                isVisible:
+                                    BlocProvider.of<PipelineTileBloc>(context)
+                                            .isVisible ??
+                                        false));
                       },
                       child: Icon(
-                        state.isChartVisible
+                        BlocProvider.of<PipelineTileBloc>(context).isVisible ==
+                                true
                             ? SupportBotIcons.eye
                             : SupportBotIcons.visibilityOff,
                         color: SupportBotColors.bluePrimary.shade400,
@@ -51,7 +56,8 @@ class DashboardPipelineChart extends StatelessWidget {
                   ],
                 ),
                 UIHelpers.verticalSpaceRegular,
-                if (state.isChartVisible)
+                if (BlocProvider.of<PipelineTileBloc>(context).isVisible ==
+                    true)
                   Expanded(
                     child: Column(
                       children: [
@@ -83,7 +89,7 @@ class DashboardPipelineChart extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                             ),
                             UIHelpers.horizontalSpaceSmall,
-                            Text("Validated Tickets",
+                            Text(S.of(context).validatedTicketsText,
                                 style: SupportBotTextstyle.normal.copyWith(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
@@ -97,7 +103,7 @@ class DashboardPipelineChart extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                             ),
                             UIHelpers.horizontalSpaceSmall,
-                            Text("Total Tickets",
+                            Text(S.of(context).totalTicketsText,
                                 style: SupportBotTextstyle.normal.copyWith(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
@@ -140,8 +146,8 @@ class CustomPipelineChart extends StatelessWidget {
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
-          maxY: pipleineData!
-              .map((e) => e.totalTickets)
+          maxY: pipleineData
+              ?.map((e) => e.totalTickets)
               .toList()
               .reduce((curr, next) => (curr ?? 0) > next! ? curr : next)
               ?.toDouble(),
