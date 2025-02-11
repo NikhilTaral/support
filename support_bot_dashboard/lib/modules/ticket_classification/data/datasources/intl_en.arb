@@ -66,10 +66,7 @@
     "@validatedByText": {
       "description": "Validated By Text"
     },
-    "ticketNotClassified": "Not Classified",
-  "@ticketNotClassified": {
-    "description": "Not Classified"
-  },
+   
     "classificationValidationReasonText":  "Classification Validation Reason",
     "@classificationValidationReasonText": {
       "description": "Classification Validation Reason Text"

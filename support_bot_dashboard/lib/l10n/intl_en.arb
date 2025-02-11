@@ -60,10 +60,6 @@
   "@acknowledgementRequired": {
     "description": "Acknowledgement Required"
   },
-  "ticketNotClassified": "Not Classified",
-  "@ticketNotClassified": {
-    "description": "Not Classified"
-  },
   "total": "Total",
   "@total": {
     "description": "Total"
@@ -227,6 +223,10 @@
   "validationStatusText": "Validation Status",
   "@validationStatusText": {
     "description": "Validation Status Text"
+  },
+  "ticketNotClassified": "Not Classified",
+  "@ticketNotClassified": {
+    "description": "Not Classified"
   },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {

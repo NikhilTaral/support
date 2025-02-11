@@ -41,7 +41,7 @@ List<CountContainerData> getCountContainerData(BuildContext context,
       count: model?.pieChartData?.data?.counts?.acknowledgementRequired,
     ),
         CountContainerData(
-      text: S.of(context).notClassified,
+      text: S.of(context).ticketNotClassified,
       icon: SupportBotIcons.star1,
       count: model?.pieChartData?.data?.counts?.notClassified,
     ),
