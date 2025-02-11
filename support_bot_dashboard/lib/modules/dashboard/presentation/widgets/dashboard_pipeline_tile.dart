@@ -71,7 +71,7 @@ class DashboardPipelineChart extends StatelessWidget {
                               padding: const EdgeInsets.only(right: 25.0),
                               child: SizedBox(
                                 width: (data?.length ?? 0) * 250,
-                                height: (data?.length ?? 0) * 30,
+                                height: (data?.length ?? 0) * 40,
                                 child: CustomPipelineChart(
                                   pipleineData: data,
                                 ),
@@ -81,35 +81,47 @@ class DashboardPipelineChart extends StatelessWidget {
                         ),
                         UIHelpers.verticalSpaceRegular,
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              height: 15,
-                              width: 15,
-                              decoration: BoxDecoration(
-                                  color: SupportBotColors.bluePrimary.shade400,
-                                  borderRadius: BorderRadius.circular(5)),
+                              width: 680,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        color: SupportBotColors
+                                            .bluePrimary.shade200,
+                                        borderRadius: BorderRadius.circular(5)),
+                                  ),
+                                  UIHelpers.horizontalSpaceSmall,
+                                  Text(s.totalTicketsText,
+                                      style:
+                                          SupportBotTextstyle.normal.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      )),
+                                  UIHelpers.horizontalSpaceMedium,
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        color: SupportBotColors
+                                            .bluePrimary.shade400,
+                                        borderRadius: BorderRadius.circular(5)),
+                                  ),
+                                  UIHelpers.horizontalSpaceSmall,
+                                  Text(s.validatedTicketsText,
+                                      style:
+                                          SupportBotTextstyle.normal.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      )),
+                                ],
+                              ),
                             ),
-                            UIHelpers.horizontalSpaceSmall,
-                            Text(s.validatedTicketsText,
-                                style: SupportBotTextstyle.normal.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                )),
-                            UIHelpers.horizontalSpaceMedium,
-                            Container(
-                              height: 15,
-                              width: 15,
-                              decoration: BoxDecoration(
-                                  color: SupportBotColors.bluePrimary.shade200,
-                                  borderRadius: BorderRadius.circular(5)),
-                            ),
-                            UIHelpers.horizontalSpaceSmall,
-                            Text(s.totalTicketsText,
-                                style: SupportBotTextstyle.normal.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                )),
                           ],
                         ),
                       ],
@@ -179,7 +191,7 @@ class CustomPipelineChart extends StatelessWidget {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 200,
+                reservedSize: 210,
                 interval: 1,
                 getTitlesWidget: (double value, TitleMeta meta) {
                   int index = value.toInt();
@@ -188,12 +200,18 @@ class CustomPipelineChart extends StatelessWidget {
                       quarterTurns: -1,
                       child: SizedBox(
                         width: 200,
-                        child: Text(
-                          pipleineData?[index].pipelineName ?? '',
-                          style: SupportBotTextstyle.normal.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              pipleineData?[index].pipelineName ?? '',
+                              style: SupportBotTextstyle.normal.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );

@@ -75,8 +75,9 @@ Widget _buildPipelineTile() {
     builder: (context, state) {
       double containerHeight = 0;
       if (state is PipelineTileSuccessState) {
-        final a = BlocProvider.of<PipelineTileBloc>(context).isVisible ?? false;
-        containerHeight = a ? 400 : 65;
+        final checkVisibility =
+            BlocProvider.of<PipelineTileBloc>(context).isVisible ?? false;
+        containerHeight = checkVisibility ? 430 : 65;
         return Container(
           height: containerHeight,
           padding: const EdgeInsets.all(4),
