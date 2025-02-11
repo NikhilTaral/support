@@ -90,7 +90,7 @@ class ReportUtils {
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
         title: 'Validated Classification',
-        field: "classification",
+        field: "validatedClassification",
         width: 178,
         type: PlutoColumnType.text(),
         enableAutoEditing: false,
@@ -177,8 +177,8 @@ class ReportUtils {
         "bops_state": PlutoCell(
           value: e?.bopsState ?? "N/A",
         ),
-        "classification": PlutoCell(
-          value: e?.classification ?? "N/A",
+        "validatedClassification": PlutoCell(
+          value: e?.validatedClassification ?? "N/A",
         ),
         "aIclassification": PlutoCell(
           value: e?.aiclassification ?? "N/A",
