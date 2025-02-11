@@ -323,8 +323,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           bloc.selectedValidation = selectedValidation;
           bloc.add(TicketClassificationDataCallEvent(
             fieldValue: selectedPipelineValue,
-            endDate: selectedate.lastOrNull,
-            startDate: selectedate.firstOrNull,
+            endDate: selectedate.lastOrNull ?? widget.endDate,
+            startDate: selectedate.firstOrNull ?? widget.startDate,
             page: 1,
             pageSize: 10,
           ));
