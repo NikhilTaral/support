@@ -127,8 +127,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             startDate = selectedDates![0];
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
-            endDate = widget.endDate ?? DateTime.now();
-            startDate = widget.startDate ?? DateTime.now();
+               endDate = DateTime.now();
+            startDate = endDate.subtract(const Duration(days: 0));
           }
 
           return Container(
@@ -341,6 +341,9 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         startDate: selectedate.firstOrNull,
         selectedPipelineValue: selectedPipelineValue,
       ));
+          BlocProvider.of<GetAllPipelineBloc>(context).add(
+          GetAllPiplineInitialEvent(
+              selectedPipelineValue: selectedPipelineValue));
       BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId =
           selectedPipelineValue;
       BlocProvider.of<TicketClassificationBloc>(context)
