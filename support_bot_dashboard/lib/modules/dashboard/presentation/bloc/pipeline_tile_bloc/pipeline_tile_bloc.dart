@@ -44,7 +44,9 @@ class PipelineTileBloc extends Bloc<PipelineTileEvent, PipelineTileState> {
 
         pipelineTileAttributeModel =
             mapResponseToAttributeModel(pipelineTileResponseModel);
-        bool isEmpty = pipelineTileAttributeModel == null;
+        bool isEmpty = pipelineTileAttributeModel == null ||
+            pipelineTileAttributeModel?.data?.items == null ||
+            pipelineTileAttributeModel?.data?.items?.isEmpty == true;
         if (isEmpty) {
           emit(PipelineTileEmptyState());
         }

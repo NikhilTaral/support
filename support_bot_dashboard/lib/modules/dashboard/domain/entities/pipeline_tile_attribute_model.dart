@@ -1,7 +1,7 @@
 class PipelineTileAttributeModel {
   final AttributeData? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final String? message;
 
   PipelineTileAttributeModel({
@@ -14,7 +14,7 @@ class PipelineTileAttributeModel {
   PipelineTileAttributeModel copyWith({
     AttributeData? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
       PipelineTileAttributeModel(
@@ -26,7 +26,7 @@ class PipelineTileAttributeModel {
 }
 
 class AttributeData {
-  final int? totalRecords;
+  final num? totalRecords;
   final List<AttributeItem>? items;
 
   AttributeData({
@@ -35,7 +35,7 @@ class AttributeData {
   });
 
   AttributeData copyWith({
-    int? totalRecords,
+    num? totalRecords,
     List<AttributeItem>? items,
   }) =>
       AttributeData(
@@ -47,10 +47,10 @@ class AttributeData {
 class AttributeItem {
   final String? pipelineId;
   final String? pipelineName;
-  final int? totalTickets;
-  final int? correctTickets;
-  final int? incorrectTickets;
-  final int? validatedTickets;
+  final num? totalTickets;
+  final num? correctTickets;
+  final num? incorrectTickets;
+  final num? validatedTickets;
 
   AttributeItem({
     this.pipelineId,
@@ -64,10 +64,10 @@ class AttributeItem {
   AttributeItem copyWith({
     String? pipelineId,
     String? pipelineName,
-    int? totalTickets,
-    int? correctTickets,
-    int? incorrectTickets,
-    int? validatedTickets,
+    num? totalTickets,
+    num? correctTickets,
+    num? incorrectTickets,
+    num? validatedTickets,
   }) =>
       AttributeItem(
         pipelineId: pipelineId ?? this.pipelineId,

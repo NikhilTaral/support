@@ -9,7 +9,7 @@ String pipelineTileResponseModelToJson(PipelineTileResponseModel data) =>
 class PipelineTileResponseModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final String? message;
 
   PipelineTileResponseModel({
@@ -22,7 +22,7 @@ class PipelineTileResponseModel {
   PipelineTileResponseModel copyWith({
     Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
       PipelineTileResponseModel(
@@ -49,7 +49,7 @@ class PipelineTileResponseModel {
 }
 
 class Data {
-  final int? totalRecords;
+  final num? totalRecords;
   final List<Item>? items;
 
   Data({
@@ -58,7 +58,7 @@ class Data {
   });
 
   Data copyWith({
-    int? totalRecords,
+    num? totalRecords,
     List<Item>? items,
   }) =>
       Data(
@@ -84,10 +84,10 @@ class Data {
 class Item {
   final String? pipelineId;
   final String? pipelineName;
-  final int? totalTickets;
-  final int? correctTickets;
-  final int? incorrectTickets;
-  final int? validatedTickets;
+  final num? totalTickets;
+  final num? correctTickets;
+  final num? incorrectTickets;
+  final num? validatedTickets;
 
   Item({
     this.pipelineId,
@@ -101,10 +101,10 @@ class Item {
   Item copyWith({
     String? pipelineId,
     String? pipelineName,
-    int? totalTickets,
-    int? correctTickets,
-    int? incorrectTickets,
-    int? validatedTickets,
+    num? totalTickets,
+    num? correctTickets,
+    num? incorrectTickets,
+    num? validatedTickets,
   }) =>
       Item(
         pipelineId: pipelineId ?? this.pipelineId,

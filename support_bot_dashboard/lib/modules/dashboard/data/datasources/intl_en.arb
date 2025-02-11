@@ -194,6 +194,10 @@
 "ticketNotClassified": "Not Classified",
   "@ticketNotClassified": {
     "description": "Not Classified"
+  },
+  "somethingWentWrongText": "Something Went Wrong",
+    "@somethingWentWrongText": {
+      "description":"Something Went Wrong Text"
   }
  
 }

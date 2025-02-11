@@ -127,9 +127,10 @@ class CustomPipelineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxTotalTickets = pipleineData
-            ?.map((e) => e.totalTickets ?? 0)
-            .fold(0, (prev, next) => prev > next ? prev : next) ??
+    final maxTotalTickets = pipleineData?.map((e) => e.totalTickets ?? 0).fold(
+            0,
+            (prev, next) =>
+                prev.toInt() > next.toInt() ? prev.toInt() : next.toInt()) ??
         0;
     final int numberOfDivisions = maxTotalTickets > 500 ? 15 : 5;
     final intervalValue = (maxTotalTickets / numberOfDivisions).ceilToDouble();
