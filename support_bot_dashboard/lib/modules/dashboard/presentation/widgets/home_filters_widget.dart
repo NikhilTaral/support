@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
@@ -83,7 +84,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: DropdownWithCheckbox(
-        hintText:s.piplineText,
+        hintText: s.piplineText,
         items: items,
         selectedItems: selectedItems,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? [], items),
@@ -162,7 +163,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
           Icons.filter_alt_outlined,
           color: Colors.white,
         ),
-        label:  Text(
+        label: Text(
           s.filterApplyText,
           style: TextStyle(
             color: SupportBotColors.white,
@@ -293,7 +294,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     if (selectedPipelineValue.isEmpty) {
       showSnackbar(
         context,
-       s.filterApplySnackBarText,
+        s.filterApplySnackBarText,
       );
       return;
     }
@@ -344,6 +345,11 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         startDate: selectedate.firstOrNull,
         selectedPipelineValue: selectedPipelineValue,
       ));
+
+      BlocProvider.of<PipelineTileBloc>(context).add(PipelineTileInitialEvent(
+        endDate: selectedate.lastOrNull,
+        startDate: selectedate.firstOrNull,
+      ));
     }
   }
 
@@ -375,8 +381,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                     selectedItems.removeAt(index);
                   }
                   if (selectedItems.isEmpty) {
-                    showSnackbar(
-                        context,  s.filterApplySnackBarText );
+                    showSnackbar(context, s.filterApplySnackBarText);
                     pipelineIds.clear();
                   }
                 });
