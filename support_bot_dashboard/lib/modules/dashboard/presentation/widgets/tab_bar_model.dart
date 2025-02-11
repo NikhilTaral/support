@@ -12,6 +12,10 @@ enum TypeBarType {
 }
 
 class TabBarWidget {
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String? title;
   final Widget view;
   final IconData? icon;
@@ -20,6 +24,10 @@ class TabBarWidget {
   final TypeBarType type;
 
   const TabBarWidget({
+    this.endDate,
+    this.pipelineName,
+    this.piplineId,
+    this.startDate,
     this.title,
     required this.view,
     required this.type,
@@ -30,6 +38,7 @@ class TabBarWidget {
   static List<TabBarWidget> organizationItemList(BuildContext context) {
     final s = serviceLocator<S>();
     List<TabBarWidget> tabBarList = [];
+    
 
     tabBarList.add(
       const TabBarWidget(

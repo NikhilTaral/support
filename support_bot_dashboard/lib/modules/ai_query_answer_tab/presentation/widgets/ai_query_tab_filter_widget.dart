@@ -40,7 +40,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     return BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
       builder: (context, state) {
         if (state is GetAllAllPipelineSuccessState) {
-          List<Datums> items = state.attributeModel?.data ?? [];
+          List<GetAllPipelineData> items = state.attributeModel?.data ?? [];
           return _buildFiltersRow(items);
         } else if (state is GetAllPipelineLoadingState) {
           return _buildLoadingState();
@@ -57,7 +57,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     );
   }
 
-  Widget _buildFiltersRow(List<Datums> items) {
+  Widget _buildFiltersRow(List<GetAllPipelineData> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -84,7 +84,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     );
   }
 
-  Widget _buildPipelineDropdown(List<Datums> items) {
+  Widget _buildPipelineDropdown(List<GetAllPipelineData> items) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: PipelineTypeWidget(
@@ -253,11 +253,12 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     }
   }
 
-  void _onPipelineSelectionChanged(String? selectedName, List<Datums> items) {
+  void _onPipelineSelectionChanged(
+      String? selectedName, List<GetAllPipelineData> items) {
     pipelineIds.clear();
     final matchingItem = items.firstWhere(
       (item) => item.pipelineName == selectedName,
-      orElse: () => Datums(pipelineName: '', pipelineId: ''),
+      orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
     );
     if (matchingItem.pipelineId?.isNotEmpty == true) {
       pipelineIds.add(matchingItem.pipelineId ?? "");

@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Support Bot',
       debugShowCheckedModeBanner: false,
-      routeInformationParser: MyAppRoutes().router.routeInformationParser,
-      routerDelegate: MyAppRoutes().router.routerDelegate,
+      routeInformationParser: MyAppRoutes.router.routeInformationParser,
+      routerDelegate: MyAppRoutes.router.routerDelegate,
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Roboto',

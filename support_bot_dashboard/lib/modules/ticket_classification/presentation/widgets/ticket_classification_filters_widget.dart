@@ -19,8 +19,16 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
 
 class TicketClassificationFiltersWidget extends StatefulWidget {
-  TicketClassificationFiltersWidget({super.key});
-
+  const TicketClassificationFiltersWidget(
+      {super.key,
+      this.endDate,
+      this.pipelineName,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
   @override
   _HomeFiltersWidgetState createState() => _HomeFiltersWidgetState();
 }
@@ -46,7 +54,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
         builder: (context, state) {
           if (state is GetAllAllPipelineSuccessState) {
-            List<Datums> items = state.attributeModel?.data ?? [];
+            List<GetAllPipelineData> items = state.attributeModel?.data ?? [];
             return _buildFiltersRow(items);
           } else if (state is GetAllPipelineLoadingState) {
             return _buildLoadingState();
@@ -91,7 +99,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _buildFiltersRow(List<Datums> items) {
+  Widget _buildFiltersRow(List<GetAllPipelineData> items) {
     return SizedBox(
       height: 40,
       child: SingleChildScrollView(
@@ -123,20 +131,23 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _buildPipelineDropdown(List<Datums> items) {
+  Widget _buildPipelineDropdown(List<GetAllPipelineData> items) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 220),
       child: TicketClassificationPipelineWidget(
-        hintText:
-            selectedPipeline.isEmpty ? s.intialpiplineText : selectedPipeline,
+        hintText: selectedPipeline.isEmpty
+            ? (widget.pipelineName ?? '')
+            : selectedPipeline,
         items: items,
         selectedItem: selectedPipeline,
         onChanged: (selectedName) async {
           setState(() {
-            selectedPipeline = selectedName;
+            if (widget.pipelineName != null) {
+              //selectedItems.clear();
+              selectedPipeline = (widget.pipelineName ?? "");
+            }
+            //selectedPipeline = selectedName;
           });
-
-          await _savePipelineToLocalStorage(selectedName);
 
           _onPipelineSelectionChanged([selectedName], items);
         },
@@ -145,12 +156,12 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   void _onPipelineSelectionChanged(
-      List<String> selectedNames, List<Datums> items) async {
+      List<String> selectedNames, List<GetAllPipelineData> items) async {
     pipelineIds = [];
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
-        orElse: () => Datums(pipelineName: '', pipelineId: ''),
+        orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
       );
       if (matchingItem.pipelineId?.isNotEmpty == true) {
         pipelineIds.add(matchingItem.pipelineId ?? "");
@@ -158,10 +169,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     }
 
     await LocalStorage.savePipelineIds(pipelineIds);
-  }
-
-  Future<void> _savePipelineToLocalStorage(String selectedName) async {
-    await LocalStorage.savePipeline(selectedName);
   }
 
   Widget _buildDateRangeSelector() {
@@ -182,8 +189,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             startDate = selectedDates![0];
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
-            endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 0));
+            endDate = widget.endDate ?? DateTime.now();
+            startDate = widget.startDate ?? DateTime.now();
           }
 
           return Container(

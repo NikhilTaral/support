@@ -13,13 +13,13 @@ class GetAllPipelinesRepoImpl extends GetAllPipelinesRepository {
 
   @override
   Future<Either<Failure, dynamic>> getAllPipeline() async {
-   try {
-       final dynamic response = await serviceLocator<ApiProvider>()
+    try {
+      final dynamic response = await serviceLocator<ApiProvider>()
           .getData(url: "dashboard/getAllPipelines", body: {});
       if (response is Left) {
         return Left(ServerFailure(message: s.aPIErrorMsgText));
       } else {
-       final model = getAllPipelinesFromJson(jsonEncode(response));
+        final model = getAllPipelinesFromJson(jsonEncode(response));
         return Right(model);
       }
     } catch (e) {

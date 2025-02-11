@@ -5,7 +5,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeli
 
 class PipelineDropdownBloc
     extends Bloc<PipelineDropdownEvent, PipelineDropdownState> {
-  List<Datums> _items = [];
+  List<GetAllPipelineData> _items = [];
   List<String> selectedItems = [];
 
   PipelineDropdownBloc() : super(PipelineDropdownInitialState()) {
@@ -52,7 +52,7 @@ class PipelineDropdownBloc
     ));
   }
 
-  List<Datums> _filterItems(String query) {
+  List<GetAllPipelineData> _filterItems(String query) {
     return _items
         .where((item) =>
             item.pipelineName

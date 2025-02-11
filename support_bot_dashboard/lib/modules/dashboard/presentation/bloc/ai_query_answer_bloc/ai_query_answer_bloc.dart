@@ -7,12 +7,13 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_cha
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 
 part 'ai_query_answer_event.dart';
 part 'ai_query_answer_state.dart';
 
 class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
-  List<String>? selectedPipelineId = ["11257490"];
+  List<String>? selectedPipelineId = [""];
   AiQueryAnswerBloc() : super(AIQueryAnswerIntialState()) {
     on<AIQueryAnswerInitialEvent>(_aIQueryAnswerInitialEvent);
   }
@@ -20,12 +21,12 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
       AIQueryAnswerInitialEvent event, Emitter<AiQueryAnswerState> emit) async {
     emit(AIQueryAnswerLoadingState());
     try {
-      DashboardDataModel dashboardDataModel = DashboardDataModel();
+      selectedPipelineId = event.selectedPipelineValue ?? [""];
       final repository = serviceLocator<DashboardAiQueryAnswerUsecase>();
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
           Filter(
-              fieldValue: event.selectedPipelineValue ?? ["11257490"],
+              fieldValue: selectedPipelineId ?? [""],
               fieldName: event.fieldName ?? "pipelines")
         ],
         startDate: (event.startDate ?? DateTime.now())
