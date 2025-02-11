@@ -76,7 +76,7 @@ class HomePageWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       color: SupportBotColors.white,
                     ),
-                    child: const DashboardPipelineChart(),
+                    child: DashboardPipelineChart(),
                   );
                 } else if (state is PipelineTileLoadingState) {
                   return LoadingWidget(

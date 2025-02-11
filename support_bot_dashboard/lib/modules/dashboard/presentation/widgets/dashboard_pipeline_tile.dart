@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/pipeline_tile_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -10,7 +11,8 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardPipelineChart extends StatelessWidget {
-  const DashboardPipelineChart({Key? key}) : super(key: key);
+  final s = serviceLocator<S>();
+  DashboardPipelineChart({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class DashboardPipelineChart extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      S.of(context).piplineText,
+                      s.piplineText,
                       style: SupportBotTextstyle.normal.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
@@ -89,7 +91,7 @@ class DashboardPipelineChart extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                             ),
                             UIHelpers.horizontalSpaceSmall,
-                            Text(S.of(context).validatedTicketsText,
+                            Text(s.validatedTicketsText,
                                 style: SupportBotTextstyle.normal.copyWith(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
@@ -103,7 +105,7 @@ class DashboardPipelineChart extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                             ),
                             UIHelpers.horizontalSpaceSmall,
-                            Text(S.of(context).totalTicketsText,
+                            Text(s.totalTicketsText,
                                 style: SupportBotTextstyle.normal.copyWith(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
