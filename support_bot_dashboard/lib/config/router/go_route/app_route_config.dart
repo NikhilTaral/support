@@ -52,19 +52,22 @@ class MyAppRoutes {
       ),
     ],
     redirect: (context, state) async {
-      var isAuthenticated = await serviceLocator<AuthService>()
-          .checkValidToken(); // Use a synchronous check
-
-      final goingToLogin = state.location == "/login";
-      final goingToDashboard = state.location == "/dashboard";
-
-      if (!isAuthenticated) {
-        return "/login"; // Redirect to login if not authenticated
-      } else if (isAuthenticated && goingToLogin) {
-        return "/"; // Redirect authenticated users away from login
-      }
-
-      return null; // No redirection needed
+      return redirect(context, state);
     },
   );
+}
+
+Future<String?> redirect(BuildContext context, GoRouterState state) async {
+  var isAuthenticated = await serviceLocator<AuthService>().checkValidToken();
+
+  final goingToLogin = state.location == "/login";
+  final goingToDashboard = state.location == "/dashboard";
+
+  if (!isAuthenticated) {
+    return "/login";
+  } else if (isAuthenticated && goingToLogin) {
+    return "/";
+  }
+
+  return null;
 }
