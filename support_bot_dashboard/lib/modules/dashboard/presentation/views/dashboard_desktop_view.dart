@@ -13,11 +13,19 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  DashboardDesktopView(
+      {super.key,
+      this.pipelineName,
+      this.index,
+      this.piplineId,
+      this.endDate,
+      this.startDate});
+
   final s = serviceLocator<S>();
-  DashboardDesktopView({
-    super.key,
-    this.index,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +76,21 @@ class DashboardDesktopView extends StatelessWidget {
             if (selectedIndex == 0) ...{
               Padding(
                 padding: padding,
-                child: const HomeFiltersWidget(),
+                child: HomeFiltersWidget(
+                    pipelineName: pipelineName,
+                    piplineId: piplineId,
+                    endDate: endDate,
+                    startDate: startDate),
               )
             },
             if (selectedIndex == 1) ...{
               Padding(
                 padding: padding,
-                child: TicketClassificationFiltersWidget(),
+                child: TicketClassificationFiltersWidget(
+                    pipelineName: pipelineName,
+                    piplineId: piplineId,
+                    endDate: endDate,
+                    startDate: startDate),
               )
             },
             if (selectedIndex == 2) ...{
@@ -83,7 +99,11 @@ class DashboardDesktopView extends StatelessWidget {
                 child: const AIQueryTabFilterWidget(),
               ),
             },
-            MyOrganizationNavBar(index: selectedIndex),
+            MyOrganizationNavBar(
+                index: selectedIndex,
+                piplineId: piplineId,
+                endDate: endDate,
+                startDate: startDate),
             UIHelpers.verticalSpaceSmall,
             Expanded(
               child: ScrollbarTheme(

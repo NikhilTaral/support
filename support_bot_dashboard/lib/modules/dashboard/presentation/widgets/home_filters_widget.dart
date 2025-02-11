@@ -21,7 +21,16 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class HomeFiltersWidget extends StatefulWidget {
-  const HomeFiltersWidget({super.key});
+  const HomeFiltersWidget(
+      {super.key,
+      this.pipelineName,
+      this.endDate,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   @override
   _HomeFiltersWidgetState createState() => _HomeFiltersWidgetState();
@@ -31,15 +40,24 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
   List<DateTime?> selectedate = [];
-  List<String> selectedItems = ['Expert Care Level 1'];
+  List<String> selectedItems = [];
   List<String> pipelineIds = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.pipelineName != null) {
+      selectedItems.clear();
+      selectedItems.add(widget.pipelineName ?? "");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
       builder: (context, state) {
         if (state is GetAllAllPipelineSuccessState) {
-          List<Datums> items = state.attributeModel?.data ?? [];
+          List<GetAllPipelineData> items = state.attributeModel?.data ?? [];
           return _buildFiltersRow(items);
         } else if (state is GetAllPipelineLoadingState) {
           return _buildLoadingState();
@@ -56,7 +74,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     );
   }
 
-  Widget _buildFiltersRow(List<Datums> items) {
+  Widget _buildFiltersRow(List<GetAllPipelineData> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -79,7 +97,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     );
   }
 
-  Widget _buildPipelineDropdown(List<Datums> items) {
+  Widget _buildPipelineDropdown(List<GetAllPipelineData> items) {
     final s = serviceLocator<S>();
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
@@ -110,8 +128,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             startDate = selectedDates![0];
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
-            endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 0));
+            endDate = widget.endDate ?? DateTime.now();
+            startDate = widget.startDate ?? DateTime.now();
           }
 
           return Container(
@@ -159,8 +177,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       height: 180,
       child: ElevatedButton.icon(
         onPressed: _addEvents,
-       icon: const Icon(SupportBotIcons.filter, color: Colors.white),
-        label:  Text(
+        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
+        label: Text(
           s.filterApplyText,
           style: TextStyle(
             color: SupportBotColors.white,
@@ -226,12 +244,12 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   }
 
   void _onPipelineSelectionChanged(
-      List<String> selectedNames, List<Datums> items) {
+      List<String> selectedNames, List<GetAllPipelineData> items) {
     pipelineIds.clear();
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
-        orElse: () => Datums(pipelineName: '', pipelineId: ''),
+        orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
       );
       if (matchingItem.pipelineId?.isNotEmpty == true) {
         pipelineIds.add(matchingItem.pipelineId ?? "");
@@ -321,11 +339,6 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         startDate: selectedate.firstOrNull,
         selectedPipelineValue: selectedPipelineValue,
       ));
-
-      BlocProvider.of<GetAllPipelineBloc>(context).add(
-          GetAllPiplineInitialEvent(
-              selectedPipelineValue: selectedPipelineValue));
-
       BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId =
           selectedPipelineValue;
       BlocProvider.of<TicketClassificationBloc>(context)

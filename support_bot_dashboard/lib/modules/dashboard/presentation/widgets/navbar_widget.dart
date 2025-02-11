@@ -12,11 +12,16 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 
 class MyOrganizationNavBar extends StatefulWidget {
-  final num index;
-  const MyOrganizationNavBar({
-    super.key,
-    required this.index,
-  });
+  final int index;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  const MyOrganizationNavBar(
+      {super.key,
+      required this.index,
+      this.piplineId,
+      this.endDate,
+      this.startDate});
 
   @override
   State<MyOrganizationNavBar> createState() => _MyOrganizationNavBarState();
@@ -50,7 +55,9 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
 
   @override
   Widget build(BuildContext context) {
-    organizationItems = TabBarWidget.organizationItemList(context);
+    organizationItems = TabBarWidget.organizationItemList(
+      context,
+    );
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -76,7 +83,56 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
             indicatorColor: Colors.transparent,
             labelStyle:
                 const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-            onTap: (value) => onTap(context, value, selectedIndex),
+            onTap: (value) {
+              if (value != selectedIndex) {
+                BlocProvider.of<TabIndexBloc>(context)
+                    .add(TabIndexChangedEvent(currentIndex: value));
+                if (value == 0) {
+                  context.read<TicketClassificationBloc>().add(
+                      TickiteClassificationEvent(
+                          selectedPipelineValue: widget.piplineId,
+                          endDate: widget.endDate,
+                          startDate: widget.startDate));
+                  context.read<UserValidationBloc>().add(UserValidationsEvent(
+                      selectedPipelineValue: widget.piplineId,
+                      endDate: widget.endDate,
+                      startDate: widget.startDate));
+                  context.read<AiQueryAnswerBloc>().add(
+                      AIQueryAnswerInitialEvent(
+                          selectedPipelineValue: widget.piplineId,
+                          endDate: widget.endDate,
+                          startDate: widget.startDate));
+                  context.read<AiQueryEditedBloc>().add(
+                      AIQueryEditedInitialEvent(
+                          selectedPipelineValue: widget.piplineId,
+                          endDate: widget.endDate,
+                          startDate: widget.startDate));
+                  context.read<ValidationStatusBloc>().add(
+                      ValidationStatuseCallEvent(
+                          selectedPipelineValue: widget.piplineId,
+                          endDate: widget.endDate,
+                          startDate: widget.startDate));
+                }
+                if (value == 1) {
+                  BlocProvider.of<TicketClassificationTabBloc>(context)
+                      .clearFilters();
+                  context.read<TicketClassificationTabBloc>().add(
+                        TicketClassificationDataCallEvent(
+                          fieldValue: widget.piplineId,
+                          startDate: widget.startDate,
+                          endDate: widget.endDate,
+                          page: BlocProvider.of<TicketClassificationTabBloc>(
+                                  context)
+                              .page,
+                          pageSize:
+                              BlocProvider.of<TicketClassificationTabBloc>(
+                                      context)
+                                  .pageSize,
+                        ),
+                      );
+                }
+              }
+            },
             labelPadding: const EdgeInsets.only(left: 30),
             indicatorPadding: EdgeInsets.zero,
             tabs: List.generate(

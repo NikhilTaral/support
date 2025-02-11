@@ -5,7 +5,7 @@ abstract class PipelineDropdownState {}
 class PipelineDropdownInitialState extends PipelineDropdownState {}
 
 class DropdownPipelineTypesLoadedState extends PipelineDropdownState {
-  final List<Datums> filteredItems;
+  final List<GetAllPipelineData> filteredItems;
   final List<String> selectedItems;
 
   DropdownPipelineTypesLoadedState({
