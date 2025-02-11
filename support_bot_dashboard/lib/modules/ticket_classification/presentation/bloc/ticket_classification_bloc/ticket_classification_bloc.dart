@@ -65,9 +65,9 @@ class TicketClassificationTabBloc
             Filter(
                 fieldName: "classificationValidations",
                 fieldValue: [selectedValidation]),
-          Filter(fieldName: "pipelines", fieldValue: [
-            selectedPipelineId.isEmpty ? "11257490" : selectedPipelineId
-          ]),
+          Filter(
+              fieldName: "pipelines",
+              fieldValue: [event.fieldValue?.first ?? ""]),
         ],
       );
       final response = await repository.invoke(req);
@@ -81,7 +81,8 @@ class TicketClassificationTabBloc
         } else {
           page = model.data?.currentPage ?? 1;
 
-          ticketClassificationAttributeModel = TicketClassificationAttributeModel(
+          ticketClassificationAttributeModel =
+              TicketClassificationAttributeModel(
             data: model.data,
             failCode: model.failCode,
             message: model.message,
@@ -92,7 +93,8 @@ class TicketClassificationTabBloc
               currentIndex: 0,
               endDate: endDate,
               startDate: startDate,
-              ticketClassificationAttributeModel: ticketClassificationAttributeModel,
+              ticketClassificationAttributeModel:
+                  ticketClassificationAttributeModel,
               pipelineId: [selectedPipelineId]));
         }
       }
@@ -105,6 +107,6 @@ class TicketClassificationTabBloc
     selectedBOPsState = "";
     selectedClassification = "";
     selectedValidation = "";
-    selectedPipelineId = "11257490";
+    selectedPipelineId = "";
   }
 }

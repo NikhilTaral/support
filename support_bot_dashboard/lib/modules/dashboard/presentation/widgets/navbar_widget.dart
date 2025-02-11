@@ -114,6 +114,8 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
                           startDate: widget.startDate));
                 }
                 if (value == 1) {
+                  BlocProvider.of<TicketClassificationTabBloc>(context)
+                      .clearFilters();
                   context.read<TicketClassificationTabBloc>().add(
                         TicketClassificationDataCallEvent(
                           fieldValue: widget.piplineId,
