@@ -101,13 +101,17 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                         IconButton(
                           onPressed: currentPage.value > 1
                               ? () {
+                                  final bloc = BlocProvider.of<
+                                      TicketClassificationTabBloc>(context);
                                   currentPage.value--;
                                   context
                                       .read<TicketClassificationTabBloc>()
                                       .add(
                                         TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
+                                          fieldValue: bloc.selectedPipelineId
+                                              .split(","),
+                                          startDate: bloc.startDate,
+                                          endDate: bloc.endDate,
                                           page: currentPage.value,
                                           pageSize: pageSize.value,
                                         ),
@@ -133,13 +137,17 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                                           ?.data?.totalRecords ??
                                       0)
                               ? () {
+                                  final bloc = BlocProvider.of<
+                                      TicketClassificationTabBloc>(context);
                                   currentPage.value++;
                                   context
                                       .read<TicketClassificationTabBloc>()
                                       .add(
                                         TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
+                                          fieldValue: bloc.selectedPipelineId
+                                              .split(","),
+                                          startDate: bloc.startDate,
+                                          endDate: bloc.endDate,
                                           page: currentPage.value,
                                           pageSize: pageSize.value,
                                         ),

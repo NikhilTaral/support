@@ -146,7 +146,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
               //selectedItems.clear();
               selectedPipeline = (widget.pipelineName ?? "");
             }
-            //selectedPipeline = selectedName;
+            selectedPipeline = selectedName;
           });
 
           _onPipelineSelectionChanged([selectedName], items);
@@ -303,14 +303,13 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 180,
       child: ElevatedButton.icon(
         onPressed: () {
           final selectedPipelineValue =
-              pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
-
-          if (selectedPipelineValue.isEmpty) {
+              pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
+          if (selectedPipelineValue == null) {
             showSnackbar(
               context,
               s.filterApplySnackBarText,
@@ -447,11 +446,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             selectedBOPsState: selectedBOPsState,
             selectedClassification: selectedClassification,
             selectedValidation: selectedValidation,
-            fieldValue: ['11257490'],
-            endDate: DateTime.now()
-                ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
-            startDate: DateTime.now()
-                ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
+            fieldValue: widget.piplineId,
+            endDate: widget.endDate,
+            startDate: widget.startDate,
             page: 1,
             pageSize: 10,
           ));

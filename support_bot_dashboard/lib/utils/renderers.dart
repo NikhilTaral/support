@@ -244,7 +244,6 @@ class Renderers {
                   style: SupportBotTextstyle.hint.copyWith(
                     color: SupportBotColors.disablePrimary,
                   ),
-                 
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -330,6 +329,7 @@ class Renderers {
                         .add(TicketClassificationDataCallEvent(
                       startDate: bloc.startDate,
                       endDate: bloc.endDate,
+                      fieldValue: bloc.selectedPipelineId.split(','),
                       page:
                           BlocProvider.of<TicketClassificationTabBloc>(context)
                               .page,
@@ -512,6 +512,8 @@ class Renderers {
                                     TicketClassificationDataCallEvent(
                                       startDate: bloc.startDate,
                                       endDate: bloc.endDate,
+                                      fieldValue:
+                                          bloc.selectedPipelineId.split(','),
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(
                                               context)
