@@ -245,14 +245,14 @@ class LandingPageDesktopView extends StatelessWidget {
   Future<void> _pickDateRange(BuildContext context) async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.normal
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.w700),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle:
-          const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.normal
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.bold),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 
@@ -262,7 +262,7 @@ class LandingPageDesktopView extends StatelessWidget {
       dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
       value: selectedDatesNotifier.value?.cast<DateTime?>() ?? [],
-      dialogBackgroundColor: Colors.white,
+      dialogBackgroundColor: SupportBotColors.white,
     );
 
     if (pickedDates != null) {
@@ -291,7 +291,7 @@ class LandingPageDesktopView extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          icon: const Icon(Icons.arrow_forward, color: Colors.white),
+          icon: const Icon(Icons.arrow_forward, color: SupportBotColors.white),
         );
       },
     );
