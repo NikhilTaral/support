@@ -26,7 +26,7 @@ class TicketClassificationFiltersWidget extends StatefulWidget {
       this.piplineId,
       this.startDate});
   final String? pipelineName;
-  final List<String>? piplineId;
+  final String? piplineId;
   final DateTime? startDate;
   final DateTime? endDate;
   @override
@@ -44,7 +44,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   String selectedBOPsState = '';
   String selectedItem = '';
   String selectedValidation = '';
-  List<String> pipelineIds = [];
+  String pipelineIds = "";
   String selectedPipeline = "";
 
   @override
@@ -143,10 +143,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         onChanged: (selectedName) async {
           setState(() {
             if (widget.pipelineName != null) {
-              //selectedItems.clear();
               selectedPipeline = (widget.pipelineName ?? "");
             }
-            //selectedPipeline = selectedName;
+            selectedPipeline = selectedName;
           });
 
           _onPipelineSelectionChanged([selectedName], items);
@@ -157,18 +156,16 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   void _onPipelineSelectionChanged(
       List<String> selectedNames, List<GetAllPipelineData> items) async {
-    pipelineIds = [];
+    pipelineIds = '';
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
         orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
       );
       if (matchingItem.pipelineId?.isNotEmpty == true) {
-        pipelineIds.add(matchingItem.pipelineId ?? "");
+        pipelineIds = (matchingItem.pipelineId ?? "");
       }
     }
-
-    await LocalStorage.savePipelineIds(pipelineIds);
   }
 
   Widget _buildDateRangeSelector() {
@@ -303,14 +300,13 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 180,
       child: ElevatedButton.icon(
         onPressed: () {
           final selectedPipelineValue =
-              pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
-
-          if (selectedPipelineValue.isEmpty) {
+              pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
+          if (selectedPipelineValue == null) {
             showSnackbar(
               context,
               s.filterApplySnackBarText,
@@ -318,14 +314,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             return;
           }
           final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
-          bloc.selectedPipelineId = selectedPipelineValue.first;
+          bloc.selectedPipelineId = selectedPipelineValue;
           bloc.selectedBOPsState = selectedBOPsState;
           bloc.selectedClassification = selectedClassification;
           bloc.selectedValidation = selectedValidation;
           bloc.add(TicketClassificationDataCallEvent(
             fieldValue: selectedPipelineValue,
-            endDate: selectedate.lastOrNull,
-            startDate: selectedate.firstOrNull,
+            endDate: selectedate.lastOrNull ?? widget.endDate,
+            startDate: selectedate.firstOrNull ?? widget.startDate,
             page: 1,
             pageSize: 10,
           ));
@@ -366,7 +362,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     if (_searchController.text.isNotEmpty) {
                       _searchController.clear();
                       final selectedPipelineValue =
-                          pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+                          pipelineIds.isEmpty ? "11257490" : pipelineIds;
                       BlocProvider.of<TicketClassificationTabBloc>(context).add(
                         TicketClassificationDataCallEvent(
                           fieldValue: selectedPipelineValue,
@@ -407,7 +403,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                   ),
                   onSubmitted: (value) {
                     final selectedPipelineValue =
-                        pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+                        pipelineIds.isEmpty ? "11257490" : pipelineIds;
                     BlocProvider.of<TicketClassificationTabBloc>(context).add(
                       TicketClassificationDataCallEvent(
                         fieldValue: selectedPipelineValue,
@@ -438,7 +434,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             selectedBOPsState = '';
             selectedValidation = '';
             selectedDatesNotifier.value = null;
-            pipelineIds.clear();
+            pipelineIds = "";
             selectedPipeline = "";
           });
           BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
@@ -447,11 +443,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             selectedBOPsState: selectedBOPsState,
             selectedClassification: selectedClassification,
             selectedValidation: selectedValidation,
-            fieldValue: ['11257490'],
-            endDate: DateTime.now()
-                ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
-            startDate: DateTime.now()
-                ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
+            fieldValue: widget.piplineId,
+            endDate: widget.endDate,
+            startDate: widget.startDate,
             page: 1,
             pageSize: 10,
           ));
@@ -549,10 +543,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildExportButton() {
     String getPipelineId() {
-      if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
-        return pipelineIds.first ?? "11257490";
+      if (pipelineIds.isEmpty) {
+        return widget.piplineId ?? "";
       }
-      return '11257490';
+      return pipelineIds;
     }
 
     return Tooltip(
@@ -560,8 +554,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: ExportButton(
           icon: 'assets/icons/Export.svg',
           selectedButtonText: s.ticketClassification,
-          startDate: selectedDatesNotifier.value?.first ?? DateTime.now(),
-          endDate: selectedDatesNotifier.value?.last ?? DateTime.now(),
+          startDate: selectedate.firstOrNull ?? widget.startDate,
+          endDate: selectedate.lastOrNull ?? widget.endDate,
           bopsState: selectedBOPsState,
           selectedClassification: selectedClassification,
           selectedClassificationValidation: selectedValidation,

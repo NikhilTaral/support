@@ -52,6 +52,7 @@ class _TicketClassificationActionRendererState
             BlocProvider.of<TicketClassificationTabBloc>(context)
                 .add(TicketClassificationDataCallEvent(
               startDate: bloc.startDate,
+              fieldValue: bloc.selectedPipelineId,
               endDate: bloc.endDate,
               page: 1,
               pageSize: 10,
@@ -136,6 +137,7 @@ class _TicketClassificationActionRendererState
             BlocProvider.of<TicketClassificationTabBloc>(context).add(
               TicketClassificationDataCallEvent(
                 startDate: bloc.startDate,
+                fieldValue: bloc.selectedPipelineId,
                 endDate: bloc.endDate,
                 page: 1,
                 pageSize: 10,

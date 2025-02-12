@@ -319,40 +319,40 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
           selectedPipelineValue;
       BlocProvider.of<ValidationStatusBloc>(context)
           .add(ValidationStatuseCallEvent(
-        endDate: selectedate.lastOrNull,
-        startDate: selectedate.firstOrNull,
+        endDate: selectedate.lastOrNull ?? widget.endDate,
+        startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
 
       BlocProvider.of<AiQueryAnswerBloc>(context).selectedPipelineId =
           selectedPipelineValue;
       BlocProvider.of<AiQueryAnswerBloc>(context).add(AIQueryAnswerInitialEvent(
-        endDate: selectedate.lastOrNull,
-        startDate: selectedate.firstOrNull,
+        endDate: selectedate.lastOrNull ?? widget.endDate,
+        startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
 
       BlocProvider.of<AiQueryEditedBloc>(context).selectedPipelineId =
           selectedPipelineValue;
       BlocProvider.of<AiQueryEditedBloc>(context).add(AIQueryEditedInitialEvent(
-        endDate: selectedate.lastOrNull,
-        startDate: selectedate.firstOrNull,
+        endDate: selectedate.lastOrNull ?? widget.endDate,
+        startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
       BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId =
           selectedPipelineValue;
       BlocProvider.of<TicketClassificationBloc>(context)
           .add(TickiteClassificationEvent(
-        endDate: selectedate.lastOrNull,
-        startDate: selectedate.firstOrNull,
+        endDate: selectedate.lastOrNull ?? widget.endDate,
+        startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
 
       BlocProvider.of<UserValidationBloc>(context).selectedPipelineId =
           selectedPipelineValue;
       BlocProvider.of<UserValidationBloc>(context).add(UserValidationsEvent(
-        endDate: selectedate.lastOrNull,
-        startDate: selectedate.firstOrNull,
+        endDate: selectedate.lastOrNull ?? widget.endDate,
+        startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
 

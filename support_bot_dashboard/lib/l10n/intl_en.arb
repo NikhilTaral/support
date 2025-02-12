@@ -32,6 +32,10 @@
   "@searchText": {
     "description": "Search"
   },
+  "getStartedText": "Get Started",
+  "@getStartedText": {
+    "description": "Get Started"
+  },
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"

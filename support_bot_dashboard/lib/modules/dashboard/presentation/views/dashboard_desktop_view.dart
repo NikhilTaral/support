@@ -14,7 +14,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
   final String? pipelineName;
-  final List<String>? piplineId;
+  final String? piplineId;
   final DateTime? startDate;
   final DateTime? endDate;
   DashboardDesktopView(
@@ -53,7 +53,11 @@ class DashboardDesktopView extends StatelessWidget {
         ? index!
         : BlocProvider.of<TabIndexBloc>(context).currentIndex;
 
-    var incomeItems = TabBarWidget.organizationItemList(context);
+    var incomeItems = TabBarWidget.organizationItemList(context,
+        endDate: endDate,
+        pipelineName: pipelineName,
+        piplineId: piplineId,
+        startDate: startDate);
 
     if (incomeItems.isEmpty) {
       return Center(child: Text(s.noItemsText));
@@ -78,7 +82,7 @@ class DashboardDesktopView extends StatelessWidget {
                 padding: padding,
                 child: HomeFiltersWidget(
                     pipelineName: pipelineName,
-                    piplineId: piplineId,
+                    piplineId: [piplineId??""],
                     endDate: endDate,
                     startDate: startDate),
               )
@@ -96,7 +100,11 @@ class DashboardDesktopView extends StatelessWidget {
             if (selectedIndex == 2) ...{
               Padding(
                 padding: padding,
-                child: const AIQueryTabFilterWidget(),
+                child: AIQueryTabFilterWidget(
+                    pipelineName: pipelineName,
+                    piplineId: piplineId,
+                    endDate: endDate,
+                    startDate: startDate),
               ),
             },
             MyOrganizationNavBar(

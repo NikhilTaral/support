@@ -30,6 +30,9 @@
   "searchText": "Search...",
   "@searchText": {
     "description": "Search"
+  }, "getStartedText": "Get Started",
+  "@getStartedText": {
+    "description": "Get Started"
   }
   
 }

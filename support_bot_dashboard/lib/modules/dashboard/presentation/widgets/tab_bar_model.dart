@@ -35,10 +35,13 @@ class TabBarWidget {
     this.svgPath,
   });
 
-  static List<TabBarWidget> organizationItemList(BuildContext context) {
+  static List<TabBarWidget> organizationItemList(BuildContext context,
+      {String? pipelineName,
+      String? piplineId,
+      DateTime? startDate,
+      DateTime? endDate}) {
     final s = serviceLocator<S>();
     List<TabBarWidget> tabBarList = [];
-    
 
     tabBarList.add(
       const TabBarWidget(
@@ -52,22 +55,32 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-       TabBarWidget(
-        title:s.ticketClassification,
-        view: const SizedBox(
+      TabBarWidget(
+        title: s.ticketClassification,
+        view: SizedBox(
           width: double.infinity,
-          child: TicketClassification(),
+          child: TicketClassification(
+            pipelineName: pipelineName ?? "",
+            piplineId: piplineId,
+            endDate: endDate ?? DateTime.now(),
+            startDate: startDate ?? DateTime.now(),
+          ),
         ),
         type: TypeBarType.ticketClassification,
       ),
     );
 
     tabBarList.add(
-       TabBarWidget(
-        title:s.aiQueryAnswer,
-        view: const SizedBox(
+      TabBarWidget(
+        title: s.aiQueryAnswer,
+        view: SizedBox(
           width: double.infinity,
-          child: AIQueryEditedScreen(),
+          child: AIQueryEditedScreen(
+            pipelineName: pipelineName ?? "",
+            piplineId: piplineId,
+            endDate: endDate ?? DateTime.now(),
+            startDate: startDate ?? DateTime.now(),
+          ),
         ),
         type: TypeBarType.aIQueryAnswer,
       ),
