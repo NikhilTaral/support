@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_que
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashb
 import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashboard_desktop_view.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/responsive.dart';
+import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 
 class Dashboard extends StatelessWidget {
@@ -89,6 +91,11 @@ class Dashboard extends StatelessWidget {
           BlocProvider<UpdateAiAnswerBloc>(
             create: (context) => UpdateAiAnswerBloc(),
             child: const AIQueryTabFilterWidget(),
+          ),
+          BlocProvider<PipelineTileBloc>(
+            create: (context) => PipelineTileBloc()
+              ..add(PipelineTileInitialEvent(
+                  endDate: endDate, startDate: startDate)),
           ),
         ],
         child: Responsive(
