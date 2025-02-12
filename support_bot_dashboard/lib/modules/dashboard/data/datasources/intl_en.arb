@@ -194,6 +194,21 @@
 "ticketNotClassified": "Not Classified",
   "@ticketNotClassified": {
     "description": "Not Classified"
+  },
+  "somethingWentWrongText": "Something Went Wrong",
+    "@somethingWentWrongText": {
+      "description":"Something Went Wrong Text"
+  },
+  "validatedTicketsText": "Validated Tickets",
+    "@validatedTicketsText": {
+      "description":"Validated Tickets Text"
+  },
+  "totalTicketsText": "Total Tickets",
+    "@totalTicketsText": {
+      "description":"Total Tickets Text"
+  },
+  "pipelineText": "Pipeline",
+    "@pipelineText": {
+      "description":"Pipeline Text"
   }
- 
 }

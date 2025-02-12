@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/validation_status_bloc/validation_status_bloc.dart';
@@ -353,6 +354,11 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
+      ));
+
+      BlocProvider.of<PipelineTileBloc>(context).add(PipelineTileInitialEvent(
+        endDate: selectedate.lastOrNull,
+        startDate: selectedate.firstOrNull,
       ));
     }
   }

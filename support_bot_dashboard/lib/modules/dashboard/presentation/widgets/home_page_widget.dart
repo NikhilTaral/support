@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/charts.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_count_container_data.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pipeline_tile.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
+import 'custom_pipeline_chart.dart';
+
 class HomePageWidget extends StatelessWidget {
-  const HomePageWidget({super.key});
+  HomePageWidget({super.key});
+
+  final s = serviceLocator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +68,7 @@ class HomePageWidget extends StatelessWidget {
               },
             ),
             UIHelpers.verticalSpaceRegular,
-             Charts(),
+            Charts(),
           ],
         )),
       ],
