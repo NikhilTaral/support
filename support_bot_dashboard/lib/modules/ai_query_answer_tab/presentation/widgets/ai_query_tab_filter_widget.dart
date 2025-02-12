@@ -200,7 +200,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
             selectedItem = widget.pipelineName ?? "";
             startDate = widget.startDate ?? DateTime.now();
             endDate = widget.endDate ?? DateTime.now();
-            selectedDatesNotifier.value = [startDate!, endDate!];
+            selectedDatesNotifier.value = [startDate??DateTime.now(), endDate??DateTime.now()];
 
             pipelineIds = "";
           });
