@@ -32,6 +32,10 @@
   "@searchText": {
     "description": "Search"
   },
+  "getStartedText": "Get Started",
+  "@getStartedText": {
+    "description": "Get Started"
+  },
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"
@@ -353,5 +357,9 @@
   "validatedClassificationText": "Validated Classification",
   "@validatedClassificationText": {
     "description": "Validated Classification Text"
+  },
+  "validatedUserText": "Validated User",
+  "@validatedUserText": {
+    "description": "Validated User Text"
   }
 }

@@ -6,12 +6,12 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validation_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -42,15 +42,28 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   String selectedClassification = '';
   List<DateTime?> selectedate = [];
   String selectedBOPsState = '';
+  String selectedUserValidator = "";
   String selectedItem = '';
+  String selectedUserName = "";
   String selectedValidation = '';
   String pipelineIds = "";
   String selectedPipeline = "";
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BopsStatesBloc()..add(BopsStateDataEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => BopsStatesBloc()..add(BopsStateDataEvent()),
+        ),
+        BlocProvider(
+          create: (context) => GetAllValidationUsersBloc()
+            ..add(GetValidationUsersInitialEvent(
+                endDate: widget.endDate,
+                filter: [widget.piplineId ?? ""],
+                startDate: widget.startDate)),
+        ),
+      ],
       child: BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
         builder: (context, state) {
           if (state is GetAllAllPipelineSuccessState) {
@@ -116,6 +129,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             _buildTicketClassificationDropdown(),
             UIHelpers.horizontalSpaceRegular,
             _buildValidationDropdown(),
+            UIHelpers.horizontalSpaceRegular,
+            _getAllValidatedUser(),
             UIHelpers.horizontalSpaceRegular,
             _buildApplyFilterButton(
               context,
@@ -299,6 +314,59 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
+  Widget _getAllValidatedUser() {
+    return SizedBox(
+      child: BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+        builder: (context, state) {
+          if (state is GetAllValidationUsersSuccessState) {
+            var users = state.getAllValidationUsersAttributeModel?.data ?? [];
+
+            return CustomMonthDropdown(
+              items: users.map((e) => e.name ?? "").toSet().toList(),
+              label: selectedUserName.isEmpty
+                  ? s.validatedUserText
+                  : users
+                          .firstWhere(
+                            (element) => element.email == selectedUserValidator,
+                            orElse: () => users.first,
+                          )
+                          .name ??
+                      s.validatedUserText,
+              onChanged: (value) async {
+                var selectedUser = users.firstWhere(
+                  (element) => element.name == value,
+                  orElse: () => users.first,
+                );
+
+                BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+                  SetUserNameEvent(
+                    email: selectedUser.email,
+                    name: selectedUser.name,
+                  ),
+                );
+
+                setState(() {
+                  selectedUserValidator = selectedUser.email ?? '';
+                  selectedUserName = selectedUser.name ?? "";
+                });
+              },
+              selectedValue: selectedUserValidator,
+            );
+          }
+          if (state is GetAllValidationUsersFailureState) {
+            return const SizedBox(child: Text("Data Not Available"));
+          }
+          return CustomMonthDropdown(
+            items: [],
+            label: s.validatedUserText,
+            onChanged: (value) {},
+            selectedValue: selectedUserName,
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildApplyFilterButton(BuildContext context) {
     return SizedBox(
       height: 180,
@@ -315,6 +383,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           }
           final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
           bloc.selectedPipelineId = selectedPipelineValue;
+          bloc.selectedUserValidator = selectedUserValidator;
           bloc.selectedBOPsState = selectedBOPsState;
           bloc.selectedClassification = selectedClassification;
           bloc.selectedValidation = selectedValidation;
@@ -429,6 +498,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: ElevatedButton.icon(
         onPressed: () async {
           setState(() {
+            selectedUserValidator = '';
             selectedItem = '';
             selectedClassification = '';
             selectedBOPsState = '';

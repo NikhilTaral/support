@@ -19,6 +19,7 @@ class TicketClassificationTabBloc
   num pageSize = 10;
   String selectedBOPsState = "";
   String selectedClassification = "";
+  String selectedUserValidator = "";
   String selectedValidation = "";
   String selectedPipelineId = "";
   DateTime? endDate = DateTime.now()
@@ -28,7 +29,9 @@ class TicketClassificationTabBloc
 
   TicketClassificationTabBloc() : super(TicketClassificationIntialState()) {
     on<TicketClassificationDataCallEvent>(_onTicketClassification);
+  
   }
+  
 
   FutureOr<void> _onTicketClassification(
       TicketClassificationDataCallEvent event,
@@ -63,6 +66,10 @@ class TicketClassificationTabBloc
             Filter(
                 fieldName: "classifications",
                 fieldValue: [selectedClassification]),
+          if (selectedUserValidator != "")
+            Filter(
+                fieldName: "classificationValidatedBy",
+                fieldValue: [selectedUserValidator]),
           if (selectedValidation != "")
             Filter(
                 fieldName: "classificationValidations",
@@ -104,6 +111,7 @@ class TicketClassificationTabBloc
   }
 
   void clearFilters() {
+    selectedUserValidator = "";
     selectedBOPsState = "";
     selectedClassification = "";
     selectedValidation = "";
