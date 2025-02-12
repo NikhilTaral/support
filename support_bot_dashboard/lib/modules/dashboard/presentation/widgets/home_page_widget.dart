@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/charts.dart';
@@ -10,10 +12,16 @@ import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
+import 'custom_pipeline_chart.dart';
+
 class HomePageWidget extends StatelessWidget {
-  const HomePageWidget({super.key});
+  HomePageWidget({super.key});
+
+  final s = serviceLocator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,49 +68,10 @@ class HomePageWidget extends StatelessWidget {
               },
             ),
             UIHelpers.verticalSpaceRegular,
-            _buildPipelineTile(),
-            UIHelpers.verticalSpaceRegular,
             Charts(),
           ],
         )),
       ],
     ));
   }
-}
-
-Widget _buildPipelineTile() {
-  return BlocBuilder<PipelineTileBloc, PipelineTileState>(
-    builder: (context, state) {
-      double containerHeight = 0;
-      if (state is PipelineTileSuccessState) {
-        final checkVisibility =
-            BlocProvider.of<PipelineTileBloc>(context).isVisible ?? false;
-        containerHeight = checkVisibility ? 430 : 65;
-        return Container(
-          height: containerHeight,
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            border: Border.all(color: SupportBotColors.gray),
-            borderRadius: BorderRadius.circular(8),
-            color: SupportBotColors.white,
-          ),
-          child: DashboardPipelineChart(),
-        );
-      } else if (state is PipelineTileLoadingState) {
-        return LoadingWidget(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            width: UIHelpers.screenWidth(context),
-            height: 65);
-      } else if (state is PipelineTileFailureState) {
-        return FailureWidget(
-          onTap: () {
-            context.read<PipelineTileBloc>().add(PipelineTileInitialEvent());
-          },
-        );
-      } else if (state is PipelineTileEmptyState) {
-        return const EmptyWidget();
-      }
-      return const SizedBox.shrink();
-    },
-  );
 }

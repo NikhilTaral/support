@@ -44,7 +44,7 @@ class TabBarWidget {
     List<TabBarWidget> tabBarList = [];
 
     tabBarList.add(
-      const TabBarWidget(
+      TabBarWidget(
         svgPath: 'assets/icons/House.svg',
         view: SizedBox(
           width: double.infinity,

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/pipeline_tile_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pipeline_chart.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
@@ -20,250 +19,74 @@ class DashboardPipelineChart extends StatelessWidget {
       builder: (context, state) {
         if (state is PipelineTileSuccessState) {
           final data = state.pipelineTileAttributeModel?.items;
-
-          return Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          return (BlocProvider.of<PipelineTileBloc>(context).isVisible == true)
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      s.piplineText,
-                      style: SupportBotTextstyle.normal.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: SupportBotColors.black,
-                      ),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        context.read<PipelineTileBloc>().add(
-                            TogglePipelineChartVisibilityEvent(
-                                isVisible:
-                                    BlocProvider.of<PipelineTileBloc>(context)
-                                            .isVisible ??
-                                        false));
-                      },
-                      child: Icon(
-                        BlocProvider.of<PipelineTileBloc>(context).isVisible ==
-                                true
-                            ? SupportBotIcons.eye
-                            : SupportBotIcons.visibilityOff,
-                        color: SupportBotColors.bluePrimary.shade400,
-                      ),
-                    ),
-                    UIHelpers.horizontalSpaceMedium,
+                    UIHelpers.verticalSpaceSmall,
+                    _buildChart(context, data),
+                    _buildIndicator()
                   ],
-                ),
-                UIHelpers.verticalSpaceRegular,
-                if (BlocProvider.of<PipelineTileBloc>(context).isVisible ==
-                    true)
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 25.0),
-                              child: SizedBox(
-                                width: (data?.length ?? 0) * 250,
-                                height: (data?.length ?? 0) * 40,
-                                child: CustomPipelineChart(
-                                  pipleineData: data,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        UIHelpers.verticalSpaceRegular,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 680,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 15,
-                                    width: 15,
-                                    decoration: BoxDecoration(
-                                        color: SupportBotColors
-                                            .bluePrimary.shade200,
-                                        borderRadius: BorderRadius.circular(5)),
-                                  ),
-                                  UIHelpers.horizontalSpaceSmall,
-                                  Text(s.totalTicketsText,
-                                      style:
-                                          SupportBotTextstyle.normal.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                      )),
-                                  UIHelpers.horizontalSpaceMedium,
-                                  Container(
-                                    height: 15,
-                                    width: 15,
-                                    decoration: BoxDecoration(
-                                        color: SupportBotColors
-                                            .bluePrimary.shade400,
-                                        borderRadius: BorderRadius.circular(5)),
-                                  ),
-                                  UIHelpers.horizontalSpaceSmall,
-                                  Text(s.validatedTicketsText,
-                                      style:
-                                          SupportBotTextstyle.normal.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          );
+                )
+              : const SizedBox.shrink();
         }
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       },
     );
   }
-}
 
-class CustomPipelineChart extends StatelessWidget {
-  final List<AttributeItem>? pipleineData;
-
-  CustomPipelineChart({
-    Key? key,
-    required this.pipleineData,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final maxTotalTickets = pipleineData?.map((e) => e.totalTickets ?? 0).fold(
-            0,
-            (prev, next) =>
-                prev.toInt() > next.toInt() ? prev.toInt() : next.toInt()) ??
-        0;
-    final int numberOfDivisions = maxTotalTickets > 500 ? 15 : 5;
-    final intervalValue = (maxTotalTickets / numberOfDivisions).ceilToDouble();
-
-    return RotatedBox(
-      quarterTurns: 1,
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          maxY: pipleineData
-              ?.map((e) => e.totalTickets)
-              .toList()
-              .reduce((curr, next) => (curr ?? 0) > next! ? curr : next)
-              ?.toDouble(),
-          minY: 0,
-          barGroups: List.generate(pipleineData?.length ?? 0, (index) {
-            final item = pipleineData?[index];
-            return BarChartGroupData(
-              x: index,
-              barRods: [
-                BarChartRodData(
-                  toY: item?.totalTickets?.toDouble() ?? 0,
-                  color: SupportBotColors.bluePrimary.shade200,
-                  width: 20,
-                  borderRadius: const BorderRadius.all(Radius.circular(4)),
-                  rodStackItems: [
-                    BarChartRodStackItem(
-                      0,
-                      item?.validatedTickets?.toDouble() ?? 0,
-                      SupportBotColors.bluePrimary.shade400,
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 210,
-                interval: 1,
-                getTitlesWidget: (double value, TitleMeta meta) {
-                  int index = value.toInt();
-                  if (index > 0 && index < (pipleineData?.length ?? 0)) {
-                    return RotatedBox(
-                      quarterTurns: -1,
-                      child: SizedBox(
-                        width: 200,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              pipleineData?[index].pipelineName ?? '',
-                              style: SupportBotTextstyle.normal.copyWith(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+  Widget _buildIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 680,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 15,
+                width: 15,
+                decoration: BoxDecoration(
+                    color: SupportBotColors.bluePrimary.shade200,
+                    borderRadius: BorderRadius.circular(5)),
               ),
-            ),
-            rightTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: intervalValue,
-                getTitlesWidget: (double value, TitleMeta meta) {
-                  return RotatedBox(
-                    quarterTurns: -1,
-                    child: Text(
-                      value.toInt().toString(),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  );
-                },
+              UIHelpers.horizontalSpaceSmall,
+              Text(s.totalTicketsText,
+                  style: SupportBotTextstyle.normal.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  )),
+              UIHelpers.horizontalSpaceMedium,
+              Container(
+                height: 15,
+                width: 15,
+                decoration: BoxDecoration(
+                    color: SupportBotColors.bluePrimary.shade400,
+                    borderRadius: BorderRadius.circular(5)),
               ),
-            ),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              UIHelpers.horizontalSpaceSmall,
+              Text(s.validatedTicketsText,
+                  style: SupportBotTextstyle.normal.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  )),
+            ],
           ),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: 100,
-            getDrawingHorizontalLine: (value) {
-              return FlLine(
-                color: Colors.grey.withOpacity(0),
-                strokeWidth: 1,
-                dashArray: [10, 0],
-              );
-            },
-          ),
-          borderData: FlBorderData(show: false),
-          barTouchData: BarTouchData(
-            enabled: true,
-            touchTooltipData: BarTouchTooltipData(
-              direction: TooltipDirection.bottom,
-              rotateAngle: 270,
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  'Validated: ${pipleineData?[groupIndex].validatedTickets?.toInt() ?? 0} / Total: ${pipleineData?[groupIndex].totalTickets?.toInt() ?? 0}',
-                  const TextStyle(color: Colors.white),
-                );
-              },
-            ),
-          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChart(BuildContext context, List<AttributeItem>? data) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        padding: const EdgeInsets.only(right: 25),
+        width: (data?.length ?? 0) * 252,
+        height: (data ?? []).length * 30,
+        child: CustomPipelineChart(
+          pipelineData: data,
         ),
       ),
     );
