@@ -19,7 +19,7 @@ import 'package:support_bot_dashboard/responsive.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 
 class Dashboard extends StatelessWidget {
-  final List<String>? pipelineId;
+  final String? pipelineId;
   final String? pipelineName;
   final DateTime? startDate;
   final DateTime? endDate;
@@ -43,14 +43,14 @@ class Dashboard extends StatelessWidget {
               ..add(AIQueryAnswerInitialEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: pipelineId)),
+                  selectedPipelineValue: [pipelineId ?? ""])),
           ),
           BlocProvider(
             create: (context) => AiQueryEditedBloc()
               ..add(AIQueryEditedInitialEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: pipelineId)),
+                  selectedPipelineValue: [pipelineId??""])),
           ),
           BlocProvider(
             create: (context) =>
@@ -64,21 +64,21 @@ class Dashboard extends StatelessWidget {
               ..add(TickiteClassificationEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: pipelineId)),
+                  selectedPipelineValue: [pipelineId??""])),
           ),
           BlocProvider(
             create: (context) => ValidationStatusBloc()
               ..add(ValidationStatuseCallEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: pipelineId)),
+                  selectedPipelineValue: [pipelineId??""])),
           ),
           BlocProvider(
             create: (context) => UserValidationBloc()
               ..add(UserValidationsEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: pipelineId)),
+                  selectedPipelineValue: [pipelineId??""])),
           ),
           BlocProvider<AiQueryBloc>(
             create: (context) =>

@@ -34,8 +34,9 @@ class TicketClassificationTabBloc
       TicketClassificationDataCallEvent event,
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
-    selectedPipelineId = event.fieldValue?.first ?? "";
+    selectedPipelineId = event.fieldValue ?? "";
     try {
+      pageSize = event.pageSize ?? 10;
       final repository = serviceLocator<TicketClassificationUsecses>();
       endDate = event.endDate
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
@@ -48,7 +49,7 @@ class TicketClassificationTabBloc
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
       page = event.page ?? 1;
-      pageSize = event.pageSize ?? 10;
+      pageSize = pageSize;
       final req = TicketClassificationRequestModel(
         startDate: (startDate ?? startdate),
         endDate: (endDate ?? enddate),

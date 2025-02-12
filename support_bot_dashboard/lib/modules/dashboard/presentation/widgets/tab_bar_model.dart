@@ -37,7 +37,7 @@ class TabBarWidget {
 
   static List<TabBarWidget> organizationItemList(BuildContext context,
       {String? pipelineName,
-      List<String>? piplineId,
+      String? piplineId,
       DateTime? startDate,
       DateTime? endDate}) {
     final s = serviceLocator<S>();
@@ -57,9 +57,14 @@ class TabBarWidget {
     tabBarList.add(
       TabBarWidget(
         title: s.ticketClassification,
-        view: const SizedBox(
+        view: SizedBox(
           width: double.infinity,
-          child: TicketClassification(),
+          child: TicketClassification(
+            pipelineName: pipelineName ?? "",
+            piplineId: piplineId,
+            endDate: endDate ?? DateTime.now(),
+            startDate: startDate ?? DateTime.now(),
+          ),
         ),
         type: TypeBarType.ticketClassification,
       ),

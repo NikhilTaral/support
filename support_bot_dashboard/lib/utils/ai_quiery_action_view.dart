@@ -73,7 +73,8 @@ class ValidateAnswerDialog extends StatelessWidget {
                               .classificationFilterValue,
                       selectedPipelineValueList:
                           serviceLocator<InstanceSharingService>()
-                              .selectedPipelineValueList,
+                                  .selectedPipelineValueList ??
+                              "11257490",
                       startDate:
                           serviceLocator<InstanceSharingService>().startDate,
                       endDate: serviceLocator<InstanceSharingService>().endDate,
@@ -98,8 +99,7 @@ class ValidateAnswerDialog extends StatelessWidget {
                       agentAnsValidation: validationStatus,
                       ticketId: id.toString(),
                       pipeline: serviceLocator<InstanceSharingService>()
-                              .selectedPipelineValueList
-                              ?.firstOrNull ??
+                              .selectedPipelineValueList ??
                           "11257490",
                     ),
                   );

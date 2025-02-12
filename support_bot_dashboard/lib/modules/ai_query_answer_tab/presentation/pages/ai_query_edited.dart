@@ -13,7 +13,7 @@ class AIQueryEditedScreen extends StatelessWidget {
       this.piplineId,
       this.startDate});
   final String? pipelineName;
-  final List<String>? piplineId;
+  final String? piplineId;
   final DateTime? startDate;
   final DateTime? endDate;
 

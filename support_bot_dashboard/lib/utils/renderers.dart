@@ -329,7 +329,7 @@ class Renderers {
                         .add(TicketClassificationDataCallEvent(
                       startDate: bloc.startDate,
                       endDate: bloc.endDate,
-                      fieldValue: bloc.selectedPipelineId.split(','),
+                      fieldValue: bloc.selectedPipelineId,
                       page:
                           BlocProvider.of<TicketClassificationTabBloc>(context)
                               .page,
@@ -513,7 +513,7 @@ class Renderers {
                                       startDate: bloc.startDate,
                                       endDate: bloc.endDate,
                                       fieldValue:
-                                          bloc.selectedPipelineId.split(','),
+                                          bloc.selectedPipelineId,
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(
                                               context)

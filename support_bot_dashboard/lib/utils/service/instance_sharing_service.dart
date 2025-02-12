@@ -3,7 +3,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket
 
 class InstanceSharingService {
   AiQueryBloc? aiQueryBloc;
-  List<String>? selectedPipelineValueList;
+  String? selectedPipelineValueList;
   String? classificationFilterValue;
   String? selectedPipelineValue;
   DateTime? endDate;

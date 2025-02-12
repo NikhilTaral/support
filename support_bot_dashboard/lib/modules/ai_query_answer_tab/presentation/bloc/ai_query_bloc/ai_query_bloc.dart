@@ -16,11 +16,12 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
   AiQueryAttributeModel? aiQueryAttributeModel;
   AiQueryEvent? lastEvent;
   DataModule? dataModule;
-  List<String>? piplineID;
+  String? piplineID = "";
   String? piplineName;
   num page = 1;
   num pageSize = 10;
   DateTime? endDate;
+  String? classificationFilterValue;
   DateTime? startDate;
   AiQueryBloc() : super(AIQueryInitialState()) {
     on<AIQueryInitialEvent>(_aIQueryInitialEvent);
@@ -30,6 +31,7 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
       AIQueryInitialEvent event, Emitter<AiQueryState> emit) async {
     emit(AIQueryLoadingState());
     try {
+      classificationFilterValue = event.classificationFilterValue;
       startDate = event.startDate;
       endDate = event.endDate;
       piplineID = event.selectedPipelineValueList;
@@ -41,11 +43,11 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
 
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
-          Filter(fieldValue: piplineID ?? ["11257490"], fieldName: "pipelines"),
+          Filter(fieldValue: [piplineID ?? ""], fieldName: "pipelines"),
           if (event.classificationFilterValue?.isNotEmpty == true ||
               event.classificationFilterValue != null)
             Filter(fieldValue: [
-              (event.classificationFilterValue?.toLowerCase() == "answered")
+              (classificationFilterValue?.toLowerCase() == "answered")
                   .toString()
             ], fieldName: "answeredStatus"),
         ],

@@ -25,7 +25,7 @@ class AIQueryTabFilterWidget extends StatefulWidget {
       this.piplineId,
       this.startDate});
   final String? pipelineName;
-  final List<String>? piplineId;
+  final String? piplineId;
   final DateTime? startDate;
   final DateTime? endDate;
   @override
@@ -39,7 +39,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
   ValueNotifier<String?> classificationNotifier = ValueNotifier<String?>(null);
   String selectedItem = "";
   final DataModule dataModule = DataModule();
-  final List<String> pipelineIds = [];
+  String? pipelineIds = "";
   List<DateTime?> selectedate = [];
   final s = serviceLocator<S>();
   DateTime? endDate;
@@ -196,18 +196,18 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
       child: ElevatedButton.icon(
         onPressed: () async {
           setState(() {
-            classificationNotifier.value = null; 
+            classificationNotifier.value = null;
             selectedItem = widget.pipelineName ?? "";
             startDate = widget.startDate ?? DateTime.now();
             endDate = widget.endDate ?? DateTime.now();
             selectedDatesNotifier.value = [startDate!, endDate!];
 
-            pipelineIds.clear();
+            pipelineIds = "";
           });
           BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent(
             startDate: startDate,
             endDate: endDate,
-            selectedPipelineValueList: widget.piplineId ?? [],
+            selectedPipelineValueList: widget.piplineId ?? "",
           ));
         },
         icon: const Icon(Icons.clear_all, color: Colors.white),
@@ -282,13 +282,13 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
 
   void _onPipelineSelectionChanged(
       String? selectedName, List<GetAllPipelineData> items) {
-    pipelineIds.clear();
+    pipelineIds = "";
     final matchingItem = items.firstWhere(
       (item) => item.pipelineName == selectedName,
       orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
     );
     if (matchingItem.pipelineId?.isNotEmpty == true) {
-      pipelineIds.add(matchingItem.pipelineId ?? widget.piplineId.toString());
+      pipelineIds = (matchingItem.pipelineId ?? widget.piplineId.toString());
     }
     setState(() {
       selectedItem = selectedName ?? "";
@@ -338,7 +338,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
 
   void _addEvents() {
     final selectedPipelineValue =
-        pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
+        pipelineIds?.isEmpty == true ? widget.piplineId : pipelineIds;
     final start = selectedDatesNotifier.value?.first ?? widget.startDate;
     final end = selectedDatesNotifier.value?.last ?? widget.endDate;
 
@@ -355,7 +355,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
       endDate: end,
       startDate: start,
       page: 1,
-      pageSize: 10,
+      pageSize: BlocProvider.of<AiQueryBloc>(context).pageSize,
     ));
   }
 

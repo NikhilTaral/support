@@ -14,7 +14,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 class DashboardDesktopView extends StatelessWidget {
   final int? index;
   final String? pipelineName;
-  final List<String>? piplineId;
+  final String? piplineId;
   final DateTime? startDate;
   final DateTime? endDate;
   DashboardDesktopView(
@@ -82,7 +82,7 @@ class DashboardDesktopView extends StatelessWidget {
                 padding: padding,
                 child: HomeFiltersWidget(
                     pipelineName: pipelineName,
-                    piplineId: piplineId,
+                    piplineId: [piplineId??""],
                     endDate: endDate,
                     startDate: startDate),
               )
