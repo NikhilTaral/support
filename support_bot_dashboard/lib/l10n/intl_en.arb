@@ -224,6 +224,10 @@
   "@validationStatusText": {
     "description": "Validation Status Text"
   },
+  "ticketNotClassified": "Not Classified",
+  "@ticketNotClassified": {
+    "description": "Not Classified"
+  },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
     "description": "By clicking “GET STARTED” you are agreeing to our "
@@ -283,11 +287,11 @@
   "@unknownPipelineText": {
     "description": "Unknown Pipeline Text"
   },
-  "updateSuccessfullyText": "Update Successfully",
+  "updateSuccessfullyText": "Update Successfully!",
   "@updateSuccessfullyText": {
     "description": "Update Successfully Text"
   },
-  "updateFailureText": "Update Failure",
+  "updateFailureText": "Update Failure!",
   "@updateFailureText": {
     "description": "Update Failure Text"
   },
@@ -345,5 +349,9 @@
   "closeText": "Close",
   "@closeText": {
     "description": "Close Text"
+  },
+  "validatedClassificationText": "Validated Classification",
+  "@validatedClassificationText": {
+    "description": "Validated Classification Text"
   }
 }
