@@ -16,14 +16,13 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
   AiQueryAttributeModel? aiQueryAttributeModel;
   AiQueryEvent? lastEvent;
   DataModule? dataModule;
-  List<String>? piplineID;
+  String? piplineID = "";
+  String? piplineName;
   num page = 1;
   num pageSize = 10;
-  DateTime endDate = DateTime.now()
-      .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-  DateTime startDate = DateTime.now()
-      .subtract(const Duration(days: 0))
-      .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+  DateTime? endDate;
+  String? classificationFilterValue;
+  DateTime? startDate;
   AiQueryBloc() : super(AIQueryInitialState()) {
     on<AIQueryInitialEvent>(_aIQueryInitialEvent);
   }
@@ -32,33 +31,34 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
       AIQueryInitialEvent event, Emitter<AiQueryState> emit) async {
     emit(AIQueryLoadingState());
     try {
-      final enddate = event.endDate
-          ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-      final startdate = event.startDate
-              ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
-          endDate = enddate ??
-              DateTime.now()
-                  .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-      startDate = startdate ?? startDate;
+      classificationFilterValue = event.classificationFilterValue;
+      startDate = event.startDate;
+      endDate = event.endDate;
       piplineID = event.selectedPipelineValueList;
       final repository = serviceLocator<AiQueryUsecase>();
       serviceLocator<InstanceSharingService>().selectedPipelineValueList =
           event.selectedPipelineValueList;
+      serviceLocator<InstanceSharingService>().endDate = event.endDate;
+      serviceLocator<InstanceSharingService>().startDate = event.startDate;
 
       final req = DashboardAnswerDataInitialRequestModel(
         filter: [
-          Filter(fieldValue: piplineID ?? ["11257490"], fieldName: "pipelines"),
+          Filter(fieldValue: [piplineID ?? ""], fieldName: "pipelines"),
           if (event.classificationFilterValue?.isNotEmpty == true ||
               event.classificationFilterValue != null)
             Filter(fieldValue: [
-              (event.classificationFilterValue?.toLowerCase() == "answered")
+              (classificationFilterValue?.toLowerCase() == "answered")
                   .toString()
             ], fieldName: "answeredStatus"),
         ],
         page: event.page ?? 1,
         pageSize: event.pageSize ?? 10,
-        startDate: startDate.toIso8601String(),
-        endDate: endDate.toIso8601String(),
+        startDate: startDate
+            ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
+            .toIso8601String(),
+        endDate: endDate
+            ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
+            .toIso8601String(),
       );
       final response = await repository.invoke(req);
       if (response.isLeft) {
@@ -75,8 +75,8 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
 
             emit(AIQuerySuccessState(
                 dashboardDataModel: aiQueryAttributeModel,
-                endDate: enddate,
-                startDate: startdate,
+                endDate: startDate,
+                startDate: endDate,
                 selectedPipelineValue: piplineID));
           }
         } else {

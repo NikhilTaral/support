@@ -2,7 +2,9 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/header/nav_bar.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/landing_page/presentation/landing_page_bloc/landing_page_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
@@ -15,7 +17,7 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class LandingPageDesktopView extends StatelessWidget {
   LandingPageDesktopView({super.key});
-
+  final s = serviceLocator<S>();
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
   final ValueNotifier<String> selectedPipelineNotifier = ValueNotifier("");
@@ -173,6 +175,8 @@ class LandingPageDesktopView extends StatelessWidget {
         pipelineIds?.add(matchingItem.pipelineId ?? "");
       }
     }
+
+    selectedPipelineNotifier.value = selectedNames.join(", ");
   }
 
   Widget _buildDateRangeSelector(BuildContext context) {
@@ -241,14 +245,14 @@ class LandingPageDesktopView extends StatelessWidget {
   Future<void> _pickDateRange(BuildContext context) async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.normal
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.w700),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle:
-          const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.normal
+          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.bold),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 
@@ -258,7 +262,7 @@ class LandingPageDesktopView extends StatelessWidget {
       dialogSize: const Size(400, 400),
       borderRadius: BorderRadius.circular(15),
       value: selectedDatesNotifier.value?.cast<DateTime?>() ?? [],
-      dialogBackgroundColor: Colors.white,
+      dialogBackgroundColor: SupportBotColors.white,
     );
 
     if (pickedDates != null) {
@@ -268,17 +272,28 @@ class LandingPageDesktopView extends StatelessWidget {
   }
 
   Widget _buildApplyFilterButton(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () => _addEvents(context),
-      iconAlignment: IconAlignment.end,
-      label: const Text('Get Started', style: TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: SupportBotColors.bluePrimary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-      ),
-      icon: const Icon(Icons.arrow_forward, color: Colors.white),
+    return ValueListenableBuilder<String>(
+      valueListenable: selectedPipelineNotifier,
+      builder: (context, selectedPipeline, child) {
+        bool isPipelineSelected = pipelineIds?.isNotEmpty ?? false;
+
+        return ElevatedButton.icon(
+          onPressed: isPipelineSelected ? () => _addEvents(context) : null,
+          iconAlignment: IconAlignment.end,
+          label: Text(s.getStartedText,
+              style: SupportBotTextstyle.dateText
+                  .copyWith(color: SupportBotColors.white)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isPipelineSelected
+                ? SupportBotColors.bluePrimary
+                : SupportBotColors.gray,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          icon: const Icon(Icons.arrow_forward, color: SupportBotColors.white),
+        );
+      },
     );
   }
 

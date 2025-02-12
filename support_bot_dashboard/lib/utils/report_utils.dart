@@ -183,6 +183,9 @@ class ReportUtils {
         "aIclassification": PlutoCell(
           value: e?.aiclassification ?? "N/A",
         ),
+        "classification": PlutoCell(
+          value: e?.aiclassification ?? "N/A",
+        ),
         "reasoning": PlutoCell(
           value: e?.reasoning ?? "N/A",
         ),

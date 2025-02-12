@@ -32,7 +32,7 @@ class MyAppRoutes {
           final pipelineName = state.queryParams["pipelineName"];
           final startDateString = state.queryParams['startDate'];
           final endDateString = state.queryParams['endDate'];
-          final pipelineId = state.queryParams['pipelineId']?.split(",");
+          final pipelineId = state.queryParams['pipelineId'];
 
           DateTime? startDate = startDateString != null
               ? DateTime.tryParse(startDateString)
