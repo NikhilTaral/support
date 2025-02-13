@@ -6,6 +6,7 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/model/add_answer_validation_request_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/model/update_ai_answer_request_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/repositories/ai_query_answer_repo.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_request_model.dart';
 
 class AiQueryAnswerRepoImpl extends AiQueryDataRepository {
   final s = serviceLocator<S>();

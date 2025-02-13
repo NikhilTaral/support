@@ -6,6 +6,7 @@ import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/model/ai_
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/data_module.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/usecases/ai_query_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_request_model.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 
 part 'ai_query_event.dart';
