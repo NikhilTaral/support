@@ -132,7 +132,7 @@ class LandingPageDesktopView extends StatelessWidget {
                   width: UIHelpers.screenHeight(context) * 0.5,
                   child: TicketClassificationPipelineWidget(
                     hintText: selectedPipeline.isEmpty
-                        ? "Pipeline Type"
+                        ? "Pipeline"
                         : selectedPipeline,
                     items: items,
                     selectedItem: selectedPipeline,
@@ -245,13 +245,13 @@ class LandingPageDesktopView extends StatelessWidget {
   Future<void> _pickDateRange(BuildContext context) async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle: SupportBotTextstyle.normal
+      dayTextStyle: SupportBotTextstyle.mediumHint
           .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.w700),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle: SupportBotTextstyle.normal
+      weekdayLabelTextStyle: SupportBotTextstyle.mediumHint
           .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.bold),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );

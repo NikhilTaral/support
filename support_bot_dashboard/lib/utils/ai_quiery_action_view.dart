@@ -289,7 +289,7 @@ class TicketDetailsDialog extends StatelessWidget {
                         ),
                         label: Text(
                           "Cancel",
-                          style: SupportBotTextstyle.mediumHint
+                          style: SupportBotTextstyle.hint
                               .copyWith(color: SupportBotColors.bluePrimary),
                         ),
                       ),
