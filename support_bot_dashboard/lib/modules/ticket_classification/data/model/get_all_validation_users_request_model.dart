@@ -75,7 +75,7 @@ class Filter {
         fieldName: json["fieldName"],
         fieldValue: json["fieldValue"] == null
             ? []
-            : List<String>.from(json["fieldValue"]!.map((x) => x)),
+            : List<String>.from(json["fieldValue"]?.map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {

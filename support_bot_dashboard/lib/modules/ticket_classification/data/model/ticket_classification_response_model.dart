@@ -90,7 +90,7 @@ class Data {
         totalRecords: json["totalRecords"],
         items: json["items"] == null
             ? []
-            : List<Item>.from(json["items"]!.map((x) => Item.fromJson(x))),
+            : List<Item>.from(json["items"]?.map((x) => Item.fromJson(x))),
         pageSize: json["pageSize"],
         lastEvaluatedKey: json["lastEvaluatedKey"],
         currentPage: json["currentPage"],
@@ -100,7 +100,7 @@ class Data {
         "totalRecords": totalRecords,
         "items": items == null
             ? []
-            : List<dynamic>.from(items!.map((x) => x.toJson())),
+            : List<dynamic>.from(items?.map((x) => x.toJson())??[]),
         "pageSize": pageSize,
         "lastEvaluatedKey": lastEvaluatedKey,
         "currentPage": currentPage,

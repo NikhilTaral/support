@@ -49,7 +49,7 @@ class GetAllValidationUsersResponseModel {
   Map<String, dynamic> toJson() => {
         "data": data == null
             ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
+            : List<dynamic>.from(data?.map((x) => x.toJson())??[]),
         "success": success,
         "failCode": failCode,
         "message": message,
