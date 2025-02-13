@@ -188,7 +188,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
         } else if (state is TicketClassificationFailureState) {
           return const FailureWidget();
         } else if (state is TicketClassificationEmptyState) {
-          return const Center(child: EmptyWidget());
+          return  Center(child: EmptyWidget(message: state.message,));
         }
         return const SizedBox.shrink();
       },

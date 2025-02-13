@@ -180,25 +180,28 @@ class LandingPageDesktopView extends StatelessWidget {
   }
 
   Widget _buildDateRangeSelector(BuildContext context) {
-    if (selectedate.isNotEmpty) {
-      final endDate = selectedate.lastOrNull;
-      final startDate = selectedate.firstOrNull;
-      selectedate = [startDate, endDate];
+    if (selectedate.isEmpty) {
+      selectedate = [
+        DateTime.now().copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
+        DateTime.now()
+            .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
+      ];
     }
 
     return Center(
       child: ValueListenableBuilder<List<DateTime>?>(
         valueListenable: selectedDatesNotifier,
         builder: (context, selectedDates, child) {
-          final DateTime endDate;
-          final DateTime startDate;
+          DateTime startDate = DateTime.now()
+              .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
-          if (selectedDates?.isNotEmpty == true) {
-            startDate = selectedDates![0];
+          DateTime endDate = DateTime.now()
+              .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
+          ;
+
+          if (selectedDates != null && selectedDates.isNotEmpty) {
+            startDate = selectedDates.first;
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
-          } else {
-            endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 0));
           }
 
           return Container(
@@ -207,10 +210,7 @@ class LandingPageDesktopView extends StatelessWidget {
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: SupportBotColors.bluePrimary),
-                padding: const EdgeInsets.only(
-                  right: 6,
-                  left: 6,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 6),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),

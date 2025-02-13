@@ -39,9 +39,9 @@
   "@month": {
     "description": "Month"
   },
-  "classification": "Classification",
+  "classification": "AI Classification",
   "@classification": {
-    "description": "Classification"
+    "description": "AI Classification"
   },
   "validation": "Validation",
   "@validation": {

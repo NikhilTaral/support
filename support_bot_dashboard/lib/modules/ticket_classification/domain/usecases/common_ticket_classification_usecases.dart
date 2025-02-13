@@ -2,6 +2,7 @@ import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
 import 'package:support_bot_dashboard/core/use_case/use_case.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_request_model.dart';
@@ -48,6 +49,7 @@ class GetValidationDetailsUsecase {
         .getgetValidationDetails(getValidationDetailsRequestModel);
   }
 }
+
 class RevertClassificationUsecase implements UseCaseOneInput<String, dynamic> {
   @override
   Future<Either<Failure, dynamic>> invoke(ticketId) async {
@@ -55,10 +57,18 @@ class RevertClassificationUsecase implements UseCaseOneInput<String, dynamic> {
         .revertClassification(ticketId: ticketId);
   }
 }
+
 class DashboardExportusecase {
-  Future<Either<Failure, dynamic>> invoke(
-      dashboardExportRequestModel) async {
+  Future<Either<Failure, dynamic>> invoke(dashboardExportRequestModel) async {
     return await serviceLocator<DashboardExportRepository>()
         .getExportData(dashboardExportRequestModel);
+  }
+}
+
+class GetAllValidationUserUsecase {
+  Future<Either<Failure, GetAllValidationUsersResponseModel>> invoke(
+      getAllValidationUsersRequestModel) async {
+    return await serviceLocator<GetAllValidationUserRepository>()
+        .getAllValidationUser(getAllValidationUsersRequestModel);
   }
 }

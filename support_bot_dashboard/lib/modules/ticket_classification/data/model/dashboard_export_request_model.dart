@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_initial_request_model.dart';
 
 class DashboardExportRequestModel {
     final DateTime? startDate;

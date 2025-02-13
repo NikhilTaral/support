@@ -34,11 +34,15 @@ class MyAppRoutes {
           final endDateString = state.queryParams['endDate'];
           final pipelineId = state.queryParams['pipelineId'];
 
-          DateTime? startDate = startDateString != null
-              ? DateTime.tryParse(startDateString)
-              : null;
-          DateTime? endDate =
-              endDateString != null ? DateTime.tryParse(endDateString) : null;
+          DateTime now = DateTime.now();
+
+          DateTime startDate = startDateString != null
+              ? DateTime.tryParse(startDateString) ?? now
+              : now;
+
+          DateTime endDate = endDateString?.isNotEmpty == true
+              ? DateTime.tryParse(endDateString ?? "") ?? now
+              : now;
 
           return MaterialPage(
             child: Dashboard(
@@ -49,7 +53,7 @@ class MyAppRoutes {
             ),
           );
         },
-      ),
+      )
     ],
     redirect: (context, state) async {
       return redirect(context, state);

@@ -40,7 +40,7 @@ class Dashboard extends StatelessWidget {
           BlocProvider(
             create: (context) => TabIndexBloc(),
           ),
-          BlocProvider(
+                   BlocProvider(
             create: (context) => AiQueryAnswerBloc()
               ..add(AIQueryAnswerInitialEvent(
                   endDate: endDate,
@@ -52,7 +52,7 @@ class Dashboard extends StatelessWidget {
               ..add(AIQueryEditedInitialEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: [pipelineId??""])),
+                  selectedPipelineValue: [pipelineId ?? ""])),
           ),
           BlocProvider(
             create: (context) =>
@@ -66,21 +66,21 @@ class Dashboard extends StatelessWidget {
               ..add(TickiteClassificationEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: [pipelineId??""])),
+                  selectedPipelineValue: [pipelineId ?? ""])),
           ),
           BlocProvider(
             create: (context) => ValidationStatusBloc()
               ..add(ValidationStatuseCallEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: [pipelineId??""])),
+                  selectedPipelineValue: [pipelineId ?? ""])),
           ),
           BlocProvider(
             create: (context) => UserValidationBloc()
               ..add(UserValidationsEvent(
                   endDate: endDate,
                   startDate: startDate,
-                  selectedPipelineValue: [pipelineId??""])),
+                  selectedPipelineValue: [pipelineId ?? ""])),
           ),
           BlocProvider<AiQueryBloc>(
             create: (context) =>
