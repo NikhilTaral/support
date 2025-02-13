@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/common/attribute_mapper.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_initial_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/validation_status_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/validation_status_usecase.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
