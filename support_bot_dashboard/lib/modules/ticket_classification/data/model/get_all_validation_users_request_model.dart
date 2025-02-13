@@ -37,7 +37,7 @@ class GetAllValidationUsersRequestModel {
             json["endDate"] == null ? null : DateTime.parse(json["endDate"]),
         filter: json["filter"] == null
             ? []
-            : List<Filter>.from(json["filter"]!.map((x) => Filter.fromJson(x))),
+            : List<Filter>.from(json["filter"]?.map((x) => Filter.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -82,6 +82,6 @@ class Filter {
         "fieldName": fieldName,
         "fieldValue": fieldValue == null
             ? []
-            : List<dynamic>.from(fieldValue!.map((x) => x)),
+            : List<dynamic>.from(fieldValue?.map((x) => x) ?? []),
       };
 }

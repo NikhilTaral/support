@@ -40,7 +40,7 @@ class GetAllValidationUsersResponseModel {
         data: json["data"] == null
             ? []
             : List<UserName>.from(
-                json["data"]!.map((x) => UserName.fromJson(x))),
+                json["data"]?.map((x) => UserName.fromJson(x))),
         success: json["success"],
         failCode: json["failCode"],
         message: json["message"],
