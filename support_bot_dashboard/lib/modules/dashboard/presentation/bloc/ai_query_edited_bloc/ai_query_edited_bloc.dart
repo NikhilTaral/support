@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_query_edited_response_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_edited_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_edited.dart';
 part 'ai_query_edited_event.dart';

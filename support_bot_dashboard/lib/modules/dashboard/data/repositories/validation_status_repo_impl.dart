@@ -3,7 +3,7 @@ import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/validation_status_responset_model.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/validation_status_repository.dart';
