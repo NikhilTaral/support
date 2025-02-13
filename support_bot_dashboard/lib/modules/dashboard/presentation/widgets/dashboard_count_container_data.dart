@@ -40,13 +40,13 @@ List<CountContainerData> getCountContainerData(BuildContext context,
       icon: SupportBotIcons.list,
       count: model?.pieChartData?.data?.counts?.acknowledgementRequired,
     ),
-        CountContainerData(
+    CountContainerData(
       text: S.of(context).ticketNotClassified,
       icon: SupportBotIcons.star1,
       count: model?.pieChartData?.data?.counts?.notClassified,
     ),
     CountContainerData(
-      text: S.of(context).total,
+      text: S.of(context).totalText,
       icon: SupportBotIcons.tickcircle4,
       count: (model?.pieChartData?.data?.counts?.spamMarketing ?? 0) +
           (model?.pieChartData?.data?.counts?.noActionRequired ?? 0) +
