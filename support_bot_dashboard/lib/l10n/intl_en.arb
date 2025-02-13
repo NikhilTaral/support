@@ -68,9 +68,9 @@
   "@month": {
     "description": "Month"
   },
-  "classification": "Classification",
+  "classification": "AI Classification",
   "@classification": {
-    "description": "Classification"
+    "description": "AI Classification"
   },
   "validation": "Validation",
   "@validation": {
@@ -373,5 +373,13 @@
   "validatedClassificationText": "Validated Classification",
   "@validatedClassificationText": {
     "description": "Validated Classification Text"
+  },
+  "validatedUserText": "Validated User",
+  "@validatedUserText": {
+    "description": "Validated User Text"
+  },
+  "noDataFoundText": "No Data Found",
+  "@noDataFoundText": {
+    "description": "No Data Found Text"
   }
 }

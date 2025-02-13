@@ -1,6 +1,8 @@
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/dashboard_export_request_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_request_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
@@ -40,4 +42,10 @@ abstract class DashboardExportRepository {
   Future<Either<Failure, dynamic>> getExportData(
     DashboardExportRequestModel? dashboardExportRequestModel,
   );
+}
+
+abstract class GetAllValidationUserRepository {
+  Future<Either<Failure, GetAllValidationUsersResponseModel>>
+      getAllValidationUser(
+          GetAllValidationUsersRequestModel? getAllValidationUsersRequestModel);
 }

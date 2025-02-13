@@ -40,7 +40,7 @@ class GetAllPipelinesResponsetModel {
       GetAllPipelinesResponsetModel(
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<Datum>.from(json["data"]?.map((x) => Datum.fromJson(x))),
         success: json["success"],
         failCode: json["failCode"],
         params: json["params"] == null ? null : Params.fromJson(json["params"]),
@@ -50,7 +50,7 @@ class GetAllPipelinesResponsetModel {
   Map<String, dynamic> toJson() => {
         "data": data == null
             ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
+            : List<dynamic>.from(data?.map((x) => x.toJson())??[]),
         "success": success,
         "failCode": failCode,
         "params": params?.toJson(),

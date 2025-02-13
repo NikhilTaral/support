@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
@@ -14,11 +15,12 @@ class TicketClassificationTabBloc
     extends Bloc<TicketClassificationEvent, TicketClassificationState> {
   TicketClassificationAttributeModel ticketClassificationAttributeModel =
       TicketClassificationAttributeModel();
-
+  final s = serviceLocator<S>();
   num page = 1;
   num pageSize = 10;
   String selectedBOPsState = "";
   String selectedClassification = "";
+  String selectedUserValidator = "";
   String selectedValidation = "";
   String selectedPipelineId = "";
   DateTime? endDate = DateTime.now()
@@ -63,6 +65,10 @@ class TicketClassificationTabBloc
             Filter(
                 fieldName: "classifications",
                 fieldValue: [selectedClassification]),
+          if (selectedUserValidator != "")
+            Filter(
+                fieldName: "classificationValidatedBy",
+                fieldValue: [selectedUserValidator]),
           if (selectedValidation != "")
             Filter(
                 fieldName: "classificationValidations",
@@ -76,8 +82,12 @@ class TicketClassificationTabBloc
       } else {
         final TicketClassificationResponseModel model =
             TicketClassificationResponseModel.fromJson(response.right);
-        if (model.data?.items?.isEmpty == true && model.success == true) {
-          emit(TicketClassificationEmptyState());
+        final message = model.data?.message ?? "";
+        if (message.isNotEmpty == true) {
+          emit(TicketClassificationEmptyState(message: message));
+        } else if (model.data?.items?.isEmpty == true &&
+            model.success == true) {
+          emit(TicketClassificationEmptyState(message: s.noDataFoundText));
         } else {
           page = model.data?.currentPage ?? 1;
 
@@ -104,6 +114,7 @@ class TicketClassificationTabBloc
   }
 
   void clearFilters() {
+    selectedUserValidator = "";
     selectedBOPsState = "";
     selectedClassification = "";
     selectedValidation = "";

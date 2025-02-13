@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_ai_query_chart_response_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
@@ -38,9 +38,7 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
       );
       final response = await repository.invoke(req);
       if (response.isLeft) {
-        emit(AIQueryAnswerFailureState(
-        
-        ));
+        emit(AIQueryAnswerFailureState());
       } else {
         final DashboardAiQueryChartResponseModel model = response.right;
         if (model.success == true && model.data != null) {
@@ -82,15 +80,11 @@ class AiQueryAnswerBloc extends Bloc<AiQueryAnswerEvent, AiQueryAnswerState> {
                 dashboardDataModel: dashboardDataModel));
           }
         } else {
-          emit(AIQueryAnswerFailureState(
-         
-          ));
+          emit(AIQueryAnswerFailureState());
         }
       }
     } catch (e) {
-      emit(AIQueryAnswerFailureState(
-       
-      ));
+      emit(AIQueryAnswerFailureState());
     }
   }
 }
