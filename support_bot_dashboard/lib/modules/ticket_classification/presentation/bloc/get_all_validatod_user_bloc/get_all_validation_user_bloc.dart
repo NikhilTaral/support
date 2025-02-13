@@ -48,7 +48,7 @@ class GetAllValidationUsersBloc
         filter: [Filter(fieldName: "pipelines", fieldValue: event.filter)],
       );
       final response = await repository.invoke(req);
-      if (response is Left) {
+      if (response.isLeft) {
         emit(GetAllValidationUsersFailureState());
       } else {
         getAllValidationUsersAttributeModel =
@@ -59,9 +59,7 @@ class GetAllValidationUsersBloc
                           name: e.name ?? "",
                         ))
                     .toList(),
-                success: response.right.success,
-                failCode: response.right.failCode,
-                message: response.right.message);
+                );
         emit(GetAllValidationUsersSuccessState(
             getAllValidationUsersAttributeModel:
                 getAllValidationUsersAttributeModel));

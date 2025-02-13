@@ -45,7 +45,7 @@ abstract class DashboardExportRepository {
 }
 
 abstract class GetAllValidationUserRepository {
-  Future<Either<Failure, GetAllValidationUsersResponceModel>>
+  Future<Either<Failure, GetAllValidationUsersResponseModel>>
       getAllValidationUser(
           GetAllValidationUsersRequestModel? getAllValidationUsersRequestModel);
 }

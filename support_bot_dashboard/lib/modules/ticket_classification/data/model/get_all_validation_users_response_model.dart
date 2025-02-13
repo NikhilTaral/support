@@ -1,45 +1,46 @@
 import 'dart:convert';
 
-GetAllValidationUsersResponceModel getAllValidationUsersResponceModelFromJson(
+GetAllValidationUsersResponseModel getAllValidationUsersResponseModelFromJson(
         String str) =>
-    GetAllValidationUsersResponceModel.fromJson(json.decode(str));
+    GetAllValidationUsersResponseModel.fromJson(json.decode(str));
 
-String getAllValidationUsersResponceModelToJson(
-        GetAllValidationUsersResponceModel data) =>
+String getAllValidationUsersResponseModelToJson(
+        GetAllValidationUsersResponseModel data) =>
     json.encode(data.toJson());
 
-class GetAllValidationUsersResponceModel {
-  final List<Datum>? data;
+class GetAllValidationUsersResponseModel {
+  final List<UserName>? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final String? message;
 
-  GetAllValidationUsersResponceModel({
+  GetAllValidationUsersResponseModel({
     this.data,
     this.success,
     this.failCode,
     this.message,
   });
 
-  GetAllValidationUsersResponceModel copyWith({
-    List<Datum>? data,
+  GetAllValidationUsersResponseModel copyWith({
+    List<UserName>? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
-      GetAllValidationUsersResponceModel(
+      GetAllValidationUsersResponseModel(
         data: data ?? this.data,
         success: success ?? this.success,
         failCode: failCode ?? this.failCode,
         message: message ?? this.message,
       );
 
-  factory GetAllValidationUsersResponceModel.fromJson(
+  factory GetAllValidationUsersResponseModel.fromJson(
           Map<String, dynamic> json) =>
-      GetAllValidationUsersResponceModel(
+      GetAllValidationUsersResponseModel(
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<UserName>.from(
+                json["data"]!.map((x) => UserName.fromJson(x))),
         success: json["success"],
         failCode: json["failCode"],
         message: json["message"],
@@ -55,25 +56,25 @@ class GetAllValidationUsersResponceModel {
       };
 }
 
-class Datum {
+class UserName {
   final String? name;
   final String? email;
 
-  Datum({
+  UserName({
     this.name,
     this.email,
   });
 
-  Datum copyWith({
+  UserName copyWith({
     String? name,
     String? email,
   }) =>
-      Datum(
+      UserName(
         name: name ?? this.name,
         email: email ?? this.email,
       );
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory UserName.fromJson(Map<String, dynamic> json) => UserName(
         name: json["name"],
         email: json["email"],
       );

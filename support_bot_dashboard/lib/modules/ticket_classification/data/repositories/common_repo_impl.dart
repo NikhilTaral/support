@@ -172,7 +172,7 @@ class DashboardExportImpl extends DashboardExportRepository {
 
 class GetAllValidationUserImpl extends GetAllValidationUserRepository {
   @override
-  Future<Either<Failure, GetAllValidationUsersResponceModel>>
+  Future<Either<Failure, GetAllValidationUsersResponseModel>>
       getAllValidationUser(
           GetAllValidationUsersRequestModel?
               getAllValidationUsersRequestModel) async {
@@ -182,7 +182,7 @@ final response = await serviceLocator<ApiProvider>().getData(
           body: getAllValidationUsersRequestModel?.toJson());
 
       final model =
-          getAllValidationUsersResponceModelFromJson(jsonEncode(response));
+          getAllValidationUsersResponseModelFromJson(jsonEncode(response));
 
       if (model is Left) {
         return Left(ServerFailure(message: s.aPIErrorMsgText));

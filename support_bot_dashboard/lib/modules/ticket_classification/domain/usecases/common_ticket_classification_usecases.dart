@@ -66,7 +66,7 @@ class DashboardExportusecase {
 }
 
 class GetAllValidationUserUsecase {
-  Future<Either<Failure, GetAllValidationUsersResponceModel>> invoke(
+  Future<Either<Failure, GetAllValidationUsersResponseModel>> invoke(
       getAllValidationUsersRequestModel) async {
     return await serviceLocator<GetAllValidationUserRepository>()
         .getAllValidationUser(getAllValidationUsersRequestModel);
