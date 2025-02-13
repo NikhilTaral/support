@@ -9,13 +9,11 @@ class GetAllValidationUsersLoadingState extends GetAllValidationUsersState {}
 class GetAllValidationUsersSuccessState extends GetAllValidationUsersState {
   final GetAllValidationUsersAttributeModel?
       getAllValidationUsersAttributeModel;
-  GetAllValidationUsersSuccessState({this.getAllValidationUsersAttributeModel});
+  final String? email;
+  final String? name;
+  GetAllValidationUsersSuccessState(
+      {this.getAllValidationUsersAttributeModel, this.email, this.name});
 }
 
 class GetAllValidationUsersFailureState extends GetAllValidationUsersState {}
 
-class GetAllValidationUsersSelectedState extends GetAllValidationUsersState {
-  final String? email;
-  final String? name;
-  GetAllValidationUsersSelectedState({this.email, this.name});
-}

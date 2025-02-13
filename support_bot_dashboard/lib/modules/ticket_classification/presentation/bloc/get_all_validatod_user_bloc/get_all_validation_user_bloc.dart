@@ -18,13 +18,20 @@ class GetAllValidationUsersBloc
       GetAllValidationUsersAttributeModel();
   GetAllValidationUsersBloc() : super(GetAllValidationUsersInitialState()) {
     on<GetValidationUsersInitialEvent>(_onGetAllValidationUsersInitialEvent);
- on<SetUserNameEvent>(_onSetUserNameEvent);
+    on<SetUserNameEvent>(_onSetUserNameEvent);
   }
   FutureOr<void> _onSetUserNameEvent(
       SetUserNameEvent event, Emitter<GetAllValidationUsersState> emit) async {
-    emit(GetAllValidationUsersSelectedState(
-        email: event.email, name: event.name));
+    if (state is GetAllValidationUsersSuccessState) {
+      emit(GetAllValidationUsersSuccessState(
+        getAllValidationUsersAttributeModel:
+            getAllValidationUsersAttributeModel,
+        email: event.email,
+        name: event.name,
+      ));
+    }
   }
+
   FutureOr<void> _onGetAllValidationUsersInitialEvent(
       GetValidationUsersInitialEvent event,
       Emitter<GetAllValidationUsersState> emit) async {
@@ -56,6 +63,7 @@ class GetAllValidationUsersBloc
                 getAllValidationUsersAttributeModel));
       }
     } catch (e) {
+      print("e:::$e");
       Log.error("Caught Exception: $e", e);
       emit(GetAllValidationUsersFailureState());
     }

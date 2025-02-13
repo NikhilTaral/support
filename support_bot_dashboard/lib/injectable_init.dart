@@ -37,7 +37,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/domain/useca
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/export_bloc/export_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_pipelines_bloc/get_all_pipelines_bloc.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validation_user_bloc/get_all_validation_user_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
@@ -169,6 +169,6 @@ Future<void> initServiceLocator() async {
       () => GetAllValidationUserUsecase());
   serviceLocator.registerLazySingleton<GetAllValidationUserRepository>(
       () => GetAllValidationUserImpl());
-  serviceLocator.registerFactory<GetAllValidationUsersBloc>(() => GetAllValidationUsersBloc());
-
+  serviceLocator.registerFactory<GetAllValidationUsersBloc>(
+      () => GetAllValidationUsersBloc());
 }
