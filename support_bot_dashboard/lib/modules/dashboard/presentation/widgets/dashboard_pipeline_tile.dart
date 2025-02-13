@@ -82,12 +82,10 @@ class DashboardPipelineChart extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
-        padding: const EdgeInsets.only(right: 25),
+        padding: const EdgeInsets.only(right: 25, top: 10),
         width: (data?.length ?? 0) * 252,
         height: (data ?? []).length * 30,
-        child: CustomPipelineChart(
-          pipelineData: data,
-        ),
+        child: CustomPipelineChart(pipelineData: data),
       ),
     );
   }

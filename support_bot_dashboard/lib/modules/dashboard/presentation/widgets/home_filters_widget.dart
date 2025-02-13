@@ -102,7 +102,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: DropdownWithCheckbox(
-        hintText: s.piplineText,
+        hintText: s.pipelineText,
         items: items,
         selectedItems: selectedItems,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? [], items),

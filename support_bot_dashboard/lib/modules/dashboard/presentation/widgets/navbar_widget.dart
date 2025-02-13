@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/tab_index_bloc/tab_index_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
@@ -112,6 +113,9 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
                           selectedPipelineValue: [widget.piplineId??""],
                           endDate: widget.endDate,
                           startDate: widget.startDate));
+
+                  context.read<PipelineTileBloc>().add(PipelineTileInitialEvent(
+                      endDate: widget.endDate, startDate: widget.startDate));
                 }
                 if (value == 1) {
                   BlocProvider.of<TicketClassificationTabBloc>(context)

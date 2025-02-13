@@ -1,11 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/pipeline_tile_attribute_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class CustomPipelineChart extends StatelessWidget {
   final List<AttributeItem>? pipelineData;
+  final s = serviceLocator<S>();
 
   CustomPipelineChart({
     Key? key,
@@ -126,12 +129,18 @@ class CustomPipelineChart extends StatelessWidget {
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
               tooltipPadding: EdgeInsets.all(2),
+              tooltipRoundedRadius: 5,
+              getTooltipColor: (group) => SupportBotColors.gray.shade200,
+              tooltipBorder: const BorderSide(
+                color: SupportBotColors.disablePrimary,
+                width: 2,
+              ),
               direction: TooltipDirection.bottom,
               rotateAngle: 270,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
-                  'Validated: ${filteredData[groupIndex].validatedTickets?.toInt() ?? 0} / Total: ${filteredData[groupIndex].totalTickets?.toInt() ?? 0}',
-                  const TextStyle(color: Colors.white),
+                  '${s.validatedText}: ${filteredData[groupIndex].validatedTickets?.toInt() ?? 0} / ${s.totalText}: ${filteredData[groupIndex].totalTickets?.toInt() ?? 0}',
+                  const TextStyle(color: SupportBotColors.black),
                 );
               },
             ),

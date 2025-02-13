@@ -79,6 +79,7 @@ class Charts extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   _buildHeader(context),
+                  UIHelpers.verticalSpace(10),
                   DashboardPipelineChart(),
                 ],
               ),
@@ -108,7 +109,7 @@ class Charts extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          s.piplineText,
+          s.pipelineText,
           style: SupportBotTextstyle.normal.copyWith(
             fontWeight: FontWeight.w600,
             fontSize: 18,

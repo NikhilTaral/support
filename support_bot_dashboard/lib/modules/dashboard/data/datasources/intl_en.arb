@@ -27,10 +27,7 @@
   "@acknowledgementRequired": {
     "description": "Acknowledgement Required"
   },
-  "total": "Total",
-  "@total": {
-    "description": "Total"
-  },
+  
   "day": "Day",
   "@day": {
     "description": "Day"
@@ -207,8 +204,20 @@
     "@totalTicketsText": {
       "description":"Total Tickets Text"
   },
+  "totalTicketsText": "Total Tickets",
+    "@totalTicketsText": {
+      "description":"Total Tickets Text"
+  },
   "pipelineText": "Pipeline",
     "@pipelineText": {
-      "description":"Pipeline Text"
+      "description":"pipeline Text"
+  },
+  "totalText": "Total",
+    "@totalText": {
+      "description":"Total Text"
+  },
+  "validatedText": "Validated",
+    "@validatedText": {
+      "description":"Validated Text"
   }
 }

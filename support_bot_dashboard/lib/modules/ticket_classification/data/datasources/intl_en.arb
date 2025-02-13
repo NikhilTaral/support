@@ -1,6 +1,6 @@
 {
-  "intialpiplineText": "Expert Care Level 1",
-  "@intialpiplineText": {
+  "intialpipelineText": "Expert Care Level 1",
+  "@intialpipelineText": {
     "description": "Inital PipLine Text"
   },
   "bobStateText": "BOPS State/ Province",

@@ -12,10 +12,6 @@
   "@pageText": {
     "description": "Page"
   },
-  "piplineText": "Pipeline",
-  "@piplineText": {
-    "description": "Pipeline"
-  },
   "filterApplyText": "Apply Filter",
   "@filterApplyText": {
     "description": "Apply Filter"
@@ -63,10 +59,6 @@
   "acknowledgementRequired": "Acknowledgement Required",
   "@acknowledgementRequired": {
     "description": "Acknowledgement Required"
-  },
-  "total": "Total",
-  "@total": {
-    "description": "Total"
   },
   "day": "Day",
   "@day": {
@@ -246,7 +238,15 @@
   },
   "pipelineText": "Pipeline",
   "@pipelineText": {
-    "description": "Pipeline Text"
+    "description": "pipeline Text"
+  },
+  "totalText": "Total",
+  "@totalText": {
+    "description": "Total Text"
+  },
+  "validatedText": "Validated",
+  "@validatedText": {
+    "description": "Validated Text"
   },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
@@ -295,8 +295,8 @@
   "@fromJoinAppSignInButtonTitle": {
     "description": "From Join App Sign In Button Title"
   },
-  "intialpiplineText": "Expert Care Level 1",
-  "@intialpiplineText": {
+  "intialpipelineText": "Expert Care Level 1",
+  "@intialpipelineText": {
     "description": "Inital PipLine Text"
   },
   "bobStateText": "BOPS State/ Province",
