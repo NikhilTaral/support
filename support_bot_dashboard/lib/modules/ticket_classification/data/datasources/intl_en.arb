@@ -81,5 +81,9 @@
      "validatedUserText":  "Validated User",
     "@validatedUserText": {
       "description": "Validated User Text"
+    },
+    "noDataFoundText":   "No Data Found",
+    "@noDataFoundText": {
+      "description": "No Data Found Text"
     }
 }

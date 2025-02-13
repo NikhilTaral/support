@@ -39,8 +39,12 @@ class GetAllValidationUsersBloc
     try {
       final repository = serviceLocator<GetAllValidationUserUsecase>();
       final req = GetAllValidationUsersRequestModel(
-        endDate: event.endDate,
-        startDate: event.startDate,
+        endDate: event.endDate ??
+            DateTime.now()
+                .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
+        startDate: event.startDate ??
+            DateTime.now()
+                .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
         filter: [Filter(fieldName: "pipelines", fieldValue: event.filter)],
       );
       final response = await repository.invoke(req);
@@ -63,7 +67,6 @@ class GetAllValidationUsersBloc
                 getAllValidationUsersAttributeModel));
       }
     } catch (e) {
-      print("e:::$e");
       Log.error("Caught Exception: $e", e);
       emit(GetAllValidationUsersFailureState());
     }

@@ -52,6 +52,7 @@ class TicketClassificationResponseModel {
 }
 
 class Data {
+  final String? message;
   final num? totalRecords;
   final List<Item>? items;
   final num? pageSize;
@@ -59,6 +60,7 @@ class Data {
   final num? currentPage;
 
   Data({
+    this.message,
     this.totalRecords,
     this.items,
     this.pageSize,
@@ -67,6 +69,7 @@ class Data {
   });
 
   Data copyWith({
+    String? message,
     num? totalRecords,
     List<Item>? items,
     num? pageSize,
@@ -74,6 +77,7 @@ class Data {
     num? currentPage,
   }) =>
       Data(
+        message: message ?? this.message,
         totalRecords: totalRecords ?? this.totalRecords,
         items: items ?? this.items,
         pageSize: pageSize ?? this.pageSize,
@@ -82,6 +86,7 @@ class Data {
       );
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
+        message: json["message"],
         totalRecords: json["totalRecords"],
         items: json["items"] == null
             ? []

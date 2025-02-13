@@ -368,47 +368,58 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildApplyFilterButton(BuildContext context) {
-    return SizedBox(
-      height: 180,
-      child: ElevatedButton.icon(
-        onPressed: () {
-          final selectedPipelineValue =
-              pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
-          if (selectedPipelineValue == null) {
-            showSnackbar(
-              context,
-              s.filterApplySnackBarText,
-            );
-            return;
-          }
-          final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
-          bloc.selectedPipelineId = selectedPipelineValue;
-          bloc.selectedUserValidator = selectedUserValidator;
-          bloc.selectedBOPsState = selectedBOPsState;
-          bloc.selectedClassification = selectedClassification;
-          bloc.selectedValidation = selectedValidation;
-          bloc.add(TicketClassificationDataCallEvent(
-            fieldValue: selectedPipelineValue,
-            endDate: selectedate.lastOrNull ?? widget.endDate,
-            startDate: selectedate.firstOrNull ?? widget.startDate,
-            page: 1,
-            pageSize: 10,
-          ));
-        },
-        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
-        label: Text(
-          s.filterApplyText,
-          style: SupportBotTextstyle.hint.copyWith(
-            color: SupportBotColors.white,
+    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+      builder: (context, state) {
+        return SizedBox(
+          height: 180,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              final selectedPipelineValue =
+                  pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
+              if (selectedPipelineValue == null) {
+                showSnackbar(
+                  context,
+                  s.filterApplySnackBarText,
+                );
+                return;
+              }
+              BlocProvider.of<GetAllValidationUsersBloc>(context)
+                  .add(GetValidationUsersInitialEvent(
+                endDate: selectedate.lastOrNull ?? widget.endDate,
+                startDate: selectedate.firstOrNull ?? widget.startDate,
+                filter: [selectedPipelineValue ?? ""],
+              ));
+              final bloc =
+                  BlocProvider.of<TicketClassificationTabBloc>(context);
+              bloc.selectedPipelineId = selectedPipelineValue;
+              bloc.selectedUserValidator = selectedUserValidator;
+              bloc.selectedBOPsState = selectedBOPsState;
+              bloc.selectedClassification = selectedClassification;
+              bloc.selectedValidation = selectedValidation;
+              bloc.add(TicketClassificationDataCallEvent(
+                fieldValue: selectedPipelineValue,
+                endDate: selectedate.lastOrNull ?? widget.endDate,
+                startDate: selectedate.firstOrNull ?? widget.startDate,
+                page: 1,
+                pageSize: 10,
+              ));
+            },
+            icon: const Icon(SupportBotIcons.filter, color: Colors.white),
+            label: Text(
+              s.filterApplyText,
+              style: SupportBotTextstyle.hint.copyWith(
+                color: SupportBotColors.white,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: SupportBotColors.bluePrimary,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+            ),
           ),
-        ),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          backgroundColor: SupportBotColors.bluePrimary,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -493,50 +504,61 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildClearFilterButton() {
-    return SizedBox(
-      height: 180,
-      child: ElevatedButton.icon(
-        onPressed: () async {
-          setState(() {
-            selectedUserValidator = '';
-            selectedUserName = '';
-            selectedItem = '';
-            selectedClassification = '';
-            selectedBOPsState = '';
-            selectedValidation = '';
-            selectedDatesNotifier.value = null;
-            pipelineIds = "";
-            selectedPipeline = "";
-          });
+    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+      builder: (context, state) {
+        return SizedBox(
+          height: 180,
+          child: ElevatedButton.icon(
+            onPressed: () async {
+              setState(() {
+                selectedUserValidator = '';
+                selectedUserName = '';
+                selectedItem = '';
+                selectedClassification = '';
+                selectedBOPsState = '';
+                selectedValidation = '';
+                selectedDatesNotifier.value = null;
+                pipelineIds = "";
+                selectedPipeline = "";
+              });
 
-          BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
-          BlocProvider.of<TicketClassificationTabBloc>(context).add(
-            TicketClassificationDataCallEvent(
-              selectedBOPsState: selectedBOPsState,
-              selectedClassification: selectedClassification,
-              selectedValidation: selectedValidation,
-              fieldValue: widget.piplineId,
-              endDate: widget.endDate,
-              startDate: widget.startDate,
-              page: 1,
-              pageSize: 10,
+              BlocProvider.of<TicketClassificationTabBloc>(context)
+                  .clearFilters();
+              BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                TicketClassificationDataCallEvent(
+                  selectedBOPsState: selectedBOPsState,
+                  selectedClassification: selectedClassification,
+                  selectedValidation: selectedValidation,
+                  fieldValue: widget.piplineId,
+                  endDate: widget.endDate,
+                  startDate: widget.startDate,
+                  page: 1,
+                  pageSize: 10,
+                ),
+              );
+              BlocProvider.of<GetAllValidationUsersBloc>(context)
+                  .add(GetValidationUsersInitialEvent(
+                endDate: selectedate.lastOrNull ?? widget.endDate,
+                startDate: selectedate.firstOrNull ?? widget.startDate,
+                filter: [widget.piplineId ?? ""],
+              ));
+            },
+            icon: const Icon(Icons.clear_all, color: Colors.white),
+            label: Text(
+              s.filterClearText,
+              style: SupportBotTextstyle.hint.copyWith(
+                color: SupportBotColors.white,
+              ),
             ),
-          );
-        },
-        icon: const Icon(Icons.clear_all, color: Colors.white),
-        label: Text(
-          s.filterClearText,
-          style: SupportBotTextstyle.hint.copyWith(
-            color: SupportBotColors.white,
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+            ),
           ),
-        ),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          backgroundColor: Colors.redAccent,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        ),
-      ),
+        );
+      },
     );
   }
 
