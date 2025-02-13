@@ -45,7 +45,7 @@ class GetAllValidationUsersRequestModel {
         "endDate": endDate?.toIso8601String(),
         "filter": filter == null
             ? []
-            : List<dynamic>.from(filter!.map((x) => x.toJson())),
+            : List<dynamic>.from(filter?.map((x) => x.toJson()) ?? []),
       };
 }
 

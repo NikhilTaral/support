@@ -59,9 +59,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         BlocProvider(
           create: (context) => GetAllValidationUsersBloc()
             ..add(GetValidationUsersInitialEvent(
-                endDate: widget.endDate,
+                endDate: widget.endDate??DateTime.now(),
                 filter: [widget.piplineId ?? ""],
-                startDate: widget.startDate)),
+                startDate: widget.startDate??DateTime.now())),
         ),
       ],
       child: BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
@@ -354,7 +354,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             );
           }
           if (state is GetAllValidationUsersFailureState) {
-            return const SizedBox(child: Text("Data Not Available"));
+            return  SizedBox(child: Text(s.noDataFoundText));
           }
           return CustomMonthDropdown(
             items: [],
