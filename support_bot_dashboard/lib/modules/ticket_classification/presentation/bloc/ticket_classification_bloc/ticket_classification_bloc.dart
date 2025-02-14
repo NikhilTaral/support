@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
@@ -14,13 +15,14 @@ class TicketClassificationTabBloc
     extends Bloc<TicketClassificationEvent, TicketClassificationState> {
   TicketClassificationAttributeModel ticketClassificationAttributeModel =
       TicketClassificationAttributeModel();
-
+  final s = serviceLocator<S>();
   num page = 1;
   num pageSize = 10;
   String selectedBOPsState = "";
   String selectedClassification = "";
+  String selectedUserValidator = "";
   String selectedValidation = "";
-  String selectedPipelineId = "11257490";
+  String selectedPipelineId = "";
   DateTime? endDate = DateTime.now()
       .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
   DateTime? startDate =
@@ -34,7 +36,9 @@ class TicketClassificationTabBloc
       TicketClassificationDataCallEvent event,
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
+    selectedPipelineId = event.fieldValue ?? "";
     try {
+      pageSize = event.pageSize ?? 10;
       final repository = serviceLocator<TicketClassificationUsecses>();
       endDate = event.endDate
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
@@ -47,7 +51,7 @@ class TicketClassificationTabBloc
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
 
       page = event.page ?? 1;
-      pageSize = event.pageSize ?? 10;
+      pageSize = pageSize;
       final req = TicketClassificationRequestModel(
         startDate: (startDate ?? startdate),
         endDate: (endDate ?? enddate),
@@ -61,13 +65,15 @@ class TicketClassificationTabBloc
             Filter(
                 fieldName: "classifications",
                 fieldValue: [selectedClassification]),
+          if (selectedUserValidator != "")
+            Filter(
+                fieldName: "classificationValidatedBy",
+                fieldValue: [selectedUserValidator]),
           if (selectedValidation != "")
             Filter(
                 fieldName: "classificationValidations",
                 fieldValue: [selectedValidation]),
-          Filter(fieldName: "pipelines", fieldValue: [
-            selectedPipelineId.isEmpty ? "11257490" : selectedPipelineId
-          ]),
+          Filter(fieldName: "pipelines", fieldValue: [selectedPipelineId]),
         ],
       );
       final response = await repository.invoke(req);
@@ -76,12 +82,17 @@ class TicketClassificationTabBloc
       } else {
         final TicketClassificationResponseModel model =
             TicketClassificationResponseModel.fromJson(response.right);
-        if (model.data?.items?.isEmpty == true && model.success == true) {
-          emit(TicketClassificationEmptyState());
+        final message = model.data?.message ?? "";
+        if (message.isNotEmpty == true) {
+          emit(TicketClassificationEmptyState(message: message));
+        } else if (model.data?.items?.isEmpty == true &&
+            model.success == true) {
+          emit(TicketClassificationEmptyState(message: s.noDataFoundText));
         } else {
           page = model.data?.currentPage ?? 1;
 
-          ticketClassificationAttributeModel = TicketClassificationAttributeModel(
+          ticketClassificationAttributeModel =
+              TicketClassificationAttributeModel(
             data: model.data,
             failCode: model.failCode,
             message: model.message,
@@ -92,7 +103,8 @@ class TicketClassificationTabBloc
               currentIndex: 0,
               endDate: endDate,
               startDate: startDate,
-              ticketClassificationAttributeModel: ticketClassificationAttributeModel,
+              ticketClassificationAttributeModel:
+                  ticketClassificationAttributeModel,
               pipelineId: [selectedPipelineId]));
         }
       }
@@ -102,9 +114,10 @@ class TicketClassificationTabBloc
   }
 
   void clearFilters() {
+    selectedUserValidator = "";
     selectedBOPsState = "";
     selectedClassification = "";
     selectedValidation = "";
-    selectedPipelineId = "11257490";
+    selectedPipelineId = "";
   }
 }

@@ -73,7 +73,11 @@ class ValidateAnswerDialog extends StatelessWidget {
                               .classificationFilterValue,
                       selectedPipelineValueList:
                           serviceLocator<InstanceSharingService>()
-                              .selectedPipelineValueList,
+                                  .selectedPipelineValueList ??
+                              "11257490",
+                      startDate:
+                          serviceLocator<InstanceSharingService>().startDate,
+                      endDate: serviceLocator<InstanceSharingService>().endDate,
                     ));
                 Navigator.pop(context);
               }
@@ -95,8 +99,7 @@ class ValidateAnswerDialog extends StatelessWidget {
                       agentAnsValidation: validationStatus,
                       ticketId: id.toString(),
                       pipeline: serviceLocator<InstanceSharingService>()
-                              .selectedPipelineValueList
-                              ?.firstOrNull ??
+                              .selectedPipelineValueList ??
                           "11257490",
                     ),
                   );
@@ -286,7 +289,7 @@ class TicketDetailsDialog extends StatelessWidget {
                         ),
                         label: Text(
                           "Cancel",
-                          style: SupportBotTextstyle.mediumHint
+                          style: SupportBotTextstyle.hint
                               .copyWith(color: SupportBotColors.bluePrimary),
                         ),
                       ),
@@ -306,6 +309,12 @@ class TicketDetailsDialog extends StatelessWidget {
                                     selectedPipelineValueList:
                                         serviceLocator<InstanceSharingService>()
                                             .selectedPipelineValueList,
+                                    startDate:
+                                        serviceLocator<InstanceSharingService>()
+                                            .startDate,
+                                    endDate:
+                                        serviceLocator<InstanceSharingService>()
+                                            .endDate,
                                   ));
                               Navigator.pop(context);
                             }

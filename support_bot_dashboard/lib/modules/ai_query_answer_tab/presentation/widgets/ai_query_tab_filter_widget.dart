@@ -18,8 +18,17 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
 
 class AIQueryTabFilterWidget extends StatefulWidget {
-  const AIQueryTabFilterWidget({super.key});
-
+  const AIQueryTabFilterWidget(
+      {super.key,
+      this.endDate,
+      this.pipelineName,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final String? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  @override
   @override
   _AIQueryFilterWidgetState createState() => _AIQueryFilterWidgetState();
 }
@@ -28,9 +37,10 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
   ValueNotifier<String?> classificationNotifier = ValueNotifier<String?>(null);
-  String selectedItem = "Expert Care Level 1";
+  String selectedItem = "";
   final DataModule dataModule = DataModule();
-  final List<String> pipelineIds = [];
+  String? pipelineIds = "";
+  List<DateTime?> selectedate = [];
   final s = serviceLocator<S>();
   DateTime? endDate;
   DateTime? startDate;
@@ -40,7 +50,12 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     return BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
       builder: (context, state) {
         if (state is GetAllAllPipelineSuccessState) {
-          List<Datums> items = state.attributeModel?.data ?? [];
+          BlocProvider.of<AiQueryBloc>(context).piplineName =
+              widget.pipelineName;
+          BlocProvider.of<AiQueryBloc>(context).piplineID = widget.piplineId;
+          BlocProvider.of<AiQueryBloc>(context).endDate = widget.endDate;
+          BlocProvider.of<AiQueryBloc>(context).startDate = widget.startDate;
+          List<GetAllPipelineData> items = state.attributeModel?.data ?? [];
           return _buildFiltersRow(items);
         } else if (state is GetAllPipelineLoadingState) {
           return _buildLoadingState();
@@ -57,7 +72,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     );
   }
 
-  Widget _buildFiltersRow(List<Datums> items) {
+  Widget _buildFiltersRow(List<GetAllPipelineData> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -84,12 +99,12 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     );
   }
 
-  Widget _buildPipelineDropdown(List<Datums> items) {
+  Widget _buildPipelineDropdown(List<GetAllPipelineData> items) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: PipelineTypeWidget(
         selectedItem: selectedItem,
-        hintText: s.piplineText,
+        hintText: widget.pipelineName ?? "",
         items: items,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? "", items),
       ),
@@ -97,11 +112,10 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
   }
 
   Widget _buildDateRangeSelector() {
-    if (selectedDatesNotifier.value == null) {
-      final endDate = selectedDatesNotifier.value?.lastOrNull ?? DateTime.now();
-      final startDate =
-          selectedDatesNotifier.value?.firstOrNull ?? DateTime.now();
-      selectedDatesNotifier.value = [startDate, endDate];
+    if (selectedate.isNotEmpty) {
+      final endDate = selectedate.lastOrNull;
+      final startDate = selectedate.firstOrNull;
+      selectedate = [startDate, endDate];
     }
 
     return Center(
@@ -115,15 +129,19 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
             startDate = selectedDates![0];
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
-            endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 0));
+            endDate = widget.endDate ?? DateTime.now();
+            startDate = widget.startDate ?? DateTime.now();
           }
 
-          return SizedBox(
+          return Container(
             height: 180,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: SupportBotColors.bluePrimary),
+                padding: const EdgeInsets.only(
+                  right: 6,
+                  left: 6,
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
@@ -131,8 +149,10 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.calendar_month_outlined,
-                      color: SupportBotColors.bluePrimary),
+                  const Icon(
+                    Icons.calendar_month_outlined,
+                    color: SupportBotColors.bluePrimary,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     '${DateFormat('MMM dd').format(startDate)} - ${DateFormat('MMM dd yyyy').format(endDate)}',
@@ -141,6 +161,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
                       color: SupportBotColors.bluePrimary,
                       fontWeight: FontWeight.w500,
                     ),
+                    overflow: TextOverflow.clip,
                   ),
                 ],
               ),
@@ -175,28 +196,31 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
       child: ElevatedButton.icon(
         onPressed: () async {
           setState(() {
-            classificationNotifier = ValueNotifier<String?>(null);
-            selectedItem = "Expert Care Level 1";
+            classificationNotifier.value = null;
+            selectedItem = widget.pipelineName ?? "";
+            startDate = widget.startDate ?? DateTime.now();
+            endDate = widget.endDate ?? DateTime.now();
+            selectedDatesNotifier.value = [startDate??DateTime.now(), endDate??DateTime.now()];
 
-            selectedDatesNotifier.value = null;
-            pipelineIds.clear();
+            pipelineIds = "";
           });
-          BlocProvider.of<AiQueryBloc>(context).piplineID = ["11257490"];
-          BlocProvider.of<AiQueryBloc>(context).endDate = DateTime.now()
-              .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-          BlocProvider.of<AiQueryBloc>(context).startDate = DateTime.now()
-              .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
-          ;
-
-          BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent());
+          BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent(
+            startDate: startDate,
+            endDate: endDate,
+            selectedPipelineValueList: widget.piplineId ?? "",
+          ));
         },
         icon: const Icon(Icons.clear_all, color: Colors.white),
-        label: Text(s.filterClearText, style: TextStyle(color: Colors.white)),
+        label: Text(
+          s.filterClearText,
+          style: const TextStyle(color: Colors.white),
+        ),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: Colors.redAccent,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
         ),
       ),
     );
@@ -247,20 +271,24 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
 
     if (pickedDates != null) {
       selectedDatesNotifier.value = pickedDates.cast<DateTime>();
-      startDate =
-          pickedDates.isNotEmpty ? (pickedDates[0] ?? startDate) : startDate;
-      endDate = pickedDates.length > 1 ? (pickedDates[1] ?? endDate) : endDate;
+      setState(() {
+        startDate =
+            pickedDates.isNotEmpty ? (pickedDates[0] ?? startDate) : startDate;
+        endDate =
+            pickedDates.length > 1 ? (pickedDates[1] ?? endDate) : endDate;
+      });
     }
   }
 
-  void _onPipelineSelectionChanged(String? selectedName, List<Datums> items) {
-    pipelineIds.clear();
+  void _onPipelineSelectionChanged(
+      String? selectedName, List<GetAllPipelineData> items) {
+    pipelineIds = "";
     final matchingItem = items.firstWhere(
       (item) => item.pipelineName == selectedName,
-      orElse: () => Datums(pipelineName: '', pipelineId: ''),
+      orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
     );
     if (matchingItem.pipelineId?.isNotEmpty == true) {
-      pipelineIds.add(matchingItem.pipelineId ?? "");
+      pipelineIds = (matchingItem.pipelineId ?? widget.piplineId.toString());
     }
     setState(() {
       selectedItem = selectedName ?? "";
@@ -310,75 +338,26 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
 
   void _addEvents() {
     final selectedPipelineValue =
-        pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+        pipelineIds?.isEmpty == true ? widget.piplineId : pipelineIds;
+    final start = selectedDatesNotifier.value?.first ?? widget.startDate;
+    final end = selectedDatesNotifier.value?.last ?? widget.endDate;
 
-    if (selectedPipelineValue.isEmpty) {
-      showSnackbar(
-        context,
-        s.filterApplySnackBarText,
+    if (selectedPipelineValue == null || start == null || end == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please select all filters")),
       );
       return;
     }
 
-    if (selectedItem.isNotEmpty) {
-      BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent(
-        selectedPipelineValueList: selectedPipelineValue,
-        classificationFilterValue: classificationNotifier.value,
-        startDate: startDate,
-        endDate: endDate,
-        page: 1,
-        pageSize: 10,
-      ));
-    }
+    BlocProvider.of<AiQueryBloc>(context).add(AIQueryInitialEvent(
+      selectedPipelineValueList: selectedPipelineValue,
+      classificationFilterValue: classificationNotifier.value,
+      endDate: end,
+      startDate: start,
+      page: 1,
+      pageSize: BlocProvider.of<AiQueryBloc>(context).pageSize,
+    ));
   }
-
-  // Keep this code for further requirements
-  // Widget _buildChips(BuildContext context, List<Datums> items) {
-  //   return Wrap(
-  //     alignment: WrapAlignment.start,
-  //     spacing: 8,
-  //     runSpacing: 8,
-  //     children: [
-  //       ...selectedItems.take(2).map((item) => Chip(
-  //             backgroundColor: SupportBotColors.bluePrimary,
-  //             label: Text(
-  //               item,
-  //               style: const TextStyle(color: SupportBotColors.white),
-  //             ),
-  //             deleteIcon: const Icon(
-  //               SupportBotIcons.close,
-  //               color: SupportBotColors.white,
-  //             ),
-  //             onDeleted: () {
-  //               setState(() {
-  //                 selectedItems.remove(item);
-  //               });
-  //               _onPipelineSelectionChanged(selectedItems ?? [], items);
-  //             },
-  //           )),
-  //       if (selectedItems.length > 2) ...[
-  //         ActionChip(
-  //           label: const Text(
-  //             "...",
-  //             style: TextStyle(color: SupportBotColors.white),
-  //           ),
-  //           backgroundColor: SupportBotColors.bluePrimary,
-  //           onPressed: () {},
-  //         ),
-  //         ActionChip(
-  //           label: Text(
-  //             "+${selectedItems.length - 2}",
-  //             style: SupportBotTextstyle.cellHeading.copyWith(
-  //               color: SupportBotColors.white,
-  //             ),
-  //           ),
-  //           backgroundColor: SupportBotColors.bluePrimary,
-  //           onPressed: () {},
-  //         ),
-  //       ],
-  //     ],
-  //   );
-  // }
 
   Widget _buildClassificationDropdown() {
     return SizedBox(

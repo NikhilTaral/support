@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class GetAllPipelinesAttributeModel {
-  final List<Datums>? data;
+  final List<GetAllPipelineData>? data;
   final bool? success;
   final num? failCode;
   final Params? params;
@@ -16,7 +16,7 @@ class GetAllPipelinesAttributeModel {
   });
 
   GetAllPipelinesAttributeModel copyWith({
-    List<Datums>? data,
+    List<GetAllPipelineData>? data,
     bool? success,
     num? failCode,
     Params? params,
@@ -31,14 +31,14 @@ class GetAllPipelinesAttributeModel {
       );
 }
 
-class Datums {
+class GetAllPipelineData {
   final String? pipelineId;
   final String? pipelineName;
   final bool? hubspotUpdatepPerm;
   final bool? aiAnswerPerm;
   final String? hubspotUpdateEnv;
 
-  Datums({
+  GetAllPipelineData({
     this.pipelineId,
     this.pipelineName,
     this.hubspotUpdatepPerm,
@@ -46,14 +46,14 @@ class Datums {
     this.hubspotUpdateEnv,
   });
 
-  Datums copyWith({
+  GetAllPipelineData copyWith({
     String? pipelineId,
     String? pipelineName,
     bool? hubspotUpdatepPerm,
     bool? aiAnswerPerm,
     String? hubspotUpdateEnv,
   }) =>
-      Datums(
+      GetAllPipelineData(
         pipelineId: pipelineId ?? this.pipelineId,
         pipelineName: pipelineName ?? this.pipelineName,
         hubspotUpdatepPerm: hubspotUpdatepPerm ?? this.hubspotUpdatepPerm,

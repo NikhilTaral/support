@@ -12,10 +12,6 @@
   "@pageText": {
     "description": "Page"
   },
-  "piplineText": "Pipeline",
-  "@piplineText": {
-    "description": "Pipeline"
-  },
   "filterApplyText": "Apply Filter",
   "@filterApplyText": {
     "description": "Apply Filter"
@@ -31,6 +27,10 @@
   "searchText": "Search...",
   "@searchText": {
     "description": "Search"
+  },
+  "getStartedText": "Get Started",
+  "@getStartedText": {
+    "description": "Get Started"
   },
   "title": "Support Bot",
   "@title": {
@@ -60,10 +60,6 @@
   "@acknowledgementRequired": {
     "description": "Acknowledgement Required"
   },
-  "total": "Total",
-  "@total": {
-    "description": "Total"
-  },
   "day": "Day",
   "@day": {
     "description": "Day"
@@ -72,9 +68,9 @@
   "@month": {
     "description": "Month"
   },
-  "classification": "Classification",
+  "classification": "AI Classification",
   "@classification": {
-    "description": "Classification"
+    "description": "AI Classification"
   },
   "validation": "Validation",
   "@validation": {
@@ -228,6 +224,30 @@
   "@ticketNotClassified": {
     "description": "Not Classified"
   },
+  "somethingWentWrongText": "Something Went Wrong",
+  "@somethingWentWrongText": {
+    "description": "Something Went Wrong Text"
+  },
+  "validatedTicketsText": "Validated Tickets",
+  "@validatedTicketsText": {
+    "description": "Validated Tickets Text"
+  },
+  "totalTicketsText": "Total Tickets",
+  "@totalTicketsText": {
+    "description": "Total Tickets Text"
+  },
+  "pipelineText": "Pipeline",
+  "@pipelineText": {
+    "description": "pipeline Text"
+  },
+  "totalText": "Total",
+  "@totalText": {
+    "description": "Total Text"
+  },
+  "validatedText": "Validated",
+  "@validatedText": {
+    "description": "Validated Text"
+  },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
     "description": "By clicking “GET STARTED” you are agreeing to our "
@@ -275,8 +295,8 @@
   "@fromJoinAppSignInButtonTitle": {
     "description": "From Join App Sign In Button Title"
   },
-  "intialpiplineText": "Expert Care Level 1",
-  "@intialpiplineText": {
+  "intialpipelineText": "Expert Care Level 1",
+  "@intialpipelineText": {
     "description": "Inital PipLine Text"
   },
   "bobStateText": "BOPS State/ Province",
@@ -353,5 +373,13 @@
   "validatedClassificationText": "Validated Classification",
   "@validatedClassificationText": {
     "description": "Validated Classification Text"
+  },
+  "validatedUserText": "Validated User",
+  "@validatedUserText": {
+    "description": "Validated User Text"
+  },
+  "noDataFoundText": "No Data Found",
+  "@noDataFoundText": {
+    "description": "No Data Found Text"
   }
 }

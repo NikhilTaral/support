@@ -35,10 +35,10 @@ class ExportButton extends StatelessWidget {
         listener: (context, state) {
           if (state is ExportFailureState) {
             ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Failed to download zip file')));
+                const SnackBar(content: Text('Failed to download CSV file')));
           } else if (state is ExportSuccessState) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Successfully download zip file')));
+                content: Text('Successfully downloaded CSV file')));
           }
         },
         builder: (context, state) {

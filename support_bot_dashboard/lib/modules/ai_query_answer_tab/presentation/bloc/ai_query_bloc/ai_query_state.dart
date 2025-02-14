@@ -13,7 +13,7 @@ class AIQuerySuccessState extends AiQueryState {
   final DataModule? dataModule;
   final DateTime? startDate;
   final DateTime? endDate;
-  final List<String>? selectedPipelineValue;
+  final String? selectedPipelineValue;
   final String? classificationFilterValue;
   AIQuerySuccessState({
     this.dashboardDataModel,

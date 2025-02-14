@@ -14,17 +14,26 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationPlutoTable extends StatelessWidget {
-  TicketClassificationPlutoTable({super.key});
-
-  final ValueNotifier<num> currentPage = ValueNotifier<int>(1);
-  final ValueNotifier<num> pageSize = ValueNotifier<int>(10);
+  TicketClassificationPlutoTable(
+      {super.key,
+      this.endDate,
+      this.pipelineName,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final String? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final ValueNotifier<num> currentPage = ValueNotifier<num>(1);
   final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TicketClassificationTabBloc, TicketClassificationState>(
       builder: (context, state) {
-        currentPage.value =
-            BlocProvider.of<TicketClassificationTabBloc>(context).page;
+        final ticketClassificationTabBloc =
+            BlocProvider.of<TicketClassificationTabBloc>(context);
+        currentPage.value = ticketClassificationTabBloc.page;
+
         if (state is TicketClassificationLoadingState) {
           return Center(
               child: LoadingWidget(
@@ -57,29 +66,36 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                           ),
                         ),
                         ValueListenableBuilder<num>(
-                          valueListenable: pageSize,
+                          valueListenable: ValueNotifier<num>(
+                              ticketClassificationTabBloc.pageSize),
                           builder: (context, value, child) {
                             return CustomPaginationDropdown(
                               selectedValue: value,
-                              items: const [10, 25, 50],
+                              items: const [10, 25, 50, 100, 250],
                               onChanged: (value) {
                                 if (value != null) {
-                                  pageSize.value = value;
+                                  BlocProvider.of<TicketClassificationTabBloc>(
+                                          context)
+                                      .pageSize = value;
                                   currentPage.value = 1;
 
                                   context
                                       .read<TicketClassificationTabBloc>()
                                       .add(
                                         TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
+                                            startDate: state.startDate,
+                                            endDate: state.endDate,
+                                            fieldValue:
+                                                ticketClassificationTabBloc
+                                                    .selectedPipelineId,
+                                            page: currentPage.value,
+                                            pageSize:
+                                                ticketClassificationTabBloc
+                                                    .pageSize),
                                       );
                                 }
                               },
-                              width: 60,
+                              width: 70,
                               height: 40,
                             );
                           },
@@ -90,8 +106,8 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "${(currentPage.value - 1) * pageSize.value + 1} - "
-                          "${(currentPage.value * pageSize.value > (state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0)) ? state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                          "${(currentPage.value - 1) * ticketClassificationTabBloc.pageSize + 1} - "
+                          "${(currentPage.value * ticketClassificationTabBloc.pageSize > (state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0)) ? state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0 : currentPage.value * ticketClassificationTabBloc.pageSize} of "
                           "${state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0}",
                           style: SupportBotTextstyle.hint.copyWith(
                             color: SupportBotColors.disablePrimary.shade500,
@@ -106,11 +122,18 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                                       .read<TicketClassificationTabBloc>()
                                       .add(
                                         TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
-                                          page: currentPage.value,
-                                          pageSize: pageSize.value,
-                                        ),
+                                            fieldValue:
+                                                ticketClassificationTabBloc
+                                                    .selectedPipelineId,
+                                            startDate:
+                                                ticketClassificationTabBloc
+                                                    .startDate,
+                                            endDate: ticketClassificationTabBloc
+                                                .endDate,
+                                            page: currentPage.value,
+                                            pageSize:
+                                                ticketClassificationTabBloc
+                                                    .pageSize),
                                       );
                                 }
                               : null,
@@ -128,7 +151,8 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                           },
                         ),
                         IconButton(
-                          onPressed: (currentPage.value * pageSize.value) <
+                          onPressed: (currentPage.value *
+                                      ticketClassificationTabBloc.pageSize) <
                                   (state.ticketClassificationAttributeModel
                                           ?.data?.totalRecords ??
                                       0)
@@ -138,10 +162,16 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                                       .read<TicketClassificationTabBloc>()
                                       .add(
                                         TicketClassificationDataCallEvent(
-                                          startDate: state.startDate,
-                                          endDate: state.endDate,
+                                          fieldValue:
+                                              ticketClassificationTabBloc
+                                                  .selectedPipelineId,
+                                          startDate: ticketClassificationTabBloc
+                                              .startDate,
+                                          endDate: ticketClassificationTabBloc
+                                              .endDate,
                                           page: currentPage.value,
-                                          pageSize: pageSize.value,
+                                          pageSize: ticketClassificationTabBloc
+                                              .pageSize,
                                         ),
                                       );
                                 }
@@ -158,7 +188,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
         } else if (state is TicketClassificationFailureState) {
           return const FailureWidget();
         } else if (state is TicketClassificationEmptyState) {
-          return const Center(child: EmptyWidget());
+          return  Center(child: EmptyWidget(message: state.message,));
         }
         return const SizedBox.shrink();
       },

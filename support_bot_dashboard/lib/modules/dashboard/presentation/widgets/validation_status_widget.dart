@@ -10,7 +10,9 @@ import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/pluto_configruration.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class ValidationStatusWidget extends StatelessWidget {
   ValidationStatusWidget({super.key});
@@ -36,12 +38,36 @@ class ValidationStatusWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 10,
         children: [
-          Text(
-            s.validationStatusText,
-            style: SupportBotTextstyle.normal.copyWith(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: SupportBotColors.black),
+          Row(
+            children: [
+              Text(
+                s.validationStatusText,
+                style: SupportBotTextstyle.normal.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: SupportBotColors.black),
+              ),
+              UIHelpers.horizontalSpaceTiny,
+              Tooltip(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: SupportBotColors.disablePrimary,
+                      width: 2,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    color: SupportBotColors.gray.shade200),
+                height: 30,
+                textStyle: SupportBotTextstyle.small.copyWith(
+                  color: SupportBotColors.black,
+                ),
+                message:
+                    "This visual compares AI-classified tickets\n with user validation, highlighting correct (green)\n and incorrect (red) classifications.",
+                child: const Icon(
+                  size: 18,
+                  SupportBotIcons.infoCircle,
+                ),
+              )
+            ],
           ),
           Expanded(
             child: BlocBuilder<ValidationStatusBloc, ValidationStatusState>(

@@ -11,10 +11,6 @@
   "@pageText": {
     "description": "Page"
   },
-  "piplineText": "Pipeline",
-  "@piplineText": {
-    "description": "Pipeline"
-  },
   "filterApplyText": "Apply Filter",
   "@filterApplyText": {
     "description": "Apply Filter"
@@ -30,6 +26,9 @@
   "searchText": "Search...",
   "@searchText": {
     "description": "Search"
+  }, "getStartedText": "Get Started",
+  "@getStartedText": {
+    "description": "Get Started"
   }
   
 }

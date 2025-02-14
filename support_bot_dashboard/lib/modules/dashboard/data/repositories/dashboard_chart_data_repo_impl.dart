@@ -4,7 +4,7 @@ import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';

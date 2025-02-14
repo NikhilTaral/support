@@ -7,7 +7,7 @@ class TicketClssificationPipelineDropdownInitialState
 
 class TicketClssificationDropdownPipelineTypesLoadedState
     extends TicketClssificationPipelineDropdownState {
-  final List<Datums> filteredItems;
+  final List<GetAllPipelineData> filteredItems;
   final List<String> selectedItems;
 
   TicketClssificationDropdownPipelineTypesLoadedState({

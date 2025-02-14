@@ -1,6 +1,6 @@
 {
-  "intialpiplineText": "Expert Care Level 1",
-  "@intialpiplineText": {
+  "intialpipelineText": "Expert Care Level 1",
+  "@intialpipelineText": {
     "description": "Inital PipLine Text"
   },
   "bobStateText": "BOPS State/ Province",
@@ -66,7 +66,6 @@
     "@validatedByText": {
       "description": "Validated By Text"
     },
-   
     "classificationValidationReasonText":  "Classification Validation Reason",
     "@classificationValidationReasonText": {
       "description": "Classification Validation Reason Text"
@@ -78,5 +77,13 @@
     "validatedClassificationText":  "Validated Classification",
     "@validatedClassificationText": {
       "description": "Validated Classification Text"
+    },
+     "validatedUserText":  "Validated User",
+    "@validatedUserText": {
+      "description": "Validated User Text"
+    },
+    "noDataFoundText":   "No Data Found",
+    "@noDataFoundText": {
+      "description": "No Data Found Text"
     }
 }

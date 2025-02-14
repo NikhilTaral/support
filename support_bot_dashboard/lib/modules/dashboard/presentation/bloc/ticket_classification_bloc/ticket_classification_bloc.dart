@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
@@ -12,7 +12,7 @@ part 'ticket_classification_state.dart';
 
 class TicketClassificationBloc
     extends Bloc<TickiteClassificationEvent, TicketClassificationState> {
-       List<String>? selectedPipelineId = ["11257490"];
+  List<String>? selectedPipelineId = [""];
   DashboardDataModel dashboardDataModel = DashboardDataModel();
   TicketClassificationBloc() : super(TicketClassificationInitialState()) {
     on<TickiteClassificationEvent>(_onTickitClassification);
@@ -21,13 +21,14 @@ class TicketClassificationBloc
   FutureOr<void> _onTickitClassification(TickiteClassificationEvent event,
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
+    selectedPipelineId = event.selectedPipelineValue;
     final endDate = DateTime.now();
     final startDate = endDate.subtract(const Duration(days: 0));
     final repository = serviceLocator<DashboardChartdataUsecase>();
    final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
-            fieldValue: event.selectedPipelineValue?? ["11257490"],
+            fieldValue: selectedPipelineId ?? [""],
             fieldName: event.fieldName ?? "pipelines")
       ],
       startDate: (event.startDate ?? DateTime.now())

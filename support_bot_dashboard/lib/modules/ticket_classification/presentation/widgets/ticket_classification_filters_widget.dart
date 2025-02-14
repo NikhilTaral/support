@@ -6,12 +6,12 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -19,8 +19,16 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
 
 class TicketClassificationFiltersWidget extends StatefulWidget {
-  TicketClassificationFiltersWidget({super.key});
-
+  const TicketClassificationFiltersWidget(
+      {super.key,
+      this.endDate,
+      this.pipelineName,
+      this.piplineId,
+      this.startDate});
+  final String? pipelineName;
+  final String? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
   @override
   _HomeFiltersWidgetState createState() => _HomeFiltersWidgetState();
 }
@@ -34,19 +42,32 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   String selectedClassification = '';
   List<DateTime?> selectedate = [];
   String selectedBOPsState = '';
+  String selectedUserValidator = "";
   String selectedItem = '';
+  String selectedUserName = "";
   String selectedValidation = '';
-  List<String> pipelineIds = [];
+  String pipelineIds = "";
   String selectedPipeline = "";
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BopsStatesBloc()..add(BopsStateDataEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => BopsStatesBloc()..add(BopsStateDataEvent()),
+        ),
+        BlocProvider(
+          create: (context) => GetAllValidationUsersBloc()
+            ..add(GetValidationUsersInitialEvent(
+                endDate: widget.endDate ?? DateTime.now(),
+                filter: [widget.piplineId ?? ""],
+                startDate: widget.startDate ?? DateTime.now())),
+        ),
+      ],
       child: BlocBuilder<GetAllPipelineBloc, GetAllPipelineState>(
         builder: (context, state) {
           if (state is GetAllAllPipelineSuccessState) {
-            List<Datums> items = state.attributeModel?.data ?? [];
+            List<GetAllPipelineData> items = state.attributeModel?.data ?? [];
             return _buildFiltersRow(items);
           } else if (state is GetAllPipelineLoadingState) {
             return _buildLoadingState();
@@ -91,7 +112,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _buildFiltersRow(List<Datums> items) {
+  Widget _buildFiltersRow(List<GetAllPipelineData> items) {
     return SizedBox(
       height: 40,
       child: SingleChildScrollView(
@@ -109,6 +130,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildValidationDropdown(),
             UIHelpers.horizontalSpaceRegular,
+            _getAllValidatedUser(),
+            UIHelpers.horizontalSpaceRegular,
             _buildApplyFilterButton(
               context,
             ),
@@ -123,20 +146,22 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _buildPipelineDropdown(List<Datums> items) {
+  Widget _buildPipelineDropdown(List<GetAllPipelineData> items) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 220),
       child: TicketClassificationPipelineWidget(
-        hintText:
-            selectedPipeline.isEmpty ? s.intialpiplineText : selectedPipeline,
+        hintText: selectedPipeline.isEmpty
+            ? (widget.pipelineName ?? '')
+            : selectedPipeline,
         items: items,
         selectedItem: selectedPipeline,
         onChanged: (selectedName) async {
           setState(() {
+            if (widget.pipelineName != null) {
+              selectedPipeline = (widget.pipelineName ?? "");
+            }
             selectedPipeline = selectedName;
           });
-
-          await _savePipelineToLocalStorage(selectedName);
 
           _onPipelineSelectionChanged([selectedName], items);
         },
@@ -145,23 +170,17 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   void _onPipelineSelectionChanged(
-      List<String> selectedNames, List<Datums> items) async {
-    pipelineIds = [];
+      List<String> selectedNames, List<GetAllPipelineData> items) async {
+    pipelineIds = '';
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
         (item) => item.pipelineName == selectedName,
-        orElse: () => Datums(pipelineName: '', pipelineId: ''),
+        orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
       );
       if (matchingItem.pipelineId?.isNotEmpty == true) {
-        pipelineIds.add(matchingItem.pipelineId ?? "");
+        pipelineIds = (matchingItem.pipelineId ?? "");
       }
     }
-
-    await LocalStorage.savePipelineIds(pipelineIds);
-  }
-
-  Future<void> _savePipelineToLocalStorage(String selectedName) async {
-    await LocalStorage.savePipeline(selectedName);
   }
 
   Widget _buildDateRangeSelector() {
@@ -182,8 +201,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             startDate = selectedDates![0];
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           } else {
-            endDate = DateTime.now();
-            startDate = endDate.subtract(const Duration(days: 0));
+            endDate = widget.endDate ?? DateTime.now();
+            startDate = widget.startDate ?? DateTime.now();
           }
 
           return Container(
@@ -295,48 +314,112 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _buildApplyFilterButton(BuildContext context) {
-    return Container(
-      height: 180,
-      child: ElevatedButton.icon(
-        onPressed: () {
-          final selectedPipelineValue =
-              pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+  Widget _getAllValidatedUser() {
+    return SizedBox(
+      child: BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+        builder: (context, state) {
+          if (state is GetAllValidationUsersSuccessState) {
+            var users = state.getAllValidationUsersAttributeModel?.data ?? [];
 
-          if (selectedPipelineValue.isEmpty) {
-            showSnackbar(
-              context,
-              s.filterApplySnackBarText,
+            return CustomMonthDropdown(
+              items: users.map((e) => e.name ?? "").toSet().toList(),
+              label: selectedUserName.isEmpty
+                  ? s.validatedUserText
+                  : users
+                          .firstWhere(
+                            (element) => element.name == selectedUserValidator,
+                            orElse: () => users.first,
+                          )
+                          .name ??
+                      s.validatedUserText,
+              onChanged: (value) {
+                var selectedUser = users.firstWhere(
+                  (element) => element.name == value,
+                  orElse: () => users.first,
+                );
+
+                BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+                  SetUserNameEvent(
+                    email: selectedUser.email,
+                    name: selectedUser.name,
+                  ),
+                );
+
+                setState(() {
+                  selectedUserValidator = selectedUser.email ?? '';
+                  selectedUserName = selectedUser.name ?? "";
+                });
+              },
+              selectedValue: selectedUserName,
             );
-            return;
           }
-          final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
-          bloc.selectedPipelineId = selectedPipelineValue.first;
-          bloc.selectedBOPsState = selectedBOPsState;
-          bloc.selectedClassification = selectedClassification;
-          bloc.selectedValidation = selectedValidation;
-          bloc.add(TicketClassificationDataCallEvent(
-            fieldValue: selectedPipelineValue,
-            endDate: selectedate.lastOrNull,
-            startDate: selectedate.firstOrNull,
-            page: 1,
-            pageSize: 10,
-          ));
+          if (state is GetAllValidationUsersFailureState) {
+            return SizedBox(child: Text(s.noDataFoundText));
+          }
+          return CustomMonthDropdown(
+            items: [],
+            label: s.validatedUserText,
+            onChanged: (value) {},
+            selectedValue: selectedUserName,
+          );
         },
-        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
-        label: Text(
-          s.filterApplyText,
-          style: SupportBotTextstyle.hint.copyWith(
-            color: SupportBotColors.white,
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          backgroundColor: SupportBotColors.bluePrimary,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        ),
       ),
+    );
+  }
+
+  Widget _buildApplyFilterButton(BuildContext context) {
+    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+      builder: (context, state) {
+        return SizedBox(
+          height: 180,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              final selectedPipelineValue =
+                  pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
+              if (selectedPipelineValue == null) {
+                showSnackbar(
+                  context,
+                  s.filterApplySnackBarText,
+                );
+                return;
+              }
+              BlocProvider.of<GetAllValidationUsersBloc>(context)
+                  .add(GetValidationUsersInitialEvent(
+                endDate: selectedate.lastOrNull ?? widget.endDate,
+                startDate: selectedate.firstOrNull ?? widget.startDate,
+                filter: [selectedPipelineValue ?? ""],
+              ));
+              final bloc =
+                  BlocProvider.of<TicketClassificationTabBloc>(context);
+              bloc.selectedPipelineId = selectedPipelineValue;
+              bloc.selectedUserValidator = selectedUserValidator;
+              bloc.selectedBOPsState = selectedBOPsState;
+              bloc.selectedClassification = selectedClassification;
+              bloc.selectedValidation = selectedValidation;
+              bloc.add(TicketClassificationDataCallEvent(
+                fieldValue: selectedPipelineValue,
+                endDate: selectedate.lastOrNull ?? widget.endDate,
+                startDate: selectedate.firstOrNull ?? widget.startDate,
+                page: 1,
+                pageSize: 10,
+              ));
+            },
+            icon: const Icon(SupportBotIcons.filter, color: Colors.white),
+            label: Text(
+              s.filterApplyText,
+              style: SupportBotTextstyle.hint.copyWith(
+                color: SupportBotColors.white,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: SupportBotColors.bluePrimary,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -359,7 +442,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     if (_searchController.text.isNotEmpty) {
                       _searchController.clear();
                       final selectedPipelineValue =
-                          pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+                          pipelineIds.isEmpty ? "11257490" : pipelineIds;
                       BlocProvider.of<TicketClassificationTabBloc>(context).add(
                         TicketClassificationDataCallEvent(
                           fieldValue: selectedPipelineValue,
@@ -400,7 +483,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                   ),
                   onSubmitted: (value) {
                     final selectedPipelineValue =
-                        pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+                        pipelineIds.isEmpty ? "11257490" : pipelineIds;
                     BlocProvider.of<TicketClassificationTabBloc>(context).add(
                       TicketClassificationDataCallEvent(
                         fieldValue: selectedPipelineValue,
@@ -421,48 +504,61 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildClearFilterButton() {
-    return SizedBox(
-      height: 180,
-      child: ElevatedButton.icon(
-        onPressed: () async {
-          setState(() {
-            selectedItem = '';
-            selectedClassification = '';
-            selectedBOPsState = '';
-            selectedValidation = '';
-            selectedDatesNotifier.value = null;
-            pipelineIds.clear();
-            selectedPipeline = "";
-          });
-          BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .add(TicketClassificationDataCallEvent(
-            selectedBOPsState: selectedBOPsState,
-            selectedClassification: selectedClassification,
-            selectedValidation: selectedValidation,
-            fieldValue: ['11257490'],
-            endDate: DateTime.now()
-                ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
-            startDate: DateTime.now()
-                ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
-            page: 1,
-            pageSize: 10,
-          ));
-        },
-        icon: const Icon(Icons.clear_all, color: Colors.white),
-        label: Text(
-          s.filterClearText,
-          style: SupportBotTextstyle.hint.copyWith(
-            color: SupportBotColors.white,
+    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+      builder: (context, state) {
+        return SizedBox(
+          height: 180,
+          child: ElevatedButton.icon(
+            onPressed: () async {
+              setState(() {
+                selectedUserValidator = '';
+                selectedUserName = '';
+                selectedItem = '';
+                selectedClassification = '';
+                selectedBOPsState = '';
+                selectedValidation = '';
+                selectedDatesNotifier.value = null;
+                pipelineIds = "";
+                selectedPipeline = "";
+              });
+
+              BlocProvider.of<TicketClassificationTabBloc>(context)
+                  .clearFilters();
+              BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                TicketClassificationDataCallEvent(
+                  selectedBOPsState: selectedBOPsState,
+                  selectedClassification: selectedClassification,
+                  selectedValidation: selectedValidation,
+                  fieldValue: widget.piplineId,
+                  endDate: widget.endDate,
+                  startDate: widget.startDate,
+                  page: 1,
+                  pageSize: 10,
+                ),
+              );
+              BlocProvider.of<GetAllValidationUsersBloc>(context)
+                  .add(GetValidationUsersInitialEvent(
+                endDate: selectedate.lastOrNull ?? widget.endDate,
+                startDate: selectedate.firstOrNull ?? widget.startDate,
+                filter: [widget.piplineId ?? ""],
+              ));
+            },
+            icon: const Icon(Icons.clear_all, color: Colors.white),
+            label: Text(
+              s.filterClearText,
+              style: SupportBotTextstyle.hint.copyWith(
+                color: SupportBotColors.white,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+            ),
           ),
-        ),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          backgroundColor: Colors.redAccent,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -542,10 +638,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildExportButton() {
     String getPipelineId() {
-      if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
-        return pipelineIds.first ?? "11257490";
+      if (pipelineIds.isEmpty) {
+        return widget.piplineId ?? "";
       }
-      return '11257490';
+      return pipelineIds;
     }
 
     return Tooltip(
@@ -553,8 +649,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: ExportButton(
           icon: 'assets/icons/Export.svg',
           selectedButtonText: s.ticketClassification,
-          startDate: selectedDatesNotifier.value?.first ?? DateTime.now(),
-          endDate: selectedDatesNotifier.value?.last ?? DateTime.now(),
+          startDate: selectedate.firstOrNull ?? widget.startDate,
+          endDate: selectedate.lastOrNull ?? widget.endDate,
           bopsState: selectedBOPsState,
           selectedClassification: selectedClassification,
           selectedClassificationValidation: selectedValidation,
