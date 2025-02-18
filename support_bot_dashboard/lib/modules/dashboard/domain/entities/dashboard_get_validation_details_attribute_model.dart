@@ -17,7 +17,3 @@ class ValidationData {
     });
 
 }
-
-// class Params {
-//     Params();
-// }

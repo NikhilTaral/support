@@ -22,12 +22,12 @@ class ValidationStatusRepoImpl extends ValidationStatusRepository {
       final model =
           validationStatusResponsetModelFromJson(jsonEncode(response));
       if (model is Left) {
-        return Left(ServerFailure(message: s.aPIErrorMsg));
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
       } else {
         return Right(model);
       }
     } catch (e) {
-      return Left(ServerFailure(message: s.aPIErrorMsg));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }

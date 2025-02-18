@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_dropdown_bloc/pipeline_dropdown_event.dart';
@@ -13,8 +15,8 @@ class DropdownWithCheckbox extends StatelessWidget {
   final List<Datums> items;
   final List<String> selectedItems;
   final ValueChanged<List<String>> onChanged;
-
-  const DropdownWithCheckbox({
+final s = serviceLocator<S>();
+   DropdownWithCheckbox({
     Key? key,
     required this.hintText,
     required this.items,
@@ -65,7 +67,7 @@ class DropdownWithCheckbox extends StatelessWidget {
                                   const EdgeInsets.symmetric(horizontal: 16.0),
                               child: TextFormField(
                                 decoration: InputDecoration(
-                                  hintText: 'Search...',
+                                  hintText: s.searchText,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
@@ -120,8 +122,8 @@ class DropdownWithCheckbox extends StatelessWidget {
                                   onChanged(state.selectedItems);
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text(
-                                  'OK',
+                                child:  Text(
+                                  s.oKText,
                                   style:
                                       TextStyle(color: SupportBotColors.white),
                                 ),

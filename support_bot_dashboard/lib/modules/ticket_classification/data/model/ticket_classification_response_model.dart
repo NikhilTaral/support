@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final ticketClassificationResponseModel = ticketClassificationResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 TicketClassificationResponseModel ticketClassificationResponseModelFromJson(

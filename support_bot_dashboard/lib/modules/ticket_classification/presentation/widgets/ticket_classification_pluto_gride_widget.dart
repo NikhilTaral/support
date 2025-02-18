@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_attribute_model.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/pluto_table_widget.dart';
 import 'package:support_bot_dashboard/utils/report_utils.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -8,11 +8,11 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 class TicketClassificationPlutoGrideWidget extends StatefulWidget {
   const TicketClassificationPlutoGrideWidget({
     super.key,
-    required this.ticketClassificationEntitieModel,
+    required this.ticketClassificationAttributeModel,
     required this.piplineId,
   });
 
-  final TicketClassificationEntitieModel ticketClassificationEntitieModel;
+  final TicketClassificationAttributeModel ticketClassificationAttributeModel;
   final List<String> piplineId;
 
   @override
@@ -65,14 +65,14 @@ class _TicketClassificationPlutoGrideWidgetState
     try {
       reportUtils = ReportUtils(
         context: context,
-        ticketClassificationEntitieModel:
-            widget.ticketClassificationEntitieModel,
+        ticketClassificationAttributeModel:
+            widget.ticketClassificationAttributeModel,
       );
 
       _rows = reportUtils.createTicketClassificationRow();
       _columns = reportUtils.createTicketClassificationColumn(
           context: context, pipelineId: widget.piplineId);
-      } catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _rows = [];
       _columns = [];
     }
@@ -80,7 +80,7 @@ class _TicketClassificationPlutoGrideWidgetState
 
   @override
   Widget build(BuildContext context) {
-   return PlutoTableWidget(
+    return PlutoTableWidget(
       columns: _columns,
       rows: _rows,
     );

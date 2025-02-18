@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/revert_bloc/revert_bloc.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
@@ -38,251 +38,322 @@ class _TicketClassificationActionRendererState
     extends State<TicketClassificationActionRenderer> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RevertBloc, RevertState>(
-      listener: (context, state) {
-        if (state is RevertClassificationSucessState) {}
-      },
-      builder: (context, state) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: PopupMenuTheme(
-            data: const PopupMenuThemeData(
-              color: Colors.white,
-            ),
-            child: PopupMenuButton<String>(
-              tooltip: "",
-              icon: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
+    final s = serviceLocator<S>();
+    return BlocProvider(
+      create: (context) => TicketClassificationActionBloc(),
+      child: BlocConsumer<TicketClassificationActionBloc,
+          TicketClassificationActionState>(
+        listener: (context, state) {
+          if (state is UpdateClassificationSuccessState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context)
+                      .uId) {
+            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+            BlocProvider.of<TicketClassificationTabBloc>(context)
+                .add(TicketClassificationDataCallEvent(
+              startDate: bloc.startDate,
+              endDate: bloc.endDate,
+              page: 1,
+              pageSize: 10,
+            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.successPrimary.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side:
+                      const BorderSide(color: SupportBotColors.successPrimary),
+                  borderRadius: BorderRadius.circular(5.0),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: const Icon(
-                  Icons.more_vert_rounded,
-                ),
-              ),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: "View",
-                  onTap: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ViewDialogBox(
-                            allRows: widget.allRows,
-                            index: widget.index,
-                          );
-                        },
-                      );
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.visibility),
-                      SizedBox(width: 8),
-                      Text(
-                        "View",
-                        style: SupportBotTextstyle.hint.copyWith(
-                            color: Colors.black, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ),
-                if (widget.isUpdatedToHubspot == true)
-                  PopupMenuItem<String>(
-                    value: S.of(context).revert,
-                    child: InkWell(
-                      onTap: () {
-                        final bloc = BlocProvider.of<RevertBloc>(context);
-                        if (widget.isUpdatedToHubspot) {
-                          bloc.add(RevertClassificationEvent(
-                            ticketId: widget.id,
-                          ));
-                          Navigator.of(context).pop();
-                          // _showRevertToHubspotPopup(
-                          //     context, S.of(context).revertSuccess);
-                        } else {
-                          // _showRevertToHubspotPopup(
-                          //     context, S.of(context).noRevert);
-                        }
-                        Future.delayed(const Duration(seconds: 2), () {
-                          final bloc =
-                              BlocProvider.of<TicketClassificationTabBloc>(
-                                  context);
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .add(
-                            TicketClassificationDataCallEvent(
-                              startDate: bloc.startDate,
-                              endDate: bloc.endDate,
-                              page: 1,
-                              pageSize: 10,
-                            ),
-                          );
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.loop_rounded),
-                          UIHelpers.horizontalSpaceTiny,
-                          Text(S.of(context).revert),
-                        ],
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle,
+                        color: SupportBotColors.successPrimary),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.updateSuccessfullyText,
+                      style: const TextStyle(
+                        color: SupportBotColors.successPrimary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ],
+                ),
+                duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.successPrimary,
+                  onPressed: () {},
+                ),
+              ),
+            );
+          } else if (state is UpdateClassificationFailureState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context)
+                      .uId) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.danger.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(color: SupportBotColors.danger),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                content: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                          color: SupportBotColors.danger,
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      child: const Icon(Icons.close_rounded,
+                          color: SupportBotColors.white),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.updateFailureText,
+                      style: const TextStyle(
+                        color: SupportBotColors.danger,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.danger,
+                  onPressed: () {},
+                ),
+              ),
+            );
+          }
+          if (state is RevertClassificationSuccessState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context).id) {
+            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+            BlocProvider.of<TicketClassificationTabBloc>(context).add(
+              TicketClassificationDataCallEvent(
+                startDate: bloc.startDate,
+                endDate: bloc.endDate,
+                page: 1,
+                pageSize: 10,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.successPrimary.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side:
+                      const BorderSide(color: SupportBotColors.successPrimary),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle,
+                        color: SupportBotColors.successPrimary),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.revertedSuccessfullyText,
+                      style: const TextStyle(
+                        color: SupportBotColors.successPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.successPrimary,
+                  onPressed: () {},
+                ),
+              ),
+            );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     backgroundColor: SupportBotColors.bluePrimary,
+            //     content: Text(
+            //       s.revertedSuccessfullyText,
+            //       style: SupportBotTextstyle.hint
+            //           .copyWith(color: SupportBotColors.white),
+            //     ),
+            //     duration: const Duration(seconds: 2),
+            //   ),
+            // );
+          }
+          if (state is RevertClassificationFailureState &&
+              widget.id ==
+                  BlocProvider.of<TicketClassificationActionBloc>(context).id) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                width: UIHelpers.screenWidth(context) * 0.6,
+                backgroundColor: SupportBotColors.danger.shade100,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(color: SupportBotColors.danger),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                content: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                          color: SupportBotColors.danger,
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      child: const Icon(Icons.close_rounded,
+                          color: SupportBotColors.white),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      s.revertedFailureText,
+                      style: const TextStyle(
+                        color: SupportBotColors.danger,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                duration: const Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "X",
+                  textColor: SupportBotColors.danger,
+                  onPressed: () {},
+                ),
+              ),
+            );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     backgroundColor: SupportBotColors.danger,
+            //     content: Text(
+            //       s.revertedFailureText,
+            //       style: SupportBotTextstyle.hint
+            //           .copyWith(color: SupportBotColors.white),
+            //     ),
+            //     duration: const Duration(seconds: 2),
+            //   ),
+            // );
+          }
+        },
+        builder: (context, state) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: PopupMenuTheme(
+              data: const PopupMenuThemeData(
+                color: Colors.white,
+              ),
+              child: PopupMenuButton<String>(
+                tooltip: "",
+                icon: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
                   ),
-                if (widget.isUpdatedToHubspot == false)
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  child: const Icon(
+                    Icons.more_vert_rounded,
+                  ),
+                ),
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    value: "Update",
+                    value: s.view,
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) {
-                          return BlocProvider.value(
-                            value: BlocProvider.of<TicketClassificationTabBloc>(
-                                context),
-                            child: AlertDialog(
-                              title: const Text("Update Ticket"),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Do you Want to Mark This Ticket as a Contact ${widget.classification} in HubSpot",
-                                      style: SupportBotTextstyle.hint.copyWith(
-                                        fontWeight: FontWeight.w600,
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ViewDialogBox(
+                              allRows: widget.allRows,
+                              index: widget.index,
+                            );
+                          },
+                        );
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.visibility),
+                        const SizedBox(width: 8),
+                        Text(
+                          s.view,
+                          style: SupportBotTextstyle.hint.copyWith(
+                              color: Colors.black, fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (widget.isUpdatedToHubspot == true)
+                    PopupMenuItem<String>(
+                      value: S.of(context).revert,
+                      child: InkWell(
+                        onTap: () {
+                          final bloc =
+                              BlocProvider.of<TicketClassificationActionBloc>(
+                                  context);
+                          if (widget.isUpdatedToHubspot) {
+                            bloc.add(RevertClassificationEvent(
+                              ticketId: widget.id,
+                            ));
+                            Navigator.of(context).pop();
+                            // _showRevertToHubspotPopup(
+                            //     context, S.of(context).revertSuccess);
+                          } else {
+                            // _showRevertToHubspotPopup(
+                            //     context, S.of(context).noRevert);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.loop_rounded),
+                            UIHelpers.horizontalSpaceTiny,
+                            Text(S.of(context).revert),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (widget.isUpdatedToHubspot == false)
+                    PopupMenuItem<String>(
+                      value: s.updateText,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return BlocProvider.value(
+                              value: BlocProvider.of<
+                                  TicketClassificationActionBloc>(context),
+                              child: AlertDialog(
+                                title: Text(
+                                  s.updateTicketText,
+                                  style: SupportBotTextstyle.subheadingH4
+                                      .copyWith(),
+                                ),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        s.requestMsgText(widget.classification),
+                                        style: SupportBotTextstyle.small
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                color: SupportBotColors.black),
                                       ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  style: TextButton.styleFrom(
-                                    backgroundColor:
-                                        SupportBotColors.bluePrimary,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 14.0, horizontal: 24.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "No",
-                                    style:
-                                        SupportBotTextstyle.mediumHint.copyWith(
-                                      color: SupportBotColors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                      const SizedBox(height: 16),
+                                    ],
                                   ),
                                 ),
-                                BlocProvider(
-                                  create: (context) =>
-                                      TicketClassificationActionBloc(),
-                                  child: BlocBuilder<
-                                      TicketClassificationActionBloc,
-                                      TicketClassificationActionState>(
-                                    builder: (context, state) {
-                                      if (state
-                                          is TicketClassificationActionLoadingState) {
-                                        return const CircularProgressIndicator();
-                                      }
-                                      if (state
-                                          is TicketClassificationActionSucssesState) {
-                                        return TextButton(
-                                          onPressed: () {
-                                            final bloc = BlocProvider.of<
-                                                    TicketClassificationTabBloc>(
-                                                context);
-                                            final classification =
-                                                widget.classification;
-
-                                            final ticketId = widget.id;
-
-                                            context
-                                                .read<
-                                                    TicketClassificationActionBloc>()
-                                                .add(
-                                                  TicketClassificationActionOnEvent(
-                                                    classification:
-                                                        classification,
-                                                    ticketId: ticketId,
-                                                  ),
-                                                );
-
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                                    TicketClassificationDataCallEvent(
-                                              startDate: bloc.startDate,
-                                              endDate: bloc.endDate,
-                                              page: 1,
-                                              pageSize: 10,
-                                            ));
-
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                SupportBotColors.bluePrimary,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 14.0,
-                                                horizontal: 24.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            "Yes",
-                                            style: SupportBotTextstyle
-                                                .mediumHint
-                                                .copyWith(
-                                              color: SupportBotColors.white,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return TextButton(
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      TextButton(
                                         onPressed: () {
-                                          final classification =
-                                              widget.classification;
-                                          final ticketId = widget.id;
-
-                                          context
-                                              .read<
-                                                  TicketClassificationActionBloc>()
-                                              .add(
-                                                TicketClassificationActionOnEvent(
-                                                  classification:
-                                                      classification,
-                                                  ticketId: ticketId,
-                                                ),
-                                              );
-
-                                          Future.delayed(
-                                              const Duration(seconds: 2), () {
-                                            final bloc = BlocProvider.of<
-                                                    TicketClassificationTabBloc>(
-                                                context);
-                                            BlocProvider.of<
-                                                        TicketClassificationTabBloc>(
-                                                    context)
-                                                .add(
-                                              TicketClassificationDataCallEvent(
-                                                startDate: bloc.startDate,
-                                                endDate: bloc.endDate,
-                                                page: 1,
-                                                pageSize: 10,
-                                              ),
-                                            );
-                                            Navigator.of(context).pop();
-                                          });
+                                          Navigator.of(context).pop();
                                         },
                                         style: TextButton.styleFrom(
                                           backgroundColor:
@@ -295,44 +366,85 @@ class _TicketClassificationActionRendererState
                                           ),
                                         ),
                                         child: Text(
-                                          "Yes",
+                                          s.noText,
                                           style: SupportBotTextstyle.mediumHint
                                               .copyWith(
                                             color: SupportBotColors.white,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                      );
-                                    },
+                                      ),
+                                      UIHelpers.horizontalSpaceSmallRegular,
+                                      TextButton(
+                                        onPressed: () {
+                                          final classification =
+                                              widget.classification;
+                                          final ticketId = widget.id;
+
+                                          context
+                                              .read<
+                                                  TicketClassificationActionBloc>()
+                                              .add(
+                                                UpdateClassificationEvent(
+                                                    classification:
+                                                        classification,
+                                                    ticketId: ticketId,
+                                                    pipelineId: BlocProvider.of<
+                                                                TicketClassificationTabBloc>(
+                                                            context)
+                                                        .selectedPipelineId),
+                                              );
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: TextButton.styleFrom(
+                                          backgroundColor:
+                                              SupportBotColors.bluePrimary,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 14.0, horizontal: 24.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4.0),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          s.yesText,
+                                          style: SupportBotTextstyle.mediumHint
+                                              .copyWith(
+                                            color: SupportBotColors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.update,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Update",
-                          style: SupportBotTextstyle.hint.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.update,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          Text(
+                            s.updateText,
+                            style: SupportBotTextstyle.hint.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
@@ -345,6 +457,8 @@ class ViewDialogBox extends StatefulWidget {
   @override
   State<ViewDialogBox> createState() => _ViewDialogBoxState();
 }
+
+final s = serviceLocator<S>();
 
 class _ViewDialogBoxState extends State<ViewDialogBox> {
   late int currentIndex;
@@ -403,7 +517,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                     icon: const Icon(Icons.arrow_circle_left_outlined),
                   ),
                   Text(
-                    "Ticket Details",
+                    s.ticketDetailsText,
                     style: SupportBotTextstyle.small.copyWith(
                         fontWeight: FontWeight.w500,
                         color: SupportBotColors.black),
@@ -422,7 +536,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                 children: [
                   SelectableText.rich(
                     TextSpan(
-                      text: "Id : \n",
+                      text: "${s.id} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -439,7 +553,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Description : \n",
+                      text: "${s.descriptionText} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -456,7 +570,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "AI Classification : \n",
+                      text: "${s.aIClassification} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -474,7 +588,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Reasoning : \n",
+                      text: "${s.reasoningText} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -492,7 +606,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "BOPS State/ Province : \n",
+                      text: "${s.bobStateText} : \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -510,7 +624,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Validated By: \n",
+                      text: "${s.validatedByText}: \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -528,7 +642,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: "Classification Validation Reason: \n",
+                      text: "${s.classificationValidationReasonText}: \n",
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -546,7 +660,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Validated Classification : \n',
+                      text: '${s.validatedClassificationText} : \n',
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -564,7 +678,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                   const SizedBox(height: 8),
                   SelectableText.rich(
                     TextSpan(
-                      text: 'Status : \n',
+                      text: '${s.status} : \n',
                       style: SupportBotTextstyle.small.copyWith(
                           fontWeight: FontWeight.w600,
                           color: SupportBotColors.black),
@@ -604,7 +718,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       ),
                     ),
                     label: Text(
-                      "Close",
+                      s.closeText,
                       style: SupportBotTextstyle.small
                           .copyWith(color: SupportBotColors.bluePrimary),
                     ),

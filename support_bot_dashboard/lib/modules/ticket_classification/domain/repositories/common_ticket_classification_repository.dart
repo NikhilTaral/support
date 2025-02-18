@@ -1,6 +1,5 @@
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
-import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_chart_data_Initial_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/dashboard_export_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';

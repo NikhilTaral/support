@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/validation_status_widget.dart';
@@ -9,8 +11,8 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class Charts extends StatelessWidget {
-  const Charts({super.key});
-
+   Charts({super.key});
+final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     final screenHeight = UIHelpers.screenHeight(context);
@@ -25,7 +27,7 @@ class Charts extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const TicketClassificationWidget(),
+                 TicketClassificationWidget(),
                 UIHelpers.verticalSpace(16),
                 _buildValidationStatusCard(screenHeight, context),
               ],
@@ -70,7 +72,7 @@ class Charts extends StatelessWidget {
         spacing: 8,
         children: [
           Text(
-            "User Validation",
+           s.userValidationText,
             style: SupportBotTextstyle.normal.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
@@ -83,12 +85,12 @@ class Charts extends StatelessWidget {
   }
 
   Widget _buildAiQueryEditedAnswerCard() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
         AiQueryAnswerTile(),
-        AiQueryEditedTile(),
+         AiQueryEditedTile(),
       ],
     );
   }
