@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final dashboardAiQueryEditedResponseModel = dashboardAiQueryEditedResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 DashboardAiQueryEditedResponseModel dashboardAiQueryEditedResponseModelFromJson(
@@ -15,7 +11,7 @@ String dashboardAiQueryEditedResponseModelToJson(
 class DashboardAiQueryEditedResponseModel {
   AIQueryEditedData? data;
   bool? success;
-  int? failCode;
+  num? failCode;
   Params? params;
   String? message;
 

@@ -1,6 +1,37 @@
-
 {
   "@@locale": "en",
+  "itemsPerPageText": "Items per page:   ",
+  "@itemsPerPageText": {
+    "description": "Items per page"
+  },
+  "aPIErrorMsgText": "Error fetching data from server",
+  "@aPIErrorMsgText": {
+    "description": "Error msg"
+  },
+  "pageText": "Page",
+  "@pageText": {
+    "description": "Page"
+  },
+  "piplineText": "Pipeline",
+  "@piplineText": {
+    "description": "Pipeline"
+  },
+  "filterApplyText": "Apply Filter",
+  "@filterApplyText": {
+    "description": "Apply Filter"
+  },
+  "filterClearText": "Clear Filters",
+  "@filterClearText": {
+    "description": "Clear Filters"
+  },
+  "filterApplySnackBarText": "Please select a pipeline to apply filter",
+  "@filterApplySnackBarText": {
+    "description": "Please select a pipeline to apply filter"
+  },
+  "searchText": "Search...",
+  "@searchText": {
+    "description": "Search"
+  },
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"
@@ -53,30 +84,6 @@
   "@export": {
     "description": "Export CSV File"
   },
-  "id": "ID",
-  "@id": {
-    "description": "ID"
-  },
-  "ticketDescription": "Ticket Description",
-  "@ticketDescription": {
-    "description": "Ticket Description"
-  },
-  "reasoning": "Reasoning",
-  "@reasoning": {
-    "description": "Reasoning"
-  },
-  "validationReason": "Validation Reason",
-  "@validationReason": {
-    "description": "Validation Reason"
-  },
-  "actions": "Actions",
-  "@actions": {
-    "description": "Actions"
-  },
-  "status": "Status",
-  "@status": {
-    "description": "Status"
-  },
   "save": "Save",
   "@save": {
     "description": "Save"
@@ -100,6 +107,30 @@
   "cancel": "Cancel",
   "@cancel": {
     "description": "Cancel"
+  },
+  "id": "ID",
+  "@id": {
+    "description": "ID"
+  },
+  "ticketDescription": "Ticket Description",
+  "@ticketDescription": {
+    "description": "Ticket Description"
+  },
+  "reasoning": "Reasoning",
+  "@reasoning": {
+    "description": "Reasoning"
+  },
+  "validationReason": "Validation Reason",
+  "@validationReason": {
+    "description": "Validation Reason"
+  },
+  "actions": "Actions",
+  "@actions": {
+    "description": "Actions"
+  },
+  "status": "Status",
+  "@status": {
+    "description": "Status"
   },
   "revertSuccess": "Ticket stage reverted successfully",
   "@revertSuccess": {
@@ -125,58 +156,6 @@
   "@ok": {
     "description": "Ok"
   },
-  "yes": "Yes",
-  "@yes": {
-    "description": "Yes"
-  },
-  "no": "No",
-  "@no": {
-    "description": "No"
-  },
-  "link": "Link",
-  "@link": {
-    "description": "Link"
-  },
-  "isAnswerEdited": "isAnswerEdited",
-  "@isAnswerEdited": {
-    "description": "isAnswerEdited"
-  },
-  "validationStatus": "Validation Status",
-  "@validationStatus": {
-    "description": "Validation Status"
-  },
-  "userValidation": "User Validation",
-  "@userValidation": {
-    "description": "User Validation"
-  },
-  "validationExists": "Validation Exists",
-  "@validationExists": {
-    "description": "Validation Exists"
-  },
-  "validatEmail": "Validate Email",
-  "@validatEmail": {
-    "description": "Validate Email"
-  },
-  "bopsState": "Bops State",
-  "@bopsState": {
-    "description": "Bops State"
-  },
-  "pipelineType": "Pipeline Type",
-  "@pipelineType": {
-    "description": "PipelineType"
-  },
-  "validateAIAnswer": "Validate AI Answer",
-  "@validateAIAnswer": {
-    "description": "Validate AI Answer"
-  },
-  "updateTicket": "Update Ticket",
-  "@updateTicket": {
-    "description": "Update Ticket"
-  },
-  "updateSuccess": "Update Successfully..",
-  "@updateSuccess": {
-    "description": "Update Successfully"
-  },
   "aIClassification": "AI Classification",
   "@aIClassification": {
     "description": "AI Classification"
@@ -185,8 +164,194 @@
   "@ackRequired": {
     "description": "Acknowledge Required"
   },
- "aPIErrorMsg":"Error fetching data from server",
-  "@aPIErrorMsg": {
-    "description":"Error fetching data from server"
+  "link": "Link",
+  "@link": {
+    "description": "Link"
+  },
+  "genuineQueryText": "Genuine Query",
+  "@genuineQueryText": {
+    "description": "Genuine Query Column Title"
+  },
+  "acknowledgeRequiredText": "Acknowledge Required",
+  "@acknowledgeRequiredText": {
+    "description": "Acknowledge Required Column Title"
+  },
+  "spamMarketing": "Spam/Marketing",
+  "@spamMarketing": {
+    "description": "Spam/Marketing Column Title"
+  },
+  "noItemsText": "No items available.",
+  "@noItemsText": {
+    "description": "No items available. Title"
+  },
+  "ticketsAnswerText": "Tickets Answer: ",
+  "@ticketsAnswerText": {
+    "description": "Tickets AnswerText Text"
+  },
+  "ticketsNotAnswerText": "Tickets Not Answer:",
+  "@ticketsNotAnswerText": {
+    "description": "Tickets Not Answer Text"
+  },
+  "aiTicketsAnswerText": "AI Tickets Answer",
+  "@aiTicketsAnswerText": {
+    "description": "AI Tickets Answer Text"
+  },
+  "ticketNotEditedText": "Ticket Not Edited:",
+  "@ticketNotEditedText": {
+    "description": "Ticket Not Edited Text"
+  },
+  "ticketEditedText": "Ticket Edited:",
+  "@ticketEditedText": {
+    "description": "Ticket Edited Text"
+  },
+  "aiTicketsEditedText": "AI Tickets Edited",
+  "@aiTicketsEditedText": {
+    "description": "AI Tickets Edited Text"
+  },
+  "userValidationText": "User Validation",
+  "@userValidationText": {
+    "description": "User Validation Text"
+  },
+  "oKText": "OK",
+  "@oKText": {
+    "description": "OK Text"
+  },
+  "actualClassification": "Actual Classification",
+  "@actualClassification": {
+    "description": "Actual Classification Text"
+  },
+  "validationStatusText": "Validation Status",
+  "@validationStatusText": {
+    "description": "Validation Status Text"
+  },
+  "ticketNotClassified": "Not Classified",
+  "@ticketNotClassified": {
+    "description": "Not Classified"
+  },
+  "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
+  "@signInPageTextPart1": {
+    "description": "By clicking “GET STARTED” you are agreeing to our "
+  },
+  "signInPageTextPart2": "Privacy Policy,",
+  "@signInPageTextPart2": {
+    "description": "Privacy Policy,"
+  },
+  "signInPageTextPart3": " our ",
+  "@signInPageTextPart3": {
+    "description": " our "
+  },
+  "signInPageTextPart4": "Terms & Conditions",
+  "@signInPageTextPart4": {
+    "description": "Terms & Conditions"
+  },
+  "signInPageText": "Enter the email and the name that was used on your join application.",
+  "@signInPageText": {
+    "description": "Enter the email and the name that was used on your join application."
+  },
+  "v3OnboardingLoginJoinEmailSentSubtitle": "We’ve sent a link for your joining application to {email}. Click the link to kick-start your application process.",
+  "@v3OnboardingLoginJoinEmailSentSubtitle": {
+    "description": "Onboarding login view email sent screen subtitle",
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "signInPageTextPart5": " as well as the anonymous recording of the application process for the purposes of improving this website and its performance. No personally identifying information will be recorded or displayed.",
+  "@signInPageTextPart5": {
+    "description": "as well as the anonymous recording of the application process for the purposes of improving this website and its performance. No personally identifying information will be recorded or displayed."
+  },
+  "fromJoinAppTitle": "From Join App",
+  "@fromJoinAppTitle": {
+    "description": "from Join App Title"
+  },
+  "fromJoinAppDownloadTitle": "Download MyeXp app to get the latest updates about your application",
+  "@fromJoinAppDownloadTitle": {
+    "description": "from Join App Download Title"
+  },
+  "fromJoinAppOrTitle": "or",
+  "@fromJoinAppOrTitle": {
+    "description": "from Join App OR Title"
+  },
+  "fromJoinAppSignInButtonTitle": "Continue on Web",
+  "@fromJoinAppSignInButtonTitle": {
+    "description": "From Join App Sign In Button Title"
+  },
+  "intialpiplineText": "Expert Care Level 1",
+  "@intialpiplineText": {
+    "description": "Inital PipLine Text"
+  },
+  "bobStateText": "BOPS State/ Province",
+  "@bobStateText": {
+    "description": "BOPS State/ Province Text"
+  },
+  "unknownPipelineText": "Unknown Pipeline",
+  "@unknownPipelineText": {
+    "description": "Unknown Pipeline Text"
+  },
+  "updateSuccessfullyText": "Update Successfully!",
+  "@updateSuccessfullyText": {
+    "description": "Update Successfully Text"
+  },
+  "updateFailureText": "Update Failure!",
+  "@updateFailureText": {
+    "description": "Update Failure Text"
+  },
+  "revertedSuccessfullyText": "Reverted Successfully",
+  "@revertedSuccessfullyText": {
+    "description": "Reverted Successfully Text"
+  },
+  "revertedFailureText": "Reverted Failure",
+  "@revertedFailureText": {
+    "description": "Reverted Failure Text"
+  },
+  "updateText": "Update",
+  "@updateText": {
+    "description": "Update Text"
+  },
+  "updateTicketText": "Update Ticket",
+  "@updateTicketText": {
+    "description": "Update Ticket Text"
+  },
+  "requestMsgText": "Do you Want to Mark This Ticket as a Contact {value} in HubSpot",
+  "@requestMsgText": {
+    "description": "request Msg Text",
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "noText": "No",
+  "@noText": {
+    "description": "NO Text"
+  },
+  "yesText": "Yes",
+  "@yesText": {
+    "description": "Yes Text"
+  },
+  "ticketDetailsText": "Ticket Details",
+  "@ticketDetailsText": {
+    "description": "Ticket Details Text"
+  },
+  "descriptionText": "Description",
+  "@descriptionText": {
+    "description": "Description Text"
+  },
+  "reasoningText": "Reasoning",
+  "@reasoningText": {
+    "description": "Reasoning Text"
+  },
+  "validatedByText": "Validated By",
+  "@validatedByText": {
+    "description": "Validated By Text"
+  },
+  "classificationValidationReasonText": "Classification Validation Reason",
+  "@classificationValidationReasonText": {
+    "description": "Classification Validation Reason Text"
+  },
+  "closeText": "Close",
+  "@closeText": {
+    "description": "Close Text"
+  },
+  "validatedClassificationText": "Validated Classification",
+  "@validatedClassificationText": {
+    "description": "Validated Classification Text"
   }
 }

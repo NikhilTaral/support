@@ -1,7 +1,7 @@
 class DashboardAiQueryResponseModel {
   final Data? data;
   final bool? success;
-  final int? failCode;
+  final num? failCode;
   final Params? params;
   final String? message;
 
@@ -18,7 +18,7 @@ class DashboardAiQueryResponseModel {
             ? Data.fromJson(json['data'] as Map<String, dynamic>)
             : null,
         success = json['success'] as bool?,
-        failCode = json['failCode'] as int?,
+        failCode = json['failCode'] as num?,
         params = (json['params'] as Map<String, dynamic>?) != null
             ? Params.fromJson(json['params'] as Map<String, dynamic>)
             : null,
@@ -34,7 +34,7 @@ class DashboardAiQueryResponseModel {
 }
 
 class Data {
-  final int? totalRecords;
+  final num? totalRecords;
   final List<Items>? items;
   final num? pageSize;
   final num? currentPage;
@@ -43,7 +43,7 @@ class Data {
   Data({
     this.totalRecords,
     this.items,
-     required this.pageSize,
+    required this.pageSize,
     required this.currentPage,
     this.lastEvaluatedKey,
   });
@@ -56,7 +56,7 @@ class Data {
         lastEvaluatedKey: json["lastEvaluatedKey"] == null
             ? null
             : LastEvaluatedKey.fromJson(json["lastEvaluatedKey"]),
-             pageSize: json["pageSize"],
+        pageSize: json["pageSize"],
         currentPage: json["currentPage"],
       );
 
@@ -64,7 +64,7 @@ class Data {
         'totalRecords': totalRecords,
         'items': items?.map((e) => e.toJson()).toList(),
         "lastEvaluatedKey": lastEvaluatedKey?.toJson(),
-         "pageSize": pageSize,
+        "pageSize": pageSize,
         "currentPage": currentPage,
       };
 }

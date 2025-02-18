@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/custom_pagination_dropdown.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_entitie_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/ticket_classification_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pluto_gride_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class TicketClassificationPlutoTable extends StatelessWidget {
   TicketClassificationPlutoTable({super.key});
 
-  final ValueNotifier<int> currentPage = ValueNotifier<int>(1);
-  final ValueNotifier<int> pageSize = ValueNotifier<int>(10);
-
+  final ValueNotifier<num> currentPage = ValueNotifier<int>(1);
+  final ValueNotifier<num> pageSize = ValueNotifier<int>(10);
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TicketClassificationTabBloc, TicketClassificationState>(
@@ -29,14 +32,14 @@ class TicketClassificationPlutoTable extends StatelessWidget {
             width: UIHelpers.screenWidth(context),
           ));
         }
-        if (state is TicketClassificationSucssesState) {
+        if (state is TicketClassificationSuccessState) {
           return Column(
             children: [
               Expanded(
                 child: TicketClassificationPlutoGrideWidget(
-                  plutoKey: UniqueKey(),
-                  ticketClassificationEntitieModel:
-                      state.model ?? TicketClassificationEntitieModel(),
+                  ticketClassificationAttributeModel:
+                      state.ticketClassificationAttributeModel ??
+                          TicketClassificationAttributeModel(),
                   piplineId: state.pipelineId,
                 ),
               ),
@@ -48,12 +51,12 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "Items per page:   ",
-                          style: TextStyle(
-                              color: SupportBotColors.disablePrimary.shade700,
-                              fontWeight: FontWeight.w500),
+                          s.itemsPerPageText,
+                          style: SupportBotTextstyle.hint.copyWith(
+                            color: SupportBotColors.disablePrimary.shade400,
+                          ),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: pageSize,
                           builder: (context, value, child) {
                             return CustomPaginationDropdown(
@@ -88,11 +91,10 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                       children: [
                         Text(
                           "${(currentPage.value - 1) * pageSize.value + 1} - "
-                          "${(currentPage.value * pageSize.value > (state.model?.data?.totalRecords ?? 0)) ? state.model?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
-                          "${state.model?.data?.totalRecords ?? 0}",
-                          style: TextStyle(
+                          "${(currentPage.value * pageSize.value > (state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0)) ? state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                          "${state.ticketClassificationAttributeModel?.data?.totalRecords ?? 0}",
+                          style: SupportBotTextstyle.hint.copyWith(
                             color: SupportBotColors.disablePrimary.shade500,
-                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -114,21 +116,22 @@ class TicketClassificationPlutoTable extends StatelessWidget {
                               : null,
                           icon: const Icon(Icons.arrow_back_ios_new, size: 15),
                         ),
-                        ValueListenableBuilder<int>(
+                        ValueListenableBuilder<num>(
                           valueListenable: currentPage,
                           builder: (context, page, _) {
                             return Text(
-                              'Page ${currentPage.value}',
-                              style: TextStyle(
-                                  color:
-                                      SupportBotColors.disablePrimary.shade700,
-                                  fontWeight: FontWeight.w500),
+                              '${s.pageText} ${currentPage.value}',
+                              style: SupportBotTextstyle.hint.copyWith(
+                                color: SupportBotColors.disablePrimary.shade400,
+                              ),
                             );
                           },
                         ),
                         IconButton(
                           onPressed: (currentPage.value * pageSize.value) <
-                                  (state.model?.data?.totalRecords ?? 0)
+                                  (state.ticketClassificationAttributeModel
+                                          ?.data?.totalRecords ??
+                                      0)
                               ? () {
                                   currentPage.value++;
                                   context
@@ -155,7 +158,7 @@ class TicketClassificationPlutoTable extends StatelessWidget {
         } else if (state is TicketClassificationFailureState) {
           return const FailureWidget();
         } else if (state is TicketClassificationEmptyState) {
-          return Center(child: const EmptyWidget());
+          return const Center(child: EmptyWidget());
         }
         return const SizedBox.shrink();
       },

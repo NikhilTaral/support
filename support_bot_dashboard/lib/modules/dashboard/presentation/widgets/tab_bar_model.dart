@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_edited/presentation/pages/ai_query_edited.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_widget.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/pages/ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/home_page_widget.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_pluto_gride_widget.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/pages/ticket_classification.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/presentation/views/ticket_classification_pluto_table.dart';
-import 'package:support_bot_dashboard/utils/theme/icons.dart';
 
 enum TypeBarType {
   home,
@@ -33,6 +28,7 @@ class TabBarWidget {
   });
 
   static List<TabBarWidget> organizationItemList(BuildContext context) {
+    final s = serviceLocator<S>();
     List<TabBarWidget> tabBarList = [];
 
     tabBarList.add(
@@ -47,9 +43,9 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-      const TabBarWidget(
-        title: "Ticket Classification",
-        view: SizedBox(
+       TabBarWidget(
+        title:s.ticketClassification,
+        view: const SizedBox(
           width: double.infinity,
           child: TicketClassification(),
         ),
@@ -58,9 +54,9 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-      const TabBarWidget(
-        title: "AI Query Answer",
-        view: SizedBox(
+       TabBarWidget(
+        title:s.aiQueryAnswer,
+        view: const SizedBox(
           width: double.infinity,
           child: AIQueryEditedScreen(),
         ),

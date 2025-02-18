@@ -1,5 +1,6 @@
 import 'package:either_dart/either.dart';
 import 'package:support_bot_dashboard/core/error/failure.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/dashboard_export_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_action_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_request_model.dart';
@@ -33,4 +34,10 @@ abstract class GetValidationDetailsRepository {
 
 abstract class RevertClassificationRepository {
   Future<Either<Failure, dynamic>> revertClassification({String? ticketId});
+}
+
+abstract class DashboardExportRepository {
+  Future<Either<Failure, dynamic>> getExportData(
+    DashboardExportRequestModel? dashboardExportRequestModel,
+  );
 }

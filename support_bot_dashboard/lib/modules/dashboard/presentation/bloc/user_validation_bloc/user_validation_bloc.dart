@@ -7,7 +7,6 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_dat
 import 'package:support_bot_dashboard/modules/dashboard/data/model/get_validation_by_count_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_validation_by_count_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
-import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 
 part 'user_validationevent.dart';
 part 'uservalidation_state.dart';
@@ -39,7 +38,7 @@ class UserValidationBloc
 
       final List<Filter> filter = [
         Filter(
-          fieldValue: selectedPipelineId ?? ["11257490"],
+          fieldValue: event.selectedPipelineValue ?? ["11257490"],
           fieldName: event.fildName ?? "pipelines",
         )
       ];
@@ -53,9 +52,7 @@ class UserValidationBloc
       final response = await repository.invoke(requestBody);
 
       if (response.isLeft) {
-        emit(UserValidationFailureSate(
-          message: response.left.toString(),
-        ));
+        emit(UserValidationFailureSate());
       } else {
         final GetValidationByCountResponseModel model = response.right;
 
@@ -89,9 +86,7 @@ class UserValidationBloc
         }
       }
     } catch (e) {
-      emit(UserValidationFailureSate(
-        message: 'Exception: $e',
-      ));
+      emit(UserValidationFailureSate());
     }
   }
 }

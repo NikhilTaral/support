@@ -1,6 +1,8 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
@@ -11,18 +13,20 @@ import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/shared_preferences/local_storage.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
 
 class TicketClassificationFiltersWidget extends StatefulWidget {
-  const TicketClassificationFiltersWidget({super.key});
+  TicketClassificationFiltersWidget({super.key});
 
   @override
   _HomeFiltersWidgetState createState() => _HomeFiltersWidgetState();
 }
 
 class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
+  final s = serviceLocator<S>();
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
   final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
@@ -105,7 +109,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             UIHelpers.horizontalSpaceRegular,
             _buildValidationDropdown(),
             UIHelpers.horizontalSpaceRegular,
-            _buildApplyFilterButton(),
+            _buildApplyFilterButton(
+              context,
+            ),
             UIHelpers.horizontalSpaceRegular,
             _buildClearFilterButton(),
             UIHelpers.horizontalSpaceRegular,
@@ -122,7 +128,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       constraints: const BoxConstraints(maxWidth: 220),
       child: TicketClassificationPipelineWidget(
         hintText:
-            selectedPipeline.isEmpty ? "Expert Care Level 1" : selectedPipeline,
+            selectedPipeline.isEmpty ? s.intialpiplineText : selectedPipeline,
         items: items,
         selectedItem: selectedPipeline,
         onChanged: (selectedName) async {
@@ -221,14 +227,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _bopsState() {
     return SizedBox(
-      width: 150,
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
-          if (state is BopsStatesSucssesState) {
+          if (state is BopsStatesSuccessState) {
             return CustomMonthDropdown(
-              items: state.model?.data ?? [],
-              label:
-                  selectedBOPsState.isEmpty ? "BOPS State" : selectedBOPsState,
+              items: state.bOpsResponseAttributeModel?.data ?? [],
+              label: selectedBOPsState.isEmpty
+                  ? s.bobStateText
+                  : selectedBOPsState,
               onChanged: (value) async {
                 setState(() {
                   selectedBOPsState = value ?? '';
@@ -242,7 +248,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           }
           return CustomMonthDropdown(
             items: [],
-            label: "BOps State",
+            label: s.bobStateText,
             onChanged: (value) {},
             selectedValue: selectedBOPsState,
           );
@@ -253,10 +259,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildTicketClassificationDropdown() {
     return SizedBox(
-      width: 200,
       child: CustomMonthDropdown(
         label: selectedClassification.isEmpty
-            ? "Classification"
+            ? s.classification
             : selectedClassification,
         selectedValue: selectedClassification,
         onChanged: (value) async {
@@ -278,63 +283,58 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       width: 200,
       child: CustomMonthDropdown(
-        label: selectedValidation.isEmpty ? "Validation" : selectedValidation,
+        label: selectedValidation.isEmpty ? s.validation : selectedValidation,
         selectedValue: selectedValidation,
         onChanged: (value) async {
           setState(() {
             selectedValidation = value?.toLowerCase() ?? "";
           });
-
-          //await LocalStorage.saveValidation(value?.toLowerCase());
         },
         items: const ["Not Validated", "Correct", "Incorrect"],
       ),
     );
   }
 
-  Widget _buildApplyFilterButton() {
-    return BlocProvider(
-      create: (context) => TicketClassificationTabBloc(),
-      child: Container(
-        height: 180,
-        child: ElevatedButton.icon(
-          onPressed: () {
-            // Use default value if pipelineIds is empty
-            final selectedPipelineValue =
-                pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+  Widget _buildApplyFilterButton(BuildContext context) {
+    return Container(
+      height: 180,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          final selectedPipelineValue =
+              pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
 
-            // Show a snackbar if no valid pipeline is selected
-            if (selectedPipelineValue.isEmpty) {
-              showSnackbar(
-                context,
-                'Please select a pipeline to apply filter',
-              );
-              return;
-            }
-
-            // Set values and trigger the event
-            final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
-            bloc.selectedPipelineId = selectedPipelineValue.first;
-            bloc.selectedBOPsState = selectedBOPsState;
-            bloc.selectedClassification = selectedClassification;
-            bloc.selectedValidation = selectedValidation;
-            bloc.add(TicketClassificationDataCallEvent(
-              fieldValue: selectedPipelineValue,
-              endDate: selectedate.lastOrNull,
-              startDate: selectedate.firstOrNull,
-              page: 1,
-              pageSize: 10,
-            ));
-          },
-          icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-          label:
-              const Text('Apply Filter', style: TextStyle(color: Colors.white)),
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            backgroundColor: SupportBotColors.bluePrimary,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0)),
+          if (selectedPipelineValue.isEmpty) {
+            showSnackbar(
+              context,
+              s.filterApplySnackBarText,
+            );
+            return;
+          }
+          final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+          bloc.selectedPipelineId = selectedPipelineValue.first;
+          bloc.selectedBOPsState = selectedBOPsState;
+          bloc.selectedClassification = selectedClassification;
+          bloc.selectedValidation = selectedValidation;
+          bloc.add(TicketClassificationDataCallEvent(
+            fieldValue: selectedPipelineValue,
+            endDate: selectedate.lastOrNull,
+            startDate: selectedate.firstOrNull,
+            page: 1,
+            pageSize: 10,
+          ));
+        },
+        icon: const Icon(SupportBotIcons.filter, color: Colors.white),
+        label: Text(
+          s.filterApplyText,
+          style: SupportBotTextstyle.hint.copyWith(
+            color: SupportBotColors.white,
           ),
+        ),
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: SupportBotColors.bluePrimary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),
       ),
     );
@@ -382,7 +382,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Search...',
+                    hintText: s.searchText,
                     hintStyle: SupportBotTextstyle.medium.copyWith(
                       color: SupportBotColors.gray.shade600,
                     ),
@@ -434,29 +434,28 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             pipelineIds.clear();
             selectedPipeline = "";
           });
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedPipelineId = "11257490";
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedBOPsState = selectedBOPsState;
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedClassification = selectedClassification;
-          BlocProvider.of<TicketClassificationTabBloc>(context)
-              .selectedValidation = selectedValidation;
-
+          BlocProvider.of<TicketClassificationTabBloc>(context).clearFilters();
           BlocProvider.of<TicketClassificationTabBloc>(context)
               .add(TicketClassificationDataCallEvent(
+            selectedBOPsState: selectedBOPsState,
+            selectedClassification: selectedClassification,
+            selectedValidation: selectedValidation,
             fieldValue: ['11257490'],
-            endDate: selectedate.isNotEmpty
-                ? selectedate.lastOrNull
-                : DateTime.now(),
-            startDate: DateTime.now().subtract(const Duration(days: 0)),
+            endDate: DateTime.now()
+                ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
+            startDate: DateTime.now()
+                ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
             page: 1,
             pageSize: 10,
           ));
         },
         icon: const Icon(Icons.clear_all, color: Colors.white),
-        label:
-            const Text('Clear Filters', style: TextStyle(color: Colors.white)),
+        label: Text(
+          s.filterClearText,
+          style: SupportBotTextstyle.hint.copyWith(
+            color: SupportBotColors.white,
+          ),
+        ),
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: Colors.redAccent,
@@ -470,14 +469,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Future<void> _pickDateRange() async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.mediumHint.copyWith(
+        color: SupportBotColors.black,
+        fontWeight: FontWeight.w700,
+      ),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle:
-          const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.mediumHint.copyWith(
+        color: SupportBotColors.black,
+        fontWeight: FontWeight.bold,
+      ),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 
@@ -540,18 +543,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Widget _buildExportButton() {
     String getPipelineId() {
       if (pipelineIds.isNotEmpty && selectedPipeline.isNotEmpty) {
-        return pipelineIds.first;
+        return pipelineIds.first ?? "11257490";
       }
-      return '';
+      return '11257490';
     }
 
     return Tooltip(
       message: 'Export CSV File',
       child: ExportButton(
           icon: 'assets/icons/Export.svg',
-          selectedButtonText: "Ticket Classification",
-          startDate: selectedDatesNotifier.value?.first,
-          endDate: selectedDatesNotifier.value?.last,
+          selectedButtonText: s.ticketClassification,
+          startDate: selectedDatesNotifier.value?.first ?? DateTime.now(),
+          endDate: selectedDatesNotifier.value?.last ?? DateTime.now(),
           bopsState: selectedBOPsState,
           selectedClassification: selectedClassification,
           selectedClassificationValidation: selectedValidation,

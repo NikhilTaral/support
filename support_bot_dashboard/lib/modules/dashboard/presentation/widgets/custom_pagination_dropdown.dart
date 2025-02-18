@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class CustomPaginationDropdown extends StatelessWidget {
-  final int selectedValue;
+  final num selectedValue;
   final List<int> items;
   final ValueChanged<int?> onChanged;
   final double width;
@@ -39,14 +39,11 @@ class CustomPaginationDropdown extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 8),
-              child: Text(
-                '$selectedValue',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: SupportBotColors.bluePrimary,
-                ),
-              ),
+              child: Text('$selectedValue',
+                  style: SupportBotTextstyle.hint.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: SupportBotColors.gray.shade700,
+                  )),
             ),
             const Icon(
               Icons.arrow_drop_down,
@@ -70,7 +67,8 @@ class CustomPaginationDropdown extends StatelessWidget {
           children: [
             Positioned(
               left: offset.dx,
-              top: offset.dy - (height * items.length) - 25, // Positioning above
+              top:
+                  offset.dy - (height * items.length) - 25, // Positioning above
               child: Material(
                 color: Colors.transparent,
                 child: Container(
@@ -92,19 +90,15 @@ class CustomPaginationDropdown extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final item = items[index];
                       return ListTile(
-                        title: Text(
-                          '$item',
-                          style: item == selectedValue
-                              ? TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: SupportBotColors.bluePrimary,
-                                  fontSize: 14,
-                                )
-                              : TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade700,
-                                ),
-                        ),
+                        title: Text('$item',
+                            style: item == selectedValue
+                                ? SupportBotTextstyle.hint.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: SupportBotColors.bluePrimary,
+                                  )
+                                : SupportBotTextstyle.hint.copyWith(
+                                    color: SupportBotColors.gray.shade700,
+                                  )),
                         onTap: () {
                           Navigator.pop(context);
                           onChanged(item);

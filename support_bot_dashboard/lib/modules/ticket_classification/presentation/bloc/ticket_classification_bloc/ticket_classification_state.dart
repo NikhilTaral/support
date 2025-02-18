@@ -6,16 +6,16 @@ class TicketClassificationIntialState extends TicketClassificationState {}
 
 class TicketClassificationLoadingState extends TicketClassificationState {}
 
-class TicketClassificationSucssesState extends TicketClassificationState {
-  final TicketClassificationEntitieModel? model;
+class TicketClassificationSuccessState extends TicketClassificationState {
+  final TicketClassificationAttributeModel? ticketClassificationAttributeModel;
   final DateTime? startDate;
   final DateTime? endDate;
   final List<String> pipelineId;
-    final num? currentIndex;
+  final num? currentIndex;
   final Map<String, dynamic>? currentRowData;
 
-  TicketClassificationSucssesState({
-    this.model,
+  TicketClassificationSuccessState({
+    this.ticketClassificationAttributeModel,
     this.startDate,
     this.endDate,
     this.pipelineId = const [],
@@ -24,27 +24,6 @@ class TicketClassificationSucssesState extends TicketClassificationState {
   });
 }
 
-abstract class TicketClassificationActionStates
-    extends TicketClassificationSucssesState {
-  TicketClassificationActionStates({super.model});
-}
-
 class TicketClassificationFailureState extends TicketClassificationState {}
 
 class TicketClassificationEmptyState extends TicketClassificationState {}
-
-class RevertClassificationLoadingState
-    extends TicketClassificationActionStates {
-  RevertClassificationLoadingState({super.model});
-}
-
-class RevertClassificationSucessState extends TicketClassificationActionStates {
-  RevertClassificationSucessState({super.model});
-}
-
-class RevertClassificationFailureState
-    extends TicketClassificationActionStates {
-  final String? errorMsg;
-
-  RevertClassificationFailureState({this.errorMsg, super.model});
-}
