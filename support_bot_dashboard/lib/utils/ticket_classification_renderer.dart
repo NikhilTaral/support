@@ -326,6 +326,12 @@ class _TicketClassificationActionRendererState
                               value: BlocProvider.of<
                                   TicketClassificationActionBloc>(context),
                               child: AlertDialog(
+                                backgroundColor: SupportBotColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  side: const BorderSide(
+                                      color: Colors.transparent, width: 1.0),
+                                ),
                                 title: Text(
                                   s.updateTicketText,
                                   style: SupportBotTextstyle.subheadingH4

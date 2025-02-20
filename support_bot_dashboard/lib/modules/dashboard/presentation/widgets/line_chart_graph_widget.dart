@@ -126,7 +126,7 @@ class LineChartGraphWidget extends StatelessWidget {
           lineBarsData: [
             LineChartBarData(
               spots: spots,
-              barWidth: 10,
+              barWidth: 2,
               isStepLineChart: false,
               color: SupportBotColors.bluePrimary.shade400,
               dotData: FlDotData(
@@ -135,7 +135,7 @@ class LineChartGraphWidget extends StatelessWidget {
                   return FlDotCirclePainter(
                     radius: 5,
                     color: SupportBotColors.bluePrimary.shade400,
-                    strokeWidth: 2,
+                    strokeWidth: 1,
                     strokeColor: Colors.transparent,
                   );
                 },
