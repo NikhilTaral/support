@@ -102,7 +102,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       child: DropdownWithCheckbox(
-        hintText: s.piplineText,
+        hintText: s.pipelineText,
         items: items,
         selectedItems: selectedItems,
         onChanged: (value) => _onPipelineSelectionChanged(value ?? [], items),
@@ -304,9 +304,9 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   void _addEvents() {
     final s = serviceLocator<S>();
     final selectedPipelineValue =
-        pipelineIds.isEmpty ? ["11257490"] : pipelineIds;
+        pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
 
-    if (selectedPipelineValue.isEmpty) {
+    if (selectedPipelineValue?.isEmpty == true) {
       showSnackbar(
         context,
         s.filterApplySnackBarText,
