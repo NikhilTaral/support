@@ -14,6 +14,7 @@ import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
+import 'package:support_bot_dashboard/utils/theme/iconsax.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 import 'package:intl/intl.dart';
@@ -119,6 +120,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildPipelineDropdown(items),
             UIHelpers.horizontalSpaceRegular,
@@ -359,7 +361,11 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           return CustomMonthDropdown(
             items: [],
             label: s.validatedUserText,
-            onChanged: (value) {},
+            onChanged: (value) {
+              setState(() {
+                selectedUserName = value ?? "";
+              });
+            },
             selectedValue: selectedUserName,
           );
         },
@@ -433,9 +439,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: IconButton(
                 icon: Icon(
-                  isSearchOpen ? Icons.close : Icons.search,
+                  isSearchOpen ? SupportBotIcons.close : SupportBotIcons.search,
                   size: 25,
-                  color: Colors.black,
+                  color: SupportBotColors.bluePrimary,
                 ),
                 onPressed: () {
                   if (isSearchOpen) {
@@ -647,7 +653,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return Tooltip(
       message: 'Export CSV File',
       child: ExportButton(
-          icon: 'assets/icons/Export.svg',
+          icon: '',
           selectedButtonText: s.ticketClassification,
           startDate: selectedate.firstOrNull ?? widget.startDate,
           endDate: selectedate.lastOrNull ?? widget.endDate,

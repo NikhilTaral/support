@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/export_bloc/export_bloc.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
 
 class ExportButton extends StatelessWidget {
   final String icon;
@@ -43,39 +44,37 @@ class ExportButton extends StatelessWidget {
         },
         builder: (context, state) {
           return Container(
-            margin: const EdgeInsets.only(top: 5),
             padding: const EdgeInsets.only(right: 16),
             child: TextButton(
-              onPressed: state is ExportLoadingState
-                  ? null
-                  : () {
-                      context.read<ExportBloc>().add(
-                            FetchExportDataEvent(
-                              startDate: startDate,
-                              endDate: endDate,
-                              selectedPipeline: selectedPipeline,
-                              bopsState: bopsState ?? "",
-                              selectedClassification:
-                                  selectedClassification ?? "",
-                              selectedClassificationValidation:
-                                  selectedClassificationValidation ?? "",
-                            ),
-                          );
-                    },
-              child: state is ExportLoadingState
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : SvgPicture.asset(
-                      icon,
-                      width: iconSize,
-                      height: iconSize,
-                    ),
-            ),
+                onPressed: state is ExportLoadingState
+                    ? null
+                    : () {
+                        context.read<ExportBloc>().add(
+                              FetchExportDataEvent(
+                                startDate: startDate,
+                                endDate: endDate,
+                                selectedPipeline: selectedPipeline,
+                                bopsState: bopsState ?? "",
+                                selectedClassification:
+                                    selectedClassification ?? "",
+                                selectedClassificationValidation:
+                                    selectedClassificationValidation ?? "",
+                              ),
+                            );
+                      },
+                child: state is ExportLoadingState
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Icon(
+                        SupportBotIcons.exportCurve,
+                        size: 25,
+                        color: SupportBotColors.bluePrimary,
+                      )),
           );
         },
       ),
