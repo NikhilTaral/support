@@ -5,10 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart'
     as ticketClassificationBloc;
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
@@ -145,75 +141,76 @@ class Renderers {
 
     return Align(
       alignment: Alignment.topLeft,
-      child: PopupMenuTheme(
-        data: const PopupMenuThemeData(
-          color: SupportBotColors.white,
+      child: _buildViewValidateButton(rendererContext, allRows, index),
+    );
+  }
+
+  static Widget _buildViewValidateButton(
+    PlutoColumnRendererContext rendererContext,
+    dynamic allRows,
+    int index,
+  ) {
+    return PopupMenuTheme(
+      data: const PopupMenuThemeData(color: SupportBotColors.white),
+      child: PopupMenuButton(
+        tooltip: "",
+        icon: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          child: Icon(Icons.more_vert_rounded),
         ),
-        child: PopupMenuButton<String>(
-          tooltip: "",
-          icon: Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
+        itemBuilder: (context) => [
+          _buildMenuItem(
+            icon: Icons.visibility,
+            text: "View",
+            onTap: () => _showDialog(
+              context,
+              TicketDetailsDialog(
+                rowData: rendererContext.row,
+                allRows: allRows,
+                initialIndex: index,
+              ),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            child: const Icon(Icons.more_vert_rounded),
           ),
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: "view",
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return TicketDetailsDialog(
-                      rowData: rendererContext.row,
-                      allRows: allRows,
-                      initialIndex: index,
-                    );
-                  },
-                );
-              },
-              child: Row(
-                children: [
-                  const Icon(Icons.visibility),
-                  UIHelpers.horizontalSpaceTiny,
-                  Text(
-                    'View',
-                    style: SupportBotTextstyle.small.copyWith(
-                      color: SupportBotColors.gray.shade800,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
+          _buildMenuItem(
+            icon: Icons.loop_rounded,
+            text: "Validate",
+            onTap: () => _showDialog(
+              context,
+              ValidateAnswerDialog(rowData: rendererContext.row),
             ),
-            PopupMenuItem<String>(
-              value: "validate",
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ValidateAnswerDialog(rowData: rendererContext.row);
-                  },
-                );
-              },
-              child: Row(
-                children: [
-                  const Icon(Icons.loop_rounded),
-                  UIHelpers.horizontalSpaceTiny,
-                  Text(
-                    "Validate",
-                    style: SupportBotTextstyle.small.copyWith(
-                      color: SupportBotColors.gray.shade800,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+  }
+
+  static PopupMenuItem _buildMenuItem({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return PopupMenuItem(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon),
+          UIHelpers.horizontalSpaceTiny,
+          Text(
+            text,
+            style: SupportBotTextstyle.small.copyWith(
+              color: SupportBotColors.gray.shade800,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void _showDialog(BuildContext context, Widget dialog) {
+    showDialog(
+      context: context,
+      builder: (context) => dialog,
     );
   }
 
@@ -512,8 +509,7 @@ class Renderers {
                                     TicketClassificationDataCallEvent(
                                       startDate: bloc.startDate,
                                       endDate: bloc.endDate,
-                                      fieldValue:
-                                          bloc.selectedPipelineId,
+                                      fieldValue: bloc.selectedPipelineId,
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(
                                               context)
