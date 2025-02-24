@@ -180,7 +180,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         icon: const Icon(SupportBotIcons.filter, color: Colors.white),
         label: Text(
           s.filterApplyText,
-          style: TextStyle(
+          style: const TextStyle(
             color: SupportBotColors.white,
           ),
         ),
@@ -357,8 +357,8 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
       ));
 
       BlocProvider.of<PipelineTileBloc>(context).add(PipelineTileInitialEvent(
-        endDate: selectedate.lastOrNull,
-        startDate: selectedate.firstOrNull,
+        endDate: selectedate.lastOrNull ?? widget.endDate,
+        startDate: selectedate.firstOrNull ?? widget.startDate,
       ));
     }
   }
