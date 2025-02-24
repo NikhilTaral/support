@@ -381,5 +381,13 @@
   "noDataFoundText": "No Data Found",
   "@noDataFoundText": {
     "description": "No Data Found Text"
+  },
+  "exportSuccessfullyText": "CSV Downloaded Successfully!",
+  "@exportSuccessfullyText": {
+    "description": "Export Successfully Text"
+  },
+  "exportFailureText": "CSV Downloading Failed!",
+  "@exportFailureText": {
+    "description": "Export Failure Text"
   }
 }
