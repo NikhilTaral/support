@@ -32,6 +32,10 @@
   "@getStartedText": {
     "description": "Get Started"
   },
+  "validate": "Validate",
+  "@validate": {
+    "description": "Validate"
+  },
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"

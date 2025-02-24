@@ -251,7 +251,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
           if (state is BopsStatesSuccessState) {
-            return CustomMonthDropdown(
+            return CustomDropdown(
               items: state.bOpsResponseAttributeModel?.data ?? [],
               label: selectedBOPsState.isEmpty
                   ? s.bobStateText
@@ -267,7 +267,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is BopsStatesFailureState) {
             return const SizedBox(child: Text("Data Not Available"));
           }
-          return CustomMonthDropdown(
+          return CustomDropdown(
             items: [],
             label: s.bobStateText,
             onChanged: (value) {},
@@ -280,7 +280,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildTicketClassificationDropdown() {
     return SizedBox(
-      child: CustomMonthDropdown(
+      child: CustomDropdown(
         label: selectedClassification.isEmpty
             ? s.classification
             : selectedClassification,
@@ -303,7 +303,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Widget _buildValidationDropdown() {
     return SizedBox(
       width: 200,
-      child: CustomMonthDropdown(
+      child: CustomDropdown(
         label: selectedValidation.isEmpty ? s.validation : selectedValidation,
         selectedValue: selectedValidation,
         onChanged: (value) async {
@@ -323,7 +323,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is GetAllValidationUsersSuccessState) {
             var users = state.getAllValidationUsersAttributeModel?.data ?? [];
 
-            return CustomMonthDropdown(
+            return CustomDropdown(
               items: users.map((e) => e.name ?? "").toSet().toList(),
               label: selectedUserName.isEmpty
                   ? s.validatedUserText
@@ -358,7 +358,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is GetAllValidationUsersFailureState) {
             return SizedBox(child: Text(s.noDataFoundText));
           }
-          return CustomMonthDropdown(
+          return CustomDropdown(
             items: [],
             label: s.validatedUserText,
             onChanged: (value) {

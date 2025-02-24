@@ -365,7 +365,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
       child: ValueListenableBuilder(
         valueListenable: classificationNotifier,
         builder: (context, value, child) {
-          return CustomMonthDropdown(
+          return CustomDropdown(
             label: classificationNotifier.value ?? s.classification,
             selectedValue: "",
             onChanged: (value) {

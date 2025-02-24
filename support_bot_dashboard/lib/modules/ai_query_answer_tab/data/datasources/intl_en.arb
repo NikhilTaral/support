@@ -29,6 +29,9 @@
   }, "getStartedText": "Get Started",
   "@getStartedText": {
     "description": "Get Started"
-  }
-  
+  },
+  "validate": "Validate",
+  "@validate": {
+    "description": "Validate"
+  }  
 }
