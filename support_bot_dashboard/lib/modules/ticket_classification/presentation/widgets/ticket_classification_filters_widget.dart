@@ -119,6 +119,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildPipelineDropdown(items),
             UIHelpers.horizontalSpaceRegular,
@@ -249,7 +250,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
           if (state is BopsStatesSuccessState) {
-            return CustomMonthDropdown(
+            return CustomDropdown(
               items: state.bOpsResponseAttributeModel?.data ?? [],
               label: selectedBOPsState.isEmpty
                   ? s.bobStateText
@@ -265,7 +266,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is BopsStatesFailureState) {
             return const SizedBox(child: Text("Data Not Available"));
           }
-          return CustomMonthDropdown(
+          return CustomDropdown(
             items: [],
             label: s.bobStateText,
             onChanged: (value) {},
@@ -278,7 +279,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildTicketClassificationDropdown() {
     return SizedBox(
-      child: CustomMonthDropdown(
+      child: CustomDropdown(
         label: selectedClassification.isEmpty
             ? s.classification
             : selectedClassification,
@@ -301,7 +302,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   Widget _buildValidationDropdown() {
     return SizedBox(
       width: 200,
-      child: CustomMonthDropdown(
+      child: CustomDropdown(
         label: selectedValidation.isEmpty ? s.validation : selectedValidation,
         selectedValue: selectedValidation,
         onChanged: (value) async {
@@ -321,7 +322,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is GetAllValidationUsersSuccessState) {
             var users = state.getAllValidationUsersAttributeModel?.data ?? [];
 
-            return CustomMonthDropdown(
+            return CustomDropdown(
               items: users.map((e) => e.name ?? "").toSet().toList(),
               label: selectedUserName.isEmpty
                   ? s.validatedUserText
@@ -356,10 +357,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is GetAllValidationUsersFailureState) {
             return SizedBox(child: Text(s.noDataFoundText));
           }
-          return CustomMonthDropdown(
+          return CustomDropdown(
             items: [],
             label: s.validatedUserText,
-            onChanged: (value) {},
+            onChanged: (value) {
+              setState(() {
+                selectedUserName = value ?? "";
+              });
+            },
             selectedValue: selectedUserName,
           );
         },
@@ -433,9 +438,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: IconButton(
                 icon: Icon(
-                  isSearchOpen ? Icons.close : Icons.search,
+                  isSearchOpen ? SupportBotIcons.close : SupportBotIcons.search,
                   size: 25,
-                  color: Colors.black,
+                  color: SupportBotColors.bluePrimary,
                 ),
                 onPressed: () {
                   if (isSearchOpen) {
@@ -647,7 +652,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return Tooltip(
       message: 'Export CSV File',
       child: ExportButton(
-          icon: 'assets/icons/Export.svg',
+          icon: '',
           selectedButtonText: s.ticketClassification,
           startDate: selectedate.firstOrNull ?? widget.startDate,
           endDate: selectedate.lastOrNull ?? widget.endDate,
