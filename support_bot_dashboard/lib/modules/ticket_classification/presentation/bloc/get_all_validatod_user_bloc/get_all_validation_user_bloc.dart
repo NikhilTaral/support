@@ -39,10 +39,12 @@ class GetAllValidationUsersBloc
     try {
       final repository = serviceLocator<GetAllValidationUserUsecase>();
       final req = GetAllValidationUsersRequestModel(
-        endDate: event.endDate ??
+        endDate: event.endDate?.copyWith(
+                hour: 23, minute: 59, second: 59, millisecond: 999) ??
             DateTime.now()
                 .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
-        startDate: event.startDate ??
+        startDate: event.startDate
+                ?.copyWith(hour: 0, minute: 0, second: 0, millisecond: 0) ??
             DateTime.now()
                 .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0),
         filter: [Filter(fieldName: "pipelines", fieldValue: event.filter)],
@@ -53,13 +55,13 @@ class GetAllValidationUsersBloc
       } else {
         getAllValidationUsersAttributeModel =
             GetAllValidationUsersAttributeModel(
-                data: response.right.data
-                    ?.map((e) => UserDetails(
-                          email: e.email ?? "",
-                          name: e.name ?? "",
-                        ))
-                    .toList(),
-                );
+          data: response.right.data
+              ?.map((e) => UserDetails(
+                    email: e.email ?? "",
+                    name: e.name ?? "",
+                  ))
+              .toList(),
+        );
         emit(GetAllValidationUsersSuccessState(
             getAllValidationUsersAttributeModel:
                 getAllValidationUsersAttributeModel));

@@ -37,11 +37,15 @@ class MyAppRoutes {
           DateTime now = DateTime.now();
 
           DateTime startDate = startDateString != null
-              ? DateTime.tryParse(startDateString) ?? now
+              ? DateTime.tryParse(startDateString) ??
+                  DateTime.now()
+                      .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
               : now;
 
           DateTime endDate = endDateString?.isNotEmpty == true
-              ? DateTime.tryParse(endDateString ?? "") ?? now
+              ? DateTime.tryParse(endDateString ?? "") ??
+                  DateTime.now().copyWith(
+                      hour: 23, minute: 59, second: 59, millisecond: 999)
               : now;
 
           return MaterialPage(
