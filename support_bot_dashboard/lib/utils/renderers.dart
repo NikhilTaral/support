@@ -7,6 +7,7 @@ import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart'
     as ticketClassificationBloc;
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
@@ -271,6 +272,9 @@ class Renderers {
           BlocProvider(
             create: (context) => UpdateClassificationValidationBloc(),
           ),
+          BlocProvider(
+            create: (context) => GetAllValidationUsersBloc(),
+          ),
         ],
         child:
             BlocConsumer<GetValidationDetailsBloc, GetValidationDetailsState>(
@@ -322,18 +326,29 @@ class Renderers {
                   Future.delayed(const Duration(microseconds: 2000000), () {
                     final bloc =
                         BlocProvider.of<TicketClassificationTabBloc>(context);
-                    BlocProvider.of<TicketClassificationTabBloc>(context)
-                        .add(TicketClassificationDataCallEvent(
-                      startDate: bloc.startDate,
-                      endDate: bloc.endDate,
-                      fieldValue: bloc.selectedPipelineId,
-                      page:
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .page,
-                      pageSize:
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .pageSize,
-                    ));
+                    BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                      TicketClassificationDataCallEvent(
+                        startDate: bloc.startDate,
+                        endDate: bloc.endDate,
+                        fieldValue: bloc.selectedPipelineId,
+                        page: BlocProvider.of<TicketClassificationTabBloc>(
+                                context)
+                            .page,
+                        pageSize: BlocProvider.of<TicketClassificationTabBloc>(
+                                context)
+                            .pageSize,
+                      ),
+                    );
+
+                    // final validateUserbloc =
+                    //     BlocProvider.of<GetAllValidationUsersBloc>(context);
+                    BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+                      GetValidationUsersInitialEvent(
+                        startDate: bloc.startDate,
+                        endDate: bloc.endDate,
+                        filter: [bloc.selectedPipelineId],
+                      ),
+                    );
                   });
 
                   if (state is GetValidationDetailsSuccessState &&
@@ -518,6 +533,18 @@ class Renderers {
                                                   TicketClassificationTabBloc>(
                                               context)
                                           .pageSize,
+                                    ),
+                                  );
+
+                                  // final validateUserbloc =
+                                  //     BlocProvider.of<GetAllValidationUsersBloc>(context);
+                                  BlocProvider.of<GetAllValidationUsersBloc>(
+                                          context)
+                                      .add(
+                                    GetValidationUsersInitialEvent(
+                                      startDate: bloc.startDate,
+                                      endDate: bloc.endDate,
+                                      filter: [bloc.selectedPipelineId],
                                     ),
                                   );
                                 });

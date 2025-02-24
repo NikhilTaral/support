@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/ticket_classification_response_model.dart';
@@ -56,6 +57,15 @@ class _TicketClassificationActionRendererState
               endDate: bloc.endDate,
               page: 1,
               pageSize: 10,
+            ));
+            // final validateUserbloc =
+            //     BlocProvider.of<TicketClassificationTabBloc>(context);
+
+            BlocProvider.of<GetAllValidationUsersBloc>(context)
+                .add(GetValidationUsersInitialEvent(
+              startDate: bloc.startDate,
+              endDate: bloc.endDate,
+              filter: [bloc.selectedPipelineId],
             ));
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
