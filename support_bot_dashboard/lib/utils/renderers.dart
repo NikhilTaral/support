@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart'
     as ticketClassificationBloc;
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
@@ -135,7 +136,8 @@ class Renderers {
     void Function(String?)? onDelete,
   }) {
     int index = rendererContext.cell.value?['index'] ?? 0;
-    final allRows = rendererContext.cell.value?['allRows'] ?? [];
+    List<AiQueryAttributeItem> allRows =
+        rendererContext.cell.value?['allRows'] ?? [];
     final actionData =
         rendererContext.row.cells["Action"]?.value as Map<String, dynamic>? ??
             {};
@@ -148,7 +150,7 @@ class Renderers {
 
   static Widget _buildViewValidateButton(
     PlutoColumnRendererContext rendererContext,
-    dynamic allRows,
+    List<AiQueryAttributeItem> allRows,
     int index,
   ) {
     return PopupMenuTheme(
@@ -162,7 +164,7 @@ class Renderers {
         itemBuilder: (context) => [
           _buildMenuItem(
             icon: Icons.visibility,
-            text: "View",
+            text: serviceLocator<S>().view,
             onTap: () => _showDialog(
               context,
               TicketDetailsDialog(
@@ -174,7 +176,7 @@ class Renderers {
           ),
           _buildMenuItem(
             icon: Icons.loop_rounded,
-            text: "Validate",
+            text: serviceLocator<S>().validate,
             onTap: () => _showDialog(
               context,
               ValidateAnswerDialog(rowData: rendererContext.row),
