@@ -12,6 +12,98 @@
   "@pageText": {
     "description": "Page"
   },
+  "filterApplyText": "Apply Filter",
+  "@filterApplyText": {
+    "description": "Apply Filter"
+  },
+  "filterClearText": "Clear Filters",
+  "@filterClearText": {
+    "description": "Clear Filters"
+  },
+  "filterApplySnackBarText": "Please select a pipeline to apply filter",
+  "@filterApplySnackBarText": {
+    "description": "Please select a pipeline to apply filter"
+  },
+  "searchText": "Search...",
+  "@searchText": {
+    "description": "Search"
+  },
+  "getStartedText": "Get Started",
+  "@getStartedText": {
+    "description": "Get Started"
+  },
+  "validate": "Validate",
+  "@validate": {
+    "description": "Validate"
+  },
+  "validateAIAnswerText": "Validate AI Answer",
+  "@validateAIAnswerText": {
+    "description": "Validate AI Answer Text"
+  },
+  "validateAIAnsweTicketrText": "Do you want to Validate AI Answer for this ticket?",
+  "@validateAIAnsweTicketrText": {
+    "description": "Do you want to Validate AI Answer for this ticket? Text"
+  },
+  "NoText": "No",
+  "@NoText": {
+    "description": "No Text"
+  },
+  "ticketIDText": "Ticket ID:",
+  "@ticketIDText": {
+    "description": "Ticket ID: Text"
+  },
+  "ticketDescriptionText": "Ticket Description:",
+  "@ticketDescriptionText": {
+    "description": "Ticket Description Text"
+  },
+  "answerStatusText": "Answer Status:",
+  "@answerStatusText": {
+    "description": "Answer Status Text"
+  },
+  "aiValidationStatusText": "Validation Status:",
+  "@aiValidationStatusText": {
+    "description": "Validation Status Text"
+  },
+  "aiAnswerValidationSuccessfullyText": "AI Answer Validated Successfully!",
+  "@aiAnswerValidationSuccessfullyText": {
+    "description": "AI Answer Validated Successfully"
+  },
+  "aiAnswerValidationFailureText": "Failed Validating AI Answer !",
+  "@aiAnswerValidationFailureText": {
+    "description": "Failed Validating AI Answer "
+  },
+  "answerEditedStatusText": "Answer Edited Status:",
+  "@answerEditedStatusText": {
+    "description": "Answer Edited Status Text"
+  },
+  "aIQueryAnswerText": "AI Query Answer:",
+  "@aIQueryAnswerText": {
+    "description": "AI Query Answer Text"
+  },
+  "exportSuccessfullyText": "CSV Downloaded Successfully!",
+  "@exportSuccessfullyText": {
+    "description": "Export Successfully Text"
+  },
+  "exportFailureText": "CSV Downloading Failed!",
+  "@exportFailureText": {
+    "description": "Export Failure Text"
+  },
+  "editText": "Edit",
+  "@editText": {
+    "description": "Edit Text"
+  },
+  "itemsPerPageText": "Items per page:   ",
+  "@itemsPerPageText": {
+    "description": "Items per page"
+  },
+  "aPIErrorMsgText": "Error fetching data from server",
+  "@aPIErrorMsgText": {
+    "description": "Error msg"
+  },
+  "pageText": "Page",
+  "@pageText": {
+    "description": "Page"
+  },
   "piplineText": "Pipeline",
   "@piplineText": {
     "description": "Pipeline"
@@ -60,10 +152,6 @@
   "@acknowledgementRequired": {
     "description": "Acknowledgement Required"
   },
-  "total": "Total",
-  "@total": {
-    "description": "Total"
-  },
   "day": "Day",
   "@day": {
     "description": "Day"
@@ -72,9 +160,9 @@
   "@month": {
     "description": "Month"
   },
-  "classification": "Classification",
+  "classification": "AI Classification",
   "@classification": {
-    "description": "Classification"
+    "description": "AI Classification"
   },
   "validation": "Validation",
   "@validation": {
@@ -228,6 +316,30 @@
   "@ticketNotClassified": {
     "description": "Not Classified"
   },
+  "somethingWentWrongText": "Something Went Wrong",
+  "@somethingWentWrongText": {
+    "description": "Something Went Wrong Text"
+  },
+  "validatedTicketsText": "Validated Tickets",
+  "@validatedTicketsText": {
+    "description": "Validated Tickets Text"
+  },
+  "totalTicketsText": "Total Tickets",
+  "@totalTicketsText": {
+    "description": "Total Tickets Text"
+  },
+  "pipelineText": "Pipeline",
+  "@pipelineText": {
+    "description": "pipeline Text"
+  },
+  "totalText": "Total",
+  "@totalText": {
+    "description": "Total Text"
+  },
+  "validatedText": "Validated",
+  "@validatedText": {
+    "description": "Validated Text"
+  },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
     "description": "By clicking “GET STARTED” you are agreeing to our "
@@ -275,8 +387,8 @@
   "@fromJoinAppSignInButtonTitle": {
     "description": "From Join App Sign In Button Title"
   },
-  "intialpiplineText": "Expert Care Level 1",
-  "@intialpiplineText": {
+  "intialpipelineText": "Expert Care Level 1",
+  "@intialpipelineText": {
     "description": "Inital PipLine Text"
   },
   "bobStateText": "BOPS State/ Province",
@@ -353,5 +465,13 @@
   "validatedClassificationText": "Validated Classification",
   "@validatedClassificationText": {
     "description": "Validated Classification Text"
+  },
+  "validatedUserText": "Validated User",
+  "@validatedUserText": {
+    "description": "Validated User Text"
+  },
+  "noDataFoundText": "No Data Found",
+  "@noDataFoundText": {
+    "description": "No Data Found Text"
   }
 }

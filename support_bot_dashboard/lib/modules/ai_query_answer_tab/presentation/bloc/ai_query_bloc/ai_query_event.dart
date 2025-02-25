@@ -3,7 +3,7 @@ part of 'ai_query_bloc.dart';
 abstract class AiQueryEvent {}
 
 class AIQueryInitialEvent extends AiQueryEvent {
-  final List<String>? selectedPipelineValueList;
+  final String? selectedPipelineValueList;
   final DateTime? startDate;
   final DateTime? endDate;
   final String? classificationFilterValue;

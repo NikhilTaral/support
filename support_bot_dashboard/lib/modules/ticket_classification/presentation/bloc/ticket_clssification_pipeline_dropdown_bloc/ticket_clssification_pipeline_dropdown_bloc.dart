@@ -7,7 +7,7 @@ part 'ticket_clssification_pipeline_dropdown_state.dart';
 class TicketClssificationPipelineDropdownBloc extends Bloc<
     TicketClssificationPipelineDropdownEvent,
     TicketClssificationPipelineDropdownState> {
-  List<Datums> _items = [];
+  List<GetAllPipelineData> _items = [];
   List<String> selectedItems = [];
 
   TicketClssificationPipelineDropdownBloc()
@@ -18,7 +18,7 @@ class TicketClssificationPipelineDropdownBloc extends Bloc<
         _onTicketClssificationFilterItemsEvent);
     on<TicketClssificationUpdateSelectedItemEvent>(
         _onTicketClssificationUpdateSelectedItemEvent);
-        on<FiltersItemsEvent>(_onFilterItemsEvent);
+    on<FiltersItemsEvent>(_onFilterItemsEvent);
   }
 
   Future<void> _onTicketClssificationLoadPipelineTypesEvent(
@@ -33,8 +33,8 @@ class TicketClssificationPipelineDropdownBloc extends Bloc<
     ));
   }
 
-  Future<void> _onFilterItemsEvent(
-      FiltersItemsEvent event, Emitter<TicketClssificationPipelineDropdownState> emit) async {
+  Future<void> _onFilterItemsEvent(FiltersItemsEvent event,
+      Emitter<TicketClssificationPipelineDropdownState> emit) async {
     final filteredItems = _filterItems(event.query);
 
     emit(TicketClssificationDropdownPipelineTypesLoadedState(
@@ -72,7 +72,7 @@ class TicketClssificationPipelineDropdownBloc extends Bloc<
     ));
   }
 
-  List<Datums> _filterItems(String query) {
+  List<GetAllPipelineData> _filterItems(String query) {
     return _items
         .where((item) =>
             item.pipelineName

@@ -3,14 +3,13 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
-
-class CustomMonthDropdown extends StatelessWidget {
+class CustomDropdown extends StatelessWidget {
   final String selectedValue;
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final String label;
 
-  const CustomMonthDropdown({
+  const CustomDropdown({
     Key? key,
     required this.selectedValue,
     required this.items,

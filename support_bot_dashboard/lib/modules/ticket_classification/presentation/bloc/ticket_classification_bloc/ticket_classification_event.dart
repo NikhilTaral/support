@@ -9,7 +9,7 @@ class TicketClassificationDataCallEvent extends TicketClassificationEvent {
   final num? page;
   final String? ticketId;
   final num? pageSize;
-  final List<String>? fieldValue;
+  final String? fieldValue;
   final String? selectedBOPsState;
   final String? selectedClassification;
   final String? selectedValidation;

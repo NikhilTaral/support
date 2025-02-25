@@ -10,7 +10,7 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class TicketClassificationPipelineWidget extends StatelessWidget {
   final String hintText;
-  final List<Datums> items;
+  final List<GetAllPipelineData> items;
   final String selectedItem;
   final ValueChanged<String> onChanged;
 
@@ -58,14 +58,9 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
                                 hintText,
-                                  style: SupportBotTextstyle
-                                                .small
-                                                .copyWith(
-                                             
-                                             fontWeight: FontWeight.bold,
-                                            ),
-                                          
-                              
+                                style: SupportBotTextstyle.small.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             Padding(
@@ -97,11 +92,11 @@ class TicketClassificationPipelineWidget extends StatelessWidget {
 
                                   return ListTile(
                                     title: Text(item.pipelineName ??
-                                       s.unknownPipelineText),
+                                        s.unknownPipelineText),
                                     selected: isSelected,
                                     onTap: () {
                                       onChanged(item.pipelineName ??
-                                         s.unknownPipelineText);
+                                          s.unknownPipelineText);
                                       Navigator.of(context).pop();
                                     },
                                   );

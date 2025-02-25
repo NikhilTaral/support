@@ -10,6 +10,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashbo
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_by_count_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_validation_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/get_all_pipelines_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/pipeline_tile_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/validation_status_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_answer_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
@@ -17,12 +18,14 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_by_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_validation_count_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/get_all_pipelines_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/pipeline_tile_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/validation_status_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_get_validation_by_count_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/get_all_pipelines_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/pipeline_tile_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/validation_status_usecase.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
@@ -34,6 +37,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/domain/useca
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/export_bloc/export_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_pipelines_bloc/get_all_pipelines_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_action_bloc/ticket_classification_action_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
@@ -75,6 +79,8 @@ Future<void> initServiceLocator() async {
       () => DashboardChartDataRepoImpl());
   serviceLocator.registerLazySingleton<DashboardAiQueryAnswerDataRepository>(
       () => DashboardAiQueryAnswerRepoImpl());
+  serviceLocator.registerLazySingleton<PipelineTileRepository>(
+      () => PipelineTileRepoImpl());
 
   // Dashboard usecase
   serviceLocator.registerLazySingleton<DashboardChartdataUsecase>(
@@ -85,6 +91,8 @@ Future<void> initServiceLocator() async {
       () => DashboardAiQueryAnswerUsecase());
   serviceLocator.registerLazySingleton<DashboardAiQueryEditedUsecase>(
       () => DashboardAiQueryEditedUsecase());
+  serviceLocator
+      .registerLazySingleton<PipelineTileUsecase>(() => PipelineTileUsecase());
 
   // get validation count
   serviceLocator.registerLazySingleton<GetValidationCountRepository>(
@@ -154,4 +162,13 @@ Future<void> initServiceLocator() async {
   serviceLocator.registerLazySingleton<DashboardExportRepository>(
       () => DashboardExportImpl());
   serviceLocator.registerFactory<ExportBloc>(() => ExportBloc());
+
+  //getAllVAlidater User
+
+  serviceLocator.registerLazySingleton<GetAllValidationUserUsecase>(
+      () => GetAllValidationUserUsecase());
+  serviceLocator.registerLazySingleton<GetAllValidationUserRepository>(
+      () => GetAllValidationUserImpl());
+  serviceLocator.registerFactory<GetAllValidationUsersBloc>(
+      () => GetAllValidationUsersBloc());
 }

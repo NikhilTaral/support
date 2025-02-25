@@ -26,4 +26,8 @@ class TicketClassificationSuccessState extends TicketClassificationState {
 
 class TicketClassificationFailureState extends TicketClassificationState {}
 
-class TicketClassificationEmptyState extends TicketClassificationState {}
+class TicketClassificationEmptyState extends TicketClassificationState {
+  final String? message;
+
+  TicketClassificationEmptyState({this.message});
+}

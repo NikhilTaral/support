@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/update_ai_answer_bloc.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/custom_snackbar.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -26,17 +28,19 @@ class ValidateAnswerDialog extends StatelessWidget {
     final validationStatus =
         rowData.cells['validation_status']?.value == "Validated";
 
+    final s = serviceLocator<S>();
+
     return AlertDialog(
       backgroundColor: SupportBotColors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
-      title: const Text(
-        'Validate AI Answer',
-        style: TextStyle(fontWeight: FontWeight.bold),
+      title: Text(
+        s.validateAIAnswerText,
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      content: const Text(
-        'Do you want to Validate AI Answer for this ticket?',
+      content: Text(
+        s.validateAIAnsweTicketrText,
         style: TextStyle(fontSize: 16),
       ),
       actions: [
@@ -53,7 +57,7 @@ class ValidateAnswerDialog extends StatelessWidget {
             ),
           ),
           child: Text(
-            'No',
+            s.NoText,
             style: SupportBotTextstyle.mediumHint.copyWith(
               color: SupportBotColors.white,
             ),
@@ -65,6 +69,13 @@ class ValidateAnswerDialog extends StatelessWidget {
               BlocConsumer<AddAnswerValidationBloc, AddAnswerValidationState>(
             listener: (context, state) {
               if (state is AddAnswerValidationSuccessState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackbar(
+                    message: s.aiAnswerValidationSuccessfullyText,
+                    context: context,
+                    isSuccess: true,
+                  ),
+                );
                 serviceLocator<InstanceSharingService>()
                     .aiQueryBloc
                     ?.add(AIQueryInitialEvent(
@@ -73,8 +84,21 @@ class ValidateAnswerDialog extends StatelessWidget {
                               .classificationFilterValue,
                       selectedPipelineValueList:
                           serviceLocator<InstanceSharingService>()
-                              .selectedPipelineValueList,
+                                  .selectedPipelineValueList ??
+                              "11257490",
+                      startDate:
+                          serviceLocator<InstanceSharingService>().startDate,
+                      endDate: serviceLocator<InstanceSharingService>().endDate,
                     ));
+                Navigator.pop(context);
+              } else if (state is AddAnswerValidationFailureState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackbar(
+                    message: s.aiAnswerValidationFailureText,
+                    context: context,
+                    isSuccess: false,
+                  ),
+                );
                 Navigator.pop(context);
               }
             },
@@ -95,14 +119,13 @@ class ValidateAnswerDialog extends StatelessWidget {
                       agentAnsValidation: validationStatus,
                       ticketId: id.toString(),
                       pipeline: serviceLocator<InstanceSharingService>()
-                              .selectedPipelineValueList
-                              ?.firstOrNull ??
+                              .selectedPipelineValueList ??
                           "11257490",
                     ),
                   );
                 },
                 child: Text(
-                  'Yes',
+                  s.yesText,
                   style: SupportBotTextstyle.mediumHint.copyWith(
                     color: SupportBotColors.white,
                   ),
@@ -121,13 +144,13 @@ class TicketDetailsDialog extends StatelessWidget {
   final List<AiQueryAttributeItem> allRows;
   final int initialIndex;
 
-  const TicketDetailsDialog({
+  TicketDetailsDialog({
     required this.rowData,
     required this.allRows,
     required this.initialIndex,
     Key? key,
   }) : super(key: key);
-
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     TextEditingController aiQueryController = TextEditingController(
@@ -179,7 +202,7 @@ class TicketDetailsDialog extends StatelessWidget {
                           icon: const Icon(Icons.arrow_circle_left_outlined),
                         ),
                         Text(
-                          "Ticket Details",
+                          s.ticketDetailsText,
                           style: SupportBotTextstyle.columnHeading
                               .copyWith(fontSize: 20),
                         ),
@@ -200,14 +223,14 @@ class TicketDetailsDialog extends StatelessWidget {
                   const Divider(),
                   UIHelpers.verticalSpaceSmall,
                   Text(
-                    "Ticket ID:",
+                    s.ticketIDText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
                   Text(id, style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "Ticket Description:",
+                    s.ticketDescriptionText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -215,14 +238,14 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceMedium,
                   Text(
-                    "Answer Status:",
+                    s.answerStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
                   Text(answeredStatus, style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "Validation Status:",
+                    s.aiValidationStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -230,7 +253,7 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "Answer Edited Status:",
+                    s.answerEditedStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -238,7 +261,7 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "AI Query Answer:",
+                    s.aIQueryAnswerText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   TextField(
@@ -285,8 +308,8 @@ class TicketDetailsDialog extends StatelessWidget {
                           ),
                         ),
                         label: Text(
-                          "Cancel",
-                          style: SupportBotTextstyle.mediumHint
+                          s.cancel,
+                          style: SupportBotTextstyle.hint
                               .copyWith(color: SupportBotColors.bluePrimary),
                         ),
                       ),
@@ -306,6 +329,12 @@ class TicketDetailsDialog extends StatelessWidget {
                                     selectedPipelineValueList:
                                         serviceLocator<InstanceSharingService>()
                                             .selectedPipelineValueList,
+                                    startDate:
+                                        serviceLocator<InstanceSharingService>()
+                                            .startDate,
+                                    endDate:
+                                        serviceLocator<InstanceSharingService>()
+                                            .endDate,
                                   ));
                               Navigator.pop(context);
                             }
@@ -341,7 +370,7 @@ class TicketDetailsDialog extends StatelessWidget {
                                 ),
                               ),
                               label: Text(
-                                isEditing ? "Save" : "Edit",
+                                isEditing ? s.save : s.editText,
                                 style: SupportBotTextstyle.hint
                                     .copyWith(color: Colors.white),
                               ),

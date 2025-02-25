@@ -5,7 +5,8 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class EmptyWidget extends StatelessWidget {
-  const EmptyWidget({super.key});
+  const EmptyWidget({super.key, this.message});
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class EmptyWidget extends StatelessWidget {
       alignment: Alignment.center,
       padding: const EdgeInsets.all(10.0),
       child: Text(
-        'No Data Found',
+        message ?? "No Data Found",
         style: Theme.of(context).textTheme.labelLarge,
       ),
     );
