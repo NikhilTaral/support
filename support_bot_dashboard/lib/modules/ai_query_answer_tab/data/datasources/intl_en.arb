@@ -46,10 +46,6 @@
   "@NoText": {
     "description": "No Text"
   },
-  "ticketDetailsText":  "Ticket Details",
-  "@ticketDetailsText": {
-    "description": "Ticket Details Text"
-  },
   "ticketIDText": "Ticket ID:",
   "@ticketIDText": {
     "description": "Ticket ID: Text"
@@ -62,8 +58,8 @@
   "@answerStatusText": {
     "description": "Answer Status Text"
   },
-  "validationStatusText": "Validation Status:",
-  "@validationStatusText": {
+  "aiValidationStatusText": "Validation Status:",
+  "@aiValidationStatusText": {
     "description": "Validation Status Text"
   },  "aiAnswerValidationSuccessfullyText": "AI Answer Validated Successfully!",
   "@aiAnswerValidationSuccessfullyText": {

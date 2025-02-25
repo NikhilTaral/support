@@ -36,11 +36,11 @@ class ValidateAnswerDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       title: Text(
-        s.ValidateAIAnswerText,
+        s.validateAIAnswerText,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       content: Text(
-        s.ValidateAIAnsweTicketrText,
+        s.validateAIAnsweTicketrText,
         style: TextStyle(fontSize: 16),
       ),
       actions: [
@@ -202,7 +202,7 @@ class TicketDetailsDialog extends StatelessWidget {
                           icon: const Icon(Icons.arrow_circle_left_outlined),
                         ),
                         Text(
-                          s.TicketDetailsText,
+                          s.ticketDetailsText,
                           style: SupportBotTextstyle.columnHeading
                               .copyWith(fontSize: 20),
                         ),
@@ -223,14 +223,14 @@ class TicketDetailsDialog extends StatelessWidget {
                   const Divider(),
                   UIHelpers.verticalSpaceSmall,
                   Text(
-                    s.TicketIDText,
+                    s.ticketIDText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
                   Text(id, style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    s.TicketDescriptionText,
+                    s.ticketDescriptionText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -238,14 +238,14 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceMedium,
                   Text(
-                    s.AnswerStatusText,
+                    s.answerStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
                   Text(answeredStatus, style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    s.ValidationStatusText,
+                    s.aiValidationStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -253,7 +253,7 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    s.AnswerEditedStatusText,
+                    s.answerEditedStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -261,7 +261,7 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    s.AIQueryAnswerText,
+                    s.aIQueryAnswerText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   TextField(
