@@ -36,6 +36,62 @@
   "@validate": {
     "description": "Validate"
   },
+  "validateAIAnswerText": "Validate AI Answer",
+  "@validateAIAnswerText": {
+    "description": "Validate AI Answer Text"
+  },
+  "validateAIAnsweTicketrText": "Do you want to Validate AI Answer for this ticket?",
+  "@validateAIAnsweTicketrText": {
+    "description": "Do you want to Validate AI Answer for this ticket? Text"
+  },
+  "NoText": "No",
+  "@NoText": {
+    "description": "No Text"
+  },
+  "ticketIDText": "Ticket ID:",
+  "@ticketIDText": {
+    "description": "Ticket ID: Text"
+  },
+  "ticketDescriptionText": "Ticket Description:",
+  "@ticketDescriptionText": {
+    "description": "Ticket Description Text"
+  },
+  "answerStatusText": "Answer Status:",
+  "@answerStatusText": {
+    "description": "Answer Status Text"
+  },
+  "aiValidationStatusText": "Validation Status:",
+  "@aiValidationStatusText": {
+    "description": "Validation Status Text"
+  },
+  "aiAnswerValidationSuccessfullyText": "AI Answer Validated Successfully!",
+  "@aiAnswerValidationSuccessfullyText": {
+    "description": "AI Answer Validated Successfully"
+  },
+  "aiAnswerValidationFailureText": "Failed Validating AI Answer !",
+  "@aiAnswerValidationFailureText": {
+    "description": "Failed Validating AI Answer "
+  },
+  "answerEditedStatusText": "Answer Edited Status:",
+  "@answerEditedStatusText": {
+    "description": "Answer Edited Status Text"
+  },
+  "aIQueryAnswerText": "AI Query Answer:",
+  "@aIQueryAnswerText": {
+    "description": "AI Query Answer Text"
+  },
+  "exportSuccessfullyText": "CSV Downloaded Successfully!",
+  "@exportSuccessfullyText": {
+    "description": "Export Successfully Text"
+  },
+  "exportFailureText": "CSV Downloading Failed!",
+  "@exportFailureText": {
+    "description": "Export Failure Text"
+  },
+  "editText": "Edit",
+  "@editText": {
+    "description": "Edit Text"
+  },
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"
@@ -385,13 +441,5 @@
   "noDataFoundText": "No Data Found",
   "@noDataFoundText": {
     "description": "No Data Found Text"
-  },
-  "exportSuccessfullyText": "CSV Downloaded Successfully!",
-  "@exportSuccessfullyText": {
-    "description": "Export Successfully Text"
-  },
-  "exportFailureText": "CSV Downloading Failed!",
-  "@exportFailureText": {
-    "description": "Export Failure Text"
   }
 }
