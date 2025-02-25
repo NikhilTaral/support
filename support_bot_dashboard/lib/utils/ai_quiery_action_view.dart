@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/update_ai_answer_bloc.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/custom_snackbar.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -25,6 +27,8 @@ class ValidateAnswerDialog extends StatelessWidget {
         : 'N/A';
     final validationStatus =
         rowData.cells['validation_status']?.value == "Validated";
+
+    final s = serviceLocator<S>();
 
     return AlertDialog(
       backgroundColor: SupportBotColors.white,
@@ -65,6 +69,13 @@ class ValidateAnswerDialog extends StatelessWidget {
               BlocConsumer<AddAnswerValidationBloc, AddAnswerValidationState>(
             listener: (context, state) {
               if (state is AddAnswerValidationSuccessState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackbar(
+                    message: s.aiAnswerValidationSuccessfullyText,
+                    context: context,
+                    isSuccess: true,
+                  ),
+                );
                 serviceLocator<InstanceSharingService>()
                     .aiQueryBloc
                     ?.add(AIQueryInitialEvent(
@@ -80,6 +91,14 @@ class ValidateAnswerDialog extends StatelessWidget {
                       endDate: serviceLocator<InstanceSharingService>().endDate,
                     ));
                 Navigator.pop(context);
+              } else if (state is AddAnswerValidationFailureState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackbar(
+                    message: s.aiAnswerValidationFailureText,
+                    context: context,
+                    isSuccess: false,
+                  ),
+                );
               }
             },
             builder: (context, state) {

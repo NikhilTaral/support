@@ -393,5 +393,13 @@
   "exportFailureText": "CSV Downloading Failed!",
   "@exportFailureText": {
     "description": "Export Failure Text"
+  },
+  "aiAnswerValidationSuccessfullyText": "AI Answer Validated Successfully!",
+  "@aiAnswerValidationSuccessfullyText": {
+    "description": "AI Answer Validated Successfully"
+  },
+  "aiAnswerValidationFailureText": "Failed Validating AI Answer !",
+  "@aiAnswerValidationFailureText": {
+    "description": "Failed Validating AI Answer "
   }
 }
