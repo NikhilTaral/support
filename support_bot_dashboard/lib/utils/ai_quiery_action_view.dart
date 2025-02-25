@@ -35,12 +35,12 @@ class ValidateAnswerDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
-      title: const Text(
-        'Validate AI Answer',
-        style: TextStyle(fontWeight: FontWeight.bold),
+      title: Text(
+        s.ValidateAIAnswerText,
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      content: const Text(
-        'Do you want to Validate AI Answer for this ticket?',
+      content: Text(
+        s.ValidateAIAnsweTicketrText,
         style: TextStyle(fontSize: 16),
       ),
       actions: [
@@ -57,7 +57,7 @@ class ValidateAnswerDialog extends StatelessWidget {
             ),
           ),
           child: Text(
-            'No',
+            s.NoText,
             style: SupportBotTextstyle.mediumHint.copyWith(
               color: SupportBotColors.white,
             ),
@@ -99,6 +99,7 @@ class ValidateAnswerDialog extends StatelessWidget {
                     isSuccess: false,
                   ),
                 );
+                Navigator.pop(context);
               }
             },
             builder: (context, state) {
@@ -124,7 +125,7 @@ class ValidateAnswerDialog extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'Yes',
+                  s.yesText,
                   style: SupportBotTextstyle.mediumHint.copyWith(
                     color: SupportBotColors.white,
                   ),
@@ -143,13 +144,13 @@ class TicketDetailsDialog extends StatelessWidget {
   final List<AiQueryAttributeItem> allRows;
   final int initialIndex;
 
-  const TicketDetailsDialog({
+  TicketDetailsDialog({
     required this.rowData,
     required this.allRows,
     required this.initialIndex,
     Key? key,
   }) : super(key: key);
-
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     TextEditingController aiQueryController = TextEditingController(
@@ -201,7 +202,7 @@ class TicketDetailsDialog extends StatelessWidget {
                           icon: const Icon(Icons.arrow_circle_left_outlined),
                         ),
                         Text(
-                          "Ticket Details",
+                          s.TicketDetailsText,
                           style: SupportBotTextstyle.columnHeading
                               .copyWith(fontSize: 20),
                         ),
@@ -222,14 +223,14 @@ class TicketDetailsDialog extends StatelessWidget {
                   const Divider(),
                   UIHelpers.verticalSpaceSmall,
                   Text(
-                    "Ticket ID:",
+                    s.TicketIDText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
                   Text(id, style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "Ticket Description:",
+                    s.TicketDescriptionText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -237,14 +238,14 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceMedium,
                   Text(
-                    "Answer Status:",
+                    s.AnswerStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
                   Text(answeredStatus, style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "Validation Status:",
+                    s.ValidationStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -252,7 +253,7 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "Answer Edited Status:",
+                    s.AnswerEditedStatusText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   UIHelpers.verticalSpaceTiny,
@@ -260,7 +261,7 @@ class TicketDetailsDialog extends StatelessWidget {
                       style: SupportBotTextstyle.cellHeading),
                   UIHelpers.verticalSpaceRegular,
                   Text(
-                    "AI Query Answer:",
+                    s.AIQueryAnswerText,
                     style: SupportBotTextstyle.columnHeading,
                   ),
                   TextField(
@@ -307,7 +308,7 @@ class TicketDetailsDialog extends StatelessWidget {
                           ),
                         ),
                         label: Text(
-                          "Cancel",
+                          s.cancel,
                           style: SupportBotTextstyle.hint
                               .copyWith(color: SupportBotColors.bluePrimary),
                         ),
@@ -369,7 +370,7 @@ class TicketDetailsDialog extends StatelessWidget {
                                 ),
                               ),
                               label: Text(
-                                isEditing ? "Save" : "Edit",
+                                isEditing ? s.save : s.editText,
                                 style: SupportBotTextstyle.hint
                                     .copyWith(color: Colors.white),
                               ),
