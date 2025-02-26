@@ -13,3 +13,4 @@ class BopsStatesSuccessState extends BopsStatesState {
 }
 
 class BopsStatesFailureState extends BopsStatesState {}
+class BopsStatesEmptyState extends BopsStatesState {}
