@@ -10,6 +10,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -75,7 +76,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           } else if (state is GetAllPipelineFailureState) {
             return const Center(child: Text("No data Found"));
           }
-          return const Center(child: Text("No data Found"));
+          return const Center(child: EmptyWidget());
         },
       ),
     );
@@ -250,6 +251,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
         builder: (context, state) {
+          print("BopsStatesBloc State ${state}");
           if (state is BopsStatesSuccessState) {
             return CustomDropdown(
               items: state.bOpsResponseAttributeModel?.data ?? [],
@@ -265,11 +267,11 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             );
           }
           if (state is BopsStatesFailureState) {
-            return const SizedBox(child: Text("Data Not Available"));
+            return const SizedBox(child: EmptyWidget());
           }
           if (state is BopsStatesEmptyState) {
             return CustomDropdown(
-              items: const ["No State Avalable"],
+              items: s.noStateAvailableText.split(","),
               label: s.bobStateText,
               onChanged: (value) async {},
               selectedValue: selectedBOPsState,
@@ -366,7 +368,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           }
           if (state is GetAllValidationUsersEmptyState) {
             return CustomDropdown(
-              items: "No User Available".split(","),
+              items: s.noUserAvailableText.split(","),
               label: s.validatedUserText,
               selectedValue: '',
               onChanged: (String? value) {},

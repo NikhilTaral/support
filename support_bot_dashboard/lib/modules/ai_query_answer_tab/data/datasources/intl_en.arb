@@ -26,7 +26,8 @@
   "searchText": "Search...",
   "@searchText": {
     "description": "Search"
-  }, "getStartedText": "Get Started",
+  },
+  "getStartedText": "Get Started",
   "@getStartedText": {
     "description": "Get Started"
   },
@@ -42,8 +43,8 @@
   "@validateAIAnsweTicketrText": {
     "description": "Do you want to Validate AI Answer for this ticket? Text"
   },
-  "NoText": "No",
-  "@NoText": {
+  "noText": "No",
+  "@noText": {
     "description": "No Text"
   },
   "ticketIDText": "Ticket ID:",
@@ -61,7 +62,8 @@
   "aiValidationStatusText": "Validation Status:",
   "@aiValidationStatusText": {
     "description": "Validation Status Text"
-  },  "aiAnswerValidationSuccessfullyText": "AI Answer Validated Successfully!",
+  },
+  "aiAnswerValidationSuccessfullyText": "AI Answer Validated Successfully!",
   "@aiAnswerValidationSuccessfullyText": {
     "description": "AI Answer Validated Successfully"
   },
@@ -76,7 +78,8 @@
   "aIQueryAnswerText": "AI Query Answer:",
   "@aIQueryAnswerText": {
     "description": "AI Query Answer Text"
-  }, "exportSuccessfullyText": "CSV Downloaded Successfully!",
+  },
+  "exportSuccessfullyText": "CSV Downloaded Successfully!",
   "@exportSuccessfullyText": {
     "description": "Export Successfully Text"
   },
