@@ -47,6 +47,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   String selectedUserName = "";
   String selectedValidation = '';
   String pipelineIds = "";
+  String setvalue = "";
   String selectedPipeline = "";
 
   @override
@@ -266,6 +267,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           if (state is BopsStatesFailureState) {
             return const SizedBox(child: Text("Data Not Available"));
           }
+          if (state is BopsStatesEmptyState) {
+            return CustomDropdown(
+              items: const ["No State Avalable"],
+              label: s.bobStateText,
+              onChanged: (value) async {},
+              selectedValue: selectedBOPsState,
+            );
+          }
           return CustomDropdown(
             items: [],
             label: s.bobStateText,
@@ -304,9 +313,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       width: 200,
       child: CustomDropdown(
         label: selectedValidation.isEmpty ? s.validation : selectedValidation,
-        selectedValue: selectedValidation,
+        selectedValue: setvalue,
         onChanged: (value) async {
           setState(() {
+            setvalue = value ?? "";
             selectedValidation = value?.toLowerCase() ?? "";
           });
         },
@@ -354,6 +364,14 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
               selectedValue: selectedUserName,
             );
           }
+          if (state is GetAllValidationUsersEmptyState) {
+            return CustomDropdown(
+              items: "No User Available".split(","),
+              label: s.validatedUserText,
+              selectedValue: '',
+              onChanged: (String? value) {},
+            );
+          }
           if (state is GetAllValidationUsersFailureState) {
             return SizedBox(child: Text(s.noDataFoundText));
           }
@@ -394,6 +412,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 startDate: selectedate.firstOrNull ?? widget.startDate,
                 filter: [selectedPipelineValue ?? ""],
               ));
+
               final bloc =
                   BlocProvider.of<TicketClassificationTabBloc>(context);
               bloc.selectedPipelineId = selectedPipelineValue;
@@ -516,6 +535,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           child: ElevatedButton.icon(
             onPressed: () async {
               setState(() {
+                setvalue = "";
                 selectedUserValidator = '';
                 selectedUserName = '';
                 selectedItem = '';
