@@ -345,10 +345,9 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
     final start = selectedDatesNotifier.value?.first ?? widget.startDate;
     final end = selectedDatesNotifier.value?.last ?? widget.endDate;
 
-    if (selectedPipelineValue.isEmpty) {
-      showSnackbar(
-        context,
-        s.filterApplySnackBarText,
+    if (selectedPipelineValue == null || start == null || end == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.filterApplySnackBarText)),
       );
       return;
     }
