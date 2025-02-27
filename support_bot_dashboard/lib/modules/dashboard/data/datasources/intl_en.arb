@@ -27,10 +27,7 @@
   "@acknowledgementRequired": {
     "description": "Acknowledgement Required"
   },
-  "total": "Total",
-  "@total": {
-    "description": "Total"
-  },
+  
   "day": "Day",
   "@day": {
     "description": "Day"
@@ -39,9 +36,9 @@
   "@month": {
     "description": "Month"
   },
-  "classification": "Classification",
+  "classification": "AI Classification",
   "@classification": {
-    "description": "Classification"
+    "description": "AI Classification"
   },
   "validation": "Validation",
   "@validation": {
@@ -194,6 +191,33 @@
 "ticketNotClassified": "Not Classified",
   "@ticketNotClassified": {
     "description": "Not Classified"
+  },
+  "somethingWentWrongText": "Something Went Wrong",
+    "@somethingWentWrongText": {
+      "description":"Something Went Wrong Text"
+  },
+  "validatedTicketsText": "Validated Tickets",
+    "@validatedTicketsText": {
+      "description":"Validated Tickets Text"
+  },
+  "totalTicketsText": "Total Tickets",
+    "@totalTicketsText": {
+      "description":"Total Tickets Text"
+  },
+  "totalTicketsText": "Total Tickets",
+    "@totalTicketsText": {
+      "description":"Total Tickets Text"
+  },
+  "pipelineText": "Pipeline",
+    "@pipelineText": {
+      "description":"pipeline Text"
+  },
+  "totalText": "Total",
+    "@totalText": {
+      "description":"Total Text"
+  },
+  "validatedText": "Validated",
+    "@validatedText": {
+      "description":"Validated Text"
   }
- 
 }

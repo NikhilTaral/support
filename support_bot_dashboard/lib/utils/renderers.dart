@@ -6,11 +6,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/entities/ai_query_answer_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/add_answer_validation/add_answer_validation_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
-import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart'
     as ticketClassificationBloc;
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_validation_details_bloc/get_validation_details_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
@@ -138,82 +136,84 @@ class Renderers {
     void Function(String?)? onDelete,
   }) {
     int index = rendererContext.cell.value?['index'] ?? 0;
-    final allRows = rendererContext.cell.value?['allRows'] ?? [];
+    List<AiQueryAttributeItem> allRows =
+        rendererContext.cell.value?['allRows'] ?? [];
     final actionData =
         rendererContext.row.cells["Action"]?.value as Map<String, dynamic>? ??
             {};
 
     return Align(
       alignment: Alignment.topLeft,
-      child: PopupMenuTheme(
-        data: const PopupMenuThemeData(
-          color: SupportBotColors.white,
+      child: _buildViewValidateButton(rendererContext, allRows, index),
+    );
+  }
+
+  static Widget _buildViewValidateButton(
+    PlutoColumnRendererContext rendererContext,
+    List<AiQueryAttributeItem> allRows,
+    int index,
+  ) {
+    return PopupMenuTheme(
+      data: const PopupMenuThemeData(color: SupportBotColors.white),
+      child: PopupMenuButton(
+        tooltip: "",
+        icon: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          child: Icon(Icons.more_vert_rounded),
         ),
-        child: PopupMenuButton<String>(
-          tooltip: "",
-          icon: Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
+        itemBuilder: (context) => [
+          _buildMenuItem(
+            icon: Icons.visibility,
+            text: serviceLocator<S>().view,
+            onTap: () => _showDialog(
+              context,
+              TicketDetailsDialog(
+                rowData: rendererContext.row,
+                allRows: allRows,
+                initialIndex: index,
+              ),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            child: const Icon(Icons.more_vert_rounded),
           ),
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: "view",
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return TicketDetailsDialog(
-                      rowData: rendererContext.row,
-                      allRows: allRows,
-                      initialIndex: index,
-                    );
-                  },
-                );
-              },
-              child: Row(
-                children: [
-                  const Icon(Icons.visibility),
-                  UIHelpers.horizontalSpaceTiny,
-                  Text(
-                    'View',
-                    style: SupportBotTextstyle.small.copyWith(
-                      color: SupportBotColors.gray.shade800,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
+          _buildMenuItem(
+            icon: Icons.loop_rounded,
+            text: serviceLocator<S>().validate,
+            onTap: () => _showDialog(
+              context,
+              ValidateAnswerDialog(rowData: rendererContext.row),
             ),
-            PopupMenuItem<String>(
-              value: "validate",
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ValidateAnswerDialog(rowData: rendererContext.row);
-                  },
-                );
-              },
-              child: Row(
-                children: [
-                  const Icon(Icons.loop_rounded),
-                  UIHelpers.horizontalSpaceTiny,
-                  Text(
-                    "Validate",
-                    style: SupportBotTextstyle.small.copyWith(
-                      color: SupportBotColors.gray.shade800,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+  }
+
+  static PopupMenuItem _buildMenuItem({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return PopupMenuItem(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon),
+          UIHelpers.horizontalSpaceTiny,
+          Text(
+            text,
+            style: SupportBotTextstyle.small.copyWith(
+              color: SupportBotColors.gray.shade800,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void _showDialog(BuildContext context, Widget dialog) {
+    showDialog(
+      context: context,
+      builder: (context) => dialog,
     );
   }
 
@@ -244,7 +244,6 @@ class Renderers {
                   style: SupportBotTextstyle.hint.copyWith(
                     color: SupportBotColors.disablePrimary,
                   ),
-                 
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -274,6 +273,9 @@ class Renderers {
           ),
           BlocProvider(
             create: (context) => UpdateClassificationValidationBloc(),
+          ),
+          BlocProvider(
+            create: (context) => GetAllValidationUsersBloc(),
           ),
         ],
         child:
@@ -326,17 +328,29 @@ class Renderers {
                   Future.delayed(const Duration(microseconds: 2000000), () {
                     final bloc =
                         BlocProvider.of<TicketClassificationTabBloc>(context);
-                    BlocProvider.of<TicketClassificationTabBloc>(context)
-                        .add(TicketClassificationDataCallEvent(
-                      startDate: bloc.startDate,
-                      endDate: bloc.endDate,
-                      page:
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .page,
-                      pageSize:
-                          BlocProvider.of<TicketClassificationTabBloc>(context)
-                              .pageSize,
-                    ));
+                    BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                      TicketClassificationDataCallEvent(
+                        startDate: bloc.startDate,
+                        endDate: bloc.endDate,
+                        fieldValue: bloc.selectedPipelineId,
+                        page: BlocProvider.of<TicketClassificationTabBloc>(
+                                context)
+                            .page,
+                        pageSize: BlocProvider.of<TicketClassificationTabBloc>(
+                                context)
+                            .pageSize,
+                      ),
+                    );
+
+                    // final validateUserbloc =
+                    //     BlocProvider.of<GetAllValidationUsersBloc>(context);
+                    BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+                      GetValidationUsersInitialEvent(
+                        startDate: bloc.startDate,
+                        endDate: bloc.endDate,
+                        filter: [bloc.selectedPipelineId],
+                      ),
+                    );
                   });
 
                   if (state is GetValidationDetailsSuccessState &&
@@ -504,6 +518,9 @@ class Renderers {
                                 );
                                 Future.delayed(
                                     const Duration(microseconds: 200000), () {
+                                  BlocProvider.of<GetAllValidationUsersBloc>(
+                                          context)
+                                      .add(GetValidationUsersInitialEvent());
                                   final bloc = BlocProvider.of<
                                       TicketClassificationTabBloc>(context);
                                   BlocProvider.of<TicketClassificationTabBloc>(
@@ -512,6 +529,7 @@ class Renderers {
                                     TicketClassificationDataCallEvent(
                                       startDate: bloc.startDate,
                                       endDate: bloc.endDate,
+                                      fieldValue: bloc.selectedPipelineId,
                                       page: BlocProvider.of<
                                                   TicketClassificationTabBloc>(
                                               context)
@@ -520,6 +538,18 @@ class Renderers {
                                                   TicketClassificationTabBloc>(
                                               context)
                                           .pageSize,
+                                    ),
+                                  );
+
+                                  // final validateUserbloc =
+                                  //     BlocProvider.of<GetAllValidationUsersBloc>(context);
+                                  BlocProvider.of<GetAllValidationUsersBloc>(
+                                          context)
+                                      .add(
+                                    GetValidationUsersInitialEvent(
+                                      startDate: bloc.startDate,
+                                      endDate: bloc.endDate,
+                                      filter: [bloc.selectedPipelineId],
                                     ),
                                   );
                                 });

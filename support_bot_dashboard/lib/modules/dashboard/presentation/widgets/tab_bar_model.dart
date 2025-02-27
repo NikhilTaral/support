@@ -12,6 +12,10 @@ enum TypeBarType {
 }
 
 class TabBarWidget {
+  final String? pipelineName;
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String? title;
   final Widget view;
   final IconData? icon;
@@ -20,6 +24,10 @@ class TabBarWidget {
   final TypeBarType type;
 
   const TabBarWidget({
+    this.endDate,
+    this.pipelineName,
+    this.piplineId,
+    this.startDate,
     this.title,
     required this.view,
     required this.type,
@@ -27,12 +35,16 @@ class TabBarWidget {
     this.svgPath,
   });
 
-  static List<TabBarWidget> organizationItemList(BuildContext context) {
+  static List<TabBarWidget> organizationItemList(BuildContext context,
+      {String? pipelineName,
+      String? piplineId,
+      DateTime? startDate,
+      DateTime? endDate}) {
     final s = serviceLocator<S>();
     List<TabBarWidget> tabBarList = [];
 
     tabBarList.add(
-      const TabBarWidget(
+      TabBarWidget(
         svgPath: 'assets/icons/House.svg',
         view: SizedBox(
           width: double.infinity,
@@ -43,22 +55,32 @@ class TabBarWidget {
     );
 
     tabBarList.add(
-       TabBarWidget(
-        title:s.ticketClassification,
-        view: const SizedBox(
+      TabBarWidget(
+        title: s.ticketClassification,
+        view: SizedBox(
           width: double.infinity,
-          child: TicketClassification(),
+          child: TicketClassification(
+            pipelineName: pipelineName ?? "",
+            piplineId: piplineId,
+            endDate: endDate ?? DateTime.now(),
+            startDate: startDate ?? DateTime.now(),
+          ),
         ),
         type: TypeBarType.ticketClassification,
       ),
     );
 
     tabBarList.add(
-       TabBarWidget(
-        title:s.aiQueryAnswer,
-        view: const SizedBox(
+      TabBarWidget(
+        title: s.aiQueryAnswer,
+        view: SizedBox(
           width: double.infinity,
-          child: AIQueryEditedScreen(),
+          child: AIQueryEditedScreen(
+            pipelineName: pipelineName ?? "",
+            piplineId: piplineId,
+            endDate: endDate ?? DateTime.now(),
+            startDate: startDate ?? DateTime.now(),
+          ),
         ),
         type: TypeBarType.aIQueryAnswer,
       ),

@@ -6,3 +6,4 @@ class GetAllPiplineInitialEvent extends GetAllPipelineEvent {
   final List<String>? selectedPipelineValue;
   GetAllPiplineInitialEvent({this.selectedPipelineValue});
 }
+class GetAllValidationUsersInitialEvent extends GetAllPipelineEvent{}

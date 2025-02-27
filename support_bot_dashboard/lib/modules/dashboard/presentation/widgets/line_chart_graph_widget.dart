@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
 class LineChartGraphWidget extends StatelessWidget {
   LineChartGraphWidget({super.key, required this.dashboardDataModel});
+
   final DashboardDataModel? dashboardDataModel;
   final Map<String, dynamic>? apiResponseData = {};
 
@@ -124,14 +127,15 @@ class LineChartGraphWidget extends StatelessWidget {
             LineChartBarData(
               spots: spots,
               barWidth: 2,
-              color: SupportBotColors.blueSecondary.shade400,
+              isStepLineChart: false,
+              color: SupportBotColors.bluePrimary.shade400,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) {
                   return FlDotCirclePainter(
                     radius: 5,
                     color: SupportBotColors.bluePrimary.shade400,
-                    strokeWidth: 2,
+                    strokeWidth: 1,
                     strokeColor: Colors.transparent,
                   );
                 },
@@ -142,6 +146,27 @@ class LineChartGraphWidget extends StatelessWidget {
           maxX: maxX,
           minY: minY,
           maxY: maxY,
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              tooltipBorder: const BorderSide(
+                  width: 2, color: SupportBotColors.disablePrimary),
+              getTooltipColor: (touchedSpot) => SupportBotColors.gray.shade200,
+              tooltipRoundedRadius: 8,
+              getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                return touchedSpots.map((spot) {
+                  return LineTooltipItem(
+                    spot.y.toStringAsFixed(2),
+                    SupportBotTextstyle.caption.copyWith(
+                      color: SupportBotColors.black,
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+            touchCallback:
+                (FlTouchEvent event, LineTouchResponse? touchResponse) {},
+            handleBuiltInTouches: true,
+          ),
         ),
       ),
     );

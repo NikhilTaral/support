@@ -12,6 +12,5 @@ class EnvConfig {
 
   static const String OKTA_APP_ID = '0oahpkkhy42WAw4Sh697';
 
-  static const String OKTA_TOKEN_URL =
-      'https://expi.okta.com/oauth2/v1/token';
+  static const String OKTA_TOKEN_URL = 'https://expi.okta.com/oauth2/v1/token';
 }

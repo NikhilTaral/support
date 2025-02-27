@@ -17,13 +17,12 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AIQueryEditedDesktopView extends StatelessWidget {
   AIQueryEditedDesktopView({super.key});
-
   final ValueNotifier<num> currentPage = ValueNotifier<num>(1);
-  final ValueNotifier<num> pageSize = ValueNotifier<num>(10);
   final AiQueryAttributeModel aiQueryAttributeModel = AiQueryAttributeModel();
-final s = serviceLocator<S>();
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
+    final aiQueryBloc = BlocProvider.of<AiQueryBloc>(context);
     return BlocBuilder<AiQueryBloc, AiQueryState>(
       builder: (context, state) {
         currentPage.value = BlocProvider.of<AiQueryBloc>(context).page;
@@ -58,31 +57,50 @@ final s = serviceLocator<S>();
                           ),
                         ),
                         ValueListenableBuilder<num>(
-                          valueListenable: pageSize,
+                          valueListenable:
+                              ValueNotifier<num>(aiQueryBloc.pageSize),
                           builder: (context, value, child) {
                             return CustomPaginationDropdown(
                               selectedValue: value,
-                              items: const [10, 25, 50],
+                              items: const [10, 25, 50, 100, 250],
                               onChanged: (value) {
                                 if (value != null) {
-                                  pageSize.value = value;
+                                  BlocProvider.of<AiQueryBloc>(context)
+                                      .pageSize = value;
                                   currentPage.value = 1;
-
-                                  BlocProvider.of<AiQueryBloc>(context).add(
-                                    AIQueryInitialEvent(
-                                      startDate: state.startDate,
-                                      endDate: state.endDate,
-                                      selectedPipelineValueList:
-                                          state.selectedPipelineValue,
-                                      classificationFilterValue:
-                                          state.classificationFilterValue,
-                                      page: currentPage.value,
-                                      pageSize: pageSize.value,
-                                    ),
-                                  );
+                                  if (state.selectedPipelineValue?.isNotEmpty ==
+                                          true ||
+                                      state.selectedPipelineValue != null) {
+                                    return BlocProvider.of<AiQueryBloc>(context)
+                                        .add(
+                                      AIQueryInitialEvent(
+                                        startDate: state.endDate,
+                                        endDate: state.startDate,
+                                        selectedPipelineValueList:
+                                            state.selectedPipelineValue ?? "",
+                                        classificationFilterValue: aiQueryBloc
+                                            .classificationFilterValue,
+                                        page: currentPage.value,
+                                        pageSize: aiQueryBloc.pageSize,
+                                      ),
+                                    );
+                                  } else {
+                                    BlocProvider.of<AiQueryBloc>(context).add(
+                                      AIQueryInitialEvent(
+                                        startDate: state.endDate,
+                                        endDate: state.startDate,
+                                        selectedPipelineValueList:
+                                            state.selectedPipelineValue ?? "",
+                                        classificationFilterValue: aiQueryBloc
+                                            .classificationFilterValue,
+                                        page: currentPage.value,
+                                        pageSize: aiQueryBloc.pageSize,
+                                      ),
+                                    );
+                                  }
                                 }
                               },
-                              width: 60,
+                              width: 70,
                               height: 40,
                             );
                           },
@@ -93,8 +111,8 @@ final s = serviceLocator<S>();
                     Row(
                       children: [
                         Text(
-                          "${(currentPage.value - 1) * pageSize.value + 1} - "
-                          "${(currentPage.value * pageSize.value > (state.dashboardDataModel?.data?.totalRecords ?? 0)) ? state.dashboardDataModel?.data?.totalRecords ?? 0 : currentPage.value * pageSize.value} of "
+                          "${(currentPage.value - 1) * aiQueryBloc.pageSize + 1} - "
+                          "${(currentPage.value * aiQueryBloc.pageSize > (state.dashboardDataModel?.data?.totalRecords ?? 0)) ? state.dashboardDataModel?.data?.totalRecords ?? 0 : currentPage.value * aiQueryBloc.pageSize} of "
                           "${state.dashboardDataModel?.data?.totalRecords ?? 0}",
                           style: SupportBotTextstyle.hint.copyWith(
                             color: SupportBotColors.disablePrimary.shade500,
@@ -107,14 +125,14 @@ final s = serviceLocator<S>();
                                   currentPage.value--;
                                   BlocProvider.of<AiQueryBloc>(context).add(
                                     AIQueryInitialEvent(
-                                      startDate: state.startDate,
-                                      endDate: state.endDate,
+                                      startDate: state.endDate,
+                                      endDate: state.startDate,
                                       selectedPipelineValueList:
                                           state.selectedPipelineValue,
                                       classificationFilterValue:
-                                          state.classificationFilterValue,
+                                          aiQueryBloc.classificationFilterValue,
                                       page: currentPage.value,
-                                      pageSize: pageSize.value,
+                                      pageSize: aiQueryBloc.pageSize,
                                     ),
                                   );
                                 }
@@ -133,7 +151,8 @@ final s = serviceLocator<S>();
                           },
                         ),
                         IconButton(
-                          onPressed: (currentPage.value * pageSize.value) <
+                          onPressed: (currentPage.value *
+                                      aiQueryBloc.pageSize) <
                                   (state.dashboardDataModel?.data
                                           ?.totalRecords ??
                                       0)
@@ -141,14 +160,14 @@ final s = serviceLocator<S>();
                                   currentPage.value++;
                                   BlocProvider.of<AiQueryBloc>(context).add(
                                     AIQueryInitialEvent(
-                                      startDate: state.startDate,
-                                      endDate: state.endDate,
+                                      startDate: state.endDate,
+                                      endDate: state.startDate,
                                       selectedPipelineValueList:
                                           state.selectedPipelineValue,
                                       classificationFilterValue:
-                                          state.classificationFilterValue,
+                                          aiQueryBloc.classificationFilterValue,
                                       page: currentPage.value,
-                                      pageSize: pageSize.value,
+                                      pageSize: aiQueryBloc.pageSize,
                                     ),
                                   );
                                 }

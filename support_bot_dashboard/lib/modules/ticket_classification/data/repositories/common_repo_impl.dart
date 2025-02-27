@@ -8,6 +8,8 @@ import 'package:support_bot_dashboard/core/network/api_provider.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/dashboard_export_request_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_response_model.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/revert_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/bops_state_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_validation_details_request_model.dart';
@@ -162,6 +164,31 @@ class DashboardExportImpl extends DashboardExportRepository {
             ? File('')
             : File.fromRawPath(Uint8List.fromList(response)));
       }
+    } catch (e) {
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
+    }
+  }
+}
+
+class GetAllValidationUserImpl extends GetAllValidationUserRepository {
+  @override
+  Future<Either<Failure, GetAllValidationUsersResponseModel>>
+      getAllValidationUser(
+          GetAllValidationUsersRequestModel?
+              getAllValidationUsersRequestModel) async {
+    try {
+      final response = await serviceLocator<ApiProvider>().getData(
+          url: 'dashboard/getAllValidationUsers',
+          body: getAllValidationUsersRequestModel?.toJson());
+
+      final model =
+          getAllValidationUsersResponseModelFromJson(jsonEncode(response));
+
+      if (model is Left) {
+        return Left(ServerFailure(message: s.aPIErrorMsgText));
+      }
+
+      return Right(model);
     } catch (e) {
       return Left(ServerFailure(message: s.aPIErrorMsgText));
     }

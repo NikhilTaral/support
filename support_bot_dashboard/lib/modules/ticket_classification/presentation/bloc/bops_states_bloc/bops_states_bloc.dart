@@ -28,14 +28,18 @@ class BopsStatesBloc extends Bloc<BopsStateEvent, BopsStatesState> {
         emit(BopsStatesFailureState());
       } else {
         final BOpsResponseModel model = response.right;
+        if (model.data?.isEmpty == true) {
+          emit(BopsStatesEmptyState());
+        } else {
+          bOpsResponseAttributeModel = BOpsResponseAttributeModel(
+            data: model.data,
+            failCode: model.failCode,
+            message: model.message,
+          );
 
-        bOpsResponseAttributeModel = BOpsResponseAttributeModel(
-          data: model.data,
-          failCode: model.failCode,
-          message: model.message,
-        );
-
-        emit(BopsStatesSuccessState(bOpsResponseAttributeModel: bOpsResponseAttributeModel));
+          emit(BopsStatesSuccessState(
+              bOpsResponseAttributeModel: bOpsResponseAttributeModel));
+        }
       }
     } catch (e) {
       emit(BopsStatesFailureState());
