@@ -518,6 +518,9 @@ class Renderers {
                                 );
                                 Future.delayed(
                                     const Duration(microseconds: 200000), () {
+                                  BlocProvider.of<GetAllValidationUsersBloc>(
+                                          context)
+                                      .add(GetValidationUsersInitialEvent());
                                   final bloc = BlocProvider.of<
                                       TicketClassificationTabBloc>(context);
                                   BlocProvider.of<TicketClassificationTabBloc>(

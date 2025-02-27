@@ -6,84 +6,92 @@
   "bobStateText": "BOPS State/ Province",
   "@bobStateText": {
     "description": "BOPS State/ Province Text"
-  }, 
-   "unknownPipelineText":  "Unknown Pipeline",
+  },
+  "unknownPipelineText": "Unknown Pipeline",
   "@unknownPipelineText": {
     "description": "Unknown Pipeline Text"
   },
-  "updateSuccessfullyText":  "Update Successfully!",
+  "updateSuccessfullyText": "Update Successfully!",
   "@updateSuccessfullyText": {
     "description": "Update Successfully Text"
   },
-  "updateFailureText":  "Update Failure!",
+  "updateFailureText": "Update Failure!",
   "@updateFailureText": {
     "description": "Update Failure Text"
   },
-  "revertedSuccessfullyText":  "Reverted Successfully",
+  "revertedSuccessfullyText": "Reverted Successfully",
   "@revertedSuccessfullyText": {
     "description": "Reverted Successfully Text"
   },
-  "revertedFailureText":  "Reverted Failure",
+  "revertedFailureText": "Reverted Failure",
   "@revertedFailureText": {
     "description": "Reverted Failure Text"
   },
-  "updateText":  "Update",
+  "updateText": "Update",
   "@updateText": {
     "description": "Update Text"
   },
-  "updateTicketText":  "Update Ticket",
+  "updateTicketText": "Update Ticket",
   "@updateTicketText": {
     "description": "Update Ticket Text"
   },
   "requestMsgText": "Do you Want to Mark This Ticket as a Contact {value} in HubSpot",
-    "@requestMsgText": {
-        "description": "request Msg Text",
-        "placeholders": {
-            "value": {}
-        }
-    },
-    "noText":  "No",
-    "@noText": {
-      "description": "NO Text"
-    },
-    "yesText":  "Yes",
-    "@yesText": {
-      "description": "Yes Text"
-    },
-    "ticketDetailsText":  "Ticket Details",
-    "@ticketDetailsText": {
-      "description": "Ticket Details Text"
-    },
-    "descriptionText":  "Description",
-    "@descriptionText": {
-      "description": "Description Text"
-    },
-    "reasoningText":  "Reasoning",
-    "@reasoningText": {
-      "description": "Reasoning Text"
-    },
-    "validatedByText":  "Validated By",
-    "@validatedByText": {
-      "description": "Validated By Text"
-    },
-    "classificationValidationReasonText":  "Classification Validation Reason",
-    "@classificationValidationReasonText": {
-      "description": "Classification Validation Reason Text"
-    },
-    "closeText":  "Close",
-    "@closeText": {
-      "description": "Close Text"
-    },
-    "validatedClassificationText":  "Validated Classification",
-    "@validatedClassificationText": {
-      "description": "Validated Classification Text"
-    },
-     "validatedUserText":  "Validated User",
-    "@validatedUserText": {
-      "description": "Validated User Text"
-    },
-    "noDataFoundText":   "No Data Found",
-    "@noDataFoundText": {
-      "description": "No Data Found Text"
+  "@requestMsgText": {
+    "description": "request Msg Text",
+    "placeholders": {
+      "value": {}
     }
+  },
+  "noText": "No",
+  "@noText": {
+    "description": "NO Text"
+  },
+  "yesText": "Yes",
+  "@yesText": {
+    "description": "Yes Text"
+  },
+  "ticketDetailsText": "Ticket Details",
+  "@ticketDetailsText": {
+    "description": "Ticket Details Text"
+  },
+  "descriptionText": "Description",
+  "@descriptionText": {
+    "description": "Description Text"
+  },
+  "reasoningText": "Reasoning",
+  "@reasoningText": {
+    "description": "Reasoning Text"
+  },
+  "validatedByText": "Validated By",
+  "@validatedByText": {
+    "description": "Validated By Text"
+  },
+  "classificationValidationReasonText": "Classification Validation Reason",
+  "@classificationValidationReasonText": {
+    "description": "Classification Validation Reason Text"
+  },
+  "closeText": "Close",
+  "@closeText": {
+    "description": "Close Text"
+  },
+  "validatedClassificationText": "Validated Classification",
+  "@validatedClassificationText": {
+    "description": "Validated Classification Text"
+  },
+  "validatedUserText": "Validated User",
+  "@validatedUserText": {
+    "description": "Validated User Text"
+  },
+  "noDataFoundText": "No Data Found",
+  "@noDataFoundText": {
+    "description": "No Data Found Text"
+  },
+  "noUserAvailableText": "No User Available",
+  "@noUserAvailableText": {
+    "description": "No User Available Text"
+  },
+  "noStateAvailableText": "No State/Province Available",
+  "@noStateAvailableText": {
+    "description": "No State/Province Available Text"
+  }
 }

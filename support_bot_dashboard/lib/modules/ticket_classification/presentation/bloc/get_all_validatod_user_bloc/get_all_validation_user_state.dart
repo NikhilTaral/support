@@ -16,4 +16,5 @@ class GetAllValidationUsersSuccessState extends GetAllValidationUsersState {
 }
 
 class GetAllValidationUsersFailureState extends GetAllValidationUsersState {}
+class GetAllValidationUsersEmptyState extends GetAllValidationUsersState {}
 

@@ -1,9 +1,6 @@
 import 'dart:async';
-
-import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_request_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/get_all_validation_users_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
@@ -62,9 +59,13 @@ class GetAllValidationUsersBloc
                   ))
               .toList(),
         );
-        emit(GetAllValidationUsersSuccessState(
-            getAllValidationUsersAttributeModel:
-                getAllValidationUsersAttributeModel));
+        if (getAllValidationUsersAttributeModel?.data?.isEmpty ?? true) {
+          emit(GetAllValidationUsersEmptyState());
+        } else {
+          emit(GetAllValidationUsersSuccessState(
+              getAllValidationUsersAttributeModel:
+                  getAllValidationUsersAttributeModel));
+        }
       }
     } catch (e) {
       Log.error("Caught Exception: $e", e);
