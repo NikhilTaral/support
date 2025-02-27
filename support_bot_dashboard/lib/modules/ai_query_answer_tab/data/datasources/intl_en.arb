@@ -43,10 +43,6 @@
   "@validateAIAnsweTicketrText": {
     "description": "Do you want to Validate AI Answer for this ticket? Text"
   },
-  "noText": "No",
-  "@noText": {
-    "description": "No Text"
-  },
   "ticketIDText": "Ticket ID:",
   "@ticketIDText": {
     "description": "Ticket ID: Text"

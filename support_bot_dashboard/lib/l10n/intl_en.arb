@@ -44,10 +44,6 @@
   "@validateAIAnsweTicketrText": {
     "description": "Do you want to Validate AI Answer for this ticket? Text"
   },
-  "NoText": "No",
-  "@NoText": {
-    "description": "No Text"
-  },
   "ticketIDText": "Ticket ID:",
   "@ticketIDText": {
     "description": "Ticket ID: Text"
@@ -441,5 +437,13 @@
   "noDataFoundText": "No Data Found",
   "@noDataFoundText": {
     "description": "No Data Found Text"
+  },
+  "noUserAvailableText": "No User Available",
+  "@noUserAvailableText": {
+    "description": "No User Available Text"
+  },
+  "noStateAvailableText": "No State/Province Available",
+  "@noStateAvailableText": {
+    "description": "No State/Province Available Text"
   }
 }
