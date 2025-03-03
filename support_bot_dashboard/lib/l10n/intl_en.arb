@@ -88,6 +88,38 @@
   "@editText": {
     "description": "Edit Text"
   },
+  "itemsPerPageText": "Items per page:   ",
+  "@itemsPerPageText": {
+    "description": "Items per page"
+  },
+  "aPIErrorMsgText": "Error fetching data from server",
+  "@aPIErrorMsgText": {
+    "description": "Error msg"
+  },
+  "pageText": "Page",
+  "@pageText": {
+    "description": "Page"
+  },
+  "piplineText": "Pipeline",
+  "@piplineText": {
+    "description": "Pipeline"
+  },
+  "filterApplyText": "Apply Filter",
+  "@filterApplyText": {
+    "description": "Apply Filter"
+  },
+  "filterClearText": "Clear Filters",
+  "@filterClearText": {
+    "description": "Clear Filters"
+  },
+  "filterApplySnackBarText": "Please select a pipeline to apply filter",
+  "@filterApplySnackBarText": {
+    "description": "Please select a pipeline to apply filter"
+  },
+  "searchText": "Search...",
+  "@searchText": {
+    "description": "Search"
+  },
   "title": "Support Bot",
   "@title": {
     "description": "Support Bot"

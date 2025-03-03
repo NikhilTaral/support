@@ -114,6 +114,9 @@ class TicketClassificationTabBloc
   }
 
   void clearFilters() {
+    startDate = DateTime.now().copyWith(hour: 0, minute: 0, second: 0);
+    endDate = DateTime.now()
+        .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
     selectedUserValidator = "";
     selectedBOPsState = "";
     selectedClassification = "";

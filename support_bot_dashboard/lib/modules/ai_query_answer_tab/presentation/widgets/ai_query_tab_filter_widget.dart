@@ -200,7 +200,10 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
             selectedItem = widget.pipelineName ?? "";
             startDate = widget.startDate ?? DateTime.now();
             endDate = widget.endDate ?? DateTime.now();
-            selectedDatesNotifier.value = [startDate??DateTime.now(), endDate??DateTime.now()];
+            selectedDatesNotifier.value = [
+              startDate ?? DateTime.now(),
+              endDate ?? DateTime.now()
+            ];
 
             pipelineIds = "";
           });
@@ -344,7 +347,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
 
     if (selectedPipelineValue == null || start == null || end == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select all filters")),
+        SnackBar(content: Text(s.filterApplySnackBarText)),
       );
       return;
     }

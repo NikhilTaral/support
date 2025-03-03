@@ -91,26 +91,26 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
                 if (value == 0) {
                   context.read<TicketClassificationBloc>().add(
                       TickiteClassificationEvent(
-                          selectedPipelineValue: [widget.piplineId??""],
+                          selectedPipelineValue: [widget.piplineId ?? ""],
                           endDate: widget.endDate,
                           startDate: widget.startDate));
                   context.read<UserValidationBloc>().add(UserValidationsEvent(
-                      selectedPipelineValue: [widget.piplineId??""],
+                      selectedPipelineValue: [widget.piplineId ?? ""],
                       endDate: widget.endDate,
                       startDate: widget.startDate));
                   context.read<AiQueryAnswerBloc>().add(
                       AIQueryAnswerInitialEvent(
-                          selectedPipelineValue: [widget.piplineId??""],
+                          selectedPipelineValue: [widget.piplineId ?? ""],
                           endDate: widget.endDate,
                           startDate: widget.startDate));
                   context.read<AiQueryEditedBloc>().add(
                       AIQueryEditedInitialEvent(
-                          selectedPipelineValue: [widget.piplineId??""],
+                          selectedPipelineValue: [widget.piplineId ?? ""],
                           endDate: widget.endDate,
                           startDate: widget.startDate));
                   context.read<ValidationStatusBloc>().add(
                       ValidationStatuseCallEvent(
-                          selectedPipelineValue: [widget.piplineId??""],
+                          selectedPipelineValue: [widget.piplineId ?? ""],
                           endDate: widget.endDate,
                           startDate: widget.startDate));
 

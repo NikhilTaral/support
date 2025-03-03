@@ -177,7 +177,7 @@ class GetAllValidationUserImpl extends GetAllValidationUserRepository {
           GetAllValidationUsersRequestModel?
               getAllValidationUsersRequestModel) async {
     try {
-final response = await serviceLocator<ApiProvider>().getData(
+      final response = await serviceLocator<ApiProvider>().getData(
           url: 'dashboard/getAllValidationUsers',
           body: getAllValidationUsersRequestModel?.toJson());
 
@@ -190,7 +190,7 @@ final response = await serviceLocator<ApiProvider>().getData(
 
       return Right(model);
     } catch (e) {
-       return Left(ServerFailure(message: s.aPIErrorMsgText));
+      return Left(ServerFailure(message: s.aPIErrorMsgText));
     }
   }
 }

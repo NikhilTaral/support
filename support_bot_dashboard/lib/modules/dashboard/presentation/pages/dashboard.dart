@@ -40,7 +40,7 @@ class Dashboard extends StatelessWidget {
           BlocProvider(
             create: (context) => TabIndexBloc(),
           ),
-                   BlocProvider(
+          BlocProvider(
             create: (context) => AiQueryAnswerBloc()
               ..add(AIQueryAnswerInitialEvent(
                   endDate: endDate,
