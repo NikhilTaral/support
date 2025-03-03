@@ -78,11 +78,25 @@ class CustomPipelineChart extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Text(
-                              filteredData[index].pipelineName ?? '',
-                              style: SupportBotTextstyle.normal.copyWith(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                            Tooltip(
+                              textStyle: const TextStyle(
+                                color: SupportBotColors.black,
+                              ),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: SupportBotColors.black),
+                                color: SupportBotColors.gray.shade200,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              message: filteredData[index].pipelineName ?? '',
+                              child: Text(
+                                filteredData[index].pipelineName ?? '',
+                                style: SupportBotTextstyle.normal.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
                           ],
@@ -109,8 +123,10 @@ class CustomPipelineChart extends StatelessWidget {
                 },
               ),
             ),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
           gridData: FlGridData(
             show: true,
