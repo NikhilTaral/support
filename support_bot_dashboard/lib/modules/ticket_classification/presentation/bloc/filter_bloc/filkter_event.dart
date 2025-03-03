@@ -33,9 +33,9 @@ class ValidationEvent extends FilterEvent {
 
 class UserValidationEvent extends FilterEvent {
   final String? selectedUserName;
-  final String? selectedUserId;
+  final String? selectedUserEmail;
 
-  UserValidationEvent({this.selectedUserName, this.selectedUserId});
+  UserValidationEvent({this.selectedUserName, this.selectedUserEmail});
 }
 
 class ApplyFilterEvent extends FilterEvent {}

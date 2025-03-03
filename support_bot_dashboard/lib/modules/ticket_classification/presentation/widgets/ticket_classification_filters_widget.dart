@@ -413,44 +413,43 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             return BlocSelector<FilterBloc, FilterState, String>(
               selector: (state) {
                 if (state is FilterSuccessState) {
-                  return '${state.selectedUserName ?? ""}${state.selectedUserId ?? ""}';
+                  return state.selectedUserName ?? "";
                 }
                 return "";
               },
               builder: (context, state) {
                 return CustomDropdown(
-                  items: users.map((e) => e.name ?? "").toSet().toList(),
-                  label: state.isEmpty
-                      ? s.validatedUserText
-                      : users
-                              .firstWhere(
-                                (element) => element.name == state,
-                                orElse: () => users.first,
-                              )
-                              .name ??
-                          s.validatedUserText,
-                  onChanged: (value) {
-                    var selectedUser = users.firstWhere(
-                      (element) => element.name == value,
-                      orElse: () => users.first,
-                    );
+                    items: users.map((e) => e.name ?? "").toSet().toList(),
+                    label: state.isEmpty
+                        ? s.validatedUserText
+                        : users
+                                .firstWhere(
+                                  (element) => element.name == state,
+                                  orElse: () => users.first,
+                                )
+                                .name ??
+                            s.validatedUserText,
+                    onChanged: (value) {
+                      var selectedUser = users.firstWhere(
+                        (element) => element.name == value,
+                        orElse: () => users.first,
+                      );
 
-                    BlocProvider.of<GetAllValidationUsersBloc>(context).add(
-                      SetUserNameEvent(
-                        email: selectedUser.email,
-                        name: selectedUser.name,
-                      ),
-                    );
+                      BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+                        SetUserNameEvent(
+                          email: selectedUser.email,
+                          name: selectedUser.name,
+                        ),
+                      );
 
-                    BlocProvider.of<FilterBloc>(context).add(
-                      UserValidationEvent(
-                        selectedUserName: value ?? "",
-                        selectedUserId: "",
-                      ),
-                    );
-                  },
-                  selectedValue: state,
-                );
+                      BlocProvider.of<FilterBloc>(context).add(
+                        UserValidationEvent(
+                          selectedUserName: selectedUser.name ?? "",
+                          selectedUserEmail: selectedUser.email ?? "",
+                        ),
+                      );
+                    },
+                    selectedValue: state);
               },
             );
           }
@@ -490,11 +489,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     showSnackbar(context, s.filterApplySnackBarText);
                     return;
                   }
-                 
                   final selectedPipelineValue =
-                      filterState.piplineId?.isEmpty == true
-                          ? widget.piplineId
-                          : filterState.piplineId;
+                      filterState.piplineId ?? widget.piplineId;
 
                   if (selectedPipelineValue == null) {
                     showSnackbar(context, s.filterApplySnackBarText);

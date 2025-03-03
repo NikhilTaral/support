@@ -109,7 +109,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         final currentState = state as FilterSuccessState;
         emit(currentState.copyWith(
             selectedUserName: event.selectedUserName,
-            selectedUserId: event.selectedUserId));
+            selectedUserId: event.selectedUserEmail));
       }
     } catch (e) {
       emit(FliterFailureState());
@@ -160,13 +160,13 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         emit(currentState.copyWith(
           aiClassification: "",
           bopsState: "",
-          endDate: DateTime.now(),
+          endDate: currentState.endDate,
           items: [],
           piplineId: "",
           piplineName: "",
           selectedUserId: "",
           selectedUserName: "",
-          startDate: DateTime.now(),
+          startDate: currentState.startDate,
           validation: "",
         ));
       }
