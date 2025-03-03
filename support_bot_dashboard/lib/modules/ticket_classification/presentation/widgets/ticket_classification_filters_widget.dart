@@ -188,8 +188,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
 
   Widget _buildDateRangeSelector() {
     if (selectedate.isNotEmpty) {
-      final endDate = selectedate.lastOrNull;
-      final startDate = selectedate.firstOrNull;
+      final endDate = selectedate.lastOrNull ?? widget.endDate;
+      final startDate = selectedate.firstOrNull ?? widget.startDate;
       selectedate = [startDate, endDate];
     }
 
@@ -547,6 +547,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 selectedDatesNotifier.value = null;
                 pipelineIds = "";
                 selectedPipeline = "";
+                selectedate = [];
               });
 
               BlocProvider.of<TicketClassificationTabBloc>(context)
@@ -671,17 +672,21 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       return pipelineIds;
     }
 
-    return Tooltip(
-      message: 'Export CSV File',
-      child: ExportButton(
-          icon: '',
-          selectedButtonText: s.ticketClassification,
-          startDate: selectedate.firstOrNull ?? widget.startDate,
-          endDate: selectedate.lastOrNull ?? widget.endDate,
-          bopsState: selectedBOPsState,
-          selectedClassification: selectedClassification,
-          selectedClassificationValidation: selectedValidation,
-          selectedPipeline: getPipelineId()),
+    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+      builder: (context, state) {
+        return Tooltip(
+          message: 'Export CSV File',
+          child: ExportButton(
+              icon: '',
+              selectedButtonText: s.ticketClassification,
+              startDate: selectedate.firstOrNull ?? widget.startDate,
+              endDate: selectedate.lastOrNull ?? widget.endDate,
+              bopsState: selectedBOPsState,
+              selectedClassification: selectedClassification,
+              selectedClassificationValidation: selectedValidation,
+              selectedPipeline: getPipelineId()),
+        );
+      },
     );
   }
 }
