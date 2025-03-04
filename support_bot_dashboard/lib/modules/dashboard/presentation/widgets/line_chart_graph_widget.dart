@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 
 class LineChartGraphWidget extends StatelessWidget {
   LineChartGraphWidget({super.key, required this.dashboardDataModel});
