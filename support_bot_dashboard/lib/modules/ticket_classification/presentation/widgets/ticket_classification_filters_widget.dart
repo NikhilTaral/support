@@ -305,6 +305,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           "No Action Required",
           "Genuine Query",
           "Acknowledgement Required",
+          "Not Classified"
         ],
       ),
     );
