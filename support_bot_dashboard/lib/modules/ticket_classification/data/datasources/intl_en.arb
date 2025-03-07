@@ -93,5 +93,9 @@
   "noStateAvailableText": "No State/Province Available",
   "@noStateAvailableText": {
     "description": "No State/Province Available Text"
+  },
+  "exportCSVFileText": "Export CSV File",
+  "@exportCSVFileText": {
+    "description": "Export CSV File Text"
   }
 }

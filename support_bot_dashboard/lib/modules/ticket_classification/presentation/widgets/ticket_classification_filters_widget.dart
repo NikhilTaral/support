@@ -675,7 +675,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
       builder: (context, state) {
         return Tooltip(
-          message: 'Export CSV File',
+          message: s.exportCSVFileText,
           child: ExportButton(
               icon: '',
               selectedButtonText: s.ticketClassification,

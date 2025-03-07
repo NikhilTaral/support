@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/pipeline_tile_attribute_model.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
@@ -78,15 +79,16 @@ class CustomPipelineChart extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Tooltip(
+                            CustomToolTip(
+                              toolTipDirection: 23,
+                              messageWidget: const SizedBox(
+                                height: 3,
+                              ),
+                              width: 300,
+                              messageWidgetHeight: 6,
+                              isMobile: false,
                               textStyle: const TextStyle(
                                 color: SupportBotColors.black,
-                              ),
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: SupportBotColors.black),
-                                color: SupportBotColors.gray.shade200,
-                                borderRadius: BorderRadius.circular(4),
                               ),
                               message: filteredData[index].pipelineName ?? '',
                               child: Text(
@@ -144,11 +146,11 @@ class CustomPipelineChart extends StatelessWidget {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              tooltipPadding: EdgeInsets.all(2),
+              tooltipPadding: const EdgeInsets.all(2),
               tooltipRoundedRadius: 5,
-              getTooltipColor: (group) => SupportBotColors.gray.shade200,
+              getTooltipColor: (group) => SupportBotColors.gray,
               tooltipBorder: const BorderSide(
-                color: SupportBotColors.disablePrimary,
+                color: SupportBotColors.gray,
                 width: 2,
               ),
               direction: TooltipDirection.bottom,
@@ -156,7 +158,9 @@ class CustomPipelineChart extends StatelessWidget {
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   '${s.validatedText}: ${filteredData[groupIndex].validatedTickets?.toInt() ?? 0} / ${s.totalText}: ${filteredData[groupIndex].totalTickets?.toInt() ?? 0}',
-                  const TextStyle(color: SupportBotColors.black),
+                  const TextStyle(
+                    color: SupportBotColors.black,
+                  ),
                 );
               },
             ),
