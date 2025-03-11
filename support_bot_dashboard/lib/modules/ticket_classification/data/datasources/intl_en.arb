@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "intialpipelineText": "Expert Care Level 1",
   "@intialpipelineText": {
     "description": "Inital PipLine Text"
@@ -41,49 +42,67 @@
         "placeholders": {
             "value": {}
         }
-    },
-    "noText":  "No",
-    "@noText": {
-      "description": "NO Text"
-    },
-    "yesText":  "Yes",
-    "@yesText": {
-      "description": "Yes Text"
-    },
-    "ticketDetailsText":  "Ticket Details",
-    "@ticketDetailsText": {
-      "description": "Ticket Details Text"
-    },
-    "descriptionText":  "Description",
-    "@descriptionText": {
-      "description": "Description Text"
-    },
-    "reasoningText":  "Reasoning",
-    "@reasoningText": {
-      "description": "Reasoning Text"
-    },
-    "validatedByText":  "Validated By",
-    "@validatedByText": {
-      "description": "Validated By Text"
-    },
-    "classificationValidationReasonText":  "Classification Validation Reason",
-    "@classificationValidationReasonText": {
-      "description": "Classification Validation Reason Text"
-    },
-    "closeText":  "Close",
-    "@closeText": {
-      "description": "Close Text"
-    },
-    "validatedClassificationText":  "Validated Classification",
-    "@validatedClassificationText": {
-      "description": "Validated Classification Text"
-    },
-     "validatedUserText":  "Validated User",
-    "@validatedUserText": {
-      "description": "Validated User Text"
-    },
-    "noDataFoundText":   "No Data Found",
-    "@noDataFoundText": {
-      "description": "No Data Found Text"
-    }
+    
+   
+  },
+  "noText": "No",
+  "@noText": {
+    "description": "NO Text"
+  },
+  "yesText": "Yes",
+  "@yesText": {
+    "description": "Yes Text"
+  },
+  "ticketDetailsText": "Ticket Details",
+  "@ticketDetailsText": {
+    "description": "Ticket Details Text"
+  },
+  "descriptionText": "Description",
+  "@descriptionText": {
+    "description": "Description Text"
+  },
+  "reasoningText": "Reasoning",
+  "@reasoningText": {
+    "description": "Reasoning Text"
+  },
+  "validatedByText": "Validated By",
+  "@validatedByText": {
+    "description": "Validated By Text"
+  },
+  "classificationValidationReasonText": "Classification Validation Reason",
+  "@classificationValidationReasonText": {
+    "description": "Classification Validation Reason Text"
+  },
+  "closeText": "Close",
+  "@closeText": {
+    "description": "Close Text"
+  },
+  "validatedClassificationText": "Validated Classification",
+  "@validatedClassificationText": {
+    "description": "Validated Classification Text"
+  },
+  "validatedUserText": "Validated User",
+  "@validatedUserText": {
+    "description": "Validated User Text"
+  },
+  "noDataFoundText": "No Data Found",
+  "@noDataFoundText": {
+    "description": "No Data Found Text"
+  },
+  "noUserAvailableText": "No User Available",
+  "@noUserAvailableText": {
+    "description": "No User Available Text"
+  },
+  "noStateAvailableText": "No State/Province Available",
+  "@noStateAvailableText": {
+    "description": "No State/Province Available Text"
+  }, 
+  "reasonAndSelectClassificationText": "Please provide reason and select classification",
+  "@reasonAndSelectClassificationText": {
+    "description": "Please provide reason and select classification Text"
+  },
+  "noSelectionText": "No selection",
+  "@noSelectionText": {
+    "description": "No selection Text"
+  }
 }

@@ -41,7 +41,9 @@ class LandingPageDesktopView extends StatelessWidget {
           text: "",
         ),
         UIHelpers.verticalSpaceRegular,
-        Container(alignment: Alignment.center, child: _filter(context)),
+        Container(
+            alignment: Alignment.center,
+             child: _filter(context)),
       ],
     );
   }
@@ -49,10 +51,8 @@ class LandingPageDesktopView extends StatelessWidget {
   Widget _filter(BuildContext context) {
     return Container(
       width: 698,
-      constraints: const BoxConstraints(
-        maxHeight: 600,
-        minHeight: 500,
-      ),
+      height: UIHelpers.screenHeight(context) * 0.85,
+      constraints: const BoxConstraints(),
       decoration: BoxDecoration(
           border: Border.all(color: SupportBotColors.gray),
           borderRadius: BorderRadius.all(Radius.circular(16))),
@@ -277,21 +277,25 @@ class LandingPageDesktopView extends StatelessWidget {
       builder: (context, selectedPipeline, child) {
         bool isPipelineSelected = pipelineIds?.isNotEmpty ?? false;
 
-        return ElevatedButton.icon(
-          onPressed: isPipelineSelected ? () => _addEvents(context) : null,
-          iconAlignment: IconAlignment.end,
-          label: Text(s.getStartedText,
-              style: SupportBotTextstyle.dateText
-                  .copyWith(color: SupportBotColors.white)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isPipelineSelected
-                ? SupportBotColors.bluePrimary
-                : SupportBotColors.gray,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+        return SizedBox(
+          height: 40,
+          child: ElevatedButton.icon(
+            onPressed: isPipelineSelected ? () => _addEvents(context) : null,
+            iconAlignment: IconAlignment.end,
+            label: Text(s.getStartedText,
+                style: SupportBotTextstyle.dateText
+                    .copyWith(color: SupportBotColors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isPipelineSelected
+                  ? SupportBotColors.bluePrimary
+                  : SupportBotColors.gray,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
+            icon:
+                const Icon(Icons.arrow_forward, color: SupportBotColors.white),
           ),
-          icon: const Icon(Icons.arrow_forward, color: SupportBotColors.white),
         );
       },
     );

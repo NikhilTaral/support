@@ -46,9 +46,12 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (context) =>
-                FilterBloc(defualtPipeline: widget.pipelineName ?? "")
-                  ..add(FilterInitialEvent())),
+            create: (context) => FilterBloc(
+                startDate: widget.startDate,
+                endDate: widget.endDate,
+                defualtPipeline: widget.pipelineName ?? "",
+                defualtPipelineId: widget.piplineId ?? "")
+              ..add(FilterInitialEvent())),
         BlocProvider(
           create: (context) => BopsStatesBloc()..add(BopsStateDataEvent()),
         ),
@@ -155,9 +158,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         return Container(
           constraints: const BoxConstraints(maxWidth: 220),
           child: TicketClassificationPipelineWidget(
-            hintText: selectedPipeline.isEmpty
-                ? (widget.pipelineName ?? '')
-                : selectedPipeline,
+            hintText: selectedPipeline,
             items: items,
             selectedItem: selectedPipeline,
             onChanged: (piplineName) async {
@@ -489,9 +490,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     showSnackbar(context, s.filterApplySnackBarText);
                     return;
                   }
-                  final selectedPipelineValue =
+                  String? selectedPipelineValue =
                       filterState.piplineId ?? widget.piplineId;
-
                   if (selectedPipelineValue == null) {
                     showSnackbar(context, s.filterApplySnackBarText);
                     return;
@@ -515,10 +515,10 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                   classificationBloc.selectedClassification =
                       filterState.aiClassification ?? "";
                   classificationBloc.selectedValidation =
-                      filterState.validation ?? "";
+                      filterState.validation?.toLowerCase() ?? "";
 
                   classificationBloc.add(TicketClassificationDataCallEvent(
-                    fieldValue: selectedPipelineValue,
+                    fieldValue: filterState.piplineId ?? widget.piplineId,
                     endDate: filterState.endDate ?? widget.endDate,
                     startDate: filterState.startDate ?? widget.startDate,
                     page: 1,
@@ -641,20 +641,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     BlocProvider.of<FilterBloc>(context).add(
                       ClearFilterEvent(),
                     );
-
-                    // setState(() {
-                    //   setvalue = "";
-                    //   selectedUserValidator = '';
-                    //   selectedUserName = '';
-                    //   selectedItem = '';
-                    //   selectedClassification = '';
-                    //   selectedBOPsState = '';
-                    //   selectedValidation = '';
-                    //   selectedDatesNotifier.value = null;
-                    //   pipelineIds = "";
-                    //   selectedPipeline = "";
-                    // });
-
                     BlocProvider.of<TicketClassificationTabBloc>(context)
                         .clearFilters();
                     BlocProvider.of<TicketClassificationTabBloc>(context).add(
@@ -671,8 +657,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                     );
                     BlocProvider.of<GetAllValidationUsersBloc>(context)
                         .add(GetValidationUsersInitialEvent(
-                      endDate: filterState.endDate ?? widget.endDate,
-                      startDate: filterState.endDate ?? widget.startDate,
+                      endDate: widget.endDate,
+                      startDate: widget.startDate,
                       filter: [widget.piplineId ?? ""],
                     ));
                   },

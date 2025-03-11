@@ -8,10 +8,22 @@ part 'fliter_state.dart';
 
 class FilterBloc extends Bloc<FilterEvent, FilterState> {
   final String? defualtPipeline;
-  FilterBloc({this.defualtPipeline}) : super(FliterInitialState()) {
+  final String? defualtPipelineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  FilterBloc(
+      {this.defualtPipeline,
+      this.defualtPipelineId,
+      this.endDate,
+      this.startDate})
+      : super(FliterInitialState()) {
     on<FilterInitialEvent>(
       (event, emit) {
-        emit(FilterSuccessState());
+        emit(FilterSuccessState(
+            startDate: startDate,
+            endDate: endDate,
+            piplineName: defualtPipeline,
+            piplineId: defualtPipeline));
       },
     );
     on<SelcetPiplineEvent>(_onSelcetPiplineEvent);
@@ -160,13 +172,13 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         emit(currentState.copyWith(
           aiClassification: "",
           bopsState: "",
-          endDate: currentState.endDate,
+          endDate: endDate,
           items: [],
-          piplineId: "",
-          piplineName: "",
+          piplineId: defualtPipelineId,
+          piplineName: defualtPipeline,
           selectedUserId: "",
           selectedUserName: "",
-          startDate: currentState.startDate,
+          startDate: startDate,
           validation: "",
         ));
       }

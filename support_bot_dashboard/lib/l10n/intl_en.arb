@@ -441,5 +441,21 @@
   "noDataFoundText": "No Data Found",
   "@noDataFoundText": {
     "description": "No Data Found Text"
+  },
+  "noUserAvailableText": "No User Available",
+  "@noUserAvailableText": {
+    "description": "No User Available Text"
+  },
+  "noStateAvailableText": "No State/Province Available",
+  "@noStateAvailableText": {
+    "description": "No State/Province Available Text"
+  },
+  "reasonAndSelectClassificationText": "Please provide reason and select classification",
+  "@reasonAndSelectClassificationText": {
+    "description": "Please provide reason and select classification Text"
+  },
+  "noSelectionText": "No selection",
+  "@noSelectionText": {
+    "description": "No selection Text"
   }
 }
