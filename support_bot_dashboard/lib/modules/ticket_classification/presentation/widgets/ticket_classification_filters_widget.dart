@@ -38,8 +38,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   final s = serviceLocator<S>();
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
-  // final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
-  // final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +69,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           } else if (state is GetAllPipelineLoadingState) {
             return _buildLoadingState();
           } else if (state is GetAllPipelineFailureState) {
-            return const Center(child: Text("No data Found"));
+            return  Center(child: Text(s.noDataFoundText));
           }
-          return const Center(child: Text("No data Found"));
+          return  Center(child: Text(s.noDataFoundText));
         },
       ),
     );
@@ -179,20 +177,6 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       },
     );
   }
-
-  // void _onPipelineSelectionChanged(
-  //     List<String> selectedNames, List<GetAllPipelineData> items) async {
-  //   pipelineIds = '';
-  //   for (var selectedName in selectedNames) {
-  //     final matchingItem = items.firstWhere(
-  //       (item) => item.pipelineName == selectedName,
-  //       orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
-  //     );
-  //     if (matchingItem.pipelineId?.isNotEmpty == true) {
-  //       pipelineIds = matchingItem.pipelineId ?? "";
-  //     }
-  //   }
-  // }
 
   Widget _buildDateRangeSelector(BuildContext context) {
     return Center(
@@ -362,6 +346,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
               "No Action Required",
               "Genuine Query",
               "Acknowledgement Required",
+              "Not Classified",
             ],
           ),
         );
@@ -744,7 +729,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
       builder: (context, state1) {
         if (state1 is FilterSuccessState) {
           return Tooltip(
-            message: 'Export CSV File',
+            message: s.export,
             child: ExportButton(
                 ticketId: state1.searchController,
                 icon: '',
