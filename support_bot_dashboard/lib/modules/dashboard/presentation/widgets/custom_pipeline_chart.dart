@@ -18,7 +18,6 @@ class CustomPipelineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filteredData = pipelineData?.skip(1).toList() ?? [];
-
     final maxTotalTickets = filteredData.map((e) => e.totalTickets ?? 0).fold(
             0,
             (prev, next) =>
@@ -26,7 +25,6 @@ class CustomPipelineChart extends StatelessWidget {
         0;
     final int numberOfDivisions = maxTotalTickets > 500 ? 15 : 5;
     final intervalValue = (maxTotalTickets / numberOfDivisions).ceilToDouble();
-
     return RotatedBox(
       quarterTurns: 1,
       child: BarChart(
@@ -109,8 +107,10 @@ class CustomPipelineChart extends StatelessWidget {
                 },
               ),
             ),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
           gridData: FlGridData(
             show: true,
@@ -128,7 +128,7 @@ class CustomPipelineChart extends StatelessWidget {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              tooltipPadding: EdgeInsets.all(2),
+              tooltipPadding: const EdgeInsets.all(2),
               tooltipRoundedRadius: 5,
               getTooltipColor: (group) => SupportBotColors.gray.shade200,
               tooltipBorder: const BorderSide(

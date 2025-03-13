@@ -39,4 +39,13 @@ class UserValidationEvent extends FilterEvent {
 }
 
 class ApplyFilterEvent extends FilterEvent {}
+
 class ClearFilterEvent extends FilterEvent {}
+
+class ToggleSearchEvent extends FilterEvent {
+  final bool isSearchOpen;
+  final String searchText;
+  final String? value;
+  ToggleSearchEvent(
+      {required this.isSearchOpen, required this.searchText, this.value});
+}

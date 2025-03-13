@@ -38,8 +38,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   final s = serviceLocator<S>();
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
-  final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
-  final TextEditingController _searchController = TextEditingController();
+  // final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
+  // final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -119,25 +119,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 15,
           children: [
             _buildPipelineDropdown(items),
-            UIHelpers.horizontalSpaceRegular,
             _buildDateRangeSelector(context),
-            UIHelpers.horizontalSpaceRegular,
             _bopsState(),
-            UIHelpers.horizontalSpaceRegular,
             _buildTicketClassificationDropdown(),
-            UIHelpers.horizontalSpaceRegular,
             _buildValidationDropdown(),
-            UIHelpers.horizontalSpaceRegular,
             _getAllValidatedUser(),
-            UIHelpers.horizontalSpaceRegular,
             _buildApplyFilterButton(
               context,
             ),
-            UIHelpers.horizontalSpaceRegular,
             _buildClearFilterButton(),
-            UIHelpers.horizontalSpaceRegular,
             _buildSearchWidget(),
             _buildExportButton(),
           ],
@@ -334,7 +327,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           }
 
           return CustomDropdown(
-            items: [],
+            items: const [],
             label: s.bobStateText,
             onChanged: (value) {},
             selectedValue: "",
@@ -466,7 +459,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
             return SizedBox(child: Text(s.noDataFoundText));
           }
           return CustomDropdown(
-            items: [],
+            items: const [],
             label: s.validatedUserText,
             onChanged: (value) {},
             selectedValue: "",
@@ -548,81 +541,101 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildSearchWidget() {
-    return ValueListenableBuilder<bool>(
-      valueListenable: _isSearchOpen,
-      builder: (context, isSearchOpen, child) {
-        return Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: IconButton(
-                icon: Icon(
-                  isSearchOpen ? SupportBotIcons.close : SupportBotIcons.search,
-                  size: 25,
-                  color: SupportBotColors.bluePrimary,
-                ),
-                onPressed: () {
-                  // if (isSearchOpen) {
-                  //   if (_searchController.text.isNotEmpty) {
-                  //     _searchController.clear();
-                  //     final selectedPipelineValue =
-                  //         pipelineIds.isEmpty ? "11257490" : pipelineIds;
-                  //     BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                  //       TicketClassificationDataCallEvent(
-                  //         fieldValue: selectedPipelineValue,
-                  //         endDate: selectedate.lastOrNull,
-                  //         startDate: selectedate.firstOrNull,
-                  //         ticketId: _searchController.text,
-                  //         page: 1,
-                  //         pageSize: 10,
-                  //       ),
-                  //     );
-                  //   }
-                  // }
-                  _isSearchOpen.value = !isSearchOpen;
-                },
-              ),
-            ),
-            if (isSearchOpen)
-              SizedBox(
-                width: UIHelpers.screenWidth(context) * 0.115,
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: s.searchText,
-                    hintStyle: SupportBotTextstyle.medium.copyWith(
-                      color: SupportBotColors.gray.shade600,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: SupportBotColors.bluePrimary.shade500,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: SupportBotColors.bluePrimary.shade500,
-                      ),
-                    ),
-                    isDense: true,
+    return BlocBuilder<FilterBloc, FilterState>(
+      builder: (context, filterstate) {
+        if (filterstate is FilterSuccessState) {
+          return Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: IconButton(
+                  icon: Icon(
+                    filterstate.isSearchOpen == false
+                        ? SupportBotIcons.close
+                        : SupportBotIcons.search,
+                    size: 25,
+                    color: SupportBotColors.bluePrimary,
                   ),
-                  onSubmitted: (value) {
-                    // final selectedPipelineValue =
-                    //     pipelineIds.isEmpty ? "11257490" : pipelineIds;
-                    // BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                    //   TicketClassificationDataCallEvent(
-                    //     fieldValue: selectedPipelineValue,
-                    //     endDate: selectedate.lastOrNull,
-                    //     startDate: selectedate.firstOrNull,
-                    //     ticketId: _searchController.text,
-                    //     page: 1,
-                    //     pageSize: 10,
-                    //   ),
-                    // );
+                  onPressed: () {
+                    BlocProvider.of<FilterBloc>(context).add(
+                      ToggleSearchEvent(
+                          isSearchOpen: !(filterstate.isSearchOpen ?? false),
+                          searchText: ""),
+                    );
+                    if (filterstate.isSearchOpen == true) {
+                      if (filterstate.searchController!.isNotEmpty) {
+                        filterstate.searchController == "";
+                        final selectedPipelineValue = filterstate.piplineId;
+                        BlocProvider.of<TicketClassificationTabBloc>(context)
+                            .add(
+                          TicketClassificationDataCallEvent(
+                            fieldValue: selectedPipelineValue,
+                            endDate: filterstate.endDate ?? widget.endDate,
+                            startDate:
+                                filterstate.startDate ?? widget.startDate,
+                            ticketId: filterstate.searchController,
+                            page: 1,
+                            pageSize: 10,
+                          ),
+                        );
+                      }
+                    }
+                    filterstate.isSearchOpen == true;
                   },
                 ),
               ),
-          ],
-        );
+              if (filterstate.isSearchOpen == false)
+                SizedBox(
+                  width: UIHelpers.screenWidth(context) * 0.115,
+                  child: TextField(
+                    controller: TextEditingController(
+                        text: filterstate.searchController),
+                    decoration: InputDecoration(
+                      hintText: s.searchText,
+                      hintStyle: SupportBotTextstyle.medium.copyWith(
+                        color: SupportBotColors.gray.shade600,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: SupportBotColors.bluePrimary.shade500,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: SupportBotColors.bluePrimary.shade500,
+                        ),
+                      ),
+                      isDense: true,
+                    ),
+                    onSubmitted: (value) {
+                      BlocProvider.of<FilterBloc>(context).add(
+                        ToggleSearchEvent(
+                            value: value,
+                            isSearchOpen: !(filterstate.isSearchOpen ?? false),
+                            searchText: value), // Create this event
+                      );
+                      final selectedPipelineValue =
+                          filterstate.piplineId!.isEmpty
+                              ? widget.piplineId
+                              : filterstate.piplineId;
+                      BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                        TicketClassificationDataCallEvent(
+                          fieldValue: selectedPipelineValue,
+                          endDate: filterstate.endDate ?? widget.endDate,
+                          startDate: filterstate.startDate ?? widget.startDate,
+                          ticketId: value,
+                          page: 1,
+                          pageSize: 10,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
       },
     );
   }
@@ -733,6 +746,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           return Tooltip(
             message: 'Export CSV File',
             child: ExportButton(
+                ticketId: state1.searchController,
                 icon: '',
                 startDate: state1.startDate ?? widget.startDate,
                 selectedButtonText: s.ticketClassification,
@@ -740,9 +754,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 bopsState: state1.bopsState,
                 selectedClassification: state1.aiClassification,
                 selectedClassificationValidation: state1.validation,
-                selectedPipeline: state1.selectedUserId?.isEmpty == true
-                    ? widget.piplineId
-                    : state1.selectedUserId),
+                selectedPipeline: state1.piplineId ?? widget.piplineId),
           );
         }
         return Container();

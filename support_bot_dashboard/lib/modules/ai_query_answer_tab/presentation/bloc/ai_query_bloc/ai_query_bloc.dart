@@ -83,7 +83,7 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
           emit(AIQueryEmptyState());
         }
       }
-    } catch (e, s) {
+    } catch (e) {
       emit(AIQueryFailureState());
     }
   }

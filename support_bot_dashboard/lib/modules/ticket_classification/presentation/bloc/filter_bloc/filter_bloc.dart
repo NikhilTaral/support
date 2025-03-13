@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 
@@ -11,6 +10,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
   final String? defualtPipelineId;
   final DateTime? startDate;
   final DateTime? endDate;
+
   FilterBloc(
       {this.defualtPipeline,
       this.defualtPipelineId,
@@ -23,7 +23,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
             startDate: startDate,
             endDate: endDate,
             piplineName: defualtPipeline,
-            piplineId: defualtPipeline));
+            piplineId: defualtPipelineId));
       },
     );
     on<SelcetPiplineEvent>(_onSelcetPiplineEvent);
@@ -34,6 +34,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     on<ValidationEvent>(_onValidationEvent);
     on<UserValidationEvent>(_onUserValidationEvent);
     on<ClearFilterEvent>(_onClearFilterEvent);
+    on<ToggleSearchEvent>(_onToggleSearchEvent);
   }
 
   FutureOr<void> _onSelcetPiplineEvent(
@@ -58,7 +59,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
 
   Future<List<GetAllPipelineData>> _fetchPipelineData(
       String selectedName) async {
-    await "";
+    "";
 
     return [];
   }
@@ -170,18 +171,38 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       if (state is FilterSuccessState) {
         final currentState = state as FilterSuccessState;
         emit(currentState.copyWith(
-          aiClassification: "",
-          bopsState: "",
-          endDate: endDate,
-          items: [],
-          piplineId: defualtPipelineId,
-          piplineName: defualtPipeline,
-          selectedUserId: "",
-          selectedUserName: "",
-          startDate: startDate,
-          validation: "",
-        ));
+            aiClassification: "",
+            bopsState: "",
+            endDate: endDate,
+            items: [],
+            piplineId: defualtPipelineId,
+            piplineName: defualtPipeline,
+            selectedUserId: "",
+            selectedUserName: "",
+            startDate: startDate,
+            validation: "",
+            searchController: ""));
       }
+    } catch (e) {
+      emit(FliterFailureState());
+    }
+  }
+
+  FutureOr<void> _onToggleSearchEvent(
+    ToggleSearchEvent event,
+    Emitter<FilterState> emit,
+  ) async {
+    try {
+      if (state is FilterSuccessState) {
+        final currentState = state as FilterSuccessState;
+        currentState.searchController == event.value;
+        emit(currentState.copyWith(
+            isSearchOpen: event.isSearchOpen,
+            searchController: event.searchText));
+        if (event.isSearchOpen) {
+          currentState.searchController == event.searchText;
+        } else {}
+      } else {}
     } catch (e) {
       emit(FliterFailureState());
     }

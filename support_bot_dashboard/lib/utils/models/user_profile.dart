@@ -68,7 +68,7 @@ class UserProfile extends Equatable {
   }
 
   bool is90DaysOverJoining() {
-    DateTime ninetyDaysAgo = DateTime.now().subtract(Duration(days: 90));
+    DateTime ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
     if (profileMember?.joinDate != null) {
       DateTime joinDate =
           DateTime.tryParse(profileMember?.joinDate ?? "") ?? DateTime.now();
@@ -102,15 +102,15 @@ class UserProfile extends Equatable {
     var name = suffix ?? "";
 
     if (lastName?.isNotEmpty == true) {
-      name = lastName! + " " + name;
+      name = "${lastName!} $name";
     }
 
     if (middleName?.isNotEmpty == true) {
-      name = middleName! + " " + name;
+      name = "${middleName!} $name";
     }
 
     if (firstName?.isNotEmpty == true) {
-      name = firstName! + " " + name;
+      name = "${firstName!} $name";
     }
 
     return name;

@@ -55,7 +55,7 @@ class LandingPageDesktopView extends StatelessWidget {
       constraints: const BoxConstraints(),
       decoration: BoxDecoration(
           border: Border.all(color: SupportBotColors.gray),
-          borderRadius: BorderRadius.all(Radius.circular(16))),
+          borderRadius: const BorderRadius.all(Radius.circular(16))),
       alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,7 +78,7 @@ class LandingPageDesktopView extends StatelessWidget {
 
   Widget _buildImg() {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Image.asset('assets/images/group.jpg'),
     );
   }
@@ -127,7 +127,7 @@ class LandingPageDesktopView extends StatelessWidget {
             return ValueListenableBuilder<String>(
               valueListenable: selectedPipelineNotifier,
               builder: (context, selectedPipeline, child) {
-                return Container(
+                return SizedBox(
                   height: 40,
                   width: UIHelpers.screenHeight(context) * 0.5,
                   child: TicketClassificationPipelineWidget(
@@ -197,14 +197,13 @@ class LandingPageDesktopView extends StatelessWidget {
 
           DateTime endDate = DateTime.now()
               .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
-          ;
 
           if (selectedDates != null && selectedDates.isNotEmpty) {
             startDate = selectedDates.first;
             endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
           }
 
-          return Container(
+          return SizedBox(
             height: 40,
             width: UIHelpers.screenHeight(context) * 0.5,
             child: OutlinedButton(
@@ -228,7 +227,7 @@ class LandingPageDesktopView extends StatelessWidget {
                     ),
                     overflow: TextOverflow.clip,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   const Icon(
                     Icons.calendar_month_outlined,
                     color: SupportBotColors.bluePrimary,

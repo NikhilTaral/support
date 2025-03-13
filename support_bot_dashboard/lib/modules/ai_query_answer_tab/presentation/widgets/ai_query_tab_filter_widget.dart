@@ -133,7 +133,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
             startDate = widget.startDate ?? DateTime.now();
           }
 
-          return Container(
+          return SizedBox(
             height: 180,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
@@ -344,7 +344,7 @@ class _AIQueryFilterWidgetState extends State<AIQueryTabFilterWidget> {
 
     if (selectedPipelineValue == null || start == null || end == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select all filters")),
+        const SnackBar(content: Text("Please select all filters")),
       );
       return;
     }

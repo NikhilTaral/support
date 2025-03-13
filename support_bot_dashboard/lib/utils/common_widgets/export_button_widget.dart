@@ -6,6 +6,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/utils/custom_widgets/custom_snackbar.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
+
 class ExportButton extends StatelessWidget {
   final String icon;
   final double iconSize;
@@ -16,19 +17,21 @@ class ExportButton extends StatelessWidget {
   final String? bopsState;
   final String? selectedClassification;
   final String? selectedClassificationValidation;
+  final String? ticketId;
 
-  const ExportButton({
-    Key? key,
-    required this.icon,
-    this.iconSize = 30.0,
-    required this.selectedButtonText,
-    this.startDate,
-    this.endDate,
-    this.selectedPipeline,
-    this.bopsState,
-    this.selectedClassification,
-    this.selectedClassificationValidation,
-  }) : super(key: key);
+  const ExportButton(
+      {Key? key,
+      required this.icon,
+      this.iconSize = 30.0,
+      required this.selectedButtonText,
+      this.startDate,
+      this.endDate,
+      this.selectedPipeline,
+      this.bopsState,
+      this.selectedClassification,
+      this.selectedClassificationValidation,
+      this.ticketId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +68,7 @@ class ExportButton extends StatelessWidget {
                     : () {
                         context.read<ExportBloc>().add(
                               FetchExportDataEvent(
+                                ticketId: ticketId,
                                 startDate: startDate,
                                 endDate: endDate,
                                 selectedPipeline: selectedPipeline,

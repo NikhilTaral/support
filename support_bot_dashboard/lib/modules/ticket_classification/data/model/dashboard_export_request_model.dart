@@ -7,6 +7,7 @@ class DashboardExportRequestModel {
   final DateTime? endDate;
   final List<Filter>? filter;
   final num? page;
+  final String? ticketId;
   final num? pageSize;
 
   DashboardExportRequestModel({
@@ -14,6 +15,7 @@ class DashboardExportRequestModel {
     this.endDate,
     this.filter,
     this.page,
+    this.ticketId,
     this.pageSize,
   });
 
@@ -22,6 +24,7 @@ class DashboardExportRequestModel {
     DateTime? endDate,
     List<Filter>? filter,
     num? page,
+    String? ticketId,
     num? pageSize,
   }) =>
       DashboardExportRequestModel(
@@ -29,6 +32,7 @@ class DashboardExportRequestModel {
         endDate: endDate ?? this.endDate,
         filter: filter ?? this.filter,
         page: page ?? this.page,
+        ticketId: ticketId ?? this.ticketId,
         pageSize: pageSize ?? this.pageSize,
       );
 
@@ -48,6 +52,7 @@ class DashboardExportRequestModel {
             ? []
             : List<Filter>.from(json["filter"]!.map((x) => Filter.fromJson(x))),
         page: json["page"],
+        ticketId: json["ticketId"],
         pageSize: json["pageSize"],
       );
 
@@ -58,6 +63,7 @@ class DashboardExportRequestModel {
             ? []
             : List<dynamic>.from(filter!.map((x) => x.toJson())),
         "page": page,
+        "ticketId": ticketId,
         "pageSize": pageSize,
       };
 }

@@ -160,7 +160,7 @@ class DashboardExportImpl extends DashboardExportRepository {
       if (response == null) {
         return Left(ServerFailure(message: s.aPIErrorMsgText));
       } else {
-        return Right(response.length == 0
+        return Right(response.isEmpty
             ? File('')
             : File.fromRawPath(Uint8List.fromList(response)));
       }
