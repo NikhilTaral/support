@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/valida
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/pluto_configruration.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
@@ -48,18 +49,9 @@ class ValidationStatusWidget extends StatelessWidget {
                     color: SupportBotColors.black),
               ),
               UIHelpers.horizontalSpaceTiny,
-              Tooltip(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: SupportBotColors.disablePrimary,
-                      width: 2,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    color: SupportBotColors.gray.shade200),
-                height: 30,
-                textStyle: SupportBotTextstyle.small.copyWith(
-                  color: SupportBotColors.black,
-                ),
+              CustomToolTip(
+                width: 300,
+                isMobile: false,
                 message:
                     "This visual compares AI-classified tickets\n with user validation, highlighting correct (green)\n and incorrect (red) classifications.",
                 child: const Icon(

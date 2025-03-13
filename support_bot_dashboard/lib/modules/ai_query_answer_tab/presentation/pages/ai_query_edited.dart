@@ -19,7 +19,7 @@ class AIQueryEditedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   context.read<AiQueryBloc>().add(
+    context.read<AiQueryBloc>().add(
           AIQueryInitialEvent(
               endDate: endDate,
               startDate: startDate,

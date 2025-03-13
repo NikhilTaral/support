@@ -57,7 +57,7 @@ class ValidateAnswerDialog extends StatelessWidget {
             ),
           ),
           child: Text(
-            s.NoText,
+            s.noText,
             style: SupportBotTextstyle.mediumHint.copyWith(
               color: SupportBotColors.white,
             ),

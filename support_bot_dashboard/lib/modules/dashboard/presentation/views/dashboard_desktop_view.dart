@@ -82,7 +82,7 @@ class DashboardDesktopView extends StatelessWidget {
                 padding: padding,
                 child: HomeFiltersWidget(
                     pipelineName: pipelineName,
-                    piplineId: [piplineId??""],
+                    piplineId: [piplineId ?? ""],
                     endDate: endDate,
                     startDate: startDate),
               )

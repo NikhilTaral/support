@@ -39,7 +39,26 @@ class Renderers {
     return Center(child: Text(displayText));
   }
 
-  static Widget textRenderer(
+  static Widget textRenderer1(
+    PlutoColumnRendererContext rendererContext, {
+    TextStyle? textStyle,
+  }) {
+    final String text = rendererContext.cell.value ?? "";
+    textStyle ??= frozenStyle(
+        rendererContext,
+        SupportBotTextstyle.small
+            .copyWith(fontSize: 14, color: SupportBotColors.gray.shade800));
+
+    return Text(
+      text.isEmpty ? "Not Classified" : text,
+      textAlign: TextAlign.start,
+      style: textStyle,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+//
+  static Widget textRenderer2(
     PlutoColumnRendererContext rendererContext, {
     TextStyle? textStyle,
   }) {

@@ -7,32 +7,32 @@
   "bobStateText": "BOPS State/ Province",
   "@bobStateText": {
     "description": "BOPS State/ Province Text"
-  }, 
-   "unknownPipelineText":  "Unknown Pipeline",
+  },
+  "unknownPipelineText": "Unknown Pipeline",
   "@unknownPipelineText": {
     "description": "Unknown Pipeline Text"
   },
-  "updateSuccessfullyText":  "Update Successfully!",
+  "updateSuccessfullyText": "Update Successfully!",
   "@updateSuccessfullyText": {
     "description": "Update Successfully Text"
   },
-  "updateFailureText":  "Update Failure!",
+  "updateFailureText": "Update Failure!",
   "@updateFailureText": {
     "description": "Update Failure Text"
   },
-  "revertedSuccessfullyText":  "Reverted Successfully",
+  "revertedSuccessfullyText": "Reverted Successfully",
   "@revertedSuccessfullyText": {
     "description": "Reverted Successfully Text"
   },
-  "revertedFailureText":  "Reverted Failure",
+  "revertedFailureText": "Reverted Failure",
   "@revertedFailureText": {
     "description": "Reverted Failure Text"
   },
-  "updateText":  "Update",
+  "updateText": "Update",
   "@updateText": {
     "description": "Update Text"
   },
-  "updateTicketText":  "Update Ticket",
+  "updateTicketText": "Update Ticket",
   "@updateTicketText": {
     "description": "Update Ticket Text"
   },
@@ -104,5 +104,9 @@
   "noSelectionText": "No selection",
   "@noSelectionText": {
     "description": "No selection Text"
+  },
+  "exportCSVFileText": "Export CSV File",
+  "@exportCSVFileText": {
+    "description": "Export CSV File Text"
   }
 }

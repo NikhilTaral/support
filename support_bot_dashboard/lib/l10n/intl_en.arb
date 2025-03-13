@@ -12,6 +12,10 @@
   "@pageText": {
     "description": "Page"
   },
+  "piplineText": "Pipeline",
+  "@piplineText": {
+    "description": "Pipeline"
+  },
   "filterApplyText": "Apply Filter",
   "@filterApplyText": {
     "description": "Apply Filter"
@@ -43,10 +47,6 @@
   "validateAIAnsweTicketrText": "Do you want to Validate AI Answer for this ticket?",
   "@validateAIAnsweTicketrText": {
     "description": "Do you want to Validate AI Answer for this ticket? Text"
-  },
-  "NoText": "No",
-  "@NoText": {
-    "description": "No Text"
   },
   "ticketIDText": "Ticket ID:",
   "@ticketIDText": {
@@ -457,5 +457,9 @@
   "noSelectionText": "No selection",
   "@noSelectionText": {
     "description": "No selection Text"
+  },
+  "exportCSVFileText": "Export CSV File",
+  "@exportCSVFileText": {
+    "description": "Export CSV File Text"
   }
 }

@@ -146,9 +146,10 @@ class LineChartGraphWidget extends StatelessWidget {
           maxY: maxY,
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
-              tooltipBorder: const BorderSide(
-                  width: 2, color: SupportBotColors.disablePrimary),
-              getTooltipColor: (touchedSpot) => SupportBotColors.gray.shade200,
+              tooltipBorder: BorderSide(
+                  width: 2, color: SupportBotColors.blueSecondary.shade200),
+              getTooltipColor: (touchedSpot) =>
+                  SupportBotColors.blueSecondary.shade200,
               tooltipRoundedRadius: 8,
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {

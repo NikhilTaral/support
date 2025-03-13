@@ -28,7 +28,7 @@ class BopsStatesBloc extends Bloc<BopsStateEvent, BopsStatesState> {
         emit(BopsStatesFailureState());
       } else {
         final BOpsResponseModel model = response.right;
-        if (model.data == null) {
+        if (model.data?.isEmpty == true) {
           emit(BopsStatesEmptyState());
         } else {
           bOpsResponseAttributeModel = BOpsResponseAttributeModel(
