@@ -742,6 +742,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           return Tooltip(
             message: s.export,
             child: ExportButton(
+                exportUser: state1.selectedUserId ?? "",
                 ticketId: state1.searchController,
                 icon: '',
                 startDate: state1.startDate ?? widget.startDate,
@@ -749,7 +750,8 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 endDate: state1.endDate ?? widget.endDate,
                 bopsState: state1.bopsState,
                 selectedClassification: state1.aiClassification,
-                selectedClassificationValidation: state1.validation,
+                selectedClassificationValidation:
+                    state1.validation?.toLowerCase(),
                 selectedPipeline: state1.piplineId ?? widget.piplineId),
           );
         }

@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 
 class ExportButton extends StatelessWidget {
+  final String exportUser;
   final String icon;
   final double iconSize;
   final String selectedButtonText;
@@ -21,6 +22,7 @@ class ExportButton extends StatelessWidget {
 
   const ExportButton(
       {Key? key,
+      required this.exportUser,
       required this.icon,
       this.iconSize = 30.0,
       required this.selectedButtonText,
@@ -68,6 +70,7 @@ class ExportButton extends StatelessWidget {
                     : () {
                         context.read<ExportBloc>().add(
                               FetchExportDataEvent(
+                                classificationValidatedBy: exportUser,
                                 ticketId: ticketId,
                                 startDate: startDate,
                                 endDate: endDate,
