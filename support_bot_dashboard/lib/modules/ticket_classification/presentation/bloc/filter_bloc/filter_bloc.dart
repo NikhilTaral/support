@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 
-part 'filkter_event.dart';
+part 'fillter_event.dart';
 part 'fliter_state.dart';
 
 class FilterBloc extends Bloc<FilterEvent, FilterState> {
@@ -135,19 +135,6 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       if (state is FilterSuccessState) {
         final currentState = state as FilterSuccessState;
         emit(currentState.copyWith(
-          aiClassification: currentState.aiClassification,
-          bopsState: currentState.bopsState,
-          endDate: currentState.endDate,
-          items: currentState.items,
-          piplineId: currentState.piplineId,
-          piplineName: currentState.piplineName,
-          selectedUserId: currentState.selectedUserId,
-          selectedUserName: currentState.selectedUserName,
-          startDate: currentState.startDate,
-          validation: currentState.validation,
-        ));
-
-        emit(ApplyFilterState(
           aiClassification: currentState.aiClassification,
           bopsState: currentState.bopsState,
           endDate: currentState.endDate,

@@ -597,7 +597,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                         ToggleSearchEvent(
                             value: value,
                             isSearchOpen: !(filterstate.isSearchOpen ?? false),
-                            searchText: value), // Create this event
+                            searchText: value),
                       );
                       final selectedPipelineValue =
                           filterstate.piplineId!.isEmpty
