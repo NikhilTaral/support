@@ -39,24 +39,22 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
       filter: [
         if (event.bopsState != null && event.bopsState!.isNotEmpty)
-          Filter(
-              fieldName: "BOPS_States",
-              fieldValue: event.bopsState?.split(",")),
+          Filter(fieldName: "BOPS_States", fieldValue: [event.bopsState ?? ""]),
         if (event.selectedClassification != null &&
             event.selectedClassification!.isNotEmpty)
           Filter(
               fieldName: "classifications",
-              fieldValue: event.selectedClassification?.split(',')),
+              fieldValue: [event.selectedClassification ?? ""]),
         if (event.classificationValidatedBy != null &&
             event.classificationValidatedBy!.isNotEmpty)
           Filter(
               fieldName: "classificationValidatedBy",
-              fieldValue: event.classificationValidatedBy?.split(',')),
+              fieldValue: [event.classificationValidatedBy ?? ""]),
         if (event.selectedClassificationValidation != null &&
             event.selectedClassificationValidation!.isNotEmpty)
           Filter(
               fieldName: "classificationValidations",
-              fieldValue: event.selectedClassificationValidation?.split(',')),
+              fieldValue: [event.selectedClassificationValidation ?? ""]),
         Filter(
           fieldName: "pipelines",
           fieldValue: [event.selectedPipeline ?? ""],
