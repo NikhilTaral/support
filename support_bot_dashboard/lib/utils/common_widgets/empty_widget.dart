@@ -100,7 +100,7 @@ class EmptyTable extends StatelessWidget {
                 type: PlutoColumnType.text(),
               ),
             ],
-            rows: [],
+            rows: const [],
           ),
         ),
       ],

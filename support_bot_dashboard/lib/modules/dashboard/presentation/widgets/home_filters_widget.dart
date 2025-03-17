@@ -132,7 +132,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
             startDate = widget.startDate ?? DateTime.now();
           }
 
-          return Container(
+          return SizedBox(
             height: 180,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(

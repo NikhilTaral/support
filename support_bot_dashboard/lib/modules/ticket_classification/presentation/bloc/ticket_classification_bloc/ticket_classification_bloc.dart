@@ -43,7 +43,6 @@ class TicketClassificationTabBloc
       endDate = event.endDate
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
       startDate = event.startDate;
-      ;
       final enddate = DateTime.now()
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
       final startdate = DateTime.now()

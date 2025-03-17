@@ -19,7 +19,6 @@ class CustomPipelineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filteredData = pipelineData?.skip(1).toList() ?? [];
-
     final maxTotalTickets = filteredData.map((e) => e.totalTickets ?? 0).fold(
             0,
             (prev, next) =>
@@ -27,7 +26,6 @@ class CustomPipelineChart extends StatelessWidget {
         0;
     final int numberOfDivisions = maxTotalTickets > 500 ? 15 : 5;
     final intervalValue = (maxTotalTickets / numberOfDivisions).ceilToDouble();
-
     return RotatedBox(
       quarterTurns: 1,
       child: BarChart(

@@ -18,7 +18,6 @@ import 'package:support_bot_dashboard/modules/dashboard/presentation/views/dashb
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/responsive.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
-import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
 
 class Dashboard extends StatelessWidget {
   final String? pipelineId;

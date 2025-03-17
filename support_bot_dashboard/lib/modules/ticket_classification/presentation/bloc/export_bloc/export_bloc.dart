@@ -52,9 +52,10 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
               fieldValue: event.selectedClassificationValidation?.split(',')),
         Filter(
           fieldName: "pipelines",
-          fieldValue: [selectedPipeline ?? "11257490"],
+          fieldValue: [event.selectedPipeline ?? ""],
         ),
       ],
+      ticketId: event.ticketId == "" ? null : event.ticketId,
       page: 1,
       pageSize: 10,
     );

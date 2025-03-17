@@ -159,14 +159,14 @@ class _CustomToolTipState extends State<CustomToolTip> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
+      onHover: _onMouseHover,
+      onExit: _onMouseExit,
       child: GestureDetector(
         onTap: _onPressed,
         child: _isDisplayingTooltip && (!kIsWeb || widget.isMobile)
             ? widget.activeChild
             : widget.child,
       ),
-      onHover: _onMouseHover,
-      onExit: _onMouseExit,
     );
   }
 

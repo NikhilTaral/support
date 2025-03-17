@@ -450,6 +450,14 @@
   "@noStateAvailableText": {
     "description": "No State/Province Available Text"
   },
+  "reasonAndSelectClassificationText": "Please provide reason and select classification",
+  "@reasonAndSelectClassificationText": {
+    "description": "Please provide reason and select classification Text"
+  },
+  "noSelectionText": "No selection",
+  "@noSelectionText": {
+    "description": "No selection Text"
+  },
   "exportCSVFileText": "Export CSV File",
   "@exportCSVFileText": {
     "description": "Export CSV File Text"
