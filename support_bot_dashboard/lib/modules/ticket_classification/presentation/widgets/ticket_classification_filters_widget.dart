@@ -5,6 +5,7 @@ import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/filter_bloc/filter_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
@@ -69,9 +70,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           } else if (state is GetAllPipelineLoadingState) {
             return _buildLoadingState();
           } else if (state is GetAllPipelineFailureState) {
-            return  Center(child: Text(s.noDataFoundText));
+            return Center(child: Text(s.noDataFoundText));
           }
-          return  Center(child: Text(s.noDataFoundText));
+          return Center(child: Text(s.noDataFoundText));
         },
       ),
     );
@@ -386,6 +387,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     return SizedBox(
       child: BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
         builder: (context, state) {
+          final userName = BlocProvider.of<FilterBloc>(context).userName;
           if (state is GetAllValidationUsersSuccessState) {
             var users = state.getAllValidationUsersAttributeModel?.data ?? [];
 
@@ -432,6 +434,15 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
               },
             );
           }
+          if (state is GetAllValidationUsersLoadingState) {
+            return CustomDropdown(
+              items: "No User Available".split(","),
+              label:
+                  (userName?.isEmpty ?? true) ? s.validatedUserText : userName!,
+              selectedValue: '',
+              onChanged: (String? value) {},
+            );
+          }
           if (state is GetAllValidationUsersEmptyState) {
             return CustomDropdown(
               items: "No User Available".split(","),
@@ -445,7 +456,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           }
           return CustomDropdown(
             items: const [],
-            label: s.validatedUserText,
+            label: userName ?? "",
             onChanged: (value) {},
             selectedValue: "",
           );

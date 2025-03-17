@@ -10,12 +10,14 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
   final String? defualtPipelineId;
   final DateTime? startDate;
   final DateTime? endDate;
+  String? userName;
 
   FilterBloc(
       {this.defualtPipeline,
       this.defualtPipelineId,
       this.endDate,
-      this.startDate})
+      this.startDate,
+      this.userName})
       : super(FliterInitialState()) {
     on<FilterInitialEvent>(
       (event, emit) {
@@ -119,6 +121,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       UserValidationEvent event, Emitter<FilterState> emit) async {
     try {
       if (state is FilterSuccessState) {
+        userName = event.selectedUserName;
         final currentState = state as FilterSuccessState;
         emit(currentState.copyWith(
             selectedUserName: event.selectedUserName,
