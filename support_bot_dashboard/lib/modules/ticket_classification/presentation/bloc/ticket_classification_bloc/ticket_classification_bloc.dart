@@ -121,5 +121,7 @@ class TicketClassificationTabBloc
     selectedClassification = "";
     selectedValidation = "";
     selectedPipelineId = "";
+    page = 1;
+    pageSize = 10;
   }
 }

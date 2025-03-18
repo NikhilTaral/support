@@ -144,7 +144,6 @@ class Charts extends StatelessWidget {
 
   Widget _buildUserValidationCard() {
     return Container(
-      width: 800,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
