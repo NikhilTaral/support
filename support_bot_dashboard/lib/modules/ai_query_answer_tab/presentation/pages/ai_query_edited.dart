@@ -24,7 +24,7 @@ class AIQueryEditedScreen extends StatelessWidget {
               endDate: endDate,
               startDate: startDate,
               selectedPipelineValueList: piplineId,
-              page: BlocProvider.of<AiQueryBloc>(context).page,
+              page: 1,
               pageSize: BlocProvider.of<AiQueryBloc>(context).pageSize),
         );
     return Scaffold(

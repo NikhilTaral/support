@@ -193,8 +193,10 @@ class AIQueryEditedDesktopView extends StatelessWidget {
             onTap: () {},
           );
         } else if (state is AIQueryEmptyState) {
-          return const Align(
-              alignment: Alignment.topCenter, child: EmptyWidget());
+          return Center(
+              child: EmptyWidget(
+            message: state.message,
+          ));
         } else {
           return const SizedBox.shrink();
         }
