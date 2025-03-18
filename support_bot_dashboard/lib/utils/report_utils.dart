@@ -37,7 +37,7 @@ class ReportUtils {
         enableSorting: false,
         enableEditingMode: false,
         enableDropToResize: false,
-        renderer: Renderers.textRenderer,
+        renderer: Renderers.textRenderer2,
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -69,7 +69,7 @@ class ReportUtils {
         readOnly: true,
         enableSorting: false,
         enableDropToResize: false,
-        renderer: Renderers.textRenderer,
+        renderer: Renderers.textRenderer2,
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -85,7 +85,7 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
-        renderer: Renderers.textRenderer,
+        renderer: Renderers.textRenderer1,
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -101,7 +101,7 @@ class ReportUtils {
         readOnly: true,
         enableSorting: false,
         enableDropToResize: false,
-        renderer: Renderers.textRenderer,
+        renderer: Renderers.textRenderer2,
       ),
       PlutoColumn(
         backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -181,7 +181,7 @@ class ReportUtils {
           value: e?.validatedClassification ?? "N/A",
         ),
         "aIclassification": PlutoCell(
-          value: e?.aiclassification ?? "N/A",
+          value: e?.aiclassification ?? "Not Classified",
         ),
         "classification": PlutoCell(
           value: e?.aiclassification ?? "N/A",
@@ -300,7 +300,7 @@ class ReportUtils {
         enableFilterMenuItem: false,
         enableSorting: false,
         enableDropToResize: false,
-        renderer: Renderers.textRenderer,
+        renderer: Renderers.textRenderer2,
       ),
       PlutoColumn(
           backgroundColor: SupportBotColors.disablePrimary.shade100,
@@ -317,7 +317,7 @@ class ReportUtils {
           enableFilterMenuItem: false,
           enableSorting: false,
           enableDropToResize: false,
-          renderer: Renderers.textRenderer),
+          renderer: Renderers.textRenderer2),
       PlutoColumn(
           backgroundColor: SupportBotColors.disablePrimary.shade100,
           title: 'AI Query Answer',

@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "intialpipelineText": "Expert Care Level 1",
   "@intialpipelineText": {
     "description": "Inital PipLine Text"
@@ -36,11 +37,13 @@
     "description": "Update Ticket Text"
   },
   "requestMsgText": "Do you Want to Mark This Ticket as a Contact {value} in HubSpot",
-  "@requestMsgText": {
-    "description": "request Msg Text",
-    "placeholders": {
-      "value": {}
-    }
+    "@requestMsgText": {
+        "description": "request Msg Text",
+        "placeholders": {
+            "value": {}
+        }
+    
+   
   },
   "noText": "No",
   "@noText": {
@@ -93,5 +96,17 @@
   "noStateAvailableText": "No State/Province Available",
   "@noStateAvailableText": {
     "description": "No State/Province Available Text"
+  }, 
+  "reasonAndSelectClassificationText": "Please provide reason and select classification",
+  "@reasonAndSelectClassificationText": {
+    "description": "Please provide reason and select classification Text"
+  },
+  "noSelectionText": "No selection",
+  "@noSelectionText": {
+    "description": "No selection Text"
+  },
+  "exportCSVFileText": "Export CSV File",
+  "@exportCSVFileText": {
+    "description": "Export CSV File Text"
   }
 }

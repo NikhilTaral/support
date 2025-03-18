@@ -154,7 +154,7 @@ class ExpAlert extends StatelessWidget {
                 padding: textPadding,
                 child: RichText(
                   text: TextSpan(
-                    text: title + " ",
+                    text: "$title ",
                     style: titleTextStyle.v3WithColor(titleColor),
                     children: <TextSpan>[
                       TextSpan(

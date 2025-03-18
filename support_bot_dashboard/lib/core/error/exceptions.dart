@@ -1,6 +1,7 @@
 class ServerException implements Exception {
   final message;
   ServerException([this.message]);
+  @override
   String toString() {
     return "Exception: $message";
   }

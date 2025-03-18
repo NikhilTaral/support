@@ -4,6 +4,8 @@ import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class YourWidget extends StatelessWidget {
+  const YourWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return CustomDropdown(

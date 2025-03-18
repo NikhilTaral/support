@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 
 class LineChartGraphWidget extends StatelessWidget {
   LineChartGraphWidget({super.key, required this.dashboardDataModel});
@@ -56,7 +54,6 @@ class LineChartGraphWidget extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 800,
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
@@ -148,9 +145,10 @@ class LineChartGraphWidget extends StatelessWidget {
           maxY: maxY,
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
-              tooltipBorder: const BorderSide(
-                  width: 2, color: SupportBotColors.disablePrimary),
-              getTooltipColor: (touchedSpot) => SupportBotColors.gray.shade200,
+              tooltipBorder: BorderSide(
+                  width: 2, color: SupportBotColors.blueSecondary.shade200),
+              getTooltipColor: (touchedSpot) =>
+                  SupportBotColors.blueSecondary.shade200,
               tooltipRoundedRadius: 8,
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {

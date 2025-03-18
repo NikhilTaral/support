@@ -6,6 +6,7 @@ class FetchExportDataEvent extends ExportEvent {
   final DateTime? startDate;
   final DateTime? endDate;
   final String? selectedClassification;
+  final String? classificationValidatedBy;
   final String? bopsState;
   final String? selectedClassificationValidation;
   final String? selectedPipeline;
@@ -18,6 +19,7 @@ class FetchExportDataEvent extends ExportEvent {
       {this.startDate,
       this.endDate,
       this.selectedClassification,
+      this.classificationValidatedBy,
       this.bopsState,
       this.selectedClassificationValidation,
       this.selectedPipeline,
