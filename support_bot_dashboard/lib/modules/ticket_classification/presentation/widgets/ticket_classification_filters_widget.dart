@@ -5,12 +5,13 @@ import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/filter_bloc/filter_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
@@ -38,23 +39,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   final s = serviceLocator<S>();
   final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
       ValueNotifier<List<DateTime>?>(null);
-  final ValueNotifier<bool> _isSearchOpen = ValueNotifier<bool>(false);
-  final TextEditingController _searchController = TextEditingController();
-  String selectedClassification = '';
-  List<DateTime?> selectedate = [];
-  String selectedBOPsState = '';
-  String selectedUserValidator = "";
-  String selectedItem = '';
-  String selectedUserName = "";
-  String selectedValidation = '';
-  String pipelineIds = "";
-  String setvalue = "";
-  String selectedPipeline = "";
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+            create: (context) => FilterBloc(
+                startDate: widget.startDate,
+                endDate: widget.endDate,
+                defualtPipeline: widget.pipelineName ?? "",
+                defualtPipelineId: widget.piplineId ?? "")
+              ..add(FilterInitialEvent())),
         BlocProvider(
           create: (context) => BopsStatesBloc()..add(BopsStateDataEvent()),
         ),
@@ -74,9 +70,9 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
           } else if (state is GetAllPipelineLoadingState) {
             return _buildLoadingState();
           } else if (state is GetAllPipelineFailureState) {
-            return const Center(child: Text("No data Found"));
+            return Center(child: Text(s.noDataFoundText));
           }
-          return const Center(child: EmptyWidget());
+          return Center(child: Text(s.noDataFoundText));
         },
       ),
     );
@@ -122,25 +118,18 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 15,
           children: [
             _buildPipelineDropdown(items),
-            UIHelpers.horizontalSpaceRegular,
-            _buildDateRangeSelector(),
-            UIHelpers.horizontalSpaceRegular,
+            _buildDateRangeSelector(context),
             _bopsState(),
-            UIHelpers.horizontalSpaceRegular,
             _buildTicketClassificationDropdown(),
-            UIHelpers.horizontalSpaceRegular,
             _buildValidationDropdown(),
-            UIHelpers.horizontalSpaceRegular,
             _getAllValidatedUser(),
-            UIHelpers.horizontalSpaceRegular,
             _buildApplyFilterButton(
               context,
             ),
-            UIHelpers.horizontalSpaceRegular,
             _buildClearFilterButton(),
-            UIHelpers.horizontalSpaceRegular,
             _buildSearchWidget(),
             _buildExportButton(),
           ],
@@ -150,65 +139,61 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildPipelineDropdown(List<GetAllPipelineData> items) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 220),
-      child: TicketClassificationPipelineWidget(
-        hintText: selectedPipeline.isEmpty
-            ? (widget.pipelineName ?? '')
-            : selectedPipeline,
-        items: items,
-        selectedItem: selectedPipeline,
-        onChanged: (selectedName) async {
-          setState(() {
-            if (widget.pipelineName != null) {
-              selectedPipeline = (widget.pipelineName ?? "");
-            }
-            selectedPipeline = selectedName;
-          });
+    return BlocSelector<FilterBloc, FilterState, String>(
+      selector: (state) {
+        if (state is FilterSuccessState) {
+          return state.piplineName ?? "";
+        }
+        return '';
+      },
+      builder: (context, selectedPipeline) {
+        return Container(
+          constraints: const BoxConstraints(maxWidth: 220),
+          child: TicketClassificationPipelineWidget(
+            hintText: selectedPipeline,
+            items: items,
+            selectedItem: selectedPipeline,
+            onChanged: (piplineName) async {
+              String pipelineIds = '';
+              for (var selectedName in [piplineName]) {
+                final matchingItem = items.firstWhere(
+                  (item) => item.pipelineName == selectedName,
+                  orElse: () =>
+                      GetAllPipelineData(pipelineName: '', pipelineId: ''),
+                );
+                if (matchingItem.pipelineId?.isNotEmpty == true) {
+                  pipelineIds = matchingItem.pipelineId ?? "";
+                }
+              }
 
-          _onPipelineSelectionChanged([selectedName], items);
-        },
-      ),
+              BlocProvider.of<FilterBloc>(context).add(
+                SelcetPiplineEvent(
+                  piplineName: piplineName,
+                  pipelineId: pipelineIds,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
-  void _onPipelineSelectionChanged(
-      List<String> selectedNames, List<GetAllPipelineData> items) async {
-    pipelineIds = '';
-    for (var selectedName in selectedNames) {
-      final matchingItem = items.firstWhere(
-        (item) => item.pipelineName == selectedName,
-        orElse: () => GetAllPipelineData(pipelineName: '', pipelineId: ''),
-      );
-      if (matchingItem.pipelineId?.isNotEmpty == true) {
-        pipelineIds = (matchingItem.pipelineId ?? "");
-      }
-    }
-  }
-
-  Widget _buildDateRangeSelector() {
-    if (selectedate.isNotEmpty) {
-      final endDate = selectedate.lastOrNull ?? widget.endDate;
-      final startDate = selectedate.firstOrNull ?? widget.startDate;
-      selectedate = [startDate, endDate];
-    }
-
+  Widget _buildDateRangeSelector(BuildContext context) {
     return Center(
-      child: ValueListenableBuilder<List<DateTime>?>(
-        valueListenable: selectedDatesNotifier,
-        builder: (context, selectedDates, child) {
-          final DateTime endDate;
-          final DateTime startDate;
-
-          if (selectedDates?.isNotEmpty == true) {
-            startDate = selectedDates![0];
-            endDate = selectedDates.length > 1 ? selectedDates[1] : startDate;
+      child: BlocBuilder<FilterBloc, FilterState>(
+        builder: (context, state) {
+          DateTime startDate;
+          DateTime endDate;
+          if (state is FilterSuccessState) {
+            startDate = state.startDate ?? widget.startDate ?? DateTime.now();
+            endDate = state.endDate ?? widget.endDate ?? DateTime.now();
           } else {
-            endDate = widget.endDate ?? DateTime.now();
             startDate = widget.startDate ?? DateTime.now();
+            endDate = widget.endDate ?? DateTime.now();
           }
 
-          return Container(
+          return SizedBox(
             height: 180,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
@@ -220,7 +205,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
-              onPressed: () => _pickDateRange(),
+              onPressed: () => _pickDateRange(context),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -247,351 +232,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
   }
 
-  Widget _bopsState() {
-    return SizedBox(
-      child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
-        builder: (context, state) {
-          print("BopsStatesBloc State ${state}");
-          if (state is BopsStatesSuccessState) {
-            return CustomDropdown(
-              items: state.bOpsResponseAttributeModel?.data ?? [],
-              label: selectedBOPsState.isEmpty
-                  ? s.bobStateText
-                  : selectedBOPsState,
-              onChanged: (value) async {
-                setState(() {
-                  selectedBOPsState = value ?? '';
-                });
-              },
-              selectedValue: selectedBOPsState,
-            );
-          }
-          if (state is BopsStatesFailureState) {
-            return const SizedBox(child: EmptyWidget());
-          }
-          if (state is BopsStatesEmptyState) {
-            return CustomDropdown(
-              items: s.noStateAvailableText.split(","),
-              label: s.bobStateText,
-              onChanged: (value) async {},
-              selectedValue: selectedBOPsState,
-            );
-          }
-          return CustomDropdown(
-            items: [],
-            label: s.bobStateText,
-            onChanged: (value) {},
-            selectedValue: selectedBOPsState,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildTicketClassificationDropdown() {
-    return SizedBox(
-      child: CustomDropdown(
-        label: selectedClassification.isEmpty
-            ? s.classification
-            : selectedClassification,
-        selectedValue: selectedClassification,
-        onChanged: (value) async {
-          setState(() {
-            selectedClassification = value ?? "";
-          });
-        },
-        items: const [
-          "Spam/Marketing",
-          "No Action Required",
-          "Genuine Query",
-          "Acknowledgement Required",
-          "Not Classified"
-        ],
-      ),
-    );
-  }
-
-  Widget _buildValidationDropdown() {
-    return SizedBox(
-      width: 200,
-      child: CustomDropdown(
-        label: selectedValidation.isEmpty ? s.validation : selectedValidation,
-        selectedValue: setvalue,
-        onChanged: (value) async {
-          setState(() {
-            setvalue = value ?? "";
-            selectedValidation = value?.toLowerCase() ?? "";
-          });
-        },
-        items: const ["Not Validated", "Correct", "Incorrect"],
-      ),
-    );
-  }
-
-  Widget _getAllValidatedUser() {
-    return SizedBox(
-      child: BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
-        builder: (context, state) {
-          if (state is GetAllValidationUsersSuccessState) {
-            var users = state.getAllValidationUsersAttributeModel?.data ?? [];
-
-            return CustomDropdown(
-              items: users.map((e) => e.name ?? "").toSet().toList(),
-              label: selectedUserName.isEmpty
-                  ? s.validatedUserText
-                  : users
-                          .firstWhere(
-                            (element) => element.name == selectedUserValidator,
-                            orElse: () => users.first,
-                          )
-                          .name ??
-                      s.validatedUserText,
-              onChanged: (value) {
-                var selectedUser = users.firstWhere(
-                  (element) => element.name == value,
-                  orElse: () => users.first,
-                );
-
-                BlocProvider.of<GetAllValidationUsersBloc>(context).add(
-                  SetUserNameEvent(
-                    email: selectedUser.email,
-                    name: selectedUser.name,
-                  ),
-                );
-
-                setState(() {
-                  selectedUserValidator = selectedUser.email ?? '';
-                  selectedUserName = selectedUser.name ?? "";
-                });
-              },
-              selectedValue: selectedUserName,
-            );
-          }
-          if (state is GetAllValidationUsersEmptyState) {
-            return CustomDropdown(
-              items: s.noUserAvailableText.split(","),
-              label: s.validatedUserText,
-              selectedValue: '',
-              onChanged: (String? value) {},
-            );
-          }
-          if (state is GetAllValidationUsersFailureState) {
-            return SizedBox(child: Text(s.noDataFoundText));
-          }
-          return CustomDropdown(
-            items: [],
-            label: s.validatedUserText,
-            onChanged: (value) {
-              setState(() {
-                selectedUserName = value ?? "";
-              });
-            },
-            selectedValue: selectedUserName,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildApplyFilterButton(BuildContext context) {
-    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
-      builder: (context, state) {
-        return SizedBox(
-          height: 180,
-          child: ElevatedButton.icon(
-            onPressed: () {
-              final selectedPipelineValue =
-                  pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
-              if (selectedPipelineValue == null) {
-                showSnackbar(
-                  context,
-                  s.filterApplySnackBarText,
-                );
-                return;
-              }
-              BlocProvider.of<GetAllValidationUsersBloc>(context)
-                  .add(GetValidationUsersInitialEvent(
-                endDate: selectedate.lastOrNull ?? widget.endDate,
-                startDate: selectedate.firstOrNull ?? widget.startDate,
-                filter: [selectedPipelineValue ?? ""],
-              ));
-
-              final bloc =
-                  BlocProvider.of<TicketClassificationTabBloc>(context);
-              bloc.selectedPipelineId = selectedPipelineValue;
-              bloc.selectedUserValidator = selectedUserValidator;
-              bloc.selectedBOPsState = selectedBOPsState;
-              bloc.selectedClassification = selectedClassification;
-              bloc.selectedValidation = selectedValidation;
-              bloc.add(TicketClassificationDataCallEvent(
-                fieldValue: selectedPipelineValue,
-                endDate: selectedate.lastOrNull ?? widget.endDate,
-                startDate: selectedate.firstOrNull ?? widget.startDate,
-                page: 1,
-                pageSize: 10,
-              ));
-            },
-            icon: const Icon(SupportBotIcons.filter, color: Colors.white),
-            label: Text(
-              s.filterApplyText,
-              style: SupportBotTextstyle.hint.copyWith(
-                color: SupportBotColors.white,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: SupportBotColors.bluePrimary,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0)),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSearchWidget() {
-    return ValueListenableBuilder<bool>(
-      valueListenable: _isSearchOpen,
-      builder: (context, isSearchOpen, child) {
-        return Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: IconButton(
-                icon: Icon(
-                  isSearchOpen ? SupportBotIcons.close : SupportBotIcons.search,
-                  size: 25,
-                  color: SupportBotColors.bluePrimary,
-                ),
-                onPressed: () {
-                  if (isSearchOpen) {
-                    if (_searchController.text.isNotEmpty) {
-                      _searchController.clear();
-                      final selectedPipelineValue =
-                          pipelineIds.isEmpty ? "11257490" : pipelineIds;
-                      BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                        TicketClassificationDataCallEvent(
-                          fieldValue: selectedPipelineValue,
-                          endDate: selectedate.lastOrNull,
-                          startDate: selectedate.firstOrNull,
-                          ticketId: _searchController.text,
-                          page: 1,
-                          pageSize: 10,
-                        ),
-                      );
-                    }
-                  }
-                  _isSearchOpen.value = !isSearchOpen;
-                },
-              ),
-            ),
-            if (isSearchOpen)
-              SizedBox(
-                width: UIHelpers.screenWidth(context) * 0.115,
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: s.searchText,
-                    hintStyle: SupportBotTextstyle.medium.copyWith(
-                      color: SupportBotColors.gray.shade600,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: SupportBotColors.bluePrimary.shade500,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: SupportBotColors.bluePrimary.shade500,
-                      ),
-                    ),
-                    isDense: true,
-                  ),
-                  onSubmitted: (value) {
-                    final selectedPipelineValue =
-                        pipelineIds.isEmpty ? "11257490" : pipelineIds;
-                    BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                      TicketClassificationDataCallEvent(
-                        fieldValue: selectedPipelineValue,
-                        endDate: selectedate.lastOrNull,
-                        startDate: selectedate.firstOrNull,
-                        ticketId: _searchController.text,
-                        page: 1,
-                        pageSize: 10,
-                      ),
-                    );
-                  },
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildClearFilterButton() {
-    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
-      builder: (context, state) {
-        return SizedBox(
-          height: 180,
-          child: ElevatedButton.icon(
-            onPressed: () async {
-              setState(() {
-                setvalue = "";
-                selectedUserValidator = '';
-                selectedUserName = '';
-                selectedItem = '';
-                selectedClassification = '';
-                selectedBOPsState = '';
-                selectedValidation = '';
-                selectedDatesNotifier.value = null;
-                pipelineIds = "";
-                selectedPipeline = "";
-                selectedate = [];
-              });
-
-              BlocProvider.of<TicketClassificationTabBloc>(context)
-                  .clearFilters();
-              BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                TicketClassificationDataCallEvent(
-                  selectedBOPsState: selectedBOPsState,
-                  selectedClassification: selectedClassification,
-                  selectedValidation: selectedValidation,
-                  fieldValue: widget.piplineId,
-                  endDate: widget.endDate,
-                  startDate: widget.startDate,
-                  page: 1,
-                  pageSize: 10,
-                ),
-              );
-              BlocProvider.of<GetAllValidationUsersBloc>(context)
-                  .add(GetValidationUsersInitialEvent(
-                endDate: selectedate.lastOrNull ?? widget.endDate,
-                startDate: selectedate.firstOrNull ?? widget.startDate,
-                filter: [widget.piplineId ?? ""],
-              ));
-            },
-            icon: const Icon(Icons.clear_all, color: Colors.white),
-            label: Text(
-              s.filterClearText,
-              style: SupportBotTextstyle.hint.copyWith(
-                color: SupportBotColors.white,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: Colors.redAccent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0)),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _pickDateRange() async {
+  Future<void> _pickDateRange(BuildContext context) async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle: SupportBotTextstyle.mediumHint.copyWith(
@@ -619,9 +260,438 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
     );
 
     if (pickedDates != null) {
-      selectedDatesNotifier.value = pickedDates.cast<DateTime>();
-      selectedate = pickedDates;
+      BlocProvider.of<FilterBloc>(context).add(
+        SelecrtDateRangeEvent(
+          startDate: pickedDates.first,
+          endDate:
+              pickedDates.length > 1 ? pickedDates.last : pickedDates.first,
+        ),
+      );
     }
+  }
+
+  Widget _bopsState() {
+    return SizedBox(
+      child: BlocBuilder<BopsStatesBloc, BopsStatesState>(
+        builder: (context, state1) {
+          if (state1 is BopsStatesSuccessState) {
+            return BlocSelector<FilterBloc, FilterState, String>(
+              selector: (state) {
+                if (state is FilterSuccessState) {
+                  return state.bopsState ?? "";
+                }
+                return "";
+              },
+              builder: (context, filterState) {
+                return CustomDropdown(
+                  items: state1.bOpsResponseAttributeModel?.data ?? [],
+                  label: filterState.isEmpty ? s.bobStateText : filterState,
+                  onChanged: (value) {
+                    BlocProvider.of<FilterBloc>(context).add(
+                      SelectBopsStateEvent(
+                        bopsState: value,
+                      ),
+                    );
+                  },
+                  selectedValue: filterState,
+                );
+              },
+            );
+          }
+
+          if (state1 is BopsStatesFailureState) {
+            return const SizedBox(child: Text("Data Not Available"));
+          }
+
+          if (state1 is BopsStatesEmptyState) {
+            return CustomDropdown(
+                items: const ["No State Available"],
+                label: s.bobStateText,
+                onChanged: (value) {},
+                selectedValue: "");
+          }
+
+          return CustomDropdown(
+            items: const [],
+            label: s.bobStateText,
+            onChanged: (value) {},
+            selectedValue: "",
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildTicketClassificationDropdown() {
+    return BlocSelector<FilterBloc, FilterState, String>(
+      selector: (state) {
+        if (state is FilterSuccessState) {
+          return state.aiClassification ?? "";
+        }
+        return "";
+      },
+      builder: (context, state) {
+        return SizedBox(
+          child: CustomDropdown(
+            label: state.isEmpty ? s.classification : state,
+            selectedValue: state,
+            onChanged: (value) async {
+              BlocProvider.of<FilterBloc>(context).add(
+                AIClassificationEvent(
+                  aiClassification: value,
+                ),
+              );
+            },
+            items: const [
+              "Spam/Marketing",
+              "No Action Required",
+              "Genuine Query",
+              "Acknowledgement Required",
+              "Not Classified",
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildValidationDropdown() {
+    return BlocSelector<FilterBloc, FilterState, String>(
+      selector: (state) {
+        if (state is FilterSuccessState) {
+          return state.validation ?? "";
+        }
+        return "";
+      },
+      builder: (context, state) {
+        return SizedBox(
+          width: 200,
+          child: CustomDropdown(
+            label: state.isEmpty ? s.validation : state,
+            selectedValue: state,
+            onChanged: (value) async {
+              BlocProvider.of<FilterBloc>(context).add(
+                ValidationEvent(
+                  validation: value,
+                ),
+              );
+            },
+            items: const ["Not Validated", "Correct", "Incorrect"],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _getAllValidatedUser() {
+    return SizedBox(
+      child: BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
+        builder: (context, state) {
+          final userName = BlocProvider.of<FilterBloc>(context).userName;
+          if (state is GetAllValidationUsersSuccessState) {
+            var users = state.getAllValidationUsersAttributeModel?.data ?? [];
+
+            return BlocSelector<FilterBloc, FilterState, String>(
+              selector: (state) {
+                if (state is FilterSuccessState) {
+                  return state.selectedUserName ?? "";
+                }
+                return "";
+              },
+              builder: (context, state) {
+                return CustomDropdown(
+                    items: users.map((e) => e.name ?? "").toSet().toList(),
+                    label: state.isEmpty
+                        ? s.validatedUserText
+                        : users
+                                .firstWhere(
+                                  (element) => element.name == state,
+                                  orElse: () => users.first,
+                                )
+                                .name ??
+                            s.validatedUserText,
+                    onChanged: (value) {
+                      var selectedUser = users.firstWhere(
+                        (element) => element.name == value,
+                        orElse: () => users.first,
+                      );
+
+                      BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+                        SetUserNameEvent(
+                          email: selectedUser.email,
+                          name: selectedUser.name,
+                        ),
+                      );
+
+                      BlocProvider.of<FilterBloc>(context).add(
+                        UserValidationEvent(
+                          selectedUserName: selectedUser.name ?? "",
+                          selectedUserEmail: selectedUser.email ?? "",
+                        ),
+                      );
+                    },
+                    selectedValue: state);
+              },
+            );
+          }
+          if (state is GetAllValidationUsersLoadingState) {
+            return CustomDropdown(
+              items: "No User Available".split(","),
+              label:
+                  (userName?.isEmpty ?? true) ? s.validatedUserText : userName!,
+              selectedValue: '',
+              onChanged: (String? value) {},
+            );
+          }
+          if (state is GetAllValidationUsersEmptyState) {
+            return CustomDropdown(
+              items: "No User Available".split(","),
+              label: s.validatedUserText,
+              selectedValue: '',
+              onChanged: (String? value) {},
+            );
+          }
+          if (state is GetAllValidationUsersFailureState) {
+            return SizedBox(child: Text(s.noDataFoundText));
+          }
+          return CustomDropdown(
+            items: const [],
+            label: userName ?? "",
+            onChanged: (value) {},
+            selectedValue: "",
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildApplyFilterButton(BuildContext context) {
+    return BlocBuilder<FilterBloc, FilterState>(
+      builder: (context, filterState) {
+        return BlocBuilder<GetAllValidationUsersBloc,
+            GetAllValidationUsersState>(
+          builder: (context, state) {
+            return SizedBox(
+              height: 180,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  if (filterState is! FilterSuccessState) {
+                    showSnackbar(context, s.filterApplySnackBarText);
+                    return;
+                  }
+                  String? selectedPipelineValue =
+                      filterState.piplineId ?? widget.piplineId;
+                  if (selectedPipelineValue == null) {
+                    showSnackbar(context, s.filterApplySnackBarText);
+                    return;
+                  }
+
+                  BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+                    GetValidationUsersInitialEvent(
+                      endDate: filterState.endDate ?? widget.endDate,
+                      startDate: filterState.startDate ?? widget.startDate,
+                      filter: [selectedPipelineValue],
+                    ),
+                  );
+
+                  final classificationBloc =
+                      BlocProvider.of<TicketClassificationTabBloc>(context);
+
+                  classificationBloc.selectedUserValidator =
+                      filterState.selectedUserId ?? "";
+                  classificationBloc.selectedBOPsState =
+                      filterState.bopsState ?? "";
+                  classificationBloc.selectedClassification =
+                      filterState.aiClassification ?? "";
+                  classificationBloc.selectedValidation =
+                      filterState.validation?.toLowerCase() ?? "";
+
+                  classificationBloc.add(TicketClassificationDataCallEvent(
+                    fieldValue: filterState.piplineId ?? widget.piplineId,
+                    endDate: filterState.endDate ?? widget.endDate,
+                    startDate: filterState.startDate ?? widget.startDate,
+                    page: 1,
+                    pageSize: 10,
+                  ));
+                },
+                icon: const Icon(SupportBotIcons.filter, color: Colors.white),
+                label: Text(
+                  s.filterApplyText,
+                  style: SupportBotTextstyle.hint.copyWith(
+                    color: SupportBotColors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: SupportBotColors.bluePrimary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildSearchWidget() {
+    return BlocBuilder<FilterBloc, FilterState>(
+      builder: (context, filterstate) {
+        if (filterstate is FilterSuccessState) {
+          return Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: IconButton(
+                  icon: Icon(
+                    filterstate.isSearchOpen == false
+                        ? SupportBotIcons.close
+                        : SupportBotIcons.search,
+                    size: 25,
+                    color: SupportBotColors.bluePrimary,
+                  ),
+                  onPressed: () {
+                    BlocProvider.of<FilterBloc>(context).add(
+                      ToggleSearchEvent(
+                          isSearchOpen: !(filterstate.isSearchOpen ?? false),
+                          searchText: ""),
+                    );
+                    if (filterstate.isSearchOpen == true) {
+                      if (filterstate.searchController!.isNotEmpty) {
+                        filterstate.searchController == "";
+                        final selectedPipelineValue = filterstate.piplineId;
+                        BlocProvider.of<TicketClassificationTabBloc>(context)
+                            .add(
+                          TicketClassificationDataCallEvent(
+                            fieldValue: selectedPipelineValue,
+                            endDate: filterstate.endDate ?? widget.endDate,
+                            startDate:
+                                filterstate.startDate ?? widget.startDate,
+                            ticketId: filterstate.searchController,
+                            page: 1,
+                            pageSize: 10,
+                          ),
+                        );
+                      }
+                    }
+                    filterstate.isSearchOpen == true;
+                  },
+                ),
+              ),
+              if (filterstate.isSearchOpen == false)
+                SizedBox(
+                  width: UIHelpers.screenWidth(context) * 0.115,
+                  child: TextField(
+                    controller: TextEditingController(
+                        text: filterstate.searchController),
+                    decoration: InputDecoration(
+                      hintText: s.searchText,
+                      hintStyle: SupportBotTextstyle.medium.copyWith(
+                        color: SupportBotColors.gray.shade600,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: SupportBotColors.bluePrimary.shade500,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: SupportBotColors.bluePrimary.shade500,
+                        ),
+                      ),
+                      isDense: true,
+                    ),
+                    onSubmitted: (value) {
+                      BlocProvider.of<FilterBloc>(context).add(
+                        ToggleSearchEvent(
+                            value: value,
+                            isSearchOpen: !(filterstate.isSearchOpen ?? false),
+                            searchText: value),
+                      );
+                      final selectedPipelineValue =
+                          filterstate.piplineId!.isEmpty
+                              ? widget.piplineId
+                              : filterstate.piplineId;
+                      BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                        TicketClassificationDataCallEvent(
+                          fieldValue: selectedPipelineValue,
+                          endDate: filterstate.endDate ?? widget.endDate,
+                          startDate: filterstate.startDate ?? widget.startDate,
+                          ticketId: value,
+                          page: 1,
+                          pageSize: 10,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  Widget _buildClearFilterButton() {
+    return BlocBuilder<FilterBloc, FilterState>(
+      builder: (context, filterState) {
+        if (filterState is FilterSuccessState) {
+          return BlocBuilder<GetAllValidationUsersBloc,
+              GetAllValidationUsersState>(
+            builder: (context, state) {
+              return SizedBox(
+                height: 180,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    BlocProvider.of<FilterBloc>(context).add(
+                      ClearFilterEvent(),
+                    );
+                    BlocProvider.of<TicketClassificationTabBloc>(context)
+                        .clearFilters();
+                    BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                      TicketClassificationDataCallEvent(
+                        selectedBOPsState: filterState.bopsState,
+                        selectedClassification: filterState.aiClassification,
+                        selectedValidation: filterState.validation,
+                        fieldValue: widget.piplineId,
+                        endDate: widget.endDate,
+                        startDate: widget.startDate,
+                        page: 1,
+                        pageSize: 10,
+                      ),
+                    );
+                    BlocProvider.of<GetAllValidationUsersBloc>(context)
+                        .add(GetValidationUsersInitialEvent(
+                      endDate: widget.endDate,
+                      startDate: widget.startDate,
+                      filter: [widget.piplineId ?? ""],
+                    ));
+                  },
+                  icon: const Icon(Icons.clear_all, color: Colors.white),
+                  label: Text(
+                    s.filterClearText,
+                    style: SupportBotTextstyle.hint.copyWith(
+                      color: SupportBotColors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+        return Container();
+      },
+    );
   }
 
   Future<void> showSnackbar(BuildContext context, String text) async {
@@ -666,27 +736,26 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildExportButton() {
-    String getPipelineId() {
-      if (pipelineIds.isEmpty) {
-        return widget.piplineId ?? "";
-      }
-      return pipelineIds;
-    }
-
-    return BlocBuilder<GetAllValidationUsersBloc, GetAllValidationUsersState>(
-      builder: (context, state) {
-        return Tooltip(
-          message: s.exportCSVFileText,
-          child: ExportButton(
-              icon: '',
-              selectedButtonText: s.ticketClassification,
-              startDate: selectedate.firstOrNull ?? widget.startDate,
-              endDate: selectedate.lastOrNull ?? widget.endDate,
-              bopsState: selectedBOPsState,
-              selectedClassification: selectedClassification,
-              selectedClassificationValidation: selectedValidation,
-              selectedPipeline: getPipelineId()),
-        );
+    return BlocBuilder<FilterBloc, FilterState>(
+      builder: (context, state1) {
+        if (state1 is FilterSuccessState) {
+          return Tooltip(
+            message: s.export,
+            child: ExportButton(
+                exportUser: state1.selectedUserId ?? "",
+                ticketId: state1.searchController,
+                icon: '',
+                startDate: state1.startDate ?? widget.startDate,
+                selectedButtonText: s.ticketClassification,
+                endDate: state1.endDate ?? widget.endDate,
+                bopsState: state1.bopsState,
+                selectedClassification: state1.aiClassification,
+                selectedClassificationValidation:
+                    state1.validation?.toLowerCase(),
+                selectedPipeline: state1.piplineId ?? widget.piplineId),
+          );
+        }
+        return Container();
       },
     );
   }

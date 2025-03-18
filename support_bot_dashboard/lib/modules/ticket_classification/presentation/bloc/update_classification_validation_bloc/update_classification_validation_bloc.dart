@@ -25,8 +25,8 @@ class UpdateClassificationValidationBloc extends Bloc<
       final repository =
           serviceLocator<UpdateClassificationValidationUsecase>();
       final req = UpdateClassificationValidationRequestModel(
-          reason: event.reason ?? null,
-          validatedClassification: event.validatedClassification ?? null,
+          reason: event.reason,
+          validatedClassification: event.validatedClassification,
           id: event.id,
           pipeline: event.pipeline,
           validation: event.validation ?? "");

@@ -126,7 +126,7 @@ class DropdownWithCheckbox extends StatelessWidget {
                                 child: Text(
                                   s.oKText,
                                   style:
-                                      TextStyle(color: SupportBotColors.white),
+                                      const TextStyle(color: SupportBotColors.white),
                                 ),
                               ),
                             ),

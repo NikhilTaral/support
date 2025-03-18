@@ -54,7 +54,6 @@ class LineChartGraphWidget extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 800,
       child: LineChart(
         LineChartData(
           gridData: FlGridData(

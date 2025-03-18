@@ -12,12 +12,11 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AiQueryAnswerTile extends StatelessWidget {
-   AiQueryAnswerTile({super.key});
-final s = serviceLocator<S>();
+  AiQueryAnswerTile({super.key});
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 800,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
@@ -28,7 +27,7 @@ final s = serviceLocator<S>();
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-           s.aiTicketsAnswerText,
+            s.aiTicketsAnswerText,
             style: SupportBotTextstyle.normal.copyWith(
               fontWeight: FontWeight.w600,
               color: SupportBotColors.black,
@@ -63,7 +62,7 @@ final s = serviceLocator<S>();
   Widget _content(AIQueryAnswerSucssesState state) {
     return _buildInfoCard(
       editedText:
-        '${s.ticketsAnswerText}${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.answered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.answered}%)',
+          '${s.ticketsAnswerText}${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.answered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.answered}%)',
       nonEditedText:
           '${s.ticketsNotAnswerText} ${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.counts?.notAnswered} (${state.dashboardDataModel?.dashboardAiQueryChartAttributeModel?.data?.percentages?.notAnswered}%)',
     );

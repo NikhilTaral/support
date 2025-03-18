@@ -29,7 +29,6 @@ class ValidationStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
-      width: 800,
       decoration: BoxDecoration(
         border: Border.all(
             color: SupportBotColors.blueSecondary.shade100, width: 1),

@@ -38,15 +38,15 @@ Color getColors({required String? colString, required String? rowString}) {
       colString == rowTitleAck && rowString == colTitle ||
       colString == rowTitleSpam && rowString == rowTitleNoAction ||
       rowString == rowTitleSpam && colString == rowTitleNoAction) {
-    return Color(0xFFFFE3E9);
+    return const Color(0xFFFFE3E9);
   } else if (colString == rowString) {
-    return Color(0xFFE9F8E9);
+    return const Color(0xFFE9F8E9);
   } else if (colString ==
       RequestMentorReportKeys.getTitle(
           RequestMentorReportKeys.aIClassification)) {
     return Colors.transparent;
   } else {
-    return Color(0xFFFFE3E9);
+    return const Color(0xFFFFE3E9);
   }
 }
 

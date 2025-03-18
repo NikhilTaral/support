@@ -72,7 +72,7 @@ class _TicketClassificationPlutoGrideWidgetState
       _rows = reportUtils.createTicketClassificationRow();
       _columns = reportUtils.createTicketClassificationColumn(
           context: context, pipelineId: widget.piplineId);
-    } catch (e, stackTrace) {
+    } catch (e) {
       _rows = [];
       _columns = [];
     }

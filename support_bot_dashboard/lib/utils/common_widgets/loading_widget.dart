@@ -18,15 +18,11 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _borderRadius = BorderRadius.zero;
-    if (borderRadius != null) {
-      _borderRadius = borderRadius!;
-    } else if (radius != 0.0) {
-      _borderRadius = BorderRadius.circular(radius);
-    }
-
+    var borderRadius = BorderRadius.zero;
+    borderRadius = borderRadius!;
+  
     return ClipRRect(
-        borderRadius: _borderRadius,
+        borderRadius: borderRadius,
         child: Shimmer.fromColors(
           baseColor: baseColor,
           highlightColor: highlightColor,

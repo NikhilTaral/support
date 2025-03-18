@@ -41,7 +41,7 @@ class ValidateAnswerDialog extends StatelessWidget {
       ),
       content: Text(
         s.validateAIAnsweTicketrText,
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
       actions: [
         ElevatedButton(
