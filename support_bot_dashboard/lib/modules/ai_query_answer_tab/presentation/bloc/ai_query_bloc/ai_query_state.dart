@@ -6,7 +6,10 @@ class AIQueryInitialState extends AiQueryState {}
 
 class AIQueryLoadingState extends AiQueryState {}
 
-class AIQueryEmptyState extends AiQueryState {}
+class AIQueryEmptyState extends AiQueryState {
+  final String? message;
+  AIQueryEmptyState({this.message});
+}
 
 class AIQuerySuccessState extends AiQueryState {
   final AiQueryAttributeModel? dashboardDataModel;

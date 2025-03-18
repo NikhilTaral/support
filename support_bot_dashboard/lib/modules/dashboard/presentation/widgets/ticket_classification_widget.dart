@@ -17,7 +17,6 @@ class TicketClassificationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 800,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(
@@ -82,7 +81,7 @@ class TicketClassificationWidget extends StatelessWidget {
                             _buildClassificationRow(
                               context,
                               color: const Color(0xFFDBE2EF),
-                             title: s.acknowledgeRequiredText,
+                              title: s.acknowledgeRequiredText,
                               percentage:
                                   "${state.dashboardDataModel?.pieChartData?.data?.percentages?.acknowledgementRequired}%",
                             ),

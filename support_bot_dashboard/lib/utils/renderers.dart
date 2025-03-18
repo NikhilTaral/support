@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +13,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/ai_quiery_action_view.dart';
 import 'package:support_bot_dashboard/utils/applications_pluto_helper_methods.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/validation_drop_down_show_dialog.dart';
 import 'package:support_bot_dashboard/utils/ticket_classification_renderer.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
@@ -23,7 +23,9 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class Renderers {
   static TextStyle frozenStyle(
-      PlutoColumnRendererContext rendererContext, TextStyle textStyle) {
+    PlutoColumnRendererContext rendererContext,
+    TextStyle textStyle,
+  ) {
     if (rendererContext.cell.column.frozen == PlutoColumnFrozen.start ||
         rendererContext.cell.column.frozen == PlutoColumnFrozen.end) {}
     return textStyle;
@@ -34,14 +36,10 @@ class Renderers {
 
     final String displayText = value == true ? 'Updated' : 'Not Updated';
 
-    return Center(
-      child: Text(
-        displayText,
-      ),
-    );
+    return Center(child: Text(displayText));
   }
 
-  static Widget textRenderer(
+  static Widget textRenderer1(
     PlutoColumnRendererContext rendererContext, {
     TextStyle? textStyle,
   }) {
@@ -50,6 +48,28 @@ class Renderers {
         rendererContext,
         SupportBotTextstyle.small
             .copyWith(fontSize: 14, color: SupportBotColors.gray.shade800));
+
+    return Text(
+      text.isEmpty ? "Not Classified" : text,
+      textAlign: TextAlign.start,
+      style: textStyle,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+//
+  static Widget textRenderer2(
+    PlutoColumnRendererContext rendererContext, {
+    TextStyle? textStyle,
+  }) {
+    final String text = rendererContext.cell.value ?? "";
+    textStyle ??= frozenStyle(
+      rendererContext,
+      SupportBotTextstyle.small.copyWith(
+        fontSize: 14,
+        color: SupportBotColors.gray.shade800,
+      ),
+    );
 
     return Text(
       text.isEmpty ? "N/A" : text,
@@ -65,16 +85,14 @@ class Renderers {
   }) {
     final num value = rendererContext.cell.value ?? "";
     textStyle ??= frozenStyle(
-        rendererContext,
-        SupportBotTextstyle.small.copyWith(
-            fontSize: 14,
-            color:
-                value > 5 ? const Color(0xFF11972C) : const Color(0xFFFD0101)));
-
-    return Text(
-      "$value/10",
-      style: textStyle,
+      rendererContext,
+      SupportBotTextstyle.small.copyWith(
+        fontSize: 14,
+        color: value > 5 ? const Color(0xFF11972C) : const Color(0xFFFD0101),
+      ),
     );
+
+    return Text("$value/10", style: textStyle);
   }
 
   static Widget applicationTextStatusRenderer(
@@ -89,18 +107,16 @@ class Renderers {
             : "N/A";
 
     textStyle ??= frozenStyle(
-        rendererContext,
-        SupportBotTextstyle.small.copyWith(
-          fontSize: 14,
-          color: ApplicationsPlutoHelperMethods.getTextColorFromStatus(
-            status: displayText,
-          ),
-        ));
-
-    return Text(
-      displayText,
-      style: textStyle,
+      rendererContext,
+      SupportBotTextstyle.small.copyWith(
+        fontSize: 14,
+        color: ApplicationsPlutoHelperMethods.getTextColorFromStatus(
+          status: displayText,
+        ),
+      ),
     );
+
+    return Text(displayText, style: textStyle);
   }
 
   static Widget ticketClassificationActionRenderer(
@@ -108,8 +124,9 @@ class Renderers {
     required BuildContext context,
     void Function(String?)? onDelete,
   }) {
-    final rowData =
-        rendererContext.row.cells.map((key, cell) => MapEntry(key, cell.value));
+    final rowData = rendererContext.row.cells.map(
+      (key, cell) => MapEntry(key, cell.value),
+    );
     final rowsData = [rowData];
     final actionData =
         rendererContext.row.cells["action"]?.value as Map<String, dynamic>? ??
@@ -138,10 +155,6 @@ class Renderers {
     int index = rendererContext.cell.value?['index'] ?? 0;
     List<AiQueryAttributeItem> allRows =
         rendererContext.cell.value?['allRows'] ?? [];
-    final actionData =
-        rendererContext.row.cells["Action"]?.value as Map<String, dynamic>? ??
-            {};
-
     return Align(
       alignment: Alignment.topLeft,
       child: _buildViewValidateButton(rendererContext, allRows, index),
@@ -211,10 +224,7 @@ class Renderers {
   }
 
   static void _showDialog(BuildContext context, Widget dialog) {
-    showDialog(
-      context: context,
-      builder: (context) => dialog,
-    );
+    showDialog(context: context, builder: (context) => dialog);
   }
 
   static Widget tooltip(
@@ -259,334 +269,147 @@ class Renderers {
     TextStyle? textStyle,
     List<String> piplineid = const [],
   }) {
-    final rowData =
-        rendererContext.row.cells.map((key, cell) => MapEntry(key, cell.value));
-    String? selectedValue;
-    final id = rowData['id'] ?? "";
+    final rowData = rendererContext.row.cells.map(
+      (key, cell) => MapEntry(key, cell.value),
+    );
+
     if (rowData['validation'] == "") {
-      final List<String> items = ['Correct', 'Incorrect'];
       return Center(
-          child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => GetValidationDetailsBloc(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => GetValidationDetailsBloc()),
+            BlocProvider(
+              create: (context) => UpdateClassificationValidationBloc(),
+            ),
+            BlocProvider(create: (context) => GetAllValidationUsersBloc()),
+          ],
+          child:
+              BlocConsumer<GetValidationDetailsBloc, GetValidationDetailsState>(
+            listener: (context, state) {
+              if (state is UpdateClassificationValidationSuccessState) {
+                serviceLocator<InstanceSharingService>()
+                    .ticketClassificationBloc
+                    ?.add(
+                      ticketClassificationBloc.TickiteClassificationEvent(),
+                    );
+              }
+            },
+            builder: (context, state) {
+              return _validateButton(
+                context,
+                state,
+                rowData,
+                rendererContext,
+                piplineid,
+              );
+            },
           ),
-          BlocProvider(
-            create: (context) => UpdateClassificationValidationBloc(),
-          ),
-          BlocProvider(
-            create: (context) => GetAllValidationUsersBloc(),
-          ),
-        ],
-        child:
-            BlocConsumer<GetValidationDetailsBloc, GetValidationDetailsState>(
-          listener: (context, state) {
-            if (state is UpdateClassificationValidationSuccessState) {
-              serviceLocator<InstanceSharingService>()
-                  .ticketClassificationBloc
-                  ?.add(ticketClassificationBloc.TickiteClassificationEvent());
-            }
-          },
-          builder: (context, state) {
-            return DropdownButton<String>(
-              alignment: Alignment.center,
-              isDense: true,
-              icon: const Icon(
-                size: 16,
-                Icons.keyboard_arrow_down_rounded,
-                color: SupportBotColors.bluePrimary,
-              ),
-              borderRadius: BorderRadius.circular(2),
-              onTap: () {
-                BlocProvider.of<GetValidationDetailsBloc>(context)
-                    .add(GetValidationDetailsvalidateEvent(id: rowData['id']));
-              },
-              dropdownColor: SupportBotColors.white,
-              underline: Container(color: Colors.transparent),
-              value: selectedValue,
-              hint: Text(selectedValue ?? 'Select'),
-              items: items.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue?.toLowerCase() == "correct") {
-                  final rowData = rendererContext.row.cells
-                      .map((key, cell) => MapEntry(key, cell.value));
-                  bool validationValue = newValue?.toLowerCase() == 'correct';
-                  BlocProvider.of<UpdateClassificationValidationBloc>(context)
-                      .add(
-                    UpdateClassificationValidationstateEvent(
-                      id: rowData['id'],
-                      pipeline: (piplineid).join(','),
-                      validation: newValue?.toLowerCase(),
-                    ),
-                  );
-
-                  Future.delayed(const Duration(microseconds: 2000000), () {
-                    final bloc =
-                        BlocProvider.of<TicketClassificationTabBloc>(context);
-                    BlocProvider.of<TicketClassificationTabBloc>(context).add(
-                      TicketClassificationDataCallEvent(
-                        startDate: bloc.startDate,
-                        endDate: bloc.endDate,
-                        fieldValue: bloc.selectedPipelineId,
-                        page: BlocProvider.of<TicketClassificationTabBloc>(
-                                context)
-                            .page,
-                        pageSize: BlocProvider.of<TicketClassificationTabBloc>(
-                                context)
-                            .pageSize,
-                      ),
-                    );
-
-                    // final validateUserbloc =
-                    //     BlocProvider.of<GetAllValidationUsersBloc>(context);
-                    BlocProvider.of<GetAllValidationUsersBloc>(context).add(
-                      GetValidationUsersInitialEvent(
-                        startDate: bloc.startDate,
-                        endDate: bloc.endDate,
-                        filter: [bloc.selectedPipelineId],
-                      ),
-                    );
-                  });
-
-                  if (state is GetValidationDetailsSuccessState &&
-                      state.getValidationDetailsAttributeModel?.data?.status ==
-                          false) {
-                    Navigator.pop(context);
-                    return;
-                  }
-
-                  if (newValue == '' || newValue == null) {
-                    rendererContext.stateManager.changeCellValue(
-                      rendererContext.cell,
-                      false,
-                    );
-                    selectedValue = null;
-                  } else {
-                    selectedValue = newValue;
-                    rendererContext.stateManager.changeCellValue(
-                      rendererContext.cell,
-                      validationValue,
-                    );
-                  }
-                } else if (newValue?.toLowerCase() == "incorrect") {
-                  final rowData = rendererContext.row.cells
-                      .map((key, cell) => MapEntry(key, cell.value));
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext dialogContext) {
-                      String reason = '';
-                      String _selectedClassification = 'Select';
-
-                      return AlertDialog(
-                        title: Text(serviceLocator<S>().emailValidations),
-                        backgroundColor: SupportBotColors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        content: SizedBox(
-                          width: UIHelpers.screenWidth(context) * 0.3,
-                          height: UIHelpers.screenHeight(context) * 0.3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                onChanged: (value) {
-                                  reason = value;
-                                },
-                                decoration: InputDecoration(
-                                  hintText: S.of(context).comments,
-                                  contentPadding: const EdgeInsets.all(16.0),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                ),
-                                maxLines: 4,
-                              ),
-                              UIHelpers.verticalSpaceSmall,
-                              Text(
-                                S.of(context).classification,
-                                style: SupportBotTextstyle.subheadingH6
-                                    .copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
-                              ),
-                              UIHelpers.verticalSpaceTiny,
-                              SizedBox(
-                                height: UIHelpers.screenHeight(context) * 0.05,
-                                child: DropdownButtonFormField<String>(
-                                  value: _selectedClassification,
-                                  items: [
-                                    'Select',
-                                    'Spam/Marketing',
-                                    'No Action Required',
-                                    'Genuine Query',
-                                    'Acknowledgement Required'
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style:
-                                            SupportBotTextstyle.medium.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: SupportBotColors.black,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newClassification) {
-                                    if (newClassification != null) {
-                                      _selectedClassification =
-                                          newClassification;
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.all(8.0),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    size: 30,
-                                    color: SupportBotColors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: SupportBotColors.danger,
-                              foregroundColor: SupportBotColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 40),
-                            ),
-                            child: Text(
-                              S.of(context).cancel,
-                              style: SupportBotTextstyle.hint.copyWith(
-                                color: SupportBotColors.white,
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                            },
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: SupportBotColors.bluePrimary,
-                              foregroundColor: SupportBotColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 40),
-                            ),
-                            child: Text(
-                              S.of(context).save,
-                              style: SupportBotTextstyle.hint.copyWith(
-                                color: SupportBotColors.white,
-                              ),
-                            ),
-                            onPressed: () async {
-                              if (reason.isNotEmpty &&
-                                  _selectedClassification != 'Select') {
-                                BlocProvider.of<
-                                            UpdateClassificationValidationBloc>(
-                                        context)
-                                    .add(
-                                  UpdateClassificationValidationstateEvent(
-                                    id: id,
-                                    pipeline: (piplineid).join(','),
-                                    reason: reason,
-                                    validatedClassification:
-                                        _selectedClassification,
-                                    validation: newValue?.toLowerCase(),
-                                  ),
-                                );
-                                Future.delayed(
-                                    const Duration(microseconds: 200000), () {
-                                  BlocProvider.of<GetAllValidationUsersBloc>(
-                                          context)
-                                      .add(GetValidationUsersInitialEvent());
-                                  final bloc = BlocProvider.of<
-                                      TicketClassificationTabBloc>(context);
-                                  BlocProvider.of<TicketClassificationTabBloc>(
-                                          context)
-                                      .add(
-                                    TicketClassificationDataCallEvent(
-                                      startDate: bloc.startDate,
-                                      endDate: bloc.endDate,
-                                      fieldValue: bloc.selectedPipelineId,
-                                      page: BlocProvider.of<
-                                                  TicketClassificationTabBloc>(
-                                              context)
-                                          .page,
-                                      pageSize: BlocProvider.of<
-                                                  TicketClassificationTabBloc>(
-                                              context)
-                                          .pageSize,
-                                    ),
-                                  );
-
-                                  // final validateUserbloc =
-                                  //     BlocProvider.of<GetAllValidationUsersBloc>(context);
-                                  BlocProvider.of<GetAllValidationUsersBloc>(
-                                          context)
-                                      .add(
-                                    GetValidationUsersInitialEvent(
-                                      startDate: bloc.startDate,
-                                      endDate: bloc.endDate,
-                                      filter: [bloc.selectedPipelineId],
-                                    ),
-                                  );
-                                });
-
-                                if (state is GetValidationDetailsSuccessState &&
-                                    state.getValidationDetailsAttributeModel
-                                            ?.data?.status ==
-                                        false) {
-                                  Navigator.of(dialogContext).pop();
-                                  return;
-                                }
-                                Navigator.of(dialogContext).pop();
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Please provide reason and select classification')),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              disabledHint: const Text('No selection'),
-            );
-          },
         ),
-      ));
-    } else {
-      final validation = rowData['vadidation'] ?? "";
-      return Center(
-        child: Text(rendererContext.cell.value),
       );
+    } else {
+      return Center(child: Text(rendererContext.cell.value));
     }
   }
+}
+
+Widget _validateButton(
+  context,
+  state,
+  rowData,
+  rendererContext,
+  piplineid,
+) {
+  final id = rowData['id'] ?? "";
+  final List<String> items = ['Correct', 'Incorrect'];
+  String? selectedValue;
+  return DropdownButton<String>(
+    alignment: Alignment.center,
+    isDense: true,
+    icon: const Icon(
+      size: 16,
+      Icons.keyboard_arrow_down_rounded,
+      color: SupportBotColors.bluePrimary,
+    ),
+    borderRadius: BorderRadius.circular(2),
+    onTap: () {
+      BlocProvider.of<GetValidationDetailsBloc>(
+        context,
+      ).add(GetValidationDetailsvalidateEvent(id: rowData['id']));
+    },
+    dropdownColor: SupportBotColors.white,
+    underline: Container(color: Colors.transparent),
+    value: selectedValue,
+    hint: Text(selectedValue ?? 'Select'),
+    items: items.map((String value) {
+      return DropdownMenuItem<String>(value: value, child: Text(value));
+    }).toList(),
+    onChanged: (String? newValue) {
+      if (newValue?.toLowerCase() == "correct") {
+        final rowData = rendererContext.row.cells.map(
+          (key, cell) => MapEntry(key, cell.value),
+        );
+
+        bool validationValue = newValue?.toLowerCase() == 'correct';
+
+        BlocProvider.of<UpdateClassificationValidationBloc>(context).add(
+          UpdateClassificationValidationstateEvent(
+            id: rowData['id'],
+            pipeline: (piplineid).join(','),
+            validation: newValue?.toLowerCase(),
+          ),
+        );
+        final states =
+            BlocProvider.of<UpdateClassificationValidationBloc>(context).state;
+        if (states is UpdateClassificationValidationSuccessState) {}
+        Future.delayed(const Duration(microseconds: 2000000), () {
+          final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
+          BlocProvider.of<TicketClassificationTabBloc>(context).add(
+            TicketClassificationDataCallEvent(
+              startDate: bloc.startDate,
+              endDate: bloc.endDate,
+              fieldValue: bloc.selectedPipelineId,
+              page: bloc.page,
+              pageSize: bloc.pageSize,
+            ),
+          );
+
+          BlocProvider.of<GetAllValidationUsersBloc>(context).add(
+            GetValidationUsersInitialEvent(
+              startDate: bloc.startDate,
+              endDate: bloc.endDate,
+              filter: [bloc.selectedPipelineId],
+            ),
+          );
+        });
+
+        if (state is GetValidationDetailsSuccessState &&
+            state.getValidationDetailsAttributeModel?.data?.status == false) {
+          Navigator.pop(context);
+          return;
+        }
+
+        if (newValue == '' || newValue == null) {
+          rendererContext.stateManager.changeCellValue(
+            rendererContext.cell,
+            false,
+          );
+          selectedValue = null;
+        } else {
+          selectedValue = newValue;
+          rendererContext.stateManager.changeCellValue(
+            rendererContext.cell,
+            validationValue,
+          );
+        }
+      } else if (newValue?.toLowerCase() == "incorrect") {
+        showClassificationDialog(
+          context: context,
+          id: id,
+          pipelineIds: piplineid,
+          newValue: newValue,
+        );
+      }
+    },
+    disabledHint: Text(s.noSelectionText),
+  );
 }

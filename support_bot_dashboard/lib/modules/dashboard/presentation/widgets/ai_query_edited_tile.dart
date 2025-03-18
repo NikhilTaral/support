@@ -12,12 +12,11 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class AiQueryEditedTile extends StatelessWidget {
-   AiQueryEditedTile({super.key});
-final s = serviceLocator<S>();
+  AiQueryEditedTile({super.key});
+  final s = serviceLocator<S>();
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 800,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
@@ -63,7 +62,7 @@ final s = serviceLocator<S>();
   Widget _content(AIQueryEditedSucssesState state) {
     return _buildInfoCard(
       editedText:
-         ' ${s.ticketEditedText} ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.editedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%)',
+          ' ${s.ticketEditedText} ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.editedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.editedCount}%)',
       nonEditedText:
           '${s.ticketNotEditedText} ${state.dashboardAiQueryEditedAttributeModel?.data?.counts?.unEditedCount} (${state.dashboardAiQueryEditedAttributeModel?.data?.percentages?.unEditedCount}%)',
     );

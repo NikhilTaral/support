@@ -17,6 +17,7 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
   String? bopsState = "";
   String? selectedClassifications = "";
   String? selectedPipeline = "11257490";
+  String? classificationValidatedBy;
   ExportBloc() : super(ExportInitial()) {
     on<FetchExportDataEvent>(_onFetchExportDataEvent);
   }
@@ -28,6 +29,7 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
     bopsState = event.bopsState;
     selectedClassifications = event.selectedClassification;
     selectedPipeline = event.selectedPipeline;
+    classificationValidatedBy = event.classificationValidatedBy;
     final repository = serviceLocator<DashboardExportusecase>();
 
     final req = DashboardExportRequestModel(
@@ -37,24 +39,28 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
           ?.copyWith(hour: 23, minute: 59, second: 59, millisecond: 999),
       filter: [
         if (event.bopsState != null && event.bopsState!.isNotEmpty)
-          Filter(
-              fieldName: "BOPS_States",
-              fieldValue: event.bopsState?.split(",")),
+          Filter(fieldName: "BOPS_States", fieldValue: [event.bopsState ?? ""]),
         if (event.selectedClassification != null &&
             event.selectedClassification!.isNotEmpty)
           Filter(
               fieldName: "classifications",
-              fieldValue: event.selectedClassification?.split(',')),
+              fieldValue: [event.selectedClassification ?? ""]),
+        if (event.classificationValidatedBy != null &&
+            event.classificationValidatedBy!.isNotEmpty)
+          Filter(
+              fieldName: "classificationValidatedBy",
+              fieldValue: [event.classificationValidatedBy ?? ""]),
         if (event.selectedClassificationValidation != null &&
             event.selectedClassificationValidation!.isNotEmpty)
           Filter(
               fieldName: "classificationValidations",
-              fieldValue: event.selectedClassificationValidation?.split(',')),
+              fieldValue: [event.selectedClassificationValidation ?? ""]),
         Filter(
           fieldName: "pipelines",
-          fieldValue: [selectedPipeline ?? "11257490"],
+          fieldValue: [event.selectedPipeline ?? ""],
         ),
       ],
+      ticketId: event.ticketId == "" ? null : event.ticketId,
       page: 1,
       pageSize: 10,
     );

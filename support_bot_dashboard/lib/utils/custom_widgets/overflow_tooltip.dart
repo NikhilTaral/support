@@ -23,9 +23,9 @@ Widget overflowTooltipText(String text, TextStyle? style) {
               isMobile: false,
               message: text,
               prefersAbove: false,
-              messagePadding: EdgeInsets.fromLTRB(5, 5, 5, 10),
+              messagePadding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
               child: Text(
-                "$text",
+                text,
                 style: style,
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
@@ -39,11 +38,6 @@ List<CountContainerData> getCountContainerData(BuildContext context,
       text: S.of(context).acknowledgementRequired,
       icon: SupportBotIcons.list,
       count: model?.pieChartData?.data?.counts?.acknowledgementRequired,
-    ),
-        CountContainerData(
-      text: S.of(context).ticketNotClassified,
-      icon: SupportBotIcons.star1,
-      count: model?.pieChartData?.data?.counts?.notClassified,
     ),
     CountContainerData(
       text: S.of(context).ticketNotClassified,

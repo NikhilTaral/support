@@ -12,6 +12,10 @@
   "@pageText": {
     "description": "Page"
   },
+  "piplineText": "Pipeline",
+  "@piplineText": {
+    "description": "Pipeline"
+  },
   "filterApplyText": "Apply Filter",
   "@filterApplyText": {
     "description": "Apply Filter"
@@ -87,38 +91,6 @@
   "editText": "Edit",
   "@editText": {
     "description": "Edit Text"
-  },
-  "itemsPerPageText": "Items per page:   ",
-  "@itemsPerPageText": {
-    "description": "Items per page"
-  },
-  "aPIErrorMsgText": "Error fetching data from server",
-  "@aPIErrorMsgText": {
-    "description": "Error msg"
-  },
-  "pageText": "Page",
-  "@pageText": {
-    "description": "Page"
-  },
-  "piplineText": "Pipeline",
-  "@piplineText": {
-    "description": "Pipeline"
-  },
-  "filterApplyText": "Apply Filter",
-  "@filterApplyText": {
-    "description": "Apply Filter"
-  },
-  "filterClearText": "Clear Filters",
-  "@filterClearText": {
-    "description": "Clear Filters"
-  },
-  "filterApplySnackBarText": "Please select a pipeline to apply filter",
-  "@filterApplySnackBarText": {
-    "description": "Please select a pipeline to apply filter"
-  },
-  "searchText": "Search...",
-  "@searchText": {
-    "description": "Search"
   },
   "title": "Support Bot",
   "@title": {
@@ -477,5 +449,17 @@
   "noStateAvailableText": "No State/Province Available",
   "@noStateAvailableText": {
     "description": "No State/Province Available Text"
+  },
+  "reasonAndSelectClassificationText": "Please provide reason and select classification",
+  "@reasonAndSelectClassificationText": {
+    "description": "Please provide reason and select classification Text"
+  },
+  "noSelectionText": "No selection",
+  "@noSelectionText": {
+    "description": "No selection Text"
+  },
+  "exportCSVFileText": "Export CSV File",
+  "@exportCSVFileText": {
+    "description": "Export CSV File Text"
   }
 }
