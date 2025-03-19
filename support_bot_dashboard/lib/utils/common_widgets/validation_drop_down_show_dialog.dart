@@ -6,6 +6,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/common_elevated_button.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/custom_snackbar.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
@@ -126,6 +127,7 @@ Widget _saveIncorrect(
     String selectedClassification,
     String? newValue) {
   if (reason.isNotEmpty && selectedClassification != 'Select') {
+    final s = serviceLocator<S>();
     BlocProvider.of<UpdateClassificationValidationBloc>(context).add(
       UpdateClassificationValidationstateEvent(
         id: id,
@@ -157,8 +159,14 @@ Widget _saveIncorrect(
           filter: [bloc.selectedPipelineId],
         ),
       );
+      ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackbar(
+          message: s.ticketUpdatedInCorrectText,
+          context: context,
+          isSuccess: true,
+        ),
+      );
     });
-
     Navigator.of(context).pop();
   } else {
     final s = serviceLocator<S>();

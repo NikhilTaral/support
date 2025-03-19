@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -14,6 +13,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/utils/ai_quiery_action_view.dart';
 import 'package:support_bot_dashboard/utils/applications_pluto_helper_methods.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/validation_drop_down_show_dialog.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/custom_snackbar.dart';
 import 'package:support_bot_dashboard/utils/ticket_classification_renderer.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/service/instance_sharing_service.dart';
@@ -360,8 +360,23 @@ Widget _validateButton(
         );
         final states =
             BlocProvider.of<UpdateClassificationValidationBloc>(context).state;
-        if (states is UpdateClassificationValidationSuccessState) {}
+        if (states is UpdateClassificationValidationSuccessState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            CustomSnackbar(
+              message: s.updateSuccessfullyText,
+              context: context,
+              isSuccess: true,
+            ),
+          );
+        }
         Future.delayed(const Duration(microseconds: 2000000), () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            CustomSnackbar(
+              message: s.ticketUpdatedCorrectText,
+              context: context,
+              isSuccess: true,
+            ),
+          );
           final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
           BlocProvider.of<TicketClassificationTabBloc>(context).add(
             TicketClassificationDataCallEvent(
@@ -385,7 +400,6 @@ Widget _validateButton(
         if (state is GetValidationDetailsSuccessState &&
             state.getValidationDetailsAttributeModel?.data?.status == false) {
           Navigator.pop(context);
-          return;
         }
 
         if (newValue == '' || newValue == null) {
