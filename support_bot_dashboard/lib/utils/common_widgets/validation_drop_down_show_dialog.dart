@@ -6,6 +6,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/update_classification_validation_bloc/update_classification_validation_bloc.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/common_elevated_button.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/custom_widgets/custom_snackbar.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -33,69 +34,56 @@ void showClassificationDialog({
           width: UIHelpers.screenWidth(context) * 0.3,
           height: UIHelpers.screenHeight(context) * 0.3,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                onChanged: (value) => reason = value,
-                decoration: InputDecoration(
-                  hintText: S.of(context).comments,
-                  contentPadding: const EdgeInsets.all(16.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                maxLines: 4,
-              ),
-              UIHelpers.verticalSpaceSmall,
-              Text(
-                S.of(context).classification,
-                style: SupportBotTextstyle.subheadingH6
-                    .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              UIHelpers.verticalSpaceTiny,
-              SizedBox(
-                height: UIHelpers.screenHeight(context) * 0.05,
-                child: DropdownButtonFormField<String>(
-                  value: selectedClassification,
-                  items: [
-                    'Select',
-                    'Spam/Marketing',
-                    'No Action Required',
-                    'Genuine Query',
-                    'Acknowledgement Required'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: SupportBotTextstyle.medium.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: SupportBotColors.black,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newClassification) {
-                    if (newClassification != null) {
-                      selectedClassification = newClassification;
-                    }
-                  },
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  onChanged: (value) => reason = value,
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(8.0),
+                    hintText: S.of(context).comments,
+                    contentPadding: const EdgeInsets.all(16.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 30,
-                    color: SupportBotColors.black,
-                  ),
+                  maxLines: 4,
                 ),
-              ),
-            ],
-          ),
+                UIHelpers.verticalSpaceSmall,
+                Text(
+                  S.of(context).classification,
+                  style: SupportBotTextstyle.subheadingH6
+                      .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                UIHelpers.verticalSpaceTiny,
+                SizedBox(
+                  child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                      return SizedBox(
+                        width: UIHelpers.screenWidth(context) * 0.9,
+                        child: CustomDropdown(
+                          width: UIHelpers.screenWidth(context) * 0.3,
+                          items: const [
+                            'Select',
+                            'Spam/Marketing',
+                            'No Action Required',
+                            'Genuine Query',
+                            'Acknowledgement Required'
+                          ],
+                          label: serviceLocator<S>().bobStateText,
+                          selectedValue: selectedClassification,
+                          onChanged: (String? newClassification) {
+                            if (newClassification != null) {
+                              setState(() {
+                                selectedClassification = newClassification;
+                              });
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                )
+              ]),
         ),
         actions: <Widget>[
           CommonElevatedButton(
