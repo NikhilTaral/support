@@ -174,28 +174,45 @@ class Renderers {
           padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           child: Icon(Icons.more_vert_rounded),
         ),
-        itemBuilder: (context) => [
-          _buildMenuItem(
-            icon: Icons.visibility,
-            text: serviceLocator<S>().view,
-            onTap: () => _showDialog(
-              context,
-              TicketDetailsDialog(
-                rowData: rendererContext.row,
-                allRows: allRows,
-                initialIndex: index,
-              ),
-            ),
-          ),
-          _buildMenuItem(
-            icon: Icons.loop_rounded,
-            text: serviceLocator<S>().validate,
-            onTap: () => _showDialog(
-              context,
-              ValidateAnswerDialog(rowData: rendererContext.row),
-            ),
-          ),
-        ],
+        itemBuilder: (context) {
+          return allRows[index].agentAnsValidation == true
+              ? [
+                  _buildMenuItem(
+                    icon: Icons.visibility,
+                    text: serviceLocator<S>().view,
+                    onTap: () => _showDialog(
+                      context,
+                      TicketDetailsDialog(
+                        rowData: rendererContext.row,
+                        allRows: allRows,
+                        initialIndex: index,
+                      ),
+                    ),
+                  ),
+                ]
+              : [
+                  _buildMenuItem(
+                    icon: Icons.visibility,
+                    text: serviceLocator<S>().view,
+                    onTap: () => _showDialog(
+                      context,
+                      TicketDetailsDialog(
+                        rowData: rendererContext.row,
+                        allRows: allRows,
+                        initialIndex: index,
+                      ),
+                    ),
+                  ),
+                  _buildMenuItem(
+                    icon: Icons.loop_rounded,
+                    text: serviceLocator<S>().validate,
+                    onTap: () => _showDialog(
+                      context,
+                      ValidateAnswerDialog(rowData: rendererContext.row),
+                    ),
+                  ),
+                ];
+        },
       ),
     );
   }
