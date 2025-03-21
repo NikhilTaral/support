@@ -20,6 +20,7 @@ class FilterSuccessState extends FilterState {
   final String? ticketId;
   final bool? isSearchOpen;
   final String? searchController;
+  final String? selectedClassification;
 
   FilterSuccessState({
     this.piplineName,
@@ -35,6 +36,7 @@ class FilterSuccessState extends FilterState {
     this.ticketId,
     this.isSearchOpen = true,
     this.searchController,
+    this.selectedClassification
   });
   FilterSuccessState copyWith(
       {String? aiClassification,
@@ -49,7 +51,8 @@ class FilterSuccessState extends FilterState {
       String? validation,
       String? ticketId,
       bool? isSearchOpen,
-      String? searchController}) {
+      String? searchController,
+      String? selectedClassification}) {
     return FilterSuccessState(
         aiClassification: aiClassification ?? this.aiClassification,
         bopsState: bopsState ?? this.bopsState,
@@ -63,7 +66,9 @@ class FilterSuccessState extends FilterState {
         validation: validation ?? this.validation,
         ticketId: ticketId ?? this.ticketId,
         isSearchOpen: isSearchOpen ?? this.isSearchOpen,
-        searchController: searchController ?? this.searchController);
+        searchController: searchController ?? this.searchController,
+        selectedClassification: selectedClassification??this.selectedClassification
+        );
   }
 }
 

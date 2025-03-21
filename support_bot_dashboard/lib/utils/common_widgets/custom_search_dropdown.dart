@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
@@ -8,7 +10,6 @@ class CustomSearchDropdown extends StatefulWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final String label;
-
   const CustomSearchDropdown({
     Key? key,
     required this.selectedValue,
@@ -22,7 +23,7 @@ class CustomSearchDropdown extends StatefulWidget {
 }
 
 class _CustomBopsateDropdownState extends State<CustomSearchDropdown> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   late List<String> _filteredItems;
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
@@ -92,7 +93,7 @@ class _CustomBopsateDropdownState extends State<CustomSearchDropdown> {
             width: UIHelpers.screenWidth(context) * 0.13,
             child: CompositedTransformFollower(
               link: _layerLink,
-              offset: Offset(0, 50),
+              offset: const Offset(0, 50),
               child: Material(
                 color: Colors.transparent,
                 child: Container(
@@ -114,8 +115,8 @@ class _CustomBopsateDropdownState extends State<CustomSearchDropdown> {
                       TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
-                          hintText: 'Search...',
-                          focusedBorder: OutlineInputBorder(
+                          hintText: serviceLocator<S>().searchText,
+                          focusedBorder: const OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: SupportBotColors.bluePrimary),
                           ),

@@ -30,75 +30,97 @@ void showClassificationDialog({
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        content: SizedBox(
-          width: UIHelpers.screenWidth(context) * 0.3,
-          height: UIHelpers.screenHeight(context) * 0.3,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  onChanged: (value) => reason = value,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).comments,
-                    contentPadding: const EdgeInsets.all(16.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  maxLines: 4,
-                ),
-                UIHelpers.verticalSpaceSmall,
-                Text(
-                  S.of(context).classification,
-                  style: SupportBotTextstyle.subheadingH6
-                      .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-                UIHelpers.verticalSpaceTiny,
-                SizedBox(
-                  child: StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                      return SizedBox(
-                        width: UIHelpers.screenWidth(context) * 0.9,
-                        child: CustomDropdown(
-                          width: UIHelpers.screenWidth(context) * 0.3,
-                          items: const [
-                            'Select',
-                            'Spam/Marketing',
-                            'No Action Required',
-                            'Genuine Query',
-                            'Acknowledgement Required'
-                          ],
-                          label: serviceLocator<S>().bobStateText,
-                          selectedValue: selectedClassification,
-                          onChanged: (String? newClassification) {
-                            if (newClassification != null) {
-                              setState(() {
-                                selectedClassification = newClassification;
-                              });
-                            }
-                          },
+        content: BlocProvider.value(
+          value: BlocProvider.of<TicketClassificationTabBloc>(context),
+          child: BlocBuilder<TicketClassificationTabBloc,
+              TicketClassificationState>(
+            builder: (context, state) {
+              return SizedBox(
+                width: UIHelpers.screenWidth(dialogContext) * 0.3,
+                height: UIHelpers.screenHeight(dialogContext) * 0.3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      onChanged: (value) => reason = value,
+                      decoration: InputDecoration(
+                        hintText: S.of(dialogContext).comments,
+                        contentPadding: const EdgeInsets.all(16.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                      );
-                    },
-                  ),
-                )
-              ]),
+                      ),
+                      maxLines: 4,
+                    ),
+                    UIHelpers.verticalSpaceSmall,
+                    Text(
+                      S.of(dialogContext).classification,
+                      style: SupportBotTextstyle.subheadingH6.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    UIHelpers.verticalSpaceTiny,
+                    CustomDropdown(
+                      label: "Select",
+                      selectedValue: state is TicketClassificationSuccessState
+                          ? state.selectedClassification ?? ""
+                          : "Select",
+                      onChanged: (value) async {
+                        BlocProvider.of<TicketClassificationTabBloc>(context)
+                            .add(UpdateTheClassificationEvent(
+                                classification: value));
+                      },
+                      items: const [
+                        "Spam/Marketing",
+                        "No Action Required",
+                        "Genuine Query",
+                        "Acknowledgement Required",
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
         actions: <Widget>[
           CommonElevatedButton(
-            text: S.of(context).cancel,
+            text: S.of(dialogContext).cancel,
             backgroundColor: SupportBotColors.danger,
             textColor: SupportBotColors.white,
             onPressed: () => Navigator.of(dialogContext).pop(),
           ),
           CommonElevatedButton(
-            text: S.of(context).save,
+            text: S.of(dialogContext).save,
             backgroundColor: SupportBotColors.bluePrimary,
             textColor: SupportBotColors.white,
             onPressed: () async {
-              _saveIncorrect(context, id, pipelineIds, reason,
-                  selectedClassification, newValue);
+              final blocState =
+                  BlocProvider.of<TicketClassificationTabBloc>(context).state;
+              String latestClassification =
+                  (blocState is TicketClassificationSuccessState)
+                      ? blocState.selectedClassification ?? 'Select'
+                      : 'Select';
+
+              BlocProvider.of<TicketClassificationTabBloc>(context).add(
+                SaveChangeValidationEvent(
+                  id: id,
+                  pipelineIds: pipelineIds,
+                  reason: reason,
+                  selectedClassification: latestClassification,
+                ),
+              );
+
+              _saveIncorrect(
+                context,
+                id,
+                pipelineIds,
+                reason,
+                latestClassification,
+                newValue,
+              );
             },
           ),
         ],
@@ -107,16 +129,19 @@ void showClassificationDialog({
   );
 }
 
-Widget _saveIncorrect(
-    BuildContext context,
-    String? id,
-    List<String> pipelineIds,
-    String reason,
-    String selectedClassification,
-    String? newValue) {
+void _saveIncorrect(
+  BuildContext context,
+  String? id,
+  List<String> pipelineIds,
+  String reason,
+  String selectedClassification,
+  String? newValue,
+) {
+  print("reason: $reason  &&& $selectedClassification");
   if (reason.isNotEmpty && selectedClassification != 'Select') {
     final s = serviceLocator<S>();
-    BlocProvider.of<UpdateClassificationValidationBloc>(context).add(
+    final bloc = BlocProvider.of<UpdateClassificationValidationBloc>(context);
+    bloc.add(
       UpdateClassificationValidationstateEvent(
         id: id,
         pipeline: pipelineIds.join(','),
@@ -125,11 +150,10 @@ Widget _saveIncorrect(
         validation: newValue?.toLowerCase(),
       ),
     );
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 3000), () {
       final bloc = BlocProvider.of<TicketClassificationTabBloc>(context);
       BlocProvider.of<GetAllValidationUsersBloc>(context)
           .add(GetValidationUsersInitialEvent());
-
       BlocProvider.of<TicketClassificationTabBloc>(context).add(
         TicketClassificationDataCallEvent(
           startDate: bloc.startDate,
@@ -139,7 +163,6 @@ Widget _saveIncorrect(
           pageSize: bloc.pageSize,
         ),
       );
-
       BlocProvider.of<GetAllValidationUsersBloc>(context).add(
         GetValidationUsersInitialEvent(
           startDate: bloc.startDate,
@@ -164,5 +187,4 @@ Widget _saveIncorrect(
       ),
     );
   }
-  return const SizedBox.shrink();
 }
