@@ -13,6 +13,11 @@ class TicketClassificationSuccessState extends TicketClassificationState {
   final List<String> pipelineId;
   final num? currentIndex;
   final Map<String, dynamic>? currentRowData;
+  final String? selectedClassification;
+  final String? id;
+  final List<String>? pipelineIds;
+  final String? reason;
+  final String? selectedClassificationValue;
 
   TicketClassificationSuccessState({
     this.ticketClassificationAttributeModel,
@@ -21,7 +26,18 @@ class TicketClassificationSuccessState extends TicketClassificationState {
     this.pipelineId = const [],
     this.currentIndex,
     this.currentRowData,
+    this.selectedClassification,
+    this.id,
+    this.pipelineIds,
+    this.reason,
+    this.selectedClassificationValue,
   });
+  TicketClassificationSuccessState copyWith({String? selectedClassification}) {
+    return TicketClassificationSuccessState(
+      selectedClassification:
+          selectedClassification ?? this.selectedClassification,
+    );
+  }
 }
 
 class TicketClassificationFailureState extends TicketClassificationState {}

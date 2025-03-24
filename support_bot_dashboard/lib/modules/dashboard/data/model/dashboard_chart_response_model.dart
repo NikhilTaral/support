@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final dashboardChartResponseModel = dashboardChartResponseModelFromJson(jsonString);
+
 import 'dart:convert';
 
 DashboardAnswerResponseModel dashboardAnswerResponseModelFromJson(String str) =>

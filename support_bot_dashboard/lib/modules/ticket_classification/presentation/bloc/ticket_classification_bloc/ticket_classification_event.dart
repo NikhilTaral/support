@@ -32,3 +32,23 @@ class TicketClassificationDataCallEvent extends TicketClassificationEvent {
 class TicketClassificationPreviousDataEvent extends TicketClassificationEvent {}
 
 class TicketClassificationNextDataEvent extends TicketClassificationEvent {}
+
+class UpdateTheClassificationEvent extends TicketClassificationEvent {
+  final String? classification;
+
+  UpdateTheClassificationEvent({this.classification});
+}
+
+class SaveChangeValidationEvent extends TicketClassificationEvent {
+
+  final String? id;
+  final List<String>? pipelineIds;
+  final String? reason;
+  final String? selectedClassification;
+  SaveChangeValidationEvent(
+      {
+      this.id,
+      this.pipelineIds,
+      this.reason,
+      this.selectedClassification});
+}

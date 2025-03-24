@@ -219,5 +219,9 @@
   "validatedText": "Validated",
     "@validatedText": {
       "description":"Validated Text"
+  },
+  "userValidationCountText": "User Validation Count",
+    "@userValidationCountText": {
+      "description":"User Validation Count Text"
   }
 }

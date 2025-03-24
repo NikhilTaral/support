@@ -37,7 +37,7 @@ pipeline
     stage('Docker push') {
       steps {
         script {
-          sh("aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${ECR}")
+          sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
           ECRURL = "http://${ECR}"
           echo ECRURL
           // Push the Docker image to ECR

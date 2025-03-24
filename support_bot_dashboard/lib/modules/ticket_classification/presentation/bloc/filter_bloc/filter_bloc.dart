@@ -25,7 +25,8 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
             startDate: startDate,
             endDate: endDate,
             piplineName: defualtPipeline,
-            piplineId: defualtPipelineId));
+            piplineId: defualtPipelineId,
+            selectedClassification: 'Select'));
       },
     );
     on<SelcetPiplineEvent>(_onSelcetPiplineEvent);

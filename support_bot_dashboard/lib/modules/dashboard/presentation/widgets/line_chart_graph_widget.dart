@@ -153,7 +153,7 @@ class LineChartGraphWidget extends StatelessWidget {
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {
                   return LineTooltipItem(
-                    spot.y.toStringAsFixed(2),
+                    spot.y.toString(),
                     SupportBotTextstyle.caption.copyWith(
                       color: SupportBotColors.black,
                     ),

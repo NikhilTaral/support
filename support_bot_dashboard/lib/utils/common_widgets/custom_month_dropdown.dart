@@ -8,14 +8,17 @@ class CustomDropdown extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final String label;
+  final double? width;
 
-  const CustomDropdown({
-    Key? key,
-    required this.selectedValue,
-    required this.items,
-    required this.onChanged,
-    required this.label,
-  }) : super(key: key);
+  const CustomDropdown(
+      {Key? key,
+      required this.selectedValue,
+      required this.items,
+      required this.onChanged,
+      required this.label,
+      this.width
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +74,7 @@ class CustomDropdown extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: Container(
-                  width: UIHelpers.screenWidth(context) * 0.13,
+                  width: width ?? UIHelpers.screenWidth(context) * 0.13,
                   constraints: BoxConstraints(
                     maxHeight: UIHelpers.screenHeight(context) * 0.35,
                   ),
