@@ -79,34 +79,37 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildLoadingState() {
-    return const Row(
-      spacing: 15,
-      children: [
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 180),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 180),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 150),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 130),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 130),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 130),
-      ],
+    return const SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: 15,
+        children: [
+          LoadingWidget(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              height: 40,
+              width: 180),
+          LoadingWidget(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              height: 40,
+              width: 180),
+          LoadingWidget(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              height: 40,
+              width: 150),
+          LoadingWidget(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              height: 40,
+              width: 130),
+          LoadingWidget(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              height: 40,
+              width: 130),
+          LoadingWidget(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              height: 40,
+              width: 130),
+        ],
+      ),
     );
   }
 
