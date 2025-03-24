@@ -40,6 +40,7 @@ class AiQueryResponseModel {
 }
 
 class AiQueryData {
+  String? message;
   num? totalRecords;
   List<AiQueryItem>? items;
   num? pageSize;
@@ -47,6 +48,7 @@ class AiQueryData {
   num? currentPage;
 
   AiQueryData({
+    this.message,
     this.totalRecords,
     this.items,
     this.pageSize,
@@ -55,6 +57,7 @@ class AiQueryData {
   });
 
   factory AiQueryData.fromJson(Map<String, dynamic> json) => AiQueryData(
+        message: json["message"],
         totalRecords: json["totalRecords"],
         items: json["items"] == null
             ? []
@@ -68,6 +71,7 @@ class AiQueryData {
       );
 
   Map<String, dynamic> toJson() => {
+        "message": message,
         "totalRecords": totalRecords,
         "items": items == null
             ? []
