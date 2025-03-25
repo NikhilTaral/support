@@ -8,5 +8,4 @@ class LocalStorageKey {
   static const String onboardingEmail = "OnboardingEmail";
   static const String onboardingName = "OnboardingName";
   static const String joinEmail = "JoinEmail";
-    static const String _pipelineKey = 'pipeline_key';
 }
