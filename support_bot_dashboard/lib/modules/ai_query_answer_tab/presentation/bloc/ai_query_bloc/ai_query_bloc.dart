@@ -68,7 +68,7 @@ class AiQueryBloc extends Bloc<AiQueryEvent, AiQueryState> {
             AiQueryResponseModel.fromJson(response.right);
         if (model.success == true && model.data != null) {
           if (model.data?.items?.isEmpty == true) {
-            final message = model.message;
+            final message = model.data?.message;
             emit(AIQueryEmptyState(message: message));
           } else {
             page = model.data?.currentPage ?? 1;

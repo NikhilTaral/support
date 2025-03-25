@@ -308,6 +308,10 @@
   "@validatedText": {
     "description": "Validated Text"
   },
+  "userValidationCountText": "User Validation Count",
+  "@userValidationCountText": {
+    "description": "User Validation Count Text"
+  },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
     "description": "By clicking “GET STARTED” you are agreeing to our "
@@ -461,5 +465,13 @@
   "exportCSVFileText": "Export CSV File",
   "@exportCSVFileText": {
     "description": "Export CSV File Text"
+  },
+  "ticketUpdatedCorrectText": "Ticket Validated As Correct",
+  "@ticketUpdatedCorrectText": {
+    "description": "Ticket Validated As  Correct Text"
+  },
+  "ticketUpdatedInCorrectText": "Ticket Validated As In-Correct",
+  "@ticketUpdatedInCorrectText": {
+    "description": "Ticket Validated As In-Correct Text"
   }
 }
