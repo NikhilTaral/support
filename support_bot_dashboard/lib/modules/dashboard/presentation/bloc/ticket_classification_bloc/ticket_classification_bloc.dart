@@ -21,11 +21,12 @@ class TicketClassificationBloc
   FutureOr<void> _onTickitClassification(TickiteClassificationEvent event,
       Emitter<TicketClassificationState> emit) async {
     emit(TicketClassificationLoadingState());
+
     selectedPipelineId = event.selectedPipelineValue;
-    final endDate = DateTime.now();
+     final endDate = DateTime.now();
     final startDate = endDate.subtract(const Duration(days: 0));
-    final repository = serviceLocator<DashboardChartdataUsecase>();
-   final req = DashboardAnswerDataInitialRequestModel(
+     final repository = serviceLocator<DashboardChartdataUsecase>();
+    final req = DashboardAnswerDataInitialRequestModel(
       filter: [
         Filter(
             fieldValue: selectedPipelineId ?? [""],
@@ -38,13 +39,15 @@ class TicketClassificationBloc
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
           .toIso8601String(),
     );
+
     final response = await repository.invoke(req);
+
     if (response.isLeft) {
       emit(TicketClassificationFailureState());
     } else {
       try {
         final model = response.right;
-        dashboardDataModel = (dashboardDataModel).copyWith(
+        dashboardDataModel = dashboardDataModel.copyWith(
           pieChartData: (dashboardDataModel.pieChartData ??
                   DashboardChartAttributeModel())
               .copyWith(
@@ -58,7 +61,10 @@ class TicketClassificationBloc
                     model.data?.counts?.acknowledgementRequired ?? "",
                 genuineQuery: model.data?.counts?.genuineQuery ?? "",
                 noActionRequired: model.data?.counts?.noActionRequired ?? "",
-                notClassified: model.data?.counts?.notClassified ?? "",
+                unableToClassify: model.data?.counts?.unableToClassify ?? "",
+                awaitingToClassify:
+                    model.data?.counts?.awaitingToClassify ?? "",
+                total: model.data?.counts?.total ?? 0,
                 spamMarketing: model.data?.counts?.spamMarketing ?? "",
               ),
               percentages:
@@ -70,7 +76,11 @@ class TicketClassificationBloc
                 genuineQuery: model.data?.percentages?.genuineQuery ?? "",
                 noActionRequired:
                     model.data?.percentages?.noActionRequired ?? "",
-                notClassified: model.data?.percentages?.notClassified ?? "",
+                unableToClassify:
+                    model.data?.percentages?.unableToClassify ?? "",
+                awaitingToClassify:
+                    model.data?.percentages?.awaitingToClassify ?? "",
+                total: model.data?.percentages?.total ?? 0,
                 spamMarketing: model.data?.percentages?.spamMarketing ?? "",
               ),
             ),
@@ -78,15 +88,15 @@ class TicketClassificationBloc
         );
 
         final percentages = dashboardDataModel.pieChartData?.data?.percentages;
-
-        bool isEmpty = percentages?.acknowledgementRequired == 0 &&
+       bool isEmpty = percentages?.acknowledgementRequired == 0 &&
             percentages?.genuineQuery == 0 &&
             percentages?.noActionRequired == 0 &&
             percentages?.spamMarketing == 0;
+
         if (isEmpty) {
           emit(TicketClassificationEmptyState());
         } else {
-          emit(TicketClassificationSucssesState(
+         emit(TicketClassificationSucssesState(
               dashboardDataModel: dashboardDataModel));
         }
       } catch (e) {
@@ -94,6 +104,4 @@ class TicketClassificationBloc
       }
     }
   }
-
- 
 }

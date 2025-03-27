@@ -6,7 +6,7 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 class CountContainer extends StatelessWidget {
   final String text;
   final IconData icon;
-  final double? count;
+  final num? count;
   const CountContainer(
       {super.key, required this.text, required this.icon, required this.count});
 
