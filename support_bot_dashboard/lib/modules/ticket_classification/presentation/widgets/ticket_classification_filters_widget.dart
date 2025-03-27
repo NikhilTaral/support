@@ -79,36 +79,19 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildLoadingState() {
-    return const SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    return SingleChildScrollView(
       child: Row(
-        spacing: 15,
-        children: [
-          LoadingWidget(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+        children: List.generate(
+          6,
+          (index) {
+            final widths = [180.0, 180.0, 150.0, 130.0, 130.0, 130.0];
+            return LoadingWidget(
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
               height: 40,
-              width: 180),
-          LoadingWidget(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              height: 40,
-              width: 180),
-          LoadingWidget(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              height: 40,
-              width: 150),
-          LoadingWidget(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              height: 40,
-              width: 130),
-          LoadingWidget(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              height: 40,
-              width: 130),
-          LoadingWidget(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              height: 40,
-              width: 130),
-        ],
+              width: widths[index],
+            );
+          },
+        ),
       ),
     );
   }

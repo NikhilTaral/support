@@ -19,19 +19,6 @@ class DashboardAnswerResponseModel {
     this.message,
   });
 
-  DashboardAnswerResponseModel copyWith({
-    Data? data,
-    bool? success,
-    num? failCode,
-    String? message,
-  }) =>
-      DashboardAnswerResponseModel(
-        data: data ?? this.data,
-        success: success ?? this.success,
-        failCode: failCode ?? this.failCode,
-        message: message ?? this.message,
-      );
-
   factory DashboardAnswerResponseModel.fromJson(Map<String, dynamic> json) =>
       DashboardAnswerResponseModel(
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
@@ -56,15 +43,6 @@ class Data {
     this.counts,
     this.percentages,
   });
-
-  Data copyWith({
-    Counts? counts,
-    Counts? percentages,
-  }) =>
-      Data(
-        counts: counts ?? this.counts,
-        percentages: percentages ?? this.percentages,
-      );
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         counts: json["counts"] == null ? null : Counts.fromJson(json["counts"]),
@@ -97,26 +75,6 @@ class Counts {
     this.awaitingToClassify,
     this.total,
   });
-
-  Counts copyWith({
-    double? genuineQuery,
-    double? noActionRequired,
-    double? spamMarketing,
-    double? acknowledgementRequired,
-    num? unableToClassify,
-    double? awaitingToClassify,
-    num? total,
-  }) =>
-      Counts(
-        genuineQuery: genuineQuery ?? this.genuineQuery,
-        noActionRequired: noActionRequired ?? this.noActionRequired,
-        spamMarketing: spamMarketing ?? this.spamMarketing,
-        acknowledgementRequired:
-            acknowledgementRequired ?? this.acknowledgementRequired,
-        unableToClassify: unableToClassify ?? this.unableToClassify,
-        awaitingToClassify: awaitingToClassify ?? this.awaitingToClassify,
-        total: total ?? this.total,
-      );
 
   factory Counts.fromJson(Map<String, dynamic> json) => Counts(
         genuineQuery: json["Genuine Query"]?.toDouble(),
