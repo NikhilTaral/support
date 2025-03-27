@@ -224,8 +224,8 @@
     "@userValidationCountText": {
       "description":"User Validation Count Text"
   },
-  "awaitingoClassifyText": "Awaiting to Classify",
-    "@awaitingoClassifyText": {
+  "awaitingToClassifyText": "Awaiting to Classify",
+    "@awaitingToClassifyText": {
       "description":"Awaiting to Classify Text"
   }
 }
