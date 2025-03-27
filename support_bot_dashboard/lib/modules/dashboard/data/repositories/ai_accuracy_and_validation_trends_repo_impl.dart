@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:either_dart/either.dart';
@@ -13,17 +12,19 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/ai_a
 class AiAccuracyAndValidationTrendsRepoImpl
     extends AiAccuracyAndValidationTrendsRespository {
   final s = serviceLocator<S>();
+
   @override
   Future<Either<Failure, dynamic>> aiAccuracyAndValidationTrends(
       AiAccuracyAndValidationTrendsRequestModel?
           aiAccuracyAndValidationTrendsRequestModel) async {
     try {
       final dynamic response = await serviceLocator<ApiProvider>().getData(
-          url: 'dashboard/getAnswerCount',
-          body: aiAccuracyAndValidationTrendsRequestModel?.toJson());
+        url: 'dashboard/getAIAccuracyAndValidationTrends',
+        body: aiAccuracyAndValidationTrendsRequestModel?.toJson(),
+      );
+ final model = aiAccuracyAndValidationTrendsResponseModelFromJson(
+          jsonEncode(response));
 
-      final model =
-          aiAccuracyAndValidationTrendsResponseModelFromJson(jsonEncode(response));
       if (model is Left) {
         return Left(ServerFailure(message: s.aPIErrorMsgText));
       }

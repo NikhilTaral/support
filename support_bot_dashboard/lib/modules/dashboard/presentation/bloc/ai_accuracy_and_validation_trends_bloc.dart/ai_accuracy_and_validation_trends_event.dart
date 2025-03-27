@@ -3,7 +3,7 @@ abstract class AiAccuracyAndValidationTrendsEvent {}
 class AiAccuracyAndValidationTrendsIntialEvent extends AiAccuracyAndValidationTrendsEvent {
   final String? startDate;
   final String? endDate;
-  final String? piplineId;
+  final List<String>? piplineId;
   AiAccuracyAndValidationTrendsIntialEvent({
     this.startDate,
     this.endDate,

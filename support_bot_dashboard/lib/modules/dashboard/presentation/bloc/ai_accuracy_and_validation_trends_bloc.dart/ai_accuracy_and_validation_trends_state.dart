@@ -13,9 +13,9 @@ class AiAccuracyAndValidationTrendsEmptyState
 
 class AiAccuracyAndValidationTrendsSucssesState
     extends AiAccuracyAndValidationTrendsState {
-  final AiAccuracyAndValidationTrendsAttributeModel? model;
+  final DashboardDataModel? dashboardDataModel;
   final String? isVisible;
-  AiAccuracyAndValidationTrendsSucssesState({this.model,this.isVisible});
+  AiAccuracyAndValidationTrendsSucssesState({this.dashboardDataModel,this.isVisible});
 }
 
 class AiAccuracyAndValidationTrendsFailureState

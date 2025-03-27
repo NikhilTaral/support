@@ -12,10 +12,12 @@ import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 
 class HomePageWidget extends StatelessWidget {
-  HomePageWidget({super.key});
+  HomePageWidget({super.key,this.endDate,this.piplineId,this.startDate});
 
   final s = serviceLocator<S>();
-
+ final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -61,7 +63,11 @@ class HomePageWidget extends StatelessWidget {
               },
             ),
             UIHelpers.verticalSpaceRegular,
-            Charts(),
+            Charts(
+               endDate: endDate,
+            startDate: startDate,
+            piplineId: piplineId,
+            ),
           ],
         )),
       ],

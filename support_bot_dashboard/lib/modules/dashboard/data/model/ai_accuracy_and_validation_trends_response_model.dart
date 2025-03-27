@@ -9,7 +9,7 @@ String aiAccuracyAndValidationTrendsResponseModelToJson(
     json.encode(data.toJson());
 
 class AiAccuracyAndValidationTrendsResponseModel {
-  final List<GraphData>? data;
+  final Data? data;
   final bool? success;
   final num? failCode;
   final String? message;
@@ -22,9 +22,9 @@ class AiAccuracyAndValidationTrendsResponseModel {
   });
 
   AiAccuracyAndValidationTrendsResponseModel copyWith({
-    List<GraphData>? data,
+    Data? data,
     bool? success,
-    int? failCode,
+    num? failCode,
     String? message,
   }) =>
       AiAccuracyAndValidationTrendsResponseModel(
@@ -37,49 +37,71 @@ class AiAccuracyAndValidationTrendsResponseModel {
   factory AiAccuracyAndValidationTrendsResponseModel.fromJson(
           Map<String, dynamic> json) =>
       AiAccuracyAndValidationTrendsResponseModel(
-        data: json["data"] == null
-            ? []
-            : List<GraphData>.from(
-                json["data"]!.map((x) => GraphData.fromJson(x))),
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
         success: json["success"],
         failCode: json["failCode"],
         message: json["message"],
       );
 
   Map<String, dynamic> toJson() => {
-        "data": data == null
-            ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "data": data?.toJson(),
         "success": success,
         "failCode": failCode,
         "message": message,
       };
 }
 
-class GraphData {
+class Data {
+  final List<Item>? items;
+
+  Data({
+    this.items,
+  });
+
+  Data copyWith({
+    List<Item>? items,
+  }) =>
+      Data(
+        items: items ?? this.items,
+      );
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+        items: json["items"] == null
+            ? []
+            : List<Item>.from(json["items"]!.map((x) => Item.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "items": items == null
+            ? []
+            : List<dynamic>.from(items!.map((x) => x.toJson())),
+      };
+}
+
+class Item {
   final String? date;
-  final double? aiAccuracy;
+  final num? aiAccuracy;
   final num? validationPercentage;
 
-  GraphData({
+  Item({
     this.date,
     this.aiAccuracy,
     this.validationPercentage,
   });
 
-  GraphData copyWith({
+  Item copyWith({
     String? date,
-    double? aiAccuracy,
+    num? aiAccuracy,
     num? validationPercentage,
   }) =>
-      GraphData(
+      Item(
         date: date ?? this.date,
         aiAccuracy: aiAccuracy ?? this.aiAccuracy,
         validationPercentage: validationPercentage ?? this.validationPercentage,
       );
 
-  factory GraphData.fromJson(Map<String, dynamic> json) => GraphData(
-        date: json["date"],
+  factory Item.fromJson(Map<String, dynamic> json) => Item(
+        date: json["date"] ?? "",
         aiAccuracy: json["aiAccuracy"]?.toDouble(),
         validationPercentage: json["validationPercentage"]?.toDouble(),
       );

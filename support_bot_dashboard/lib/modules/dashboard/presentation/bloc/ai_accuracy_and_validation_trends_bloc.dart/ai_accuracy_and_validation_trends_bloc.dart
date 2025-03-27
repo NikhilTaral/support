@@ -2,9 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/ai_accuracy_and_validation_trends_request_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/ai_accuracy_and_validation_trends_response_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/ai_accuracy_and_validation_trends_attribute_model.dart';
-import 'package:support_bot_dashboard/modules/dashboard/domain/entities/ai_accuracy_and_validation_trends_attribute_model.dart'
-    as response_model;
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/ai_accuracy_and_validation_trends_usecase.dart';
 
 part 'ai_accuracy_and_validation_trends_event.dart';
@@ -12,54 +11,76 @@ part 'ai_accuracy_and_validation_trends_state.dart';
 
 class AiAccuracyAndValidationTrendsBloc extends Bloc<
     AiAccuracyAndValidationTrendsEvent, AiAccuracyAndValidationTrendsState> {
+  DashboardDataModel dashboardDataModel = DashboardDataModel();
+  String? startDate;
+  String? endData;
+  List<String>? piplineId;
   AiAccuracyAndValidationTrendsBloc()
       : super(AiAccuracyAndValidationTrendsIntialState()) {
     on<AiAccuracyAndValidationTrendsIntialEvent>(
         _onAiAccuracyAndValidationTrendsIntialEvent);
-        on<GraphToggalEvent>(_onGraphToggalEvent);
+    on<GraphToggalEvent>(_onGraphToggalEvent);
   }
   Future<void> _onAiAccuracyAndValidationTrendsIntialEvent(
       AiAccuracyAndValidationTrendsIntialEvent event,
       Emitter<AiAccuracyAndValidationTrendsState> emit) async {
+    startDate = event.startDate;
+    endData = event.endDate;
+    piplineId = event.piplineId;
     emit(AiAccuracyAndValidationTrendsLoadingState());
-    try {
+     try {
       final repository = serviceLocator<AiAccuracyAndValidationTrendsUsecase>();
-      final req = AiAccuracyAndValidationTrendsRequestModel(
-          startDate: event.startDate,
-          endDate: event.endDate,
-          filter: [
-            Filter(fieldName: "pipelines", fieldValue: [event.piplineId ?? ""]),
-          ]);
+       final req = AiAccuracyAndValidationTrendsRequestModel(
+        startDate: startDate ?? event.startDate,
+        endDate: endData ?? event.endDate,
+        filter: [
+          Filter(
+              fieldName: "pipelines",
+              fieldValue: piplineId ?? event.piplineId ),
+        ],
+      );
       final response = await repository.invoke(req);
       if (response.isLeft) {
         emit(AiAccuracyAndValidationTrendsFailureState());
-      } else {
+       } else {
         final AiAccuracyAndValidationTrendsResponseModel model = response.right;
-        final AiAccuracyAndValidationTrendsAttributeModel attributeModel =
-            AiAccuracyAndValidationTrendsAttributeModel(
-          data: model.data
-              ?.map((item) => response_model.GraphData(
-                    date: item.date ?? "",
-                    aiAccuracy: item.aiAccuracy,
-                    validationPercentage: item.validationPercentage,
-                  ))
-              .toList(),
-          message: model.message,
-          success: model.success,
+       dashboardDataModel = dashboardDataModel.copyWith(
+          aiAccuracyAndValidationTrendsAttributeModel:
+              AiAccuracyAndValidationTrendsAttributeModel(
+            data: DataAttribute(
+              items: model.data?.items
+                  ?.map(
+                    (e) => AttributeItem(
+                      aiAccuracy: e.aiAccuracy ?? 0,
+                      date: e.date ?? "",
+                      validationPercentage: e.validationPercentage ?? 0,
+                    ),
+                  )
+                  .toList(),
+            ),
+            message: model.message,
+            success: model.success,
+            failCode: model.failCode,
+          ),
         );
-        emit(AiAccuracyAndValidationTrendsSucssesState(model: attributeModel));
-      }
+
+       emit(AiAccuracyAndValidationTrendsSucssesState(
+            dashboardDataModel: dashboardDataModel));
+        }
     } catch (e) {
       emit(AiAccuracyAndValidationTrendsFailureState());
-    }
+     }
   }
 
-Future<void>_onGraphToggalEvent(GraphToggalEvent event, Emitter<AiAccuracyAndValidationTrendsState> emit) async {
+  Future<void> _onGraphToggalEvent(GraphToggalEvent event,
+      Emitter<AiAccuracyAndValidationTrendsState> emit) async {
     emit(AiAccuracyAndValidationTrendsLoadingState());
     try {
-      emit(AiAccuracyAndValidationTrendsSucssesState(isVisible: event.isVisible));
+      emit(AiAccuracyAndValidationTrendsSucssesState(
+          isVisible: event.isVisible));
     } catch (e) {
       emit(AiAccuracyAndValidationTrendsFailureState());
     }
   }
 }
+      
