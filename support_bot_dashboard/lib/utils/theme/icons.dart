@@ -108,6 +108,7 @@ class SupportBotIcons {
   static const IconData printer = Iconsax.printer;
   static const IconData minus = Iconsax.minus;
   static const IconData add = Iconsax.add;
+    static const IconData pentool = Iconsax.pen_tool_2;
   static const IconData flag = Iconsax.flag;
   static const IconData arrowRight = Iconsax.arrow_right_34;
   static const IconData arrowRight41 = Iconsax.arrow_right_41;
