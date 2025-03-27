@@ -46,7 +46,7 @@ List<CountContainerData> getCountContainerData(BuildContext context,
       count: model?.pieChartData?.data?.counts?.unableToClassify,
     ),
     CountContainerData(
-      text: S.of(context).awaitingoClassifyText,
+      text: S.of(context).awaitingToClassifyText,
       icon: Iconsax.hierarchy_2,
       count: model?.pieChartData?.data?.counts?.awaitingToClassify,
     ),
