@@ -10,6 +10,7 @@ import 'package:support_bot_dashboard/modules/ticket_classification/presentation
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
+import 'package:support_bot_dashboard/responsive.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_search_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.dart';
@@ -79,19 +80,19 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildLoadingState() {
-    return SingleChildScrollView(
-      child: Row(
-        children: List.generate(
-          6,
-          (index) {
-            final widths = [180.0, 180.0, 150.0, 130.0, 130.0, 130.0];
-            return LoadingWidget(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              height: 40,
-              width: widths[index],
-            );
-          },
-        ),
+    return Row(
+      spacing: 4,
+      children: List.generate(
+        6,
+        (index) {
+          return LoadingWidget(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            height: 40,
+            width: Responsive.isTablet(context)
+                ? UIHelpers.screenWidth(context) * 0.14
+                : UIHelpers.screenWidth(context) * 0.2,
+          );
+        },
       ),
     );
   }
