@@ -15,7 +15,19 @@ class AiAccuracyAndValidationTrendsSucssesState
     extends AiAccuracyAndValidationTrendsState {
   final DashboardDataModel? dashboardDataModel;
   final String? isVisible;
-  AiAccuracyAndValidationTrendsSucssesState({this.dashboardDataModel,this.isVisible});
+
+  AiAccuracyAndValidationTrendsSucssesState(
+      {this.dashboardDataModel, this.isVisible});
+
+  AiAccuracyAndValidationTrendsSucssesState copyWith({
+    DashboardDataModel? dashboardDataModel,
+    String? isVisible,
+  }) {
+    return AiAccuracyAndValidationTrendsSucssesState(
+      dashboardDataModel: dashboardDataModel ?? this.dashboardDataModel,
+      isVisible: isVisible ?? this.isVisible,
+    );
+  }
 }
 
 class AiAccuracyAndValidationTrendsFailureState

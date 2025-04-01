@@ -9,9 +9,10 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/ai_accur
 part 'ai_accuracy_and_validation_trends_event.dart';
 part 'ai_accuracy_and_validation_trends_state.dart';
 
+DashboardDataModel dashboardDataModel = DashboardDataModel();
+
 class AiAccuracyAndValidationTrendsBloc extends Bloc<
     AiAccuracyAndValidationTrendsEvent, AiAccuracyAndValidationTrendsState> {
-  DashboardDataModel dashboardDataModel = DashboardDataModel();
   String? startDate;
   String? endData;
   List<String>? piplineId;
@@ -28,23 +29,22 @@ class AiAccuracyAndValidationTrendsBloc extends Bloc<
     endData = event.endDate;
     piplineId = event.piplineId;
     emit(AiAccuracyAndValidationTrendsLoadingState());
-     try {
+    try {
       final repository = serviceLocator<AiAccuracyAndValidationTrendsUsecase>();
-       final req = AiAccuracyAndValidationTrendsRequestModel(
+      final req = AiAccuracyAndValidationTrendsRequestModel(
         startDate: startDate ?? event.startDate,
         endDate: endData ?? event.endDate,
         filter: [
           Filter(
-              fieldName: "pipelines",
-              fieldValue: piplineId ?? event.piplineId ),
+              fieldName: "pipelines", fieldValue: piplineId ?? event.piplineId),
         ],
       );
       final response = await repository.invoke(req);
       if (response.isLeft) {
         emit(AiAccuracyAndValidationTrendsFailureState());
-       } else {
+      } else {
         final AiAccuracyAndValidationTrendsResponseModel model = response.right;
-       dashboardDataModel = dashboardDataModel.copyWith(
+        dashboardDataModel = dashboardDataModel.copyWith(
           aiAccuracyAndValidationTrendsAttributeModel:
               AiAccuracyAndValidationTrendsAttributeModel(
             data: DataAttribute(
@@ -64,12 +64,12 @@ class AiAccuracyAndValidationTrendsBloc extends Bloc<
           ),
         );
 
-       emit(AiAccuracyAndValidationTrendsSucssesState(
+        emit(AiAccuracyAndValidationTrendsSucssesState(
             dashboardDataModel: dashboardDataModel));
-        }
+      }
     } catch (e) {
       emit(AiAccuracyAndValidationTrendsFailureState());
-     }
+    }
   }
 
   Future<void> _onGraphToggalEvent(GraphToggalEvent event,
@@ -83,4 +83,3 @@ class AiAccuracyAndValidationTrendsBloc extends Bloc<
     }
   }
 }
-      

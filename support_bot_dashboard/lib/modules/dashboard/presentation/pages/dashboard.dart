@@ -87,7 +87,7 @@ class Dashboard extends StatelessWidget {
               ..add(AiAccuracyAndValidationTrendsIntialEvent(
                   endDate: endDate?.toIso8601String(),
                   startDate: startDate?.toIso8601String(),
-                  piplineId:[ pipelineId ?? ""])),
+                  piplineId: [pipelineId ?? ""])),
           ),
           BlocProvider<AiQueryBloc>(
             create: (context) =>

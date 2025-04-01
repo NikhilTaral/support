@@ -6,11 +6,12 @@ import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
-  AiAccuracyAndValidationTrendsLineGraph(
-      {super.key, required this.dashboardDataModel});
+  AiAccuracyAndValidationTrendsLineGraph({
+    super.key,
+    required this.dashboardDataModel,
+  });
 
   final DashboardDataModel? dashboardDataModel;
-  final List<dynamic>? apiResponseData = [];
 
   List<dynamic> get apiResponse {
     return [
@@ -36,9 +37,10 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final aiAccuracyData = apiResponse.first['aiAccuracy'];
-    final validationPercentageData = apiResponse.first['validationPercentage'];
-    final dates = apiResponse.first['date'];
+    final dates = apiResponse.first['date'] as List<String>;
+    final aiAccuracyData = apiResponse.first['aiAccuracy'] as List<num>;
+    final validationPercentageData =
+        apiResponse.first['validationPercentage'] as List<num>;
 
     List<FlSpot> aiAccuracySpots = [];
     List<FlSpot> validationPercentageSpots = [];
@@ -49,19 +51,24 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
           .add(FlSpot(i.toDouble(), validationPercentageData[i].toDouble()));
     }
 
-    double minY = 0;
-    double maxY = 100;
-    double minX = 0;
-    double maxX = aiAccuracySpots.length.toDouble();
+    final minY = 0;
+    final maxY = 100;
+
+     final maxX = dates.isNotEmpty ? dates.length.toDouble() - 1 : 1;
+    final minX = 0;
+
+   final yInterval = 10;
+
+   final xInterval = dates.length > 10 ? (dates.length / 7) : 1;
 
     return SizedBox(
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
             getDrawingHorizontalLine: (value) =>
-                const FlLine(color: Color(0xFFC8C8C8)),
+                const FlLine(color: Colors.transparent),
             getDrawingVerticalLine: (value) =>
-                const FlLine(color: Color(0xFFC8C8C8)),
+                const FlLine(color: Colors.transparent),
             drawHorizontalLine: true,
             drawVerticalLine: true,
             show: true,
@@ -76,7 +83,7 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: 20,
+                interval: yInterval.toDouble(),
                 getTitlesWidget: (value, meta) {
                   return Padding(
                     padding: const EdgeInsets.only(left: 4.0, bottom: 0),
@@ -91,23 +98,30 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: 1,
+                interval: xInterval.toDouble(),
                 getTitlesWidget: (value, meta) {
-                  int index = value.toInt();
+                  final index = value.toInt();
                   if (index >= 0 && index < dates.length) {
-                    String formattedDate =
-                        DateFormat('dd').format(DateTime.parse(dates[index]));
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        formattedDate,
+                    try {
+                      final date = DateTime.parse(dates[index]);
+                      final formattedDate = DateFormat('MMM dd').format(date);
+                      return Container(
+                        margin: const EdgeInsets.only(left: 15, right: 25),
+                        child: Text(
+                          formattedDate,
+                          style: SupportBotTextstyle.mediumHint.copyWith(),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    } catch (e) {
+                      return Text(
+                        dates[index],
                         style: SupportBotTextstyle.mediumHint.copyWith(),
                         textAlign: TextAlign.center,
-                      ),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
+                      );
+                    }
                   }
+                  return const SizedBox.shrink();
                 },
               ),
             ),
@@ -123,15 +137,17 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
           ),
           lineBarsData: [
             LineChartBarData(
+              isCurved: true,
+              preventCurveOverShooting: true,
               spots: aiAccuracySpots,
-              barWidth: 2,
+              barWidth: 1.5,
               isStepLineChart: false,
               color: SupportBotColors.bluePrimary.shade400,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) {
                   return FlDotCirclePainter(
-                    radius: 5,
+                    radius: 3,
                     color: SupportBotColors.bluePrimary.shade400,
                     strokeWidth: 1,
                     strokeColor: Colors.transparent,
@@ -140,15 +156,17 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
               ),
             ),
             LineChartBarData(
+              preventCurveOverShooting: true,
+              isCurved: true,
               spots: validationPercentageSpots,
-              barWidth: 2,
+              barWidth: 1.5,
               isStepLineChart: false,
               color: SupportBotColors.bluePrimary.shade200,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) {
                   return FlDotCirclePainter(
-                    radius: 5,
+                    radius: 3,
                     color: SupportBotColors.bluePrimary.shade300,
                     strokeWidth: 1,
                     strokeColor: Colors.transparent,
@@ -157,18 +175,20 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
               ),
             ),
           ],
-          minX: minX,
-          maxX: maxX,
-          minY: minY,
-          maxY: maxY,
+          minX: minX.toDouble(),
+          maxX: maxX.toDouble(),
+          minY: minY.toDouble(),
+          maxY: maxY.toDouble(),
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
               tooltipBorder: BorderSide(
-                  width: 2, color: SupportBotColors.blueSecondary.shade200),
+                width: 2,
+                color: SupportBotColors.blueSecondary.shade200,
+              ),
               getTooltipColor: (touchedSpot) =>
                   SupportBotColors.blueSecondary.shade200,
-              tooltipRoundedRadius: 8,
+              tooltipRoundedRadius: 4,
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {
                   String label = '';

@@ -4,6 +4,7 @@ import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_accuracy_and_validation_trends_states.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_tile.dart';
@@ -172,8 +173,8 @@ class Charts extends StatelessWidget {
             spacing: 8,
             children: [
               Row(
-               children: [
-                 CustomDropdown(
+                children: [
+                  CustomDropdown(
                     iconColor: SupportBotColors.black,
                     style: SupportBotTextstyle.normal.copyWith(
                         fontWeight: FontWeight.w600,
@@ -193,6 +194,19 @@ class Charts extends StatelessWidget {
                               : "User Validation",
                         ),
                       );
+                      final bloc =
+                          BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(
+                              context);
+                      if (newValue == "AI Accuracy") {
+                        BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(
+                                context)
+                            .add(AiAccuracyAndValidationTrendsIntialEvent(
+                          startDate:
+                              bloc.startDate ?? startDate?.toIso8601String(),
+                          endDate: bloc.endData ?? endDate?.toIso8601String(),
+                          piplineId: bloc.piplineId ?? piplineId,
+                        ));
+                      }
                     },
                     items: const ["AI Accuracy", "User Validation"],
                   ),
