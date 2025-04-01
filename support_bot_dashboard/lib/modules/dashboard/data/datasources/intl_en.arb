@@ -227,5 +227,9 @@
   "awaitingToClassifyText": "Awaiting to Classify",
     "@awaitingToClassifyText": {
       "description":"Awaiting to Classify Text"
+  },
+  "aIAccuracyText": "AI Accuracy",
+    "@aIAccuracyText": {
+      "description":"AI Accuracy Text"
   }
 }
