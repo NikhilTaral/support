@@ -54,12 +54,11 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
     final minY = 0;
     final maxY = 100;
 
-     final maxX = dates.isNotEmpty ? dates.length.toDouble() - 1 : 1;
+    final maxX = dates.isNotEmpty ? dates.length.toDouble() - 1 : 1;
     final minX = 0;
+    final yInterval = 10;
 
-   final yInterval = 10;
-
-   final xInterval = dates.length > 10 ? (dates.length / 7) : 1;
+    final xInterval = dates.length > 10 ? (dates.length / 7) : 1;
 
     return SizedBox(
       child: LineChart(
@@ -192,10 +191,17 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {
                   String label = '';
+                  String dateLabel = '';
                   Color tooltipColor = Colors.black;
+                  int index = spot.x.toInt();
 
+                  if (index >= 0 && index < dates.length) {
+                    dateLabel = DateFormat('dd MMM yyyy')
+                        .format(DateTime.parse(dates[index]));
+                  }
                   if (spot.barIndex == 0) {
-                    label = 'AI Accuracy: ${spot.y.toStringAsFixed(0)}%';
+                    label =
+                        'Date: $dateLabel,\nAI Accuracy: ${spot.y.toStringAsFixed(0)}%';
                     tooltipColor = SupportBotColors.bluePrimary.shade400;
                   } else if (spot.barIndex == 1) {
                     label = 'Validation: ${spot.y.toStringAsFixed(0)}%';
