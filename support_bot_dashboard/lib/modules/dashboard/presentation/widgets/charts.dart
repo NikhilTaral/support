@@ -189,7 +189,7 @@ class Charts extends StatelessWidget {
                               context)
                           .add(
                         GraphToggalEvent(
-                          isVisible: newValue == "AI Accuracy"
+                          isVisible: newValue?.toLowerCase() == "ai accuracy"
                               ? "AI Accuracy"
                               : "User Validation",
                         ),
@@ -197,13 +197,13 @@ class Charts extends StatelessWidget {
                       final bloc =
                           BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(
                               context);
-                      if (newValue == "AI Accuracy") {
+                      if (newValue?.toLowerCase() == "ai accuracy") {
                         BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(
                                 context)
                             .add(AiAccuracyAndValidationTrendsIntialEvent(
                           startDate:
                               bloc.startDate ?? startDate?.toIso8601String(),
-                          endDate: bloc.endData ?? endDate?.toIso8601String(),
+                          endDate: bloc.endDate ?? endDate?.toIso8601String(),
                           piplineId: bloc.piplineId ?? piplineId,
                         ));
                       }

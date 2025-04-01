@@ -5,6 +5,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/model/ai_accuracy_a
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/ai_accuracy_and_validation_trends_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/ai_accuracy_and_validation_trends_usecase.dart';
+import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_request_model.dart';
 
 part 'ai_accuracy_and_validation_trends_event.dart';
 part 'ai_accuracy_and_validation_trends_state.dart';
@@ -14,7 +15,7 @@ DashboardDataModel dashboardDataModel = DashboardDataModel();
 class AiAccuracyAndValidationTrendsBloc extends Bloc<
     AiAccuracyAndValidationTrendsEvent, AiAccuracyAndValidationTrendsState> {
   String? startDate;
-  String? endData;
+  String? endDate;
   List<String>? piplineId;
   AiAccuracyAndValidationTrendsBloc()
       : super(AiAccuracyAndValidationTrendsIntialState()) {
@@ -26,14 +27,14 @@ class AiAccuracyAndValidationTrendsBloc extends Bloc<
       AiAccuracyAndValidationTrendsIntialEvent event,
       Emitter<AiAccuracyAndValidationTrendsState> emit) async {
     startDate = event.startDate;
-    endData = event.endDate;
+    endDate = event.endDate;
     piplineId = event.piplineId;
     emit(AiAccuracyAndValidationTrendsLoadingState());
     try {
       final repository = serviceLocator<AiAccuracyAndValidationTrendsUsecase>();
       final req = AiAccuracyAndValidationTrendsRequestModel(
         startDate: startDate ?? event.startDate,
-        endDate: endData ?? event.endDate,
+        endDate: endDate ?? event.endDate,
         filter: [
           Filter(
               fieldName: "pipelines", fieldValue: piplineId ?? event.piplineId),
