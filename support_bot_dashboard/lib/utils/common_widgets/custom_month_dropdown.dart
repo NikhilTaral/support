@@ -9,6 +9,9 @@ class CustomDropdown extends StatelessWidget {
   final ValueChanged<String?> onChanged;
   final String label;
   final double? width;
+  final Border? border;
+  final TextStyle? style;
+  final Color? iconColor;
 
   const CustomDropdown(
       {Key? key,
@@ -16,7 +19,10 @@ class CustomDropdown extends StatelessWidget {
       required this.items,
       required this.onChanged,
       required this.label,
-      this.width
+      this.width,
+      this.border,
+      this.style,
+      this.iconColor
       })
       : super(key: key);
 
@@ -28,7 +34,8 @@ class CustomDropdown extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: SupportBotColors.bluePrimary),
+
+              border:border ?? Border.all(color: SupportBotColors.bluePrimary),
               borderRadius: BorderRadius.circular(5.0),
             ),
             padding:
@@ -39,16 +46,16 @@ class CustomDropdown extends StatelessWidget {
               children: [
                 Text(
                   selectedValue.isNotEmpty ? selectedValue : label,
-                  style: SupportBotTextstyle.medium.copyWith(
+                  style: style??SupportBotTextstyle.medium.copyWith(
                     fontWeight: FontWeight.w500,
                     color: SupportBotColors.bluePrimary,
                   ),
                   overflow: TextOverflow.clip,
                 ),
-                const Icon(
+                Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 30,
-                  color: SupportBotColors.bluePrimary,
+                  color:iconColor?? SupportBotColors.bluePrimary,
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/ai_query_bloc/ai_query_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/bloc/update_ai_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/presentation/widgets/ai_query_tab_filter_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
@@ -80,6 +81,13 @@ class Dashboard extends StatelessWidget {
                   endDate: endDate,
                   startDate: startDate,
                   selectedPipelineValue: [pipelineId ?? ""])),
+          ),
+          BlocProvider(
+            create: (context) => AiAccuracyAndValidationTrendsBloc()
+              ..add(AiAccuracyAndValidationTrendsIntialEvent(
+                  endDate: endDate?.toIso8601String(),
+                  startDate: startDate?.toIso8601String(),
+                  piplineId: [pipelineId ?? ""])),
           ),
           BlocProvider<AiQueryBloc>(
             create: (context) =>

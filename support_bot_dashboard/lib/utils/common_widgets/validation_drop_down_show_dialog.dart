@@ -137,8 +137,7 @@ void _saveIncorrect(
   String selectedClassification,
   String? newValue,
 ) {
-  print("reason: $reason  &&& $selectedClassification");
-  if (reason.isNotEmpty && selectedClassification != 'Select') {
+ if (reason.isNotEmpty && selectedClassification != 'Select') {
     final s = serviceLocator<S>();
     final bloc = BlocProvider.of<UpdateClassificationValidationBloc>(context);
     bloc.add(
