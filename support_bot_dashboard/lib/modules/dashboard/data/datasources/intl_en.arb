@@ -188,9 +188,9 @@
   "@validationStatusText": {
     "description":"Validation Status Text"
 }, 
-"ticketNotClassified": "Not Classified",
-  "@ticketNotClassified": {
-    "description": "Not Classified"
+"ticketUnableClassify": "Unable to Classify",
+  "@ticketUnableClassify": {
+    "description": "Unable to Classify text"
   },
   "somethingWentWrongText": "Something Went Wrong",
     "@somethingWentWrongText": {
