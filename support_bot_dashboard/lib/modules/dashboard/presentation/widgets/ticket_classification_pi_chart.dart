@@ -14,52 +14,80 @@ class ChartData {
 
 class FlCircularChart extends StatelessWidget {
   final DashboardDataModel dashboardDataModel;
+  final ValueNotifier<int?> touchedIndexNotifier = ValueNotifier<int?>(null);
 
   FlCircularChart({super.key, required this.dashboardDataModel});
 
-  late final List<ChartData> chartData = [
-    ChartData(
-        label: 'Genuine Query',
-        percentage:
-            dashboardDataModel.pieChartData?.data?.percentages?.genuineQuery),
-    ChartData(
-        label: 'No Action Required',
-        percentage: dashboardDataModel
-            .pieChartData?.data?.percentages?.noActionRequired),
-    ChartData(
-        label: 'Spam/Marketing',
-        percentage:
-            dashboardDataModel.pieChartData?.data?.percentages?.spamMarketing),
-    ChartData(
-        label: 'Acknowledge required',
-        percentage: dashboardDataModel
-            .pieChartData?.data?.percentages?.acknowledgementRequired),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return PieChart(
-      PieChartData(
-        sections: chartData.map((data) {
-          final color = _getColorForLabel(data.label);
-          return PieChartSectionData(
-            value: data.percentage,
-            title: '${data.percentage?.toStringAsFixed(1)}%',
-            color: color,
-            radius: 120,
-            titleStyle: SupportBotTextstyle.mediumHint.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+    final List<ChartData> chartData = [
+      ChartData(
+          label: 'Genuine Query',
+          percentage:
+              dashboardDataModel.pieChartData?.data?.percentages?.genuineQuery),
+      ChartData(
+          label: 'No Action Required',
+          percentage: dashboardDataModel
+              .pieChartData?.data?.percentages?.noActionRequired),
+      ChartData(
+          label: 'Spam/Marketing',
+          percentage: dashboardDataModel
+              .pieChartData?.data?.percentages?.spamMarketing),
+      ChartData(
+          label: 'Acknowledge required',
+          percentage: dashboardDataModel
+              .pieChartData?.data?.percentages?.acknowledgementRequired),
+    ];
+
+    return ValueListenableBuilder<int?>(
+      valueListenable: touchedIndexNotifier,
+      builder: (context, touchedIndex, child) {
+        return PieChart(
+          PieChartData(
+            sections: _getSections(chartData, touchedIndex),
+            centerSpaceRadius: 0,
+            sectionsSpace: 0,
+            startDegreeOffset: 360,
+            pieTouchData: PieTouchData(
+              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                if (!event.isInterestedForInteractions ||
+                    pieTouchResponse == null ||
+                    pieTouchResponse.touchedSection == null) {
+                  touchedIndexNotifier.value = null;
+                  return;
+                }
+                touchedIndexNotifier.value =
+                    pieTouchResponse.touchedSection!.touchedSectionIndex;
+              },
             ),
-          );
-        }).toList(),
-        centerSpaceRadius: 0,
-        sectionsSpace: 0,
-        startDegreeOffset: 360,
-      ),
-      swapAnimationCurve: Curves.easeInOutCirc,
-      swapAnimationDuration: const Duration(milliseconds: 2000),
+          ),
+          swapAnimationCurve: Curves.easeInOutCirc,
+          swapAnimationDuration: const Duration(milliseconds: 200),
+        );
+      },
     );
+  }
+
+  List<PieChartSectionData> _getSections(
+      List<ChartData> chartData, int? touchedIndex) {
+    return List.generate(chartData.length, (index) {
+      final data = chartData[index];
+      final color = _getColorForLabel(data.label);
+      final isTouched = index == touchedIndex;
+
+      return PieChartSectionData(
+        value: data.percentage,
+        title: isTouched
+            ? '${data.label}\n${data.percentage?.toStringAsFixed(1)}%'
+            : '${data.percentage?.toStringAsFixed(1)}%',
+        color: color,
+        radius: 120,
+        titleStyle: SupportBotTextstyle.mediumHint.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      );
+    });
   }
 
   Color _getColorForLabel(String label) {

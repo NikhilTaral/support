@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
@@ -98,6 +99,11 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
                       selectedPipelineValue: [widget.piplineId ?? ""],
                       endDate: widget.endDate,
                       startDate: widget.startDate));
+                  context.read<AiAccuracyAndValidationTrendsBloc>().add(
+                      AiAccuracyAndValidationTrendsIntialEvent(
+                          piplineId: [widget.piplineId ?? ""],
+                          endDate: widget.endDate?.toIso8601String(),
+                          startDate: widget.startDate?.toIso8601String()));
                   context.read<AiQueryAnswerBloc>().add(
                       AIQueryAnswerInitialEvent(
                           selectedPipelineValue: [widget.piplineId ?? ""],
@@ -158,6 +164,9 @@ class _MyOrganizationNavBarState extends State<MyOrganizationNavBar>
             .read<TicketClassificationBloc>()
             .add(TickiteClassificationEvent());
         context.read<UserValidationBloc>().add(UserValidationsEvent());
+        context
+            .read<AiAccuracyAndValidationTrendsBloc>()
+            .add(AiAccuracyAndValidationTrendsIntialEvent());
         context.read<AiQueryAnswerBloc>().add(AIQueryAnswerInitialEvent());
         context.read<AiQueryEditedBloc>().add(AIQueryEditedInitialEvent());
         context.read<ValidationStatusBloc>().add(ValidationStatuseCallEvent());

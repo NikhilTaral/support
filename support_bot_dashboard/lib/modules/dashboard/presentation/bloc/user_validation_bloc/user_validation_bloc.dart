@@ -16,6 +16,9 @@ DashboardDataModel dashboardDataModel = DashboardDataModel();
 class UserValidationBloc
     extends Bloc<UserValidationevent, UservalidationState> {
   List<String>? selectedPipelineId = [""];
+  String? startDate;
+  String? endDate;
+  String? selectedPipelineValue;
   DashboardAnswerDataInitialRequestModel requestBody =
       DashboardAnswerDataInitialRequestModel();
   UserValidationBloc() : super(UserValidationIntialState()) {
@@ -27,16 +30,15 @@ class UserValidationBloc
     emit(UserValidationLoadingState());
 
     try {
-      selectedPipelineId = event.selectedPipelineValue;
       final repository = serviceLocator<DashboardGetValidationByCountUsecase>();
 
-      final startDate = (event.startDate ?? DateTime.now())
+      startDate = (event.startDate ?? DateTime.now())
           .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0)
           .toIso8601String();
-      final endDate = (event.endDate ?? DateTime.now())
+      endDate = (event.endDate ?? DateTime.now())
           .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999)
           .toIso8601String();
-
+      selectedPipelineId = event.selectedPipelineValue;
       final List<Filter> filter = [
         Filter(
           fieldValue: event.selectedPipelineValue ?? ["11257490"],

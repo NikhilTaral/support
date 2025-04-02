@@ -1,3 +1,4 @@
+import 'package:support_bot_dashboard/modules/dashboard/domain/entities/ai_accuracy_and_validation_trends_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_ai_query_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_chart_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/dashboard_get_validation_count_attribute_model.dart';
@@ -17,6 +18,7 @@ class DashboardDataModel {
   final GetValidationByCountAttributeModel? getValidationByCountAttributeModel;
   final DashboardPipelineAttributeModel? dashboardPipelineAttributeModel;
   final GetValidationCountAttributeModel? getValidationCountAttributeModel;
+  final AiAccuracyAndValidationTrendsAttributeModel? aiAccuracyAndValidationTrendsAttributeModel;
   final String? selectedPipelineValue;
   final DateTime? selectedDate;
   final DateTime? selectedMonth;
@@ -30,6 +32,7 @@ class DashboardDataModel {
     this.getAllPipelinesAttributeModel,
     this.dashboardAiQueryChartAttributeModel,
     this.getValidationCountAttributeModel,
+    this.aiAccuracyAndValidationTrendsAttributeModel,
     this.getValidationByCountAttributeModel,
     this.dashboardPipelineAttributeModel,
     this.index,
@@ -48,6 +51,7 @@ class DashboardDataModel {
     DashboardPipelineAttributeModel? dashboardPipelineAttributeModel,
     GetValidationCountAttributeModel? getValidationCountAttributeModel,
     GetValidationByCountAttributeModel? getValidationByCountAttributeModel,
+    AiAccuracyAndValidationTrendsAttributeModel? aiAccuracyAndValidationTrendsAttributeModel,
     String? selectedPipelineValue,
     DateTime? selectedDate,
     DateTime? selectedMonth,
@@ -71,6 +75,8 @@ class DashboardDataModel {
           this.getValidationCountAttributeModel,
       getValidationByCountAttributeModel: getValidationByCountAttributeModel ??
           this.getValidationByCountAttributeModel,
+      aiAccuracyAndValidationTrendsAttributeModel: aiAccuracyAndValidationTrendsAttributeModel ??
+          this.aiAccuracyAndValidationTrendsAttributeModel,
       selectedPipelineValue:
           selectedPipelineValue ?? this.selectedPipelineValue,
       selectedDate: selectedDate ?? this.selectedDate,

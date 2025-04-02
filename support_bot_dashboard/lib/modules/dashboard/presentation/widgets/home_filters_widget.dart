@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
@@ -354,6 +355,14 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
+      ));
+BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(context)
+          .add(AiAccuracyAndValidationTrendsIntialEvent(
+        endDate: selectedate.lastOrNull?.toIso8601String() ??
+            widget.endDate?.toIso8601String(),
+        startDate: selectedate.firstOrNull?.toIso8601String() ??
+            widget.startDate?.toIso8601String(),
+        piplineId: selectedPipelineValue,
       ));
 
       BlocProvider.of<PipelineTileBloc>(context).add(PipelineTileInitialEvent(
