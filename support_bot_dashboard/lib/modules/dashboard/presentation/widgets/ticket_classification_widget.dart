@@ -62,28 +62,28 @@ class TicketClassificationWidget extends StatelessWidget {
                               color: SupportBotColors.bluePrimary.shade400,
                               title: s.spamMarketing,
                               percentage:
-                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.spamMarketing}%",
+                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.spamMarketing?.toStringAsFixed(1)}%",
                             ),
                             _buildClassificationRow(
                               context,
                               color: const Color(0xFF8099C7),
                               title: s.noActionRequired,
                               percentage:
-                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.noActionRequired}%",
+                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.noActionRequired?.toStringAsFixed(1)}%",
                             ),
                             _buildClassificationRow(
                               context,
                               color: const Color(0xFFB6C5DF),
                               title: s.genuineQuery,
                               percentage:
-                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.genuineQuery}%",
+                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.genuineQuery?.toStringAsFixed(1)}%",
                             ),
                             _buildClassificationRow(
                               context,
                               color: const Color(0xFFDBE2EF),
                               title: s.acknowledgeRequiredText,
                               percentage:
-                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.acknowledgementRequired}%",
+                                  "${state.dashboardDataModel?.pieChartData?.data?.percentages?.acknowledgementRequired?.toStringAsFixed(1)}%",
                             ),
                           ],
                         ),
