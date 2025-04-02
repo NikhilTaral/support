@@ -181,12 +181,11 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
-              tooltipBorder: BorderSide(
+              tooltipBorder: const BorderSide(
                 width: 2,
-                color: SupportBotColors.blueSecondary.shade200,
+                color: SupportBotColors.gray,
               ),
-              getTooltipColor: (touchedSpot) =>
-                  SupportBotColors.blueSecondary.shade200,
+              getTooltipColor: (touchedSpot) => SupportBotColors.gray,
               tooltipRoundedRadius: 4,
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {
@@ -202,10 +201,10 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
                   if (spot.barIndex == 0) {
                     label =
                         'Date: $dateLabel,\nAI Accuracy: ${spot.y.toStringAsFixed(0)}%';
-                    tooltipColor = SupportBotColors.bluePrimary.shade400;
+                    tooltipColor = SupportBotColors.black;
                   } else if (spot.barIndex == 1) {
                     label = 'Validation: ${spot.y.toStringAsFixed(0)}%';
-                    tooltipColor = SupportBotColors.bluePrimary.shade300;
+                    tooltipColor = SupportBotColors.black;
                   }
 
                   return LineTooltipItem(
