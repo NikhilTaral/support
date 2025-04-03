@@ -53,11 +53,17 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
 
     final minY = 0;
     final maxY = 100;
+    double minX, maxX;
 
-    final maxX = dates.isNotEmpty ? dates.length.toDouble() - 1 : 1;
-    final minX = 0;
+    if (dates.length == 1) {
+      minX = aiAccuracySpots.first.x - 1;
+      maxX = aiAccuracySpots.first.x + 1;
+    } else {
+      minX = 0;
+      maxX = dates.isNotEmpty ? dates.length.toDouble() - 1 : 1;
+    }
+
     final yInterval = 10;
-
     final xInterval = dates.length > 10 ? (dates.length / 7) : 1;
 
     return SizedBox(
@@ -140,42 +146,18 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
               preventCurveOverShooting: true,
               spots: aiAccuracySpots,
               barWidth: 1.5,
-              isStepLineChart: false,
               color: SupportBotColors.bluePrimary.shade400,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) {
-                  return FlDotCirclePainter(
-                    radius: 3,
-                    color: SupportBotColors.bluePrimary.shade400,
-                    strokeWidth: 1,
-                    strokeColor: Colors.transparent,
-                  );
-                },
-              ),
             ),
             LineChartBarData(
-              preventCurveOverShooting: true,
               isCurved: true,
+              preventCurveOverShooting: true,
               spots: validationPercentageSpots,
               barWidth: 1.5,
-              isStepLineChart: false,
               color: SupportBotColors.bluePrimary.shade200,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) {
-                  return FlDotCirclePainter(
-                    radius: 3,
-                    color: SupportBotColors.bluePrimary.shade300,
-                    strokeWidth: 1,
-                    strokeColor: Colors.transparent,
-                  );
-                },
-              ),
             ),
           ],
-          minX: minX.toDouble(),
-          maxX: maxX.toDouble(),
+          minX: minX,
+          maxX: maxX,
           minY: minY.toDouble(),
           maxY: maxY.toDouble(),
           lineTouchData: LineTouchData(
@@ -187,6 +169,7 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
               ),
               getTooltipColor: (touchedSpot) => SupportBotColors.gray,
               tooltipRoundedRadius: 4,
+              tooltipHorizontalAlignment: FLHorizontalAlignment.left,
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {
                   String label = '';
