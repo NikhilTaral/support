@@ -113,7 +113,7 @@
   "@ticketUpdatedCorrectText": {
     "description": "Ticket Validated As  Correct Text"
   },
-  "ticketUpdatedInCorrectText": "Ticket Validated As In-Correct",
+  "ticketUpdatedInCorrectText": "Ticket Validated As Incorrect",
   "@ticketUpdatedInCorrectText": {
     "description": "Ticket Validated As In-Correct Text"
   }
