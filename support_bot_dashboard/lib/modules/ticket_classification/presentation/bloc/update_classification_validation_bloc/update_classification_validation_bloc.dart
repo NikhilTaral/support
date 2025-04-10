@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_request_model.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/update_classification_validation_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/entities/update_classification_validation_attribute_module.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/domain/usecases/common_ticket_classification_usecases.dart';
 
@@ -25,31 +24,30 @@ class UpdateClassificationValidationBloc extends Bloc<
       final repository =
           serviceLocator<UpdateClassificationValidationUsecase>();
       final req = UpdateClassificationValidationRequestModel(
-          reason: event.reason,
-          validatedClassification: event.validatedClassification,
-          id: event.id,
-          pipeline: event.pipeline,
-          validation: event.validation ?? "");
+        reason: event.reason,
+        validatedClassification: event.validatedClassification,
+        id: event.id,
+        pipeline: event.pipeline,
+        validation: event.validation ?? "",
+      );
       final response = await repository.invoke(req);
       if (response.isLeft) {
-        emit(UpdateClassificationValidationFailureState());
+       emit(UpdateClassificationValidationFailureState());
       } else {
-        final UpdateClassificationValidationResponseModel model =
-            UpdateClassificationValidationResponseModel.fromJson(
-                response.right);
-
-        updateClassificationValidationAttributeModule =
+       final model = response.right;
+         updateClassificationValidationAttributeModule =
             UpdateClassificationValidationAttributeModule(
-                data:
-                    updateClassificationValidationAttributeModule.data?.copyWith(
+                data: updateClassificationValidationAttributeModule.data
+                    ?.copyWith(
                   message: model.message,
                 ),
                 failCode: model.failCode,
                 message: model.message,
                 success: model.success);
         emit(UpdateClassificationValidationSuccessState(
-            updateClassificationValidationAttributeModule: updateClassificationValidationAttributeModule));
-      }
+            updateClassificationValidationAttributeModule:
+                updateClassificationValidationAttributeModule));
+       }
     } catch (e) {
       emit(UpdateClassificationValidationFailureState());
     }

@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/user_validation_bloc/user_validation_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_accuracy_and_validation_trends_states.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pipeline_tile.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/validation_status_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_widget.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_widget.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
@@ -18,8 +22,11 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class Charts extends StatelessWidget {
-  Charts({super.key});
+  Charts({super.key, this.endDate, this.piplineId, this.startDate});
   final s = serviceLocator<S>();
+  final List<String>? piplineId;
+  final DateTime? startDate;
+  final DateTime? endDate;
   @override
   Widget build(BuildContext context) {
     final screenHeight = UIHelpers.screenHeight(context);
@@ -50,7 +57,7 @@ class Charts extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildUserValidationCard(),
+                    _buildUserValidationCard(context),
                     UIHelpers.verticalSpaceRegular,
                     _buildAiQueryEditedAnswerCard(),
                   ],
@@ -142,29 +149,80 @@ class Charts extends StatelessWidget {
     );
   }
 
-  Widget _buildUserValidationCard() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: SupportBotColors.blueSecondary.shade100, width: 1),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8,
-        children: [
-          Text(
-            s.userValidationText,
-            style: SupportBotTextstyle.normal.copyWith(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: SupportBotColors.black),
+  Widget _buildUserValidationCard(BuildContext context) {
+    return BlocSelector<AiAccuracyAndValidationTrendsBloc,
+        AiAccuracyAndValidationTrendsState, String>(
+      selector: (state) {
+        if (state is AiAccuracyAndValidationTrendsSucssesState) {
+          return state.isVisible ?? "";
+        }
+        return "";
+      },
+      builder: (context, state) {
+        state = state.isEmpty ? "AI Accuracy" : state;
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: SupportBotColors.blueSecondary.shade100, width: 1),
+            borderRadius: BorderRadius.circular(6),
           ),
-          const UserValidationWidget(),
-        ],
-      ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
+            children: [
+              Row(
+                children: [
+                  CustomDropdown(
+                    iconColor: SupportBotColors.black,
+                    style: SupportBotTextstyle.normal.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: SupportBotColors.black),
+                    border: Border.all(color: WidgetStateColor.transparent),
+                    width: UIHelpers.screenWidth(context) * 0.09,
+                    label: state,
+                    selectedValue: state.isEmpty ? "AI Accuracy" : state,
+                    onChanged: (newValue) async {
+                      BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(
+                              context)
+                          .add(
+                        GraphToggalEvent(
+                          isVisible: newValue?.toLowerCase() == "ai accuracy"
+                              ? "AI Accuracy"
+                              : "User Validation",
+                        ),
+                      );
+                      final bloc =
+                          BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(
+                              context);
+                      if (newValue?.toLowerCase() == "ai accuracy") {
+                        BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(
+                                context)
+                            .add(AiAccuracyAndValidationTrendsIntialEvent(
+                          startDate:
+                              bloc.startDate ?? startDate?.toIso8601String(),
+                          endDate: bloc.endDate ?? endDate?.toIso8601String(),
+                          piplineId: bloc.piplineId ?? piplineId,
+                        ));
+                      }
+                    },
+                    items: const ["AI Accuracy", "User Validation"],
+                  ),
+                ],
+              ),
+              state == "AI Accuracy"
+                  ? AiAccuracyAndValidationTrendsStates(
+                      endDate: endDate,
+                      startDate: startDate,
+                      piplineId: piplineId,
+                    )
+                  : const UserValidationWidget()
+            ],
+          ),
+        );
+      },
     );
   }
 

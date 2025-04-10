@@ -58,9 +58,9 @@ class LineChartGraphWidget extends StatelessWidget {
         LineChartData(
           gridData: FlGridData(
             getDrawingHorizontalLine: (value) =>
-                const FlLine(color: Color(0xFFC8C8C8)),
+                const FlLine(color: Colors.transparent),
             getDrawingVerticalLine: (value) =>
-                const FlLine(color: Color(0xFFC8C8C8)),
+                const FlLine(color: Colors.transparent),
             drawHorizontalLine: true,
             drawVerticalLine: true,
             show: true,
@@ -122,15 +122,18 @@ class LineChartGraphWidget extends StatelessWidget {
           ),
           lineBarsData: [
             LineChartBarData(
+              isCurved: true,
+              preventCurveOvershootingThreshold: 100,
+              preventCurveOverShooting: true,
               spots: spots,
-              barWidth: 2,
+              barWidth: 1.5,
               isStepLineChart: false,
               color: SupportBotColors.bluePrimary.shade400,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) {
                   return FlDotCirclePainter(
-                    radius: 5,
+                    radius: 3,
                     color: SupportBotColors.bluePrimary.shade400,
                     strokeWidth: 1,
                     strokeColor: Colors.transparent,
@@ -153,7 +156,7 @@ class LineChartGraphWidget extends StatelessWidget {
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 return touchedSpots.map((spot) {
                   return LineTooltipItem(
-                    spot.y.toStringAsFixed(2),
+                    spot.y.toString(),
                     SupportBotTextstyle.caption.copyWith(
                       color: SupportBotColors.black,
                     ),

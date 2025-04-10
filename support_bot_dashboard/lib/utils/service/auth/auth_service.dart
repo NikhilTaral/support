@@ -19,8 +19,6 @@ import 'package:support_bot_dashboard/utils/shared_preferences/local_storage_key
 import 'package:support_bot_dashboard/utils/shared_preferences/secure_storage.dart';
 
 class AuthService {
-  static const apiKey =
-      '556d0cdcb9696f909bda624731e9d38af85e6d04fb449941837672dc2fab15ba';
   static final SecureStorage _storage = serviceLocator<SecureStorage>();
   UserProfile? _userProfile;
 

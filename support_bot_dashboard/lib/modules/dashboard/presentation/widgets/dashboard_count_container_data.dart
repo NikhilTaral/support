@@ -1,13 +1,14 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/model/dashboard_data_model.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
+import 'package:support_bot_dashboard/utils/theme/iconsax.dart';
 
 class CountContainerData {
   final String text;
   final IconData icon;
-  final double? count;
+  final num? count;
 
   CountContainerData({
     required this.text,
@@ -36,22 +37,23 @@ List<CountContainerData> getCountContainerData(BuildContext context,
     ),
     CountContainerData(
       text: S.of(context).acknowledgementRequired,
-      icon: SupportBotIcons.list,
+      icon: SupportBotIcons.pentool,
       count: model?.pieChartData?.data?.counts?.acknowledgementRequired,
     ),
     CountContainerData(
-      text: S.of(context).ticketNotClassified,
+      text: S.of(context).ticketUnableClassify,
       icon: SupportBotIcons.star1,
-      count: model?.pieChartData?.data?.counts?.notClassified,
+      count: model?.pieChartData?.data?.counts?.unableToClassify,
+    ),
+    CountContainerData(
+      text: S.of(context).awaitingToClassifyText,
+      icon: Iconsax.hierarchy_2,
+      count: model?.pieChartData?.data?.counts?.awaitingToClassify,
     ),
     CountContainerData(
       text: S.of(context).totalText,
       icon: SupportBotIcons.tickcircle4,
-      count: (model?.pieChartData?.data?.counts?.spamMarketing ?? 0) +
-          (model?.pieChartData?.data?.counts?.noActionRequired ?? 0) +
-          (model?.pieChartData?.data?.counts?.genuineQuery ?? 0) +
-          (model?.pieChartData?.data?.counts?.acknowledgementRequired ?? 0) +
-          (model?.pieChartData?.data?.counts?.notClassified ?? 0),
+      count: model?.pieChartData?.data?.counts?.total,
     ),
   ];
 }

@@ -48,7 +48,11 @@ class TabBarWidget {
         svgPath: 'assets/icons/House.svg',
         view: SizedBox(
           width: double.infinity,
-          child: HomePageWidget(),
+          child: HomePageWidget(
+            endDate: endDate,
+            startDate: startDate,
+            piplineId: [piplineId??""],
+          ),
         ),
         type: TypeBarType.home,
       ),

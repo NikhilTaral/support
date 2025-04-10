@@ -280,9 +280,9 @@
   "@validationStatusText": {
     "description": "Validation Status Text"
   },
-  "ticketNotClassified": "Not Classified",
-  "@ticketNotClassified": {
-    "description": "Not Classified"
+  "ticketUnableClassify": "Unable to Classify",
+  "@ticketUnableClassify": {
+    "description": "Unable to Classify text"
   },
   "somethingWentWrongText": "Something Went Wrong",
   "@somethingWentWrongText": {
@@ -307,6 +307,18 @@
   "validatedText": "Validated",
   "@validatedText": {
     "description": "Validated Text"
+  },
+  "userValidationCountText": "User Validation Count",
+  "@userValidationCountText": {
+    "description": "User Validation Count Text"
+  },
+  "awaitingToClassifyText": "Awaiting to Classify",
+  "@awaitingToClassifyText": {
+    "description": "Awaiting to Classify Text"
+  },
+  "aIAccuracyText": "AI Accuracy",
+  "@aIAccuracyText": {
+    "description": "AI Accuracy Text"
   },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
@@ -461,5 +473,13 @@
   "exportCSVFileText": "Export CSV File",
   "@exportCSVFileText": {
     "description": "Export CSV File Text"
+  },
+  "ticketUpdatedCorrectText": "Ticket Validated As Correct",
+  "@ticketUpdatedCorrectText": {
+    "description": "Ticket Validated As  Correct Text"
+  },
+  "ticketUpdatedInCorrectText": "Ticket Validated As Incorrect",
+  "@ticketUpdatedInCorrectText": {
+    "description": "Ticket Validated As In-Correct Text"
   }
 }
