@@ -5,12 +5,13 @@ import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_pipelines_attribute_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
-import 'package:support_bot_dashboard/modules/ticket_classification/data/model/get_all_validation_users_response_model.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/bops_states_bloc/bops_states_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/filter_bloc/filter_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/get_all_validatod_user_bloc/get_all_validation_user_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
 import 'package:support_bot_dashboard/modules/ticket_classification/presentation/widgets/ticket_classification_pipeline_widget.dart';
+import 'package:support_bot_dashboard/responsive.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_search_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/export_button_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
@@ -79,34 +80,20 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
   }
 
   Widget _buildLoadingState() {
-    return const Row(
-      spacing: 15,
-      children: [
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+    return Row(
+      spacing: 4,
+      children: List.generate(
+        6,
+        (index) {
+          return LoadingWidget(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
             height: 40,
-            width: 180),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 180),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 150),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 130),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 130),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 130),
-      ],
+            width: Responsive.isTablet(context)
+                ? UIHelpers.screenWidth(context) * 0.14
+                : UIHelpers.screenWidth(context) * 0.2,
+          );
+        },
+      ),
     );
   }
 
@@ -283,7 +270,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 return "";
               },
               builder: (context, filterState) {
-                return CustomDropdown(
+                return CustomSearchDropdown(
                   items: state1.bOpsResponseAttributeModel?.data ?? [],
                   label: filterState.isEmpty ? s.bobStateText : filterState,
                   onChanged: (value) {
@@ -399,7 +386,7 @@ class _HomeFiltersWidgetState extends State<TicketClassificationFiltersWidget> {
                 return "";
               },
               builder: (context, state) {
-                return CustomDropdown(
+                return CustomSearchDropdown(
                     items: users.map((e) => e.name ?? "").toSet().toList(),
                     label: state.isEmpty
                         ? s.validatedUserText

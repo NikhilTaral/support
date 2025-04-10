@@ -4,6 +4,7 @@ import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/data/repositories/ai_query_answer_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/repositories/ai_query_answer_repo.dart';
 import 'package:support_bot_dashboard/modules/ai_query_answer_tab/domain/usecases/ai_query_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/data/repositories/ai_accuracy_and_validation_trends_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_ai_query_chart_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_chart_data_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashboard_get_ai_edited_repo_impl.dart';
@@ -12,6 +13,7 @@ import 'package:support_bot_dashboard/modules/dashboard/data/repositories/dashbo
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/get_all_pipelines_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/pipeline_tile_repo_impl.dart';
 import 'package:support_bot_dashboard/modules/dashboard/data/repositories/validation_status_repo_impl.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/ai_accuracy_and_validation_trends_respository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_ai_query_answer_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_chart_data_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dashboard_get_ai_edited_repository.dart';
@@ -20,6 +22,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/dash
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/get_all_pipelines_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/pipeline_tile_repository.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/repositories/validation_status_repository.dart';
+import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/ai_accuracy_and_validation_trends_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_answer.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_ai_query_edited.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboard_chartdata_usecase.dart';
@@ -27,6 +30,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/dashboar
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/get_all_pipelines_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/pipeline_tile_usecase.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/usecases/validation_status_usecase.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 import 'package:support_bot_dashboard/modules/login_v3/data/repositories/v3_login_repositories_impl.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/repositories/v3_login_repositories.dart';
 import 'package:support_bot_dashboard/modules/login_v3/domain/usecases/v3_login_usecases.dart';
@@ -171,4 +175,12 @@ Future<void> initServiceLocator() async {
       () => GetAllValidationUserImpl());
   serviceLocator.registerFactory<GetAllValidationUsersBloc>(
       () => GetAllValidationUsersBloc());
+
+  serviceLocator.registerLazySingleton<AiAccuracyAndValidationTrendsUsecase>(
+      () => AiAccuracyAndValidationTrendsUsecase());
+  serviceLocator
+      .registerLazySingleton<AiAccuracyAndValidationTrendsRespository>(
+          () => AiAccuracyAndValidationTrendsRepoImpl());
+  serviceLocator.registerFactory<AiAccuracyAndValidationTrendsBloc>(
+      () => AiAccuracyAndValidationTrendsBloc());
 }

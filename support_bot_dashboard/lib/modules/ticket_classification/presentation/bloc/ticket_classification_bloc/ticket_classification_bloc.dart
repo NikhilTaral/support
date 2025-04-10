@@ -27,9 +27,13 @@ class TicketClassificationTabBloc
       .copyWith(hour: 23, minute: 59, second: 59, millisecond: 999);
   DateTime? startDate =
       DateTime.now().copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
+  String? newValue;
+  String? reason = "";
 
   TicketClassificationTabBloc() : super(TicketClassificationIntialState()) {
     on<TicketClassificationDataCallEvent>(_onTicketClassification);
+    on<UpdateTheClassificationEvent>(__onUpdateTheClassificationEvent);
+    on<SaveChangeValidationEvent>(_onSaveChangeValidationEvent);
   }
 
   FutureOr<void> _onTicketClassification(
@@ -123,5 +127,29 @@ class TicketClassificationTabBloc
     selectedPipelineId = "";
     page = 1;
     pageSize = 10;
+  }
+
+  FutureOr<void> __onUpdateTheClassificationEvent(
+      UpdateTheClassificationEvent event,
+      Emitter<TicketClassificationState> emit) async {
+    try {
+      if (state is TicketClassificationSuccessState) {
+        final currentState = state as TicketClassificationSuccessState;
+        emit(currentState.copyWith(
+            selectedClassification: event.classification));
+      }
+    } catch (e) {
+      emit(TicketClassificationFailureState());
+    }
+  }
+
+  FutureOr<void> _onSaveChangeValidationEvent(SaveChangeValidationEvent event,
+      Emitter<TicketClassificationState> emit) async {
+    newValue = event.selectedClassification;
+    emit(TicketClassificationSuccessState(
+        id: event.id,
+        pipelineIds: event.pipelineIds,
+        reason: event.reason,
+        selectedClassificationValue: newValue));
   }
 }

@@ -1,81 +1,18 @@
-// import 'package:flutter/material.dart';
-// import 'package:support_bot_dashboard/utils/theme/colors.dart';
-// import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
-
-// class UserValidationSidebar extends StatelessWidget {
-//   final Map<String, int> validationData;
-
-//   const UserValidationSidebar({
-//     Key? key,
-//     required this.validationData,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: IconButton(icon: Icon(Icons.arrow_back_ios_new,size: 20,),onPressed: (){Navigator.pop(context);},),
-//         backgroundColor: SupportBotColors.white,
-//         title:  Text(
-//           'User Validation Count',
-//           style: SupportBotTextstyle.normal.copyWith(
-//             fontWeight: FontWeight.bold
-//           ),
-//         ),
-//         centerTitle: true,
-//       ),
-//       body: SingleChildScrollView(
-//         child: Column(
-//           children: [
-//             Divider(height: 1, color: Colors.grey[300]),
-//             Padding(
-//               padding: const EdgeInsets.all(16.0),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: validationData.entries.map((entry) {
-//                   final name = entry.key.split('@').first.replaceAll('.', ' ').capitalize();
-//                   return Padding(
-//                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         Text(name, style: SupportBotTextstyle.pierchartLabel),
-//                         Text(entry.value.toString(), style: SupportBotTextstyle.pierchartLabel),
-//                       ],
-//                     ),
-//                   );
-//                 }).toList(),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-// extension StringExtension on String {
-//   String capitalize() {
-//     return split(' ')
-//         .map((word) => word[0].toUpperCase() + word.substring(1))
-//         .join(' ');
-//   }
-// }
-
 import 'package:flutter/material.dart';
-import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
 class UserValidationSidebar extends StatelessWidget {
   final Map<String, double>? validationData;
-
-  const UserValidationSidebar({
+  final s = serviceLocator<S>();
+   UserValidationSidebar({
     Key? key,
     required this.validationData,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Sort validation data by value in descending order
     final sortedEntries = validationData?.entries.toList()
       ?..sort((a, b) => b.value.compareTo(a.value));
 
@@ -85,7 +22,6 @@ class UserValidationSidebar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Custom App Bar
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
@@ -97,7 +33,7 @@ class UserValidationSidebar extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      'User Validation Count',
+                      s.userValidationCountText,
                       style: SupportBotTextstyle.normal.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -108,9 +44,7 @@ class UserValidationSidebar extends StatelessWidget {
                 ],
               ),
             ),
-
             const Divider(height: 1, color: Colors.grey),
-
             Expanded(
               child: ListView.builder(
                 itemCount: sortedEntries?.length,
@@ -137,7 +71,6 @@ class UserValidationSidebar extends StatelessWidget {
     );
   }
 
-  // Helper method to format name
   String _formatName(String email) {
     if (email.isEmpty) return 'Unknown';
 
@@ -147,7 +80,6 @@ class UserValidationSidebar extends StatelessWidget {
   }
 }
 
-// Extension method for capitalization
 extension StringExtension on String {
   String capitalize() {
     if (isEmpty) return '';

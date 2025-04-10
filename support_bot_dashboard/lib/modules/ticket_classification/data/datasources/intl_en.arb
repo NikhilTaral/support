@@ -108,5 +108,13 @@
   "exportCSVFileText": "Export CSV File",
   "@exportCSVFileText": {
     "description": "Export CSV File Text"
+  },
+  "ticketUpdatedCorrectText": "Ticket Validated As Correct",
+  "@ticketUpdatedCorrectText": {
+    "description": "Ticket Validated As  Correct Text"
+  },
+  "ticketUpdatedInCorrectText": "Ticket Validated As Incorrect",
+  "@ticketUpdatedInCorrectText": {
+    "description": "Ticket Validated As In-Correct Text"
   }
 }

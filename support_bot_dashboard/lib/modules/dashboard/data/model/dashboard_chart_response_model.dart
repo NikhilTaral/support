@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final dashboardChartResponseModel = dashboardChartResponseModelFromJson(jsonString);
-
 import 'dart:convert';
 
 DashboardAnswerResponseModel dashboardAnswerResponseModelFromJson(String str) =>
@@ -14,14 +10,12 @@ class DashboardAnswerResponseModel {
   final Data? data;
   final bool? success;
   final num? failCode;
-  final Params? params;
   final String? message;
 
   DashboardAnswerResponseModel({
     this.data,
     this.success,
     this.failCode,
-    this.params,
     this.message,
   });
 
@@ -30,7 +24,6 @@ class DashboardAnswerResponseModel {
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
         success: json["success"],
         failCode: json["failCode"],
-        params: json["params"] == null ? null : Params.fromJson(json["params"]),
         message: json["message"],
       );
 
@@ -38,7 +31,6 @@ class DashboardAnswerResponseModel {
         "data": data?.toJson(),
         "success": success,
         "failCode": failCode,
-        "params": params?.toJson(),
         "message": message,
       };
 }
@@ -70,14 +62,18 @@ class Counts {
   final double? noActionRequired;
   final double? spamMarketing;
   final double? acknowledgementRequired;
-  final double? notClassified;
+  final num? unableToClassify;
+  final double? awaitingToClassify;
+  final num? total;
 
   Counts({
     this.genuineQuery,
     this.noActionRequired,
     this.spamMarketing,
     this.acknowledgementRequired,
-    this.notClassified,
+    this.unableToClassify,
+    this.awaitingToClassify,
+    this.total,
   });
 
   factory Counts.fromJson(Map<String, dynamic> json) => Counts(
@@ -85,7 +81,9 @@ class Counts {
         noActionRequired: json["No Action Required"]?.toDouble(),
         spamMarketing: json["Spam/Marketing"]?.toDouble(),
         acknowledgementRequired: json["Acknowledgement Required"]?.toDouble(),
-        notClassified: json["Not Classified"]?.toDouble(),
+        unableToClassify: json["Unable to Classify"],
+        awaitingToClassify: json["Awaiting to Classify"]?.toDouble(),
+        total: json["Total"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -93,14 +91,8 @@ class Counts {
         "No Action Required": noActionRequired,
         "Spam/Marketing": spamMarketing,
         "Acknowledgement Required": acknowledgementRequired,
-        "Not Classified": notClassified,
+        "Unable to Classify": unableToClassify,
+        "Awaiting to Classify": awaitingToClassify,
+        "Total": total,
       };
-}
-
-class Params {
-  Params();
-
-  factory Params.fromJson(Map<String, dynamic> json) => Params();
-
-  Map<String, dynamic> toJson() => {};
 }
