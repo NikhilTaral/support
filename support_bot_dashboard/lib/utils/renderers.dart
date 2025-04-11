@@ -50,7 +50,7 @@ class Renderers {
             .copyWith(fontSize: 14, color: SupportBotColors.gray.shade800));
 
     return Text(
-      text.isEmpty ? "Not Classified" : text,
+      text.isEmpty ? "Awaiting to Classify" : text,
       textAlign: TextAlign.start,
       style: textStyle,
       overflow: TextOverflow.ellipsis,
