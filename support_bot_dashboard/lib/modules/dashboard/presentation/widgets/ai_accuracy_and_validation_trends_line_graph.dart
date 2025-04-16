@@ -64,7 +64,7 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
     }
 
     final yInterval = 10;
-    final xInterval = dates.length > 10 ? (dates.length / 7) : 1;
+    final xInterval = dates.length > 10 ? (dates.length / 6) : 1;
 
     return SizedBox(
       child: LineChart(
