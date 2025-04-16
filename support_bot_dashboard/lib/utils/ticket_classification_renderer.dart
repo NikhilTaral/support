@@ -466,7 +466,7 @@ class _ViewDialogBoxState extends State<ViewDialogBox> {
                       children: <TextSpan>[
                         TextSpan(
                           text:
-                              '${currentRowData.aiclassification == "" ? "N/A" : currentRowData.aiclassification}',
+                              '${currentRowData.aiclassification == "" ? "Awaiting to Classify" : currentRowData.aiclassification}',
                           style: SupportBotTextstyle.small.copyWith(
                             fontWeight: FontWeight.w400,
                           ),
