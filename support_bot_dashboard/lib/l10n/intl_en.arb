@@ -292,8 +292,16 @@
   "@validatedTicketsText": {
     "description": "Validated Tickets Text"
   },
+  "validatedTicketsPercentageText": "Validated Tickets",
+  "@validatedTicketsPercentageText": {
+    "description": "Validated Tickets Text"
+  },
   "totalTicketsText": "Total Tickets",
   "@totalTicketsText": {
+    "description": "Total Tickets Text"
+  },
+  "totalTicketsPercentageText": "Total Tickets",
+  "@totalTicketsPercentageText": {
     "description": "Total Tickets Text"
   },
   "pipelineText": "Pipeline",
@@ -304,9 +312,17 @@
   "@totalText": {
     "description": "Total Text"
   },
-  "validatedText": "Validated",
-  "@validatedText": {
-    "description": "Validated Text"
+  "totalCountText": "Total Count",
+  "@totalCountText": {
+    "description": "Total Count Text"
+  },
+  "validatedCountText": "Validated Count",
+  "@validatedCountText": {
+    "description": "Validated Count Text"
+  },
+  "validatedPercentageText": "Validated Percentage",
+  "@validatedPercentageText": {
+    "description": "Validated Count Percentage Text"
   },
   "userValidationCountText": "User Validation Count",
   "@userValidationCountText": {

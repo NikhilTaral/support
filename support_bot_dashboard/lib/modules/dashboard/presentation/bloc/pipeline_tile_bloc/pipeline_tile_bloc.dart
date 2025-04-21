@@ -74,13 +74,15 @@ class PipelineTileBloc extends Bloc<PipelineTileEvent, PipelineTileState> {
       totalRecords: response.data?.totalRecords ?? 0,
       items: response.data?.items
               ?.map((item) => AttributeItem(
-                    pipelineId: item.pipelineId ?? "",
-                    pipelineName: item.pipelineName ?? "",
-                    totalTickets: item.totalTickets ?? 0,
-                    correctTickets: item.correctTickets ?? 0,
-                    incorrectTickets: item.incorrectTickets ?? 0,
-                    validatedTickets: item.validatedTickets ?? 0,
-                  ))
+                  pipelineId: item.pipelineId ?? "",
+                  pipelineName: item.pipelineName ?? "",
+                  totalTickets: item.totalTickets ?? 0,
+                  correctTickets: item.correctTickets ?? 0,
+                  incorrectTickets: item.incorrectTickets ?? 0,
+                  validatedTickets: item.validatedTickets ?? 0,
+                  totalTicketsPercentage: item.totalTicketsPercentage ?? 0,
+                  validatedTicketPercentage:
+                      item.validatedTicketPercentage ?? 0))
               .toList() ??
           [],
     );
