@@ -88,41 +88,49 @@ class Item {
   final num? correctTickets;
   final num? incorrectTickets;
   final num? validatedTickets;
+  final num? validatedTicketPercentage;
+  final num? totalTicketsPercentage;
 
-  Item({
-    this.pipelineId,
-    this.pipelineName,
-    this.totalTickets,
-    this.correctTickets,
-    this.incorrectTickets,
-    this.validatedTickets,
-  });
+  Item(
+      {this.pipelineId,
+      this.pipelineName,
+      this.totalTickets,
+      this.correctTickets,
+      this.incorrectTickets,
+      this.validatedTickets,
+      this.validatedTicketPercentage,
+      this.totalTicketsPercentage});
 
-  Item copyWith({
-    String? pipelineId,
-    String? pipelineName,
-    num? totalTickets,
-    num? correctTickets,
-    num? incorrectTickets,
-    num? validatedTickets,
-  }) =>
+  Item copyWith(
+          {String? pipelineId,
+          String? pipelineName,
+          num? totalTickets,
+          num? correctTickets,
+          num? incorrectTickets,
+          num? validatedTickets,
+          num? validatedTicketPercentage,
+          num? totalTicketsPercentage}) =>
       Item(
-        pipelineId: pipelineId ?? this.pipelineId,
-        pipelineName: pipelineName ?? this.pipelineName,
-        totalTickets: totalTickets ?? this.totalTickets,
-        correctTickets: correctTickets ?? this.correctTickets,
-        incorrectTickets: incorrectTickets ?? this.incorrectTickets,
-        validatedTickets: validatedTickets ?? this.validatedTickets,
-      );
+          pipelineId: pipelineId ?? this.pipelineId,
+          pipelineName: pipelineName ?? this.pipelineName,
+          totalTickets: totalTickets ?? this.totalTickets,
+          correctTickets: correctTickets ?? this.correctTickets,
+          incorrectTickets: incorrectTickets ?? this.incorrectTickets,
+          validatedTickets: validatedTickets ?? this.validatedTickets,
+          totalTicketsPercentage:
+              totalTicketsPercentage ?? this.totalTicketsPercentage,
+          validatedTicketPercentage:
+              validatedTicketPercentage ?? this.validatedTicketPercentage);
 
   factory Item.fromJson(Map<String, dynamic> json) => Item(
-        pipelineId: json["PipelineId"],
-        pipelineName: json["PipelineName"],
-        totalTickets: json["TotalTickets"],
-        correctTickets: json["correctTickets"],
-        incorrectTickets: json["incorrectTickets"],
-        validatedTickets: json["ValidatedTickets"],
-      );
+      pipelineId: json["PipelineId"],
+      pipelineName: json["PipelineName"],
+      totalTickets: json["TotalTickets"],
+      correctTickets: json["correctTickets"],
+      incorrectTickets: json["incorrectTickets"],
+      validatedTickets: json["ValidatedTickets"],
+      totalTicketsPercentage: json["TotalTicketsPercentage"],
+      validatedTicketPercentage: json["ValidatedTicketPercentage"]);
 
   Map<String, dynamic> toJson() => {
         "PipelineId": pipelineId,
@@ -131,5 +139,7 @@ class Item {
         "correctTickets": correctTickets,
         "incorrectTickets": incorrectTickets,
         "ValidatedTickets": validatedTickets,
+        "TotalTicketsPercentage": totalTicketsPercentage,
+        "ValidatedTicketPercentage": validatedTicketPercentage
       };
 }

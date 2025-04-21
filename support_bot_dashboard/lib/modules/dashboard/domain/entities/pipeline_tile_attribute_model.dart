@@ -24,30 +24,37 @@ class AttributeItem {
   final num? correctTickets;
   final num? incorrectTickets;
   final num? validatedTickets;
+  final num? validatedTicketPercentage;
+  final num? totalTicketsPercentage;
 
-  AttributeItem({
-    this.pipelineId,
-    this.pipelineName,
-    this.totalTickets,
-    this.correctTickets,
-    this.incorrectTickets,
-    this.validatedTickets,
-  });
+  AttributeItem(
+      {this.pipelineId,
+      this.pipelineName,
+      this.totalTickets,
+      this.correctTickets,
+      this.incorrectTickets,
+      this.validatedTickets,
+      this.validatedTicketPercentage,
+      this.totalTicketsPercentage});
 
-  AttributeItem copyWith({
-    String? pipelineId,
-    String? pipelineName,
-    num? totalTickets,
-    num? correctTickets,
-    num? incorrectTickets,
-    num? validatedTickets,
-  }) =>
+  AttributeItem copyWith(
+          {String? pipelineId,
+          String? pipelineName,
+          num? totalTickets,
+          num? correctTickets,
+          num? incorrectTickets,
+          num? validatedTickets,
+          num? validatedTicketPercentage,
+          num? totalTicketsPercentage}) =>
       AttributeItem(
-        pipelineId: pipelineId ?? this.pipelineId,
-        pipelineName: pipelineName ?? this.pipelineName,
-        totalTickets: totalTickets ?? this.totalTickets,
-        correctTickets: correctTickets ?? this.correctTickets,
-        incorrectTickets: incorrectTickets ?? this.incorrectTickets,
-        validatedTickets: validatedTickets ?? this.validatedTickets,
-      );
+          pipelineId: pipelineId ?? this.pipelineId,
+          pipelineName: pipelineName ?? this.pipelineName,
+          totalTickets: totalTickets ?? this.totalTickets,
+          correctTickets: correctTickets ?? this.correctTickets,
+          incorrectTickets: incorrectTickets ?? this.incorrectTickets,
+          validatedTickets: validatedTickets ?? this.validatedTickets,
+          totalTicketsPercentage:
+              totalTicketsPercentage ?? this.totalTicketsPercentage,
+          validatedTicketPercentage:
+              validatedTicketPercentage ?? this.validatedTicketPercentage);
 }
