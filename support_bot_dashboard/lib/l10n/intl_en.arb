@@ -336,6 +336,10 @@
   "@aIAccuracyText": {
     "description": "AI Accuracy Text"
   },
+  "piplineInfoToolTipText": "Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown.",
+  "@piplineInfoToolTipText": {
+    "description": "Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown. Text"
+  },
   "signInPageTextPart1": "By clicking “GET STARTED” you are agreeing to our ",
   "@signInPageTextPart1": {
     "description": "By clicking “GET STARTED” you are agreeing to our "
