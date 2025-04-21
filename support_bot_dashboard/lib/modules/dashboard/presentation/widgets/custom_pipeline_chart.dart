@@ -143,6 +143,7 @@ class CustomPipelineChart extends StatelessWidget {
             touchTooltipData: BarTouchTooltipData(
               fitInsideVertically: false,
               tooltipMargin: (-80),
+              tooltipHorizontalOffset: -55,
               tooltipPadding: const EdgeInsets.all(7),
               tooltipRoundedRadius: 5,
               getTooltipColor: (group) => SupportBotColors.gray,
@@ -155,9 +156,9 @@ class CustomPipelineChart extends StatelessWidget {
               rotateAngle: 270,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
-                  '${s.validatedCountText}: ${filteredData[groupIndex].validatedTickets?.toInt() ?? 0} \n'
-                  '${s.validatedPercentageText}: ${filteredData[groupIndex].validatedTicketPercentage?.toInt() ?? 0}% \n'
-                  '${s.totalCountText}: ${filteredData[groupIndex].totalTickets?.toInt() ?? 0}',
+                  '${s.validatedCountText}: ${filteredData[groupIndex].validatedTickets?.toDouble() ?? 0} \n'
+                  '${s.validatedPercentageText}: ${filteredData[groupIndex].validatedTicketPercentage?.toDouble() ?? 0}% \n'
+                  '${s.totalCountText}: ${filteredData[groupIndex].totalTickets?.toDouble() ?? 0}',
                   const TextStyle(
                     color: SupportBotColors.black,
                   ),
