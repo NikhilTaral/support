@@ -131,8 +131,7 @@ class Charts extends StatelessWidget {
               minMargin: 40,
               width: 300,
               isMobile: false,
-              message:
-                  "Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown.",
+              message: s.piplineInfoToolTipText,
               child: const Icon(
                 size: 18,
                 SupportBotIcons.infoCircle,
