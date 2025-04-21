@@ -16,6 +16,7 @@ import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/icons.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
@@ -115,13 +116,29 @@ class Charts extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          s.pipelineText,
-          style: SupportBotTextstyle.normal.copyWith(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-            color: SupportBotColors.black,
-          ),
+        Row(
+          children: [
+            Text(
+              s.pipelineText,
+              style: SupportBotTextstyle.normal.copyWith(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                color: SupportBotColors.black,
+              ),
+            ),
+            UIHelpers.horizontalSpaceTiny,
+            CustomToolTip(
+              minMargin: 40,
+              width: 300,
+              isMobile: false,
+              message:
+                  "Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown.",
+              child: const Icon(
+                size: 18,
+                SupportBotIcons.infoCircle,
+              ),
+            ),
+          ],
         ),
         GestureDetector(
           onTap: () {
