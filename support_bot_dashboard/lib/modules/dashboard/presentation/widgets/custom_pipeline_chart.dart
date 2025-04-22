@@ -19,23 +19,22 @@ class CustomPipelineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filteredData = pipelineData?.skip(1).toList() ?? [];
-    final maxTotalTickets = filteredData.map((e) => e.totalTickets ?? 0).fold(
-            0,
-            (prev, next) =>
-                prev.toInt() > next.toInt() ? prev.toInt() : next.toInt()) ??
-        0;
-    final int numberOfDivisions = maxTotalTickets > 500 ? 15 : 5;
-    final intervalValue = (maxTotalTickets / numberOfDivisions).ceilToDouble();
+    final maxY = (filteredData
+                    .map((e) => e.totalTicketsPercentage ?? 0)
+                    .fold<double>(
+                        0,
+                        (prev, curr) =>
+                            curr.toDouble() > prev ? curr.toDouble() : prev) /
+                10)
+            .ceil() *
+        10;
+
     return RotatedBox(
       quarterTurns: 1,
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
-          maxY: filteredData
-              .map((e) => e.totalTickets)
-              .toList()
-              .reduce((curr, next) => (curr ?? 0) > next! ? curr : next)
-              ?.toDouble(),
+          maxY: maxY.toDouble(),
           minY: 0,
           barGroups: List.generate(filteredData.length, (index) {
             final item = filteredData[index];
@@ -44,14 +43,14 @@ class CustomPipelineChart extends StatelessWidget {
               x: index,
               barRods: [
                 BarChartRodData(
-                  toY: item.totalTickets?.toDouble() ?? 0,
+                  toY: item.totalTicketsPercentage?.toDouble() ?? 0,
                   color: SupportBotColors.bluePrimary.shade200,
                   width: 20,
                   borderRadius: const BorderRadius.all(Radius.circular(4)),
                   rodStackItems: [
                     BarChartRodStackItem(
                       0,
-                      item.validatedTickets?.toDouble() ?? 0,
+                      item.validatedTicketPercentage?.toDouble() ?? 0,
                       SupportBotColors.bluePrimary.shade400,
                     ),
                   ],
@@ -79,9 +78,7 @@ class CustomPipelineChart extends StatelessWidget {
                           children: [
                             CustomToolTip(
                               toolTipDirection: 23,
-                              messageWidget: const SizedBox(
-                                height: 3,
-                              ),
+                              messageWidget: const SizedBox(height: 3),
                               width: 300,
                               messageWidgetHeight: 6,
                               isMobile: false,
@@ -111,12 +108,12 @@ class CustomPipelineChart extends StatelessWidget {
             rightTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: intervalValue,
+                interval: 10,
                 getTitlesWidget: (double value, TitleMeta meta) {
                   return RotatedBox(
                     quarterTurns: -1,
                     child: Text(
-                      value.toInt().toString(),
+                      '${value.toInt()}%',
                       style: const TextStyle(fontSize: 12),
                     ),
                   );
@@ -131,7 +128,7 @@ class CustomPipelineChart extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
-            horizontalInterval: 100,
+            horizontalInterval: 10,
             getDrawingHorizontalLine: (value) {
               return FlLine(
                 color: Colors.grey.withOpacity(0),
@@ -144,18 +141,24 @@ class CustomPipelineChart extends StatelessWidget {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              tooltipPadding: const EdgeInsets.all(2),
+              fitInsideVertically: false,
+              tooltipMargin: (-80),
+              tooltipHorizontalOffset: -55,
+              tooltipPadding: const EdgeInsets.all(7),
               tooltipRoundedRadius: 5,
               getTooltipColor: (group) => SupportBotColors.gray,
               tooltipBorder: const BorderSide(
                 color: SupportBotColors.gray,
                 width: 2,
               ),
+              maxContentWidth: 800,
               direction: TooltipDirection.bottom,
               rotateAngle: 270,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
-                  '${s.validatedText}: ${filteredData[groupIndex].validatedTickets?.toInt() ?? 0} / ${s.totalText}: ${filteredData[groupIndex].totalTickets?.toInt() ?? 0}',
+                  '${s.validatedCountText}: ${filteredData[groupIndex].validatedTickets?.toDouble() ?? 0} \n'
+                  '${s.validatedPercentageText}: ${filteredData[groupIndex].validatedTicketPercentage?.toDouble() ?? 0}% \n'
+                  '${s.totalCountText}: ${filteredData[groupIndex].totalTickets?.toDouble() ?? 0}',
                   const TextStyle(
                     color: SupportBotColors.black,
                   ),
