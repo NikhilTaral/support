@@ -52,7 +52,7 @@ class DashboardPipelineChart extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5)),
               ),
               UIHelpers.horizontalSpaceSmall,
-              Text(s.totalTicketsText,
+              Text(s.totalTicketsPercentageText,
                   style: SupportBotTextstyle.normal.copyWith(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -66,7 +66,7 @@ class DashboardPipelineChart extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5)),
               ),
               UIHelpers.horizontalSpaceSmall,
-              Text(s.validatedTicketsText,
+              Text(s.validatedTicketsPercentageText,
                   style: SupportBotTextstyle.normal.copyWith(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -83,7 +83,7 @@ class DashboardPipelineChart extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Container(
         padding: const EdgeInsets.only(right: 25, top: 10),
-        width: (data?.length ?? 0) * 252,
+        width: UIHelpers.screenWidth(context) * 0.9,
         height: (data ?? []).length * 30,
         child: CustomPipelineChart(pipelineData: data),
       ),
