@@ -12,20 +12,16 @@ part 'ai_accuracy_and_validation_trends_state.dart';
 
 DashboardDataModel dashboardDataModel = DashboardDataModel();
 
-class AiAccuracyAndValidationTrendsBloc extends Bloc<
-    AiAccuracyAndValidationTrendsEvent, AiAccuracyAndValidationTrendsState> {
+class AiAccuracyAndValidationTrendsBloc extends Bloc<AiAccuracyAndValidationTrendsEvent, AiAccuracyAndValidationTrendsState> {
   String? startDate;
   String? endDate;
   List<String>? piplineId;
-  AiAccuracyAndValidationTrendsBloc()
-      : super(AiAccuracyAndValidationTrendsIntialState()) {
-    on<AiAccuracyAndValidationTrendsIntialEvent>(
-        _onAiAccuracyAndValidationTrendsIntialEvent);
+  AiAccuracyAndValidationTrendsBloc() : super(AiAccuracyAndValidationTrendsIntialState()) {
+    on<AiAccuracyAndValidationTrendsIntialEvent>(_onAiAccuracyAndValidationTrendsIntialEvent);
     on<GraphToggalEvent>(_onGraphToggalEvent);
   }
   Future<void> _onAiAccuracyAndValidationTrendsIntialEvent(
-      AiAccuracyAndValidationTrendsIntialEvent event,
-      Emitter<AiAccuracyAndValidationTrendsState> emit) async {
+      AiAccuracyAndValidationTrendsIntialEvent event, Emitter<AiAccuracyAndValidationTrendsState> emit) async {
     startDate = event.startDate;
     endDate = event.endDate;
     piplineId = event.piplineId;
@@ -36,8 +32,7 @@ class AiAccuracyAndValidationTrendsBloc extends Bloc<
         startDate: startDate ?? event.startDate,
         endDate: endDate ?? event.endDate,
         filter: [
-          Filter(
-              fieldName: "pipelines", fieldValue: piplineId ?? event.piplineId),
+          Filter(fieldName: "pipelines", fieldValue: piplineId ?? event.piplineId),
         ],
       );
       final response = await repository.invoke(req);
@@ -46,16 +41,15 @@ class AiAccuracyAndValidationTrendsBloc extends Bloc<
       } else {
         final AiAccuracyAndValidationTrendsResponseModel model = response.right;
         dashboardDataModel = dashboardDataModel.copyWith(
-          aiAccuracyAndValidationTrendsAttributeModel:
-              AiAccuracyAndValidationTrendsAttributeModel(
+          aiAccuracyAndValidationTrendsAttributeModel: AiAccuracyAndValidationTrendsAttributeModel(
             data: DataAttribute(
               items: model.data?.items
                   ?.map(
                     (e) => AttributeItem(
-                      aiAccuracy: e.aiAccuracy ?? 0,
-                      date: e.date ?? "",
-                      validationPercentage: e.validationPercentage ?? 0,
-                    ),
+                        aiAccuracy: e.aiAccuracy ?? 0,
+                        date: e.date ?? "",
+                        validationPercentage: e.validationPercentage ?? 0,
+                        aIClosedTicketsPercentage: e.aIClosedTicketsPercentage ?? 0),
                   )
                   .toList(),
             ),
@@ -65,20 +59,17 @@ class AiAccuracyAndValidationTrendsBloc extends Bloc<
           ),
         );
 
-        emit(AiAccuracyAndValidationTrendsSucssesState(
-            dashboardDataModel: dashboardDataModel));
+        emit(AiAccuracyAndValidationTrendsSucssesState(dashboardDataModel: dashboardDataModel));
       }
     } catch (e) {
       emit(AiAccuracyAndValidationTrendsFailureState());
     }
   }
 
-  Future<void> _onGraphToggalEvent(GraphToggalEvent event,
-      Emitter<AiAccuracyAndValidationTrendsState> emit) async {
+  Future<void> _onGraphToggalEvent(GraphToggalEvent event, Emitter<AiAccuracyAndValidationTrendsState> emit) async {
     emit(AiAccuracyAndValidationTrendsLoadingState());
     try {
-      emit(AiAccuracyAndValidationTrendsSucssesState(
-          isVisible: event.isVisible));
+      emit(AiAccuracyAndValidationTrendsSucssesState(isVisible: event.isVisible));
     } catch (e) {
       emit(AiAccuracyAndValidationTrendsFailureState());
     }
