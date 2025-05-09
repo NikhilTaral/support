@@ -16,19 +16,19 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
   List<dynamic> get apiResponse {
     return [
       {
-        'aiAccuracy': dashboardDataModel
-                ?.aiAccuracyAndValidationTrendsAttributeModel?.data?.items
+        'aiAccuracy': dashboardDataModel?.aiAccuracyAndValidationTrendsAttributeModel?.data?.items
                 ?.map((e) => e.aiAccuracy ?? 0)
                 ?.toList() ??
             [],
-        'validationPercentage': dashboardDataModel
-                ?.aiAccuracyAndValidationTrendsAttributeModel?.data?.items
+        'validationPercentage': dashboardDataModel?.aiAccuracyAndValidationTrendsAttributeModel?.data?.items
                 ?.map((e) => e.validationPercentage ?? 0)
                 ?.toList() ??
             [],
-        'date': dashboardDataModel
-                ?.aiAccuracyAndValidationTrendsAttributeModel?.data?.items
-                ?.map((e) => e.date ?? '')
+        'date':
+            dashboardDataModel?.aiAccuracyAndValidationTrendsAttributeModel?.data?.items?.map((e) => e.date ?? '')?.toList() ??
+                [],
+        'AIClosedTicketsPercentage': dashboardDataModel?.aiAccuracyAndValidationTrendsAttributeModel?.data?.items
+                ?.map((e) => e.aIClosedTicketsPercentage ?? 0)
                 ?.toList() ??
             [],
       }
@@ -39,16 +39,17 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final dates = apiResponse.first['date'] as List<String>;
     final aiAccuracyData = apiResponse.first['aiAccuracy'] as List<num>;
-    final validationPercentageData =
-        apiResponse.first['validationPercentage'] as List<num>;
+    final validationPercentageData = apiResponse.first['validationPercentage'] as List<num>;
+    final aIClosedTicketsPercentage = apiResponse.first['AIClosedTicketsPercentage'] as List<num>;
 
     List<FlSpot> aiAccuracySpots = [];
     List<FlSpot> validationPercentageSpots = [];
+    List<FlSpot> aIClosedTicketsPercentageSpots = [];
 
     for (int i = 0; i < aiAccuracyData.length; i++) {
       aiAccuracySpots.add(FlSpot(i.toDouble(), aiAccuracyData[i].toDouble()));
-      validationPercentageSpots
-          .add(FlSpot(i.toDouble(), validationPercentageData[i].toDouble()));
+      validationPercentageSpots.add(FlSpot(i.toDouble(), validationPercentageData[i].toDouble()));
+      aIClosedTicketsPercentageSpots.add(FlSpot(i.toDouble(), aIClosedTicketsPercentage[i].toDouble()));
     }
 
     final minY = 0;
@@ -70,10 +71,8 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
-            getDrawingHorizontalLine: (value) =>
-                const FlLine(color: Colors.transparent),
-            getDrawingVerticalLine: (value) =>
-                const FlLine(color: Colors.transparent),
+            getDrawingHorizontalLine: (value) => const FlLine(color: Colors.transparent),
+            getDrawingVerticalLine: (value) => const FlLine(color: Colors.transparent),
             drawHorizontalLine: true,
             drawVerticalLine: true,
             show: true,
@@ -153,7 +152,14 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
               preventCurveOverShooting: true,
               spots: validationPercentageSpots,
               barWidth: 1.5,
-              color: SupportBotColors.bluePrimary.shade200,
+              color: SupportBotColors.bluePrimary.shade300,
+            ),
+            LineChartBarData(
+              isCurved: true,
+              preventCurveOverShooting: true,
+              spots: aIClosedTicketsPercentageSpots,
+              barWidth: 1.5,
+              color: SupportBotColors.bluePrimary.shade500,
             ),
           ],
           minX: minX,
@@ -178,16 +184,15 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
                   int index = spot.x.toInt();
 
                   if (index >= 0 && index < dates.length) {
-                    dateLabel = DateFormat('dd MMM yyyy')
-                        .format(DateTime.parse(dates[index]));
+                    dateLabel = DateFormat('dd MMM yyyy').format(DateTime.parse(dates[index]));
                   }
+
                   if (spot.barIndex == 0) {
-                    label =
-                        'Date: $dateLabel,\nAI Accuracy: ${spot.y.toStringAsFixed(0)}%';
-                    tooltipColor = SupportBotColors.black;
+                    label = 'Date: $dateLabel,\nAI Accuracy: ${spot.y.toStringAsFixed(0)}%';
                   } else if (spot.barIndex == 1) {
                     label = 'Validation: ${spot.y.toStringAsFixed(0)}%';
-                    tooltipColor = SupportBotColors.black;
+                  } else if (spot.barIndex == 2) {
+                    label = 'Auto-Close: ${spot.y.toStringAsFixed(0)}%';
                   }
 
                   return LineTooltipItem(
@@ -197,8 +202,7 @@ class AiAccuracyAndValidationTrendsLineGraph extends StatelessWidget {
                 }).toList();
               },
             ),
-            touchCallback:
-                (FlTouchEvent event, LineTouchResponse? touchResponse) {},
+            touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {},
             handleBuiltInTouches: true,
           ),
         ),
