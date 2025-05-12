@@ -35,7 +35,7 @@ class AiAccuracyAndValidationTrendsStates extends StatelessWidget {
                   Container(
                     height: 15,
                     width: 15,
-                    color: SupportBotColors.bluePrimary.shade300,
+                    color: SupportBotColors.bluePrimary.shade400,
                   ),
                   UIHelpers.horizontalSpaceRegular,
                   Text(
@@ -50,7 +50,7 @@ class AiAccuracyAndValidationTrendsStates extends StatelessWidget {
                   Container(
                     height: 15,
                     width: 15,
-                    color: SupportBotColors.bluePrimary.shade400,
+                    color: SupportBotColors.bluePrimary.shade300,
                   ),
                   UIHelpers.horizontalSpaceRegular,
                   Text(
@@ -65,7 +65,7 @@ class AiAccuracyAndValidationTrendsStates extends StatelessWidget {
                   Container(
                     height: 15,
                     width: 15,
-                    color: SupportBotColors.bluePrimary.shade500,
+                    color: SupportBotColors.successPrimary.shade200,
                   ),
                   UIHelpers.horizontalSpaceRegular,
                   Text(
