@@ -12,7 +12,7 @@ class AiAccuracyAndValidationTrendsAttributeModel {
   });
 
   AiAccuracyAndValidationTrendsAttributeModel copyWith({
-     DataAttribute? data,
+    DataAttribute? data,
     bool? success,
     num? failCode,
     String? message,
@@ -44,21 +44,20 @@ class AttributeItem {
   final String? date;
   final num? aiAccuracy;
   final num? validationPercentage;
+  final num? aIClosedTicketsPercentage;
 
-  AttributeItem({
-    this.date,
-    this.aiAccuracy,
-    this.validationPercentage,
-  });
+  AttributeItem({this.date, this.aiAccuracy, this.validationPercentage, this.aIClosedTicketsPercentage});
 
   AttributeItem copyWith({
     String? date,
     num? aiAccuracy,
     num? validationPercentage,
+    num? aIClosedTicketsPercentage
   }) =>
       AttributeItem(
         date: date ?? this.date,
         aiAccuracy: aiAccuracy ?? this.aiAccuracy,
         validationPercentage: validationPercentage ?? this.validationPercentage,
+        aIClosedTicketsPercentage: aIClosedTicketsPercentage??this.aIClosedTicketsPercentage
       );
 }
