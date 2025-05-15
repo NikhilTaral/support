@@ -248,5 +248,9 @@
   "piplineInfoToolTipText": "Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown.",
     "@piplineInfoToolTipText": {
       "description":"Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown. Text"
+  },
+  "autoCloseText": "Auto-Close",
+    "@autoCloseText": {
+      "description":"Auto-Close Text"
   }
 }
