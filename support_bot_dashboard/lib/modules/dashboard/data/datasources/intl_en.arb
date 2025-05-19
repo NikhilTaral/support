@@ -136,9 +136,9 @@
   "@genuineQueryText": {
     "description": "Genuine Query Column Title"
   },
-  "acknowledgeRequiredText": "Acknowledge Required",
+  "acknowledgeRequiredText": "Acknowledgement Required",
   "@acknowledgeRequiredText": {
-    "description": "Acknowledge Required Column Title"
+    "description": "Acknowledgement Required Column Title"
   },
   "spamMarketing":  "Spam/Marketing",
   "@spamMarketing": {
@@ -248,5 +248,9 @@
   "piplineInfoToolTipText": "Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown.",
     "@piplineInfoToolTipText": {
       "description":"Displays the percentage of validated tickets out of total tickets for each pipeline—pipelines with zero tickets are not shown. Text"
+  },
+  "autoCloseText": "Auto-Close",
+    "@autoCloseText": {
+      "description":"Auto-Close Text"
   }
 }
