@@ -21,22 +21,12 @@ class FlCircularChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
+      ChartData(label: 'Genuine Query', percentage: dashboardDataModel.pieChartData?.data?.percentages?.genuineQuery),
+      ChartData(label: 'No Action Required', percentage: dashboardDataModel.pieChartData?.data?.percentages?.noActionRequired),
+      ChartData(label: 'Spam/Marketing', percentage: dashboardDataModel.pieChartData?.data?.percentages?.spamMarketing),
       ChartData(
-          label: 'Genuine Query',
-          percentage:
-              dashboardDataModel.pieChartData?.data?.percentages?.genuineQuery),
-      ChartData(
-          label: 'No Action Required',
-          percentage: dashboardDataModel
-              .pieChartData?.data?.percentages?.noActionRequired),
-      ChartData(
-          label: 'Spam/Marketing',
-          percentage: dashboardDataModel
-              .pieChartData?.data?.percentages?.spamMarketing),
-      ChartData(
-          label: 'Acknowledge required',
-          percentage: dashboardDataModel
-              .pieChartData?.data?.percentages?.acknowledgementRequired),
+          label: 'Acknowledgement required',
+          percentage: dashboardDataModel.pieChartData?.data?.percentages?.acknowledgementRequired),
     ];
 
     return ValueListenableBuilder<int?>(
@@ -50,14 +40,11 @@ class FlCircularChart extends StatelessWidget {
             startDegreeOffset: 360,
             pieTouchData: PieTouchData(
               touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                if (!event.isInterestedForInteractions ||
-                    pieTouchResponse == null ||
-                    pieTouchResponse.touchedSection == null) {
+                if (!event.isInterestedForInteractions || pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
                   touchedIndexNotifier.value = null;
                   return;
                 }
-                touchedIndexNotifier.value =
-                    pieTouchResponse.touchedSection!.touchedSectionIndex;
+                touchedIndexNotifier.value = pieTouchResponse.touchedSection!.touchedSectionIndex;
               },
             ),
           ),
@@ -68,8 +55,7 @@ class FlCircularChart extends StatelessWidget {
     );
   }
 
-  List<PieChartSectionData> _getSections(
-      List<ChartData> chartData, int? touchedIndex) {
+  List<PieChartSectionData> _getSections(List<ChartData> chartData, int? touchedIndex) {
     return List.generate(chartData.length, (index) {
       final data = chartData[index];
       final color = _getColorForLabel(data.label);
@@ -77,9 +63,7 @@ class FlCircularChart extends StatelessWidget {
 
       return PieChartSectionData(
         value: data.percentage,
-        title: isTouched
-            ? '${data.label}\n${data.percentage?.toStringAsFixed(1)}%'
-            : '${data.percentage?.toStringAsFixed(1)}%',
+        title: isTouched ? '${data.label}\n${data.percentage?.toStringAsFixed(1)}%' : '${data.percentage?.toStringAsFixed(1)}%',
         color: color,
         radius: 120,
         titleStyle: SupportBotTextstyle.mediumHint.copyWith(
@@ -98,7 +82,7 @@ class FlCircularChart extends StatelessWidget {
         return const Color(0xFF8099C7);
       case 'Spam/Marketing':
         return SupportBotColors.bluePrimary.shade400;
-      case 'Acknowledge required':
+      case 'Acknowledgement required':
         return const Color(0xFFDBE2EF);
       default:
         return Colors.grey;

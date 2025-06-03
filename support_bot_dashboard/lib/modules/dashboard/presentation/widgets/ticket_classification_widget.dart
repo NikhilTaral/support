@@ -30,10 +30,8 @@ class TicketClassificationWidget extends StatelessWidget {
           children: [
             Text(
               s.ticketClassification,
-              style: SupportBotTextstyle.normal.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: SupportBotColors.black),
+              style:
+                  SupportBotTextstyle.normal.copyWith(fontWeight: FontWeight.w600, fontSize: 18, color: SupportBotColors.black),
             ),
             UIHelpers.verticalSpaceSmall,
             BlocBuilder<TicketClassificationBloc, TicketClassificationState>(
@@ -48,8 +46,7 @@ class TicketClassificationWidget extends StatelessWidget {
                         height: 240,
                         width: 240,
                         child: state.dashboardDataModel != null
-                            ? FlCircularChart(
-                                dashboardDataModel: state.dashboardDataModel!)
+                            ? FlCircularChart(dashboardDataModel: state.dashboardDataModel!)
                             : const SizedBox.shrink(),
                       ),
                       Expanded(
@@ -92,16 +89,13 @@ class TicketClassificationWidget extends StatelessWidget {
                   );
                 } else if (state is TicketClassificationLoadingState) {
                   return const LoadingWidget(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      width: double.infinity,
-                      height: 280);
+                      borderRadius: BorderRadius.all(Radius.circular(8)), width: double.infinity, height: 280);
                 } else if (state is TicketClassificationEmptyState) {
                   return const EmptyWidget();
                 } else if (state is TicketClassificationFailureState) {
                   return FailureWidget(
                     onTap: () {
-                      BlocProvider.of<TicketClassificationBloc>(context)
-                          .add(TickiteClassificationEvent());
+                      BlocProvider.of<TicketClassificationBloc>(context).add(TickiteClassificationEvent());
                     },
                   );
                 }
@@ -148,10 +142,8 @@ class TicketClassificationWidget extends StatelessWidget {
                   child: Text(
                     title,
                     overflow: TextOverflow.ellipsis,
-                    style: SupportBotTextstyle.normal.copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: SupportBotColors.black),
+                    style: SupportBotTextstyle.normal
+                        .copyWith(fontWeight: FontWeight.w400, fontSize: 16, color: SupportBotColors.black),
                   ),
                 ),
               ],
@@ -159,9 +151,7 @@ class TicketClassificationWidget extends StatelessWidget {
           ),
           Text(
             percentage,
-            style: SupportBotTextstyle.small.copyWith(
-                fontWeight: FontWeight.w400,
-                color: SupportBotColors.blueSecondary),
+            style: SupportBotTextstyle.small.copyWith(fontWeight: FontWeight.w400, color: SupportBotColors.blueSecondary),
           ),
         ],
       ),

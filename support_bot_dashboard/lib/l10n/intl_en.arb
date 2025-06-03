@@ -228,9 +228,9 @@
   "@genuineQueryText": {
     "description": "Genuine Query Column Title"
   },
-  "acknowledgeRequiredText": "Acknowledge Required",
+  "acknowledgeRequiredText": "Acknowledgement Required",
   "@acknowledgeRequiredText": {
-    "description": "Acknowledge Required Column Title"
+    "description": "Acknowledgement Required Column Title"
   },
   "spamMarketing": "Spam/Marketing",
   "@spamMarketing": {
