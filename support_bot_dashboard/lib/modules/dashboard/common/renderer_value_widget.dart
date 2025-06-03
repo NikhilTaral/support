@@ -15,7 +15,7 @@ class Renderer {
         ),
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          overflow: TextOverflow.ellipsis,  
+          overflow: TextOverflow.ellipsis,
           rendererContext.cell.value.toString(),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -25,14 +25,10 @@ class Renderer {
 }
 
 Color getColors({required String? colString, required String? rowString}) {
-  String? colTitle =
-      RequestMentorReportKeys.getTitle(RequestMentorReportKeys.genuineQuery);
-  String? rowTitleAck =
-      RequestMentorReportKeys.getTitle(RequestMentorReportKeys.ackRequired);
-  String? rowTitleNoAction = RequestMentorReportKeys.getTitle(
-      RequestMentorReportKeys.noActionRequired);
-  String? rowTitleSpam =
-      RequestMentorReportKeys.getTitle(RequestMentorReportKeys.spam);
+  String? colTitle = RequestMentorReportKeys.getTitle(RequestMentorReportKeys.genuineQuery);
+  String? rowTitleAck = RequestMentorReportKeys.getTitle(RequestMentorReportKeys.ackRequired);
+  String? rowTitleNoAction = RequestMentorReportKeys.getTitle(RequestMentorReportKeys.noActionRequired);
+  String? rowTitleSpam = RequestMentorReportKeys.getTitle(RequestMentorReportKeys.spam);
 
   if (colString == colTitle && rowString == rowTitleAck ||
       colString == rowTitleAck && rowString == colTitle ||
@@ -41,9 +37,7 @@ Color getColors({required String? colString, required String? rowString}) {
     return const Color(0xFFFFE3E9);
   } else if (colString == rowString) {
     return const Color(0xFFE9F8E9);
-  } else if (colString ==
-      RequestMentorReportKeys.getTitle(
-          RequestMentorReportKeys.aIClassification)) {
+  } else if (colString == RequestMentorReportKeys.getTitle(RequestMentorReportKeys.aIClassification)) {
     return Colors.transparent;
   } else {
     return const Color(0xFFFFE3E9);
@@ -65,7 +59,7 @@ class RequestMentorReportKeys {
       case RequestMentorReportKeys.genuineQuery:
         return s.genuineQuery;
       case RequestMentorReportKeys.ackRequired:
-        return s.ackRequired;
+        return s.acknowledgeRequiredText;
       case RequestMentorReportKeys.noActionRequired:
         return s.noActionRequired;
       case RequestMentorReportKeys.spam:
