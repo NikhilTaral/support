@@ -8,6 +8,7 @@ import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_all_
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_answer_bloc/ai_query_answer_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_query_edited_bloc/ai_query_edited_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_ai_reponse_stat_bloc/get_ai_response_stat_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/get_all_pipeline_bloc/get_all_pipeline_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
 import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ticket_classification_bloc/ticket_classification_bloc.dart';
@@ -22,12 +23,7 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 import 'package:support_bot_dashboard/utils/ui_helpers.dart';
 
 class HomeFiltersWidget extends StatefulWidget {
-  const HomeFiltersWidget(
-      {super.key,
-      this.pipelineName,
-      this.endDate,
-      this.piplineId,
-      this.startDate});
+  const HomeFiltersWidget({super.key, this.pipelineName, this.endDate, this.piplineId, this.startDate});
   final String? pipelineName;
   final List<String>? piplineId;
   final DateTime? startDate;
@@ -38,8 +34,7 @@ class HomeFiltersWidget extends StatefulWidget {
 }
 
 class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
-  final ValueNotifier<List<DateTime>?> selectedDatesNotifier =
-      ValueNotifier<List<DateTime>?>(null);
+  final ValueNotifier<List<DateTime>?> selectedDatesNotifier = ValueNotifier<List<DateTime>?>(null);
   List<DateTime?> selectedate = [];
   List<String> selectedItems = [];
   List<String> pipelineIds = [];
@@ -65,8 +60,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
         } else if (state is GetAllPipelineFailureState) {
           return FailureWidget(
             onTap: () {
-              BlocProvider.of<GetAllPipelineBloc>(context)
-                  .add(GetAllPiplineInitialEvent());
+              BlocProvider.of<GetAllPipelineBloc>(context).add(GetAllPiplineInitialEvent());
             },
           );
         }
@@ -142,8 +136,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
                   right: 6,
                   left: 6,
                 ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: () => _pickDateRange(),
               child: Row(
@@ -199,18 +192,9 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     return const Row(
       spacing: 15,
       children: [
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 450),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 180),
-        LoadingWidget(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            height: 40,
-            width: 130),
+        LoadingWidget(borderRadius: BorderRadius.all(Radius.circular(8)), height: 40, width: 450),
+        LoadingWidget(borderRadius: BorderRadius.all(Radius.circular(8)), height: 40, width: 180),
+        LoadingWidget(borderRadius: BorderRadius.all(Radius.circular(8)), height: 40, width: 130),
       ],
     );
   }
@@ -218,14 +202,12 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
   Future<void> _pickDateRange() async {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle: SupportBotTextstyle.hint
-          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.w700),
+      dayTextStyle: SupportBotTextstyle.hint.copyWith(color: SupportBotColors.black, fontWeight: FontWeight.w700),
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: SupportBotColors.bluePrimary,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
-      weekdayLabelTextStyle: SupportBotTextstyle.hint
-          .copyWith(color: SupportBotColors.black, fontWeight: FontWeight.bold),
+      weekdayLabelTextStyle: SupportBotTextstyle.hint.copyWith(color: SupportBotColors.black, fontWeight: FontWeight.bold),
       selectableDayPredicate: (date) => date.isBefore(DateTime.now()),
     );
 
@@ -244,8 +226,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     }
   }
 
-  void _onPipelineSelectionChanged(
-      List<String> selectedNames, List<GetAllPipelineData> items) {
+  void _onPipelineSelectionChanged(List<String> selectedNames, List<GetAllPipelineData> items) {
     pipelineIds.clear();
     for (var selectedName in selectedNames) {
       final matchingItem = items.firstWhere(
@@ -304,8 +285,7 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
 
   void _addEvents() {
     final s = serviceLocator<S>();
-    final selectedPipelineValue =
-        pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
+    final selectedPipelineValue = pipelineIds.isEmpty ? widget.piplineId : pipelineIds;
 
     if (selectedPipelineValue?.isEmpty == true) {
       showSnackbar(
@@ -316,52 +296,42 @@ class _HomeFiltersWidgetState extends State<HomeFiltersWidget> {
     }
 
     if (selectedItems.isNotEmpty) {
-      BlocProvider.of<ValidationStatusBloc>(context).selectedPipelineId =
-          selectedPipelineValue;
-      BlocProvider.of<ValidationStatusBloc>(context)
-          .add(ValidationStatuseCallEvent(
+      BlocProvider.of<ValidationStatusBloc>(context).selectedPipelineId = selectedPipelineValue;
+      BlocProvider.of<ValidationStatusBloc>(context).add(ValidationStatuseCallEvent(
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
 
-      BlocProvider.of<AiQueryAnswerBloc>(context).selectedPipelineId =
-          selectedPipelineValue;
+      BlocProvider.of<AiQueryAnswerBloc>(context).selectedPipelineId = selectedPipelineValue;
       BlocProvider.of<AiQueryAnswerBloc>(context).add(AIQueryAnswerInitialEvent(
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
 
-      BlocProvider.of<AiQueryEditedBloc>(context).selectedPipelineId =
-          selectedPipelineValue;
+      BlocProvider.of<AiQueryEditedBloc>(context).selectedPipelineId = selectedPipelineValue;
       BlocProvider.of<AiQueryEditedBloc>(context).add(AIQueryEditedInitialEvent(
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
-      BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId =
-          selectedPipelineValue;
-      BlocProvider.of<TicketClassificationBloc>(context)
-          .add(TickiteClassificationEvent(
+      BlocProvider.of<TicketClassificationBloc>(context).selectedPipelineId = selectedPipelineValue;
+      BlocProvider.of<TicketClassificationBloc>(context).add(TickiteClassificationEvent(
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
 
-      BlocProvider.of<UserValidationBloc>(context).selectedPipelineId =
-          selectedPipelineValue;
+      BlocProvider.of<UserValidationBloc>(context).selectedPipelineId = selectedPipelineValue;
       BlocProvider.of<UserValidationBloc>(context).add(UserValidationsEvent(
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
         selectedPipelineValue: selectedPipelineValue,
       ));
-BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(context)
-          .add(AiAccuracyAndValidationTrendsIntialEvent(
-        endDate: selectedate.lastOrNull?.toIso8601String() ??
-            widget.endDate?.toIso8601String(),
-        startDate: selectedate.firstOrNull?.toIso8601String() ??
-            widget.startDate?.toIso8601String(),
+      BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(context).add(AiAccuracyAndValidationTrendsIntialEvent(
+        endDate: selectedate.lastOrNull?.toIso8601String() ?? widget.endDate?.toIso8601String(),
+        startDate: selectedate.firstOrNull?.toIso8601String() ?? widget.startDate?.toIso8601String(),
         piplineId: selectedPipelineValue,
       ));
 
@@ -369,6 +339,11 @@ BlocProvider.of<AiAccuracyAndValidationTrendsBloc>(context)
         endDate: selectedate.lastOrNull ?? widget.endDate,
         startDate: selectedate.firstOrNull ?? widget.startDate,
       ));
+
+      BlocProvider.of<GetAiResponseStatBloc>(context).add(GetAiResponseStatInitialEvent(
+          endDate: selectedate.lastOrNull ?? widget.endDate,
+          startDate: selectedate.firstOrNull ?? widget.startDate,
+          selectedPipelineValue: widget.piplineId));
     }
   }
 
