@@ -9,8 +9,8 @@ class GetAiResponseStatAttributeModel {
 }
 
 class CountsAttribute {
-  final int? totalTickets;
-  final int? totalResponses;
+  final double? totalTickets;
+  final double? totalResponses;
   final double? validatedResponses;
   final double? correctResponses;
   final double? incorrectResponses;

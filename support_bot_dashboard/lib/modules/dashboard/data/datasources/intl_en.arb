@@ -265,12 +265,13 @@
     "@aiResponseStatText": {
       "description":"AI Response Stats Text"
   },
-  "totalResponsesTooltip": "Total Responses: {totalResponses}\n Percentage: {percentage}%",
+  "totalResponsesTooltip": " Responses: {totalResponses}\nPercentage: {percentage}% \n {correctIncorrectText}",
   "@totalResponsesTooltip": {
-    "description": "Tooltip displaying total responses and percentage",
+    "description": "Tooltip displaying correct/incorrect responses and percentage",
     "placeholders": {
       "totalResponses": {},
-      "percentage": {}
+      "percentage": {},
+      "correctIncorrectText": {}
     }
   }
 }

@@ -13,8 +13,8 @@ extension GetAiResponseStatMapper on GetAiResponseStatResonseModel {
 extension GetAiResponseCountsMapper on GetAiResponseCounts {
   CountsAttribute toCountsModel() {
     return CountsAttribute(
-      totalTickets: totalTickets?.toInt() ?? 0,
-      totalResponses: totalResponses?.toInt() ?? 0,
+      totalTickets: totalTickets?.toDouble() ?? 0,
+      totalResponses: totalResponses?.toDouble() ?? 0,
       validatedResponses: validatedResponses?.toDouble() ?? 0,
       correctResponses: correctResponses?.toDouble() ?? 0,
       incorrectResponses: incorrectResponses?.toDouble() ?? 0,

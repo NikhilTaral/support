@@ -39,12 +39,14 @@ final s=serviceLocator<S>();
                       EvaluationData(
                         timeLabel: s.correctText,
                         percentage: state.getAiResponseStatAttributeModel?.percentages?.correctResponses ?? 0,
-                        totalResponses: state.getAiResponseStatAttributeModel?.percentages?.totalResponses ?? 0,
+                        totalResponses: state.getAiResponseStatAttributeModel?.counts?.validatedResponses ?? 0,
+                        totalCorrectOrIncorrect: state.getAiResponseStatAttributeModel?.counts?.correctResponses??0
                       ),
                       EvaluationData(
                         timeLabel: s.incorrectText,
                         percentage: state.getAiResponseStatAttributeModel?.percentages?.incorrectResponses ?? 0,
-                        totalResponses: state.getAiResponseStatAttributeModel?.percentages?.totalResponses ?? 0,
+                        totalResponses: state.getAiResponseStatAttributeModel?.counts?.validatedResponses ?? 0,
+                        totalCorrectOrIncorrect: state.getAiResponseStatAttributeModel?.counts?.incorrectResponses??0
                       ),
                     ],
                   ));

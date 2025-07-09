@@ -8,12 +8,14 @@ import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 class EvaluationData {
   final String timeLabel;
   final double percentage;
-  final int totalResponses;
+  final double totalResponses;
+  final double totalCorrectOrIncorrect;
 
   EvaluationData({
     required this.timeLabel,
     required this.percentage,
     required this.totalResponses,
+    required this.totalCorrectOrIncorrect
   });
 }
 
@@ -99,7 +101,7 @@ class EvaluationBarChart extends StatelessWidget {
             leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
-          gridData: FlGridData(
+          gridData: const FlGridData(
             show: true,
             drawVerticalLine: false,
             horizontalInterval: 10,
@@ -122,8 +124,13 @@ class EvaluationBarChart extends StatelessWidget {
               rotateAngle: 270,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final item = evaluationData[groupIndex];
+                final String correctIncorrectText = "${item.timeLabel}:${item.totalCorrectOrIncorrect}"; 
+                final tooltipText = serviceLocator<S>().totalResponsesTooltip(
+                correctIncorrectText,  
+                item.totalResponses.toString(),  
+                item.percentage.toStringAsFixed(1));
                 return BarTooltipItem(
-                  serviceLocator<S>().totalResponsesTooltip(item.totalResponses,item.percentage.toStringAsFixed(1)),
+                  tooltipText,
                    SupportBotTextstyle.normal.copyWith(color: SupportBotColors.black,fontSize: 14),
                 );
               },
