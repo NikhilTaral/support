@@ -126,9 +126,9 @@ class EvaluationBarChart extends StatelessWidget {
                 final item = evaluationData[groupIndex];
                 final String correctIncorrectText = "${item.timeLabel}:${item.totalCorrectOrIncorrect}"; 
                 final tooltipText = serviceLocator<S>().totalResponsesTooltip(
-                correctIncorrectText,  
+                  
                 item.totalResponses.toString(),  
-                item.percentage.toStringAsFixed(1));
+                item.percentage.toStringAsFixed(1),correctIncorrectText);
                 return BarTooltipItem(
                   tooltipText,
                    SupportBotTextstyle.normal.copyWith(color: SupportBotColors.black,fontSize: 14),
