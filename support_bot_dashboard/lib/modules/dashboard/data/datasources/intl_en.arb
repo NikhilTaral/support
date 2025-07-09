@@ -264,5 +264,13 @@
   "aiResponseStatText": "AI Response Stats",
     "@aiResponseStatText": {
       "description":"AI Response Stats Text"
+  },
+  "totalResponsesTooltip": "Total Responses: {totalResponses}\n Percentage: {percentage}%",
+  "@totalResponsesTooltip": {
+    "description": "Tooltip displaying total responses and percentage",
+    "placeholders": {
+      "totalResponses": {},
+      "percentage": {}
+    }
   }
 }

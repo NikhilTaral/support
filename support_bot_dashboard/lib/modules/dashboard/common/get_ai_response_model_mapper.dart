@@ -1,7 +1,7 @@
 import 'package:support_bot_dashboard/modules/dashboard/data/model/get_ai_response_stat_response_model.dart';
 import 'package:support_bot_dashboard/modules/dashboard/domain/entities/get_ai_response_stat_attribute_model.dart';
 
-extension GetAiResponseStatMapper on GetAiResponseStat {
+extension GetAiResponseStatMapper on GetAiResponseStatResonseModel {
   GetAiResponseStatAttributeModel toAttributeModel() {
     return GetAiResponseStatAttributeModel(
       counts: counts?.toCountsModel(),
@@ -11,14 +11,14 @@ extension GetAiResponseStatMapper on GetAiResponseStat {
 }
 
 extension GetAiResponseCountsMapper on GetAiResponseCounts {
-  Counts toCountsModel() {
-    return Counts(
+  CountsAttribute toCountsModel() {
+    return CountsAttribute(
       totalTickets: totalTickets?.toInt() ?? 0,
       totalResponses: totalResponses?.toInt() ?? 0,
-      validatedResponses: validatedResponses ?? 0,
-      correctResponses: correctResponses ?? 0,
-      incorrectResponses: incorrectResponses ?? 0,
-      needsImprovement: needsImprovement ?? 0,
+      validatedResponses: validatedResponses?.toDouble() ?? 0,
+      correctResponses: correctResponses?.toDouble() ?? 0,
+      incorrectResponses: incorrectResponses?.toDouble() ?? 0,
+      needsImprovement: needsImprovement?.toDouble() ?? 0,
     );
   }
 }

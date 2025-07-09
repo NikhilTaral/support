@@ -1,6 +1,6 @@
 class GetAiResponseStatAttributeModel {
-  final Counts? counts;
-  final Counts? percentages;
+  final CountsAttribute? counts;
+  final CountsAttribute? percentages;
 
   GetAiResponseStatAttributeModel({
     this.counts,
@@ -8,7 +8,7 @@ class GetAiResponseStatAttributeModel {
   });
 }
 
-class Counts {
+class CountsAttribute {
   final int? totalTickets;
   final int? totalResponses;
   final double? validatedResponses;
@@ -16,7 +16,7 @@ class Counts {
   final double? incorrectResponses;
   final double? needsImprovement;
 
-  Counts({
+  CountsAttribute({
     this.totalTickets,
     this.totalResponses,
     this.validatedResponses,

@@ -1,5 +1,7 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:support_bot_dashboard/generated/l10n.dart';
+import 'package:support_bot_dashboard/injectable_init.dart';
 import 'package:support_bot_dashboard/utils/theme/colors.dart';
 import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
 
@@ -121,9 +123,8 @@ class EvaluationBarChart extends StatelessWidget {
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final item = evaluationData[groupIndex];
                 return BarTooltipItem(
-                  'Total Responses: ${item.totalResponses}\n'
-                  'Percentage: ${item.percentage.toStringAsFixed(1)}%',
-                  const TextStyle(color: SupportBotColors.black),
+                  serviceLocator<S>().totalResponsesTooltip(item.totalResponses,item.percentage.toStringAsFixed(1)),
+                   SupportBotTextstyle.normal.copyWith(color: SupportBotColors.black,fontSize: 14),
                 );
               },
             ),
