@@ -252,5 +252,17 @@
   "autoCloseText": "Auto-Close",
     "@autoCloseText": {
       "description":"Auto-Close Text"
+  },
+  "correctText": "Correct",
+    "@correctText": {
+      "description":"Correct Text"
+  },
+  "incorrectText": "Incorrect",
+    "@incorrectText": {
+      "description":"InCorrect Text"
+  },
+  "aiResponseStatText": "AI Response Stats",
+    "@aiResponseStatText": {
+      "description":"AI Response Stats Text"
   }
 }

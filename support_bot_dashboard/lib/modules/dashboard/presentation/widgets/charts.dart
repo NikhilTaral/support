@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_bot_dashboard/generated/l10n.dart';
 import 'package:support_bot_dashboard/injectable_init.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_accuracy_and_validation_trends_states.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_tile.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_tile.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_response_stat_tile.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pipeline_tile.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/validation_status_widget.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_widget.dart';
-import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_widget.dart';
-import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
+import 'package:support_bot_dashboard/utils/ui_helpers.dart';
+import 'package:support_bot_dashboard/utils/theme/icons.dart';
+import 'package:support_bot_dashboard/utils/theme/colors.dart';
+import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
+import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/empty_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/failure_widget.dart';
 import 'package:support_bot_dashboard/utils/common_widgets/loading_widget.dart';
-import 'package:support_bot_dashboard/utils/custom_widgets/tool_tip.dart';
-import 'package:support_bot_dashboard/utils/theme/colors.dart';
-import 'package:support_bot_dashboard/utils/theme/icons.dart';
-import 'package:support_bot_dashboard/utils/theme/text_styles.dart';
-import 'package:support_bot_dashboard/utils/ui_helpers.dart';
+import 'package:support_bot_dashboard/utils/common_widgets/custom_month_dropdown.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_answer_tile.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_query_edited_tile.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_response_stat_tile.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/user_validation_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/dashboard_pipeline_tile.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/validation_status_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ticket_classification_widget.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/pipeline_tile_bloc/pipeline_tile_bloc.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/widgets/ai_accuracy_and_validation_trends_states.dart';
+import 'package:support_bot_dashboard/modules/dashboard/presentation/bloc/ai_accuracy_and_validation_trends_bloc.dart/ai_accuracy_and_validation_trends_bloc.dart';
 
 class Charts extends StatelessWidget {
   Charts({super.key, this.endDate, this.piplineId, this.startDate});
@@ -60,13 +60,11 @@ class Charts extends StatelessWidget {
                   children: [
                     _buildUserValidationCard(context),
                     UIHelpers.verticalSpaceRegular,
-
                     // TO DO:
                     // _buildAiQueryEditedAnswerCard(),
                     // UIHelpers.verticalSpaceRegular,
                     // const ImprovementAreasTile()
-
-                    const AiResponseStatTile(),
+                     AiResponseStatTile(),
                   ],
                 ),
               ),
